@@ -263,16 +263,27 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(300);
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
   const tv0 = await pg.evaluate(() => ({ mode: window.__pthWW.mode(), lab: document.querySelector('#pth-game .ww-tlab').textContent, n: document.querySelector('#pth-game .ww-prog').textContent, tm: window.__pthWW.run().tMax, lives: document.querySelector('#pth-game .ww-lives').textContent }));
-  await pg.keyboard.press('Digit1'); await pg.keyboard.press('Digit2'); await pg.keyboard.press('Digit3');
+  await pg.keyboard.press('Digit2'); await pg.keyboard.press('Digit3');
   await sleep(150);
-  const tv1 = await pg.evaluate(() => { const G = window.__pthWW.run(); return { out: G.out, win: G.q.win, hint: G.hint, tm: G.tMax, jok: G.jok }; });
+  const tv1 = await pg.evaluate(() => { const G = window.__pthWW.run(); return { win: G.q.win, hint: G.hint, save: G.save, jok: G.jok }; });
   ok(tv0.mode === 'tv' && tv0.lab === 'Question' && tv0.n === '1/15' && tv0.tm === 12 && tv0.lives === '', label + ': TV show: question 1/15, a longer clock (' + tv0.tm + ' s), no hearts');
-  ok(tv1.out != null && tv1.out !== tv1.win && tv1.hint && tv1.tm === 17 && !tv1.jok.j50 && !tv1.jok.jace && !tv1.jok.jtime, label + ': keys 1 2 3: 50/50 takes a wrong answer away, the Ace names the hands, +5 s');
-  await pg.keyboard.press(keyFor(tv1.out));        // the answer taken away: nothing happens
+  ok(tv1.hint && tv1.save && !tv1.jok.jace && !tv1.jok.jsave && tv1.jok.jswap, label + ': keys 2 3: the Ace names the hands, Second chance armed');
+  const wrong1 = tv1.win === 1 ? -1 : 1;
+  await pg.keyboard.press(keyFor(wrong1));          // forgiven: crossed out, the question goes on
   await sleep(150);
+  const tv1b = await pg.evaluate(() => { const G = window.__pthWW.run(); return { st: window.__pthWW.state(), out: G.out, save: G.save }; });
+  await pg.keyboard.press(keyFor(wrong1));          // crossed out: nothing happens
+  await sleep(100);
   const st1 = await pg.evaluate(() => window.__pthWW.state());
-  ok(st1 === 'ask', label + ': the answer taken away by the 50/50 cannot be picked');
-  for (let k = 0; k < 5; k++) await answerRight();
+  ok(tv1b.st === 'ask' && tv1b.out === wrong1 && !tv1b.save && st1 === 'ask', label + ': Second chance: the wrong answer is crossed out, answer again');
+  await pg.keyboard.press(keyFor(tv1.win)); await sleep(470); await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
+  const q2 = await pg.evaluate(() => window.__pthWW.run().q.board.join());
+  await pg.keyboard.press('Digit1');
+  await sleep(150);
+  const tv2b = await pg.evaluate(() => { const G = window.__pthWW.run(); return { b: G.q.board.join(), st: window.__pthWW.state(), sw: G.jok.jswap, n: document.querySelector('#pth-game .ww-prog').textContent }; });
+  ok(tv2b.b !== q2 && ['deal', 'ask'].includes(tv2b.st) && !tv2b.sw && tv2b.n === '2/15', label + ': key 1: New hand, another showdown for the same question');
+  for (let k = 0; k < 4; k++) await answerRight();
   await sleep(250);
   const tv2 = await pg.evaluate(() => ({ won: window.__pthWW.run().won, n: document.querySelector('#pth-game .ww-prog').textContent }));
   ok(tv2.won === 1000 && tv2.n === '6/15', label + ': five right answers: 1 000 chips, the first safe level (' + tv2.n + ')');

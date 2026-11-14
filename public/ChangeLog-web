@@ -1,4 +1,7 @@
-2026-11-14 version 2.1.11-web.36 (current series):
+2026-11-14 version 2.1.11-web.37 (current series):
+- improvement: Who Wins? — new jokers in the TV show: New hand (another hand for the same question) and Second chance (a wrong answer is crossed out and you answer again), with the Ace's help; the 50/50 and +5 s are gone
+
+2026-11-14 version 2.1.11-web.36:
 - improvement: Who Wins? — when the Ace explains a trap, the game waits until you tap or press Space (« Continue ▶ »)
 
 2026-11-14 version 2.1.11-web.35:

@@ -117,6 +117,11 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — new jokers** (`web.37`, narmod: the 50/50 was useless with three answers) — `JOKERS`: `jswap`
+  New hand (another showdown of the question's level, turned over again, a fresh clock), `jace` the Ace's help
+  (unchanged), `jsave` Second chance (armed for the question: a wrong answer is crossed out — hand or Split — and the
+  question goes on; a timeout still ends it). `fiftyOut()` and +5 s removed. Keys: +`wwJSwap`, `wwJSave`,
+  `wwJSaveSay`; −`wwJ50`, `wwJTime`; the TV rules line's jokers sentence × 83.
 - **Who Wins? — a trap explained pauses the game** (`web.36`) — no auto-advance while the trap card is shown (was
   5 s): the player goes on with a tap or Space, « Continue ▶ » (`continueBtn`) blinking in the card (steady with
   « Reduce animations »). Test: `test-games-browser`.

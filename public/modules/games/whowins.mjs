@@ -23,8 +23,10 @@
 //      chips, harder as it climbs (TV_LEVEL); one mistake ends the show but
 //      questions 5 and 10 are safe levels (SAFE: you leave with them); the
 //      clock is TV_EXTRA s longer. Three jokers, once each (buttons, keys
-//      1 2 3): 50/50 takes a wrong answer away, the Ace's help names both
-//      hands, +5 s.
+//      1 2 3; web.37, narmod: no more 50/50 nor +5 s): New hand (another
+//      showdown of the same level, a fresh clock), the Ace's help (names both
+//      hands), Second chance (armed for the question: a wrong answer is
+//      crossed out and you answer again).
 //   📅 The Daily challenge (web.34) — DAILY_HANDS hands, the same for every
 //      player on a given UTC day (seeded: rng('pth-whowins-' + day)), from
 //      the easy levels to the Ace's (DAILY_LEVEL); a mistake does not stop
@@ -165,8 +167,8 @@ export const TV_LEVEL = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5];
 export const TV_EXTRA = 3;
 /** The chips you leave with after k right answers then a mistake (the last safe level passed). */
 export function keptAfter(k) { let v = 0; for (const i of SAFE) if (k > i) v = LADDER[i]; return v; }
-/** The 50/50 joker: one of the two wrong answers (1 left, -1 right, 0 split), taken away. */
-export function fiftyOut(win, rnd = Math.random) { const wrong = [1, -1, 0].filter((x) => x !== win); return wrong[Math.floor(rnd() * 2) % 2]; }
+// The TV show's jokers: id, label key, key.
+export const JOKERS = [['jswap', 'wwJSwap', '1'], ['jace', 'wwJAce', '2'], ['jsave', 'wwJSave', '3']];
 // Best level reached per mode, on this device.
 const BEST_KEY = 'pth_ww_best';
 function loadBest() { try { return JSON.parse(localStorage.getItem(BEST_KEY) || '{}') || {}; } catch (e) { return {}; } }
@@ -214,7 +216,7 @@ export function create(shell) {
   function newGame() {
     G = { score: 0, lives: LIVES, right: 0, n: 0, level: 0, streak: 0, bestStreak: 0, q: null, tMax: TIME_MAX, tLeft: TIME_MAX, answer: null, ok: false,
       fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0, dealT: 0, snd: 0, pot: 3, fly: null, shake: 0,
-      won: 0, jok: { j50: true, jace: true, jtime: true }, out: null, hint: false };
+      won: 0, jok: { jswap: true, jace: true, jsave: true }, out: null, hint: false, save: false };
     renderHud();
   }
   const tv = () => mode === 'tv';
@@ -290,7 +292,7 @@ export function create(shell) {
       // The TV show: the question's chips on the board, its level, a longer clock.
       G.level = TV_LEVEL[Math.min(G.right, TV_LEVEL.length - 1)];
       banner(t('wwQuestion', { n: G.right + 1 }) + ' · ' + fmt(LADDER[G.right]));
-      G.out = null; G.hint = false;
+      G.out = null; G.hint = false; G.save = false;
     } else if (daily()) {
       G.level = DAILY_LEVEL[Math.min(G.n, DAILY_LEVEL.length - 1)];
     } else {
@@ -315,15 +317,29 @@ export function create(shell) {
     if (!tv() || state !== 'ask' || !G.jok[id]) return;
     G.jok[id] = false;
     const l = L();
-    if (id === 'j50') G.out = fiftyOut(G.q.win);
-    else if (id === 'jace') G.hint = true;              // the hands' names, in blue under them
-    else { G.tLeft += 5; G.tMax += 5; G.fx.push({ s: '+5 s', x: shell.W / 2, y: l.barY + 18, t: 0, life: 1.1, gold: true }); }
+    if (id === 'jswap') {
+      // Another showdown of the same level, turned over again, a fresh clock.
+      G.q = LEVELS[G.level].deal(Math.random);
+      G.out = null; G.tLeft = G.tMax;
+      G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
+      state = shell.reduced ? 'ask' : 'deal';
+      G.fx.push({ s: '🔄', x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true });
+    } else if (id === 'jace') G.hint = true;            // the hands' names, in blue under them
+    else { G.save = true; G.fx.push({ s: '🛡️', x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true }); }
     sound('notifyAction');
   }
   function answer(pick) {
     if (state !== 'ask') return;
-    if (pick != null && tv() && pick === G.out) return;     // taken away by the 50/50
+    if (pick != null && tv() && pick === G.out) return;     // already crossed out
     const q = G.q;
+    // Second chance: a wrong answer is crossed out, the question goes on.
+    if (tv() && G.save && pick != null && pick !== q.win) {
+      G.save = false; G.out = pick;
+      if (!shell.reduced) G.shake = 0.3;
+      say(t('wwJSaveSay'), 1.4);     // short: it covers the jokers' row
+      sound('notifyFold');
+      return;
+    }
     G.answer = pick;
     G.ok = pick === q.win;
     state = 'shown';
@@ -477,8 +493,8 @@ export function create(shell) {
     // The TV show's jokers, a row above.
     if (tv() && (state === 'ask' || state === 'deal')) {
       const w = Math.min(104, (l.W - 32) / 3), y = l.btnY - l.btnH - 8;
-      [['j50', 'wwJ50', '1'], ['jace', 'wwJAce', '2'], ['jtime', 'wwJTime', '3']].forEach(([id, key, k], i) =>
-        btns.add({ id, x: l.W / 2 + (i - 1) * (w + 8), y, w, h: 28, label: t(key), kind: 'gold', key: k, off: !G.jok[id] || state !== 'ask' }));
+      JOKERS.forEach(([id, key, k], i) =>
+        btns.add({ id, x: l.W / 2 + (i - 1) * (w + 8), y, w, h: 28, label: t(key), kind: id === 'jsave' && G.save ? 'ghost' : 'gold', key: k, off: !G.jok[id] || state !== 'ask' }));
     }
   }
 
@@ -502,14 +518,14 @@ export function create(shell) {
     if (info.x != null) {
       const id = btns.hit(info.x, info.y);
       if (id === 'split') { answer(0); return; }
-      if (id === 'j50' || id === 'jace' || id === 'jtime') { joker(id); return; }
+      if (JOKERS.some((j) => j[0] === id)) { joker(id); return; }
       const h = handAt(l, info.x, info.y);
       if (h != null) answer(h);
       return;
     }
-    if (a === 'n1') joker('j50');
+    if (a === 'n1') joker('jswap');
     else if (a === 'n2') joker('jace');
-    else if (a === 'n3') joker('jtime');
+    else if (a === 'n3') joker('jsave');
     else if (a === 'left') answer(1);
     else if (a === 'right') answer(-1);
     else if (a === 'duck') answer(0);
@@ -639,7 +655,7 @@ export function create(shell) {
         g.fillStyle = shown ? (won ? 'rgba(216,178,90,.28)' : 'rgba(0,0,0,.22)') : 'rgba(0,0,0,.18)'; g.fill();
         if (shown && G.answer === side) { g.strokeStyle = G.ok ? '#3fae6a' : '#d2453b'; g.lineWidth = 2.5; g.stroke(); }
         for (let k = 0; k < 2; k++) card(g, hand[k], xs[k], l.handY, l.hcw, l.hch, shown && lit.has(hand[k]), shown && !lit.has(hand[k]));
-        // The 50/50 took this hand away.
+        // Crossed out by a second chance.
         if (!shown && tv() && G.out === side) {
           rr(g, cx - l.hcw - l.gap - 6, l.handY - l.hch / 2 - 8, 2 * l.hcw + 2 * l.gap + 12, l.hch + 16, 10);
           g.fillStyle = 'rgba(0,0,0,.6)'; g.fill();
