@@ -327,8 +327,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(300);
   const tp2 = await pg.evaluate(() => ({ trap: window.__pthWW.run().trap, ok: window.__pthWW.run().ok }));
   ok(tp.trap === 'counterfeit' && !tp2.ok && tp2.trap === 'counterfeit', label + ': a mistake on a trap: the Ace explains it (' + tp2.trap + ')');
-  await sleep(400); await pg.keyboard.press('Space'); await sleep(300);
-  ok(await pg.evaluate(() => window.__pthWW.run().trap == null), label + ': the next hand: the explanation is gone');
+  await sleep(3000);
+  ok(await pg.evaluate(() => window.__pthWW.state()) === 'shown', label + ': the explanation waits for the player (still there after 3 s)');
+  await pg.keyboard.press('Space'); await sleep(300);
+  ok(await pg.evaluate(() => window.__pthWW.run().trap == null), label + ': Space: the next hand, the explanation is gone');
   await pg.keyboard.press('Space');                // back in a game, as before the modes
   await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(200);

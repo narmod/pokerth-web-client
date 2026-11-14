@@ -34,7 +34,8 @@
 // The traps explained (web.35): after a mistake on a tricky showdown
 // (trapOf: the board plays, a counterfeited pocket pair, the wheel, flush
 // against flush, the kicker, only five cards count), the Ace explains it in a
-// card at the bottom of the felt, in every mode; the next hand waits longer.
+// card at the bottom of the felt, in every mode; the game waits until the
+// player goes on (« Continue ▶ »: a tap or Space, web.36).
 // Secret trophy « Who Wins? »: the million.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
@@ -362,7 +363,8 @@ export function create(shell) {
     }
     renderHud();
     clearTimeout(timer);
-    timer = setTimeout(goOn, G.ok ? 1400 : G.trap ? 5000 : 2600);
+    // A trap explained: the game waits for the player (a tap, Space) to read it.
+    if (!G.trap) timer = setTimeout(goOn, G.ok ? 1400 : 2600);
   }
   function goOn() {
     if (state !== 'shown') return;
@@ -593,13 +595,17 @@ export function create(shell) {
     g.save();
     g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
     const lines = wrapLines((s2) => g.measureText(s2).width, body, w - 2 * pad).slice(0, 5);
-    const h = pad * 2 + lh * (lines.length + 1), y = l.H - h - 6;
+    const h = pad * 2 + lh * (lines.length + 2), y = l.H - h - 6;
     rr(g, x, y, w, h, l.narrow ? 8 : 12); g.fillStyle = 'rgba(245,240,227,.97)'; g.fill();
     g.strokeStyle = '#d8b25a'; g.lineWidth = 1.5; g.stroke();
     g.textAlign = 'left'; g.textBaseline = 'top';
     g.fillStyle = '#8a5a00'; g.font = '700 ' + fs + 'px Inter, system-ui, sans-serif'; g.fillText(title, x + pad, y + pad);
     g.fillStyle = '#1d222b'; g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
     lines.forEach((ln, i) => g.fillText(ln, x + pad, y + pad + lh * (i + 1)));
+    // The game waits: « Continue ▶ » (a tap anywhere, Space).
+    g.textAlign = 'right'; g.fillStyle = '#8a5a00'; g.font = '700 ' + fs + 'px Inter, system-ui, sans-serif';
+    g.globalAlpha = shell.reduced ? 1 : 0.65 + 0.35 * Math.sin(time * 4);
+    g.fillText(t('continueBtn'), x + w - pad, y + pad + lh * (lines.length + 1));
     g.restore();
   }
   function draw(g) {

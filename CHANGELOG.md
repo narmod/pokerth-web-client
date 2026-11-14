@@ -117,6 +117,9 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — a trap explained pauses the game** (`web.36`) — no auto-advance while the trap card is shown (was
+  5 s): the player goes on with a tap or Space, « Continue ▶ » (`continueBtn`) blinking in the card (steady with
+  « Reduce animations »). Test: `test-games-browser`.
 - **Who Wins? — modes, Endless** (`web.32`, narmod: no tables; three modes instead — Endless, TV show, Daily
   challenge) — `games/whowins.mjs`: the tables page and its stars are gone (`TABLES` → `LEVELS`, `starsFor` /
   `tableOpen` / `pth_ww_tables` removed); the title shows the modes (`MODES`), first `endless`: 3 hearts, a level
