@@ -114,6 +114,11 @@ const CSS = `
 #${ACE_ID}.adash-back .air .mc-legL{transform:rotate(10deg) scaleY(.78)}#${ACE_ID}.adash-back .air .mc-legR{transform:rotate(-10deg) scaleY(.78)}
 #${ACE_ID}.adash-back .flip .mc-legL,#${ACE_ID}.adash-back .flip .mc-legR{transform:scaleY(.55)}
 #${ACE_ID}.adash-back .flip .mc-armL{transform:rotate(-40deg)}#${ACE_ID}.adash-back .flip .mc-armR{transform:rotate(40deg)}
+#${ACE_ID}.adash-back .run .mc-card3d{animation:adSway .3s ease-in-out infinite alternate}
+#${ACE_ID}.adash-back .run .mc-breath{animation:adRoll .6s ease-in-out infinite alternate}
+@keyframes adSway{from{transform:rotateY(166deg) rotateZ(-3deg)}to{transform:rotateY(194deg) rotateZ(3deg)}}
+@keyframes adRoll{from{transform:rotate(-2deg)}to{transform:rotate(2deg)}}
+#${ACE_ID}.adash-back .duck .mc-card3d{transform:rotateY(180deg) rotateX(-18deg)}
 #pth-game .adash-chip{display:inline-block;width:.8em;height:.8em;border-radius:50%;background:#b3261e;vertical-align:-.05em;margin-right:.25em;
   box-shadow:inset 0 0 0 .14em #f5f0e3,inset 0 0 0 .24em #b3261e}
 #pth-game .ad-x{display:inline-block;margin-left:.3em;padding:0 .3em;border-radius:.5em;font-size:.72em;vertical-align:.15em;background:#d8b25a;color:#1d222b}
@@ -121,7 +126,8 @@ const CSS = `
 #pth-game .ar-num.ad-low{color:#ff8a80}
 #pth-game .ad-rec{display:block;opacity:.8;font-size:.82em;margin-top:.2em}
 #pth-game .ad-rebuy .pg-blink{margin-top:.6em}
-@media (prefers-reduced-motion:reduce){#${ACE_ID} .mc-card3d{transition:none}}
+@media (prefers-reduced-motion:reduce){#${ACE_ID} .mc-card3d{transition:none}#${ACE_ID}.adash-back .run .mc-card3d,#${ACE_ID}.adash-back .run .mc-breath{animation:none}}
+.reduce-fx #${ACE_ID}.adash-back .run .mc-card3d,.reduce-fx #${ACE_ID}.adash-back .run .mc-breath{animation:none}
 `;
 
 // The table: felt and rail (the theme), the floor beside it (the venue).
@@ -220,7 +226,7 @@ export function create(shell) {
     R = daily ? rng('ad-' + dayKey()) : Math.random;
     G = { t: 0, travel: 0, dist: 0, bonus: 0, chips: 0, chipPts: 0, streak: 1, grp: 0, grps: {}, level: 1, speed: SPEED0,
       lane: 1, x: 0, y: 0, vy: 0, onGround: true, dbl: false, flipAt: -1, duck: false, duckKey: false, duckUntil: 0, jumpBuf: 0, lean: 0,
-      allInUntil: 0, allInWarned: false, magnetUntil: 0, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
+      allInUntil: 0, allInWarned: false, magnetUntil: 0, lookAt: 0, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
       obj: [], items: [], fx: [], deck: deckWith(R), hand: [], ev: evalCards([]),
       spawnAt: 6, extra: 0, rows: 0, free: 1, nextCard: 2, nextPower: 14, nextRamp: 6, zig: false, overAt: 0,
       venue: 0, prevVenue: 0, venueT: 1, time: TIME_S, rebought: false, mode, day: dayKey() };
@@ -367,11 +373,13 @@ export function create(shell) {
   }
 
   // ── Input ─────────────────────────────────────────────────────────
-  const doJump = () => { G.vy = JUMP_V; G.onGround = false; G.dbl = false; G.duckUntil = 0; };
+  const doJump = () => { G.vy = JUMP_V; G.onGround = false; G.dbl = false; G.duckUntil = 0; ace.fx('jump'); };
+  /** He turns to us with a face for a moment (not too often). */
+  const look = (m, ms) => { if (state === 'run' && performance.now() > G.lookAt) { if (ace.look(m, ms || 850)) G.lookAt = performance.now() + (ms || 850) + 900; } };
   /** Jump again in the air: higher, with a backflip (once per jump). */
   function backflip(v) {
     G.vy = v || JUMP2_V; G.onGround = false; G.dbl = true; G.flipAt = G.t; G.duckUntil = 0;
-    sound('notifyRaise'); buzz(15);
+    ace.fx('jump'); sound('notifyRaise'); buzz(15);
   }
   /** The backflip's angle now (0 when none), eased in and out. */
   function flipAngle() {
@@ -442,7 +450,7 @@ export function create(shell) {
     if (lvl > G.level) {
       G.level = lvl;
       const v = venueAt(lvl);
-      if (v !== G.venue) { G.prevVenue = G.venue; G.venue = v; G.venueT = 0; G.banner = { s: t(VENUES[v]), sub: String(lvl), t: 0 }; }
+      if (v !== G.venue) { G.prevVenue = G.venue; G.venue = v; G.venueT = 0; G.banner = { s: t(VENUES[v]), sub: String(lvl), t: 0 }; look('mc-m-yay', 1000); }
       else G.banner = { s: t('arBlinds'), sub: String(lvl), t: 0 };
       sound('notifyBlindsUp'); buzz(30); renderStats();
     }
@@ -460,7 +468,7 @@ export function create(shell) {
     G.lean += (clamp(dx, -1, 1) - G.lean) * Math.min(1, dt * 14);
     if (!G.onGround) {
       G.vy -= GRAV * dt; G.y += G.vy * dt;
-      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
+      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; ace.fx('land'); if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
       else if (G.flipAt >= 0 && G.t - G.flipAt >= FLIP_S) G.flipAt = -1;
     }
     G.duck = (G.duckKey || now < G.duckUntil) && G.onGround;
@@ -488,9 +496,10 @@ export function create(shell) {
         // Over it in a backflip: Salto! (else a close call: skimmed it).
         if (o.flipOver) {
           G.bonus += SALTO_BONUS; const p = P(G.x, top + 0.35, PZ); textFx(t('adSalto') + ' +' + SALTO_BONUS, p[0], p[1], true, true);
-          sound('notifyCard');
+          sound('notifyCard'); look('mc-m-wink', 900);
         } else if (o.lat ? o.vclose : o.nearLat) {
           G.bonus += CLOSE_BONUS; const p = P(G.x, top + 0.25, PZ); textFx('+' + CLOSE_BONUS, p[0], p[1], true);
+          ace.fx('shiver');
         }
         continue;
       }
@@ -553,6 +562,7 @@ export function create(shell) {
     burst(p[0], p[1], 10, INS_COL);
     textFx('🛡️', p[0], p[1] - 24, false, true);
     sound('notifyFold'); buzz(50);
+    ace.fx('wobble'); G.lookAt = 0; look('mc-m-dizzy', 800);
   }
   /** Time attack: a crash costs TIME_HIT seconds and the streak, not the run. */
   function timeHit(o) {
@@ -561,6 +571,7 @@ export function create(shell) {
     burst(p[0], p[1], 10, ['#e8503f', '#f5f0e3']);
     textFx('−' + TIME_HIT + ' s', p[0], p[1] - 24, false, true);
     sound('notifyFold'); buzz([50, 30, 50]);
+    ace.fx('wobble'); G.lookAt = 0; look('mc-m-dizzy', 800);
   }
   function collect(it, now) {
     it.got = true;
@@ -577,7 +588,7 @@ export function create(shell) {
           if (G.streak < STREAK_MAX) {
             G.streak = streakUp(G.streak);
             textFx(t('adStreak') + ' ×' + G.streak, p[0], p[1] - 34, true);
-            sound('notifyRaise');
+            sound('notifyRaise'); ace.fx('hop'); look('mc-m-grin', 800);
           }
         }
       }
@@ -586,19 +597,19 @@ export function create(shell) {
     if (it.kind === 'allin') {
       G.allInUntil = now + ALLIN_MS; G.allInWarned = false;
       textFx('ALL-IN!', p[0], p[1] - 40, true, true); burst(p[0], p[1], 14, ['#f5c518', '#d8b25a', '#fff6cf']);
-      sound('notifyAllIn');
+      sound('notifyAllIn'); ace.fx('cheer'); G.lookAt = 0; look('mc-m-fierce', 900);
       return;
     }
     if (it.kind === 'ins') {
       G.ins = true; renderStats();
       textFx('🛡️', p[0], p[1] - 30, false); burst(p[0], p[1], 8, INS_COL);
-      sound('notifyCard'); buzz(20);
+      sound('notifyCard'); buzz(20); ace.fx('hop');
       return;
     }
     if (it.kind === 'magnet') {
       G.magnetUntil = now + MAGNET_MS; renderStats();
       textFx(t('adMagnet'), p[0], p[1] - 40, true, true); burst(p[0], p[1], 10, MAG_COL);
-      sound('notifyCard'); buzz(20);
+      sound('notifyCard'); buzz(20); ace.fx('hop'); G.lookAt = 0; look('mc-m-love', 900);
       return;
     }
     const prev = G.ev.cat;
@@ -609,7 +620,8 @@ export function create(shell) {
     if (G.ev.cat > prev && bonusOf(G.ev) > 0) {
       textFx(t(G.ev.nameKey) + ' +' + Math.round(bonusOf(G.ev) * 100) + '%', p[0], p[1] - 40, true);
       if (G.ev.cat >= 5) G.coolUntil = now + 1600;   // a flush or better: sunglasses
-    }
+      ace.fx('cheer'); G.lookAt = 0; look(G.ev.cat >= 5 ? 'mc-m-cool' : 'mc-m-yay', G.ev.cat >= 5 ? 1200 : 900);
+    } else ace.fx('hop');
   }
   function stepFx(dt) {
     for (const f of G.fx) {
@@ -650,6 +662,7 @@ export function create(shell) {
     state = 'run'; shell.panel(null);
     turnBack(true); ace.pose('run'); ace.mood('mc-m-fierce');
     sound('notifyAllIn'); renderStats();
+    ace.fx('cheer'); G.lookAt = 0; setTimeout(() => look('mc-m-fierce', 900), 120);
   }
   function timeUp() {
     state = 'over'; G.overAt = performance.now();

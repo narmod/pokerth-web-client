@@ -43,7 +43,12 @@ const CSS = `
 #${ACE_ID} .ko .mc-armL{transform:rotate(90deg)}#${ACE_ID} .ko .mc-armR{transform:rotate(-100deg)}
 #${ACE_ID} .mc-m-jump .mc-f-es,#${ACE_ID} .mc-m-jump .mc-f-mo,
 #${ACE_ID} .mc-m-yay .mc-f-eo,#${ACE_ID} .mc-m-yay .mc-f-mo,
-#${ACE_ID} .mc-m-ko .mc-f-ed,#${ACE_ID} .mc-m-ko .mc-f-mo{opacity:1}
+#${ACE_ID} .mc-m-ko .mc-f-ed,#${ACE_ID} .mc-m-ko .mc-f-mo,
+#${ACE_ID} .mc-m-wink .mc-f-ew,#${ACE_ID} .mc-m-wink .mc-f-ms,
+#${ACE_ID} .mc-m-grin .mc-f-ec,#${ACE_ID} .mc-m-grin .mc-f-mo,
+#${ACE_ID} .mc-m-dizzy .mc-f-ed,#${ACE_ID} .mc-m-dizzy .mc-f-mw,
+#${ACE_ID} .mc-m-love .mc-f-eh,#${ACE_ID} .mc-m-love .mc-f-ms,
+#${ACE_ID} .mc-m-scared .mc-f-es,#${ACE_ID} .mc-m-scared .mc-f-mu{opacity:1}
 #${ACE_ID} .ar-king{filter:drop-shadow(0 0 6px rgba(245,197,24,.85))}
 #${ACE_ID} .ar-king.ar-ending{animation:arEnd .2s steps(2,start) infinite}
 @keyframes arEnd{50%{filter:none}}
@@ -181,10 +186,50 @@ export function aceActor(layer) {
   layer.appendChild(root);
   const box = /** @type {HTMLElement} */ (root.firstElementChild);
   const pos = /** @type {HTMLElement} */ (box.firstElementChild);
-  let poseNow = 'idle', moodNow = 'mc-m-smile', king = false;
+  let poseNow = 'idle', moodNow = 'mc-m-smile', king = false, holdUntil = 0, wanted = 'mc-m-smile', lookAnim = null;
+  const setMood = (m) => { if (m !== moodNow) { pos.classList.remove(moodNow); pos.classList.add(m); moodNow = m; } };
+  const part = (c) => /** @type {HTMLElement|null} */ (pos.querySelector('.' + c));
+  const reduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('reduce-fx'); } catch (e) { return false; } };
+  /** A short body animation (Web Animations, over the poses' CSS). */
+  const play = (c, frames, ms, easing) => { const el = part(c); if (!el || reduced() || !el.animate) return null; try { return el.animate(frames, { duration: ms, easing: easing || 'ease-out' }); } catch (e) { return null; } };
   return {
     pose(p) { if (p !== poseNow) { pos.classList.remove(poseNow); pos.classList.add(p); poseNow = p; } },
-    mood(m) { if (m !== moodNow) { pos.classList.remove(moodNow); pos.classList.add(m); moodNow = m; } },
+    /** The face; held while a look() shows another one. */
+    mood(m) { wanted = m; if (performance.now() >= holdUntil) setMood(m); },
+    /**
+     * A bit of life (web.50, narmod « less stiff »): land (squash), jump
+     * (stretch), hop, shiver (a close shave), wobble (a knock), cheer (a
+     * little bounce of joy). Nothing with « reduce animations ».
+     */
+    fx(kind) {
+      if (kind === 'land') play('mc-squash', [{ transform: 'scale(1.22,.78)' }, { offset: 0.45, transform: 'scale(.94,1.07)' }, { transform: 'scale(1,1)' }], 300);
+      else if (kind === 'jump') play('mc-squash', [{ transform: 'scale(.86,1.16)' }, { transform: 'scale(1,1)' }], 260);
+      else if (kind === 'hop') play('mc-flip', [{ transform: 'translateY(0)' }, { offset: 0.4, transform: 'translateY(-9px)' }, { transform: 'translateY(0)' }], 260);
+      else if (kind === 'shiver') play('mc-flip', [{ transform: 'rotate(0)' }, { offset: 0.2, transform: 'rotate(-7deg)' }, { offset: 0.45, transform: 'rotate(6deg)' }, { offset: 0.7, transform: 'rotate(-3deg)' }, { transform: 'rotate(0)' }], 360);
+      else if (kind === 'wobble') play('mc-flip', [{ transform: 'rotate(0) translateX(0)' }, { offset: 0.15, transform: 'rotate(-14deg) translateX(-6px)' }, { offset: 0.35, transform: 'rotate(11deg) translateX(5px)' },
+        { offset: 0.55, transform: 'rotate(-7deg)' }, { offset: 0.75, transform: 'rotate(4deg)' }, { transform: 'rotate(0)' }], 620);
+      else if (kind === 'cheer') play('mc-flip', [{ transform: 'translateY(0) scale(1)' }, { offset: 0.3, transform: 'translateY(-12px) scale(1.06,.96)' }, { offset: 0.6, transform: 'translateY(0) scale(1.08,.9)' }, { transform: 'translateY(0) scale(1)' }], 420);
+    },
+    /**
+     * Turn round to show a face for `ms` (from his back: the card turns to us
+     * and back), then the face the game asks for again.
+     */
+    look(m, ms, fromDeg) {
+      const now = performance.now();
+      if (now < holdUntil) return false;
+      holdUntil = now + ms; setMood(m);
+      setTimeout(() => { if (performance.now() >= holdUntil) setMood(wanted); }, ms + 20);
+      const from = fromDeg == null ? 180 : fromDeg;
+      if (from && !reduced()) {
+        try { if (lookAnim) lookAnim.cancel(); } catch (e) {}
+        const el = part('mc-card3d');
+        if (el && el.animate) {
+          lookAnim = el.animate([{ transform: 'rotateY(' + from + 'deg)' }, { offset: 0.22, transform: 'rotateY(18deg)', easing: 'ease-in-out' },
+            { offset: 0.78, transform: 'rotateY(18deg)', easing: 'ease-in-out' }, { transform: 'rotateY(' + from + 'deg)' }], { duration: ms, easing: 'linear' });
+        }
+      }
+      return true;
+    },
     king(on, ending) {
       if (on !== king) {
         pos.classList.toggle('mc-hat-none', !on); pos.classList.toggle('mc-hat-crown', on);

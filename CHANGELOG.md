@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash — a livelier Ace** (`web.50`, narmod: « less stiff, faces for the events ») — `games/common.mjs`
+  `aceActor()` gains `fx(kind)` (Web Animations over the poses: `land` squash, `jump` stretch, `hop`, `shiver`,
+  `wobble`, `cheer`) and `look(mood, ms, fromDeg)` (the card turns from his back to us and back, the face held
+  meanwhile: `mood()` waits for it), plus the moods `wink`, `grin`, `dizzy`, `love`, `scared`; nothing with
+  « reduce animations ». Ace Dash: the card sways with the stride (`adSway`), the body rolls (`adRoll`), the card
+  tips forward when he ducks; looks on Salto, Streak, Magnet, All-In, a better hand, a knock, a new venue, a
+  rebuy (one at a time, `G.lookAt`).
 - **Ace Dash — the long run** (`web.49`, narmod: ideas 1–8 « all of them », after Ace Runner) — `games/ace-dash.mjs`:
   **venues** every `VENUE_LV` 5 levels (`venueAt()`): Ace Runner's `drawScenery()` scaled into the band above the
   horizon (`BG_GY`), the floor beside the table per venue (`FLOOR`), the haze (`HAZE` / sky dimmed to the floor),

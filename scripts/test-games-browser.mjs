@@ -518,6 +518,12 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     setTimeout(() => res({ dbl: G.dbl, y: G.y }), 350);
   }));
   ok(rampOk.dbl && rampOk.y > 0.8, label + ': a ramp launches him into a backflip (' + rampOk.y.toFixed(2) + ' m)');
+  // A magnet chip: he turns round to us, heart eyes, then runs on.
+  await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
+  await sleep(1000);
+  await pg.evaluate(() => { const G = window.__pthDash.run(); G.lookAt = 0; G.items.push({ kind: 'magnet', x: G.x, z: 4.3, y: 0.6, spin: 0, col: ['#000', '#fff'] }); });
+  await sleep(200);
+  ok(await pg.evaluate(() => document.querySelector('#pth-game-ace .mc-pos').classList.contains('mc-m-love')), label + ': a magnet: he looks back at us, heart eyes');
   // Busted with 25 chips or more: the rebuy, once; Space takes it.
   await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
   await pg.evaluate(() => { const G = window.__pthDash.run(); G.chips = 30; G.safeUntil = 0; G.ins = false; G.allInUntil = 0; G.obj = [{ kind: 'wall', x: G.x, z: 4.6, h: 1.6, hw: 0.66, dz: 0.3, tilt: 0 }]; });
