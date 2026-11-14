@@ -390,6 +390,29 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('ArrowUp');
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthHL.run().lives === 2 && window.__pthHL.run().pot === 10), label + ': a wrong guess loses the pot and a heart');
+  // The hand: four cards held, a pair comes — the showdown pays the pot × 1.2 and banks it.
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 5; G.hand = [2, 22, 37, 5]; G.pot = 100; G.potWins = 3; G.shoe = G.shoe.filter((c) => c !== 28); G.shoe.push(28); });
+  const sc0 = await pg.evaluate(() => window.__pthHL.run().score);
+  await pg.keyboard.press('ArrowDown');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'show', null, { timeout: 3000 }).catch(() => {});
+  const sd = await pg.evaluate(() => ({ st: window.__pthHL.state(), score: window.__pthHL.run().score, hand: window.__pthHL.run().hand.length, pot: window.__pthHL.run().pot, line: (window.__pthHL.run().show || {}).line || '' }));
+  const m12 = /×1\.2 +([\d\s\u202f\u00a0.,]+) → ([\d\s\u202f\u00a0.,]+)/.exec(sd.line), num = (x) => +String(x).replace(/\D/g, '');
+  ok(sd.st === 'show' && m12 && num(m12[2]) === Math.round(num(m12[1]) * 1.2) && sd.score - sc0 === num(m12[2]) && sd.hand === 1 && sd.pot === 10, label + ': five cards with a pair: the showdown, the pot × 1.2 banked (' + sd.line + ')');
+  await shot(pg, label + '-hl-showdown');
+  await pg.keyboard.press('Space'); await sleep(150);
+  // The tournament: All-In on a 3 with a K next doubles the stack; Fold costs the small blind.
+  await pg.evaluate(() => window.__pthHL.start('tourney'));
+  await sleep(200);
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 14; G.shoe = G.shoe.filter((c) => c !== 14 && c !== 37); G.shoe.push(37); });
+  await pg.keyboard.press('Digit3');
+  await pg.keyboard.press('ArrowUp');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
+  const tn = await pg.evaluate(() => ({ stack: window.__pthHL.run().stack, bet: window.__pthHL.run().bet, cards: window.__pthHL.run().cards, hud: document.querySelector('#pth-game .hl-shoe').textContent }));
+  ok(tn.stack === 2000 && tn.bet === 'bet' && tn.cards === 1 && /Blinds 10\/20/.test(tn.hud), label + ': tournament: All-In on a 3, a K comes: the stack doubles, back to Bet (' + tn.stack + ', ' + tn.hud + ')');
+  await shot(pg, label + '-hl-tourney');
+  await pg.keyboard.press('Digit4');
+  await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthHL.run().stack === 1990 && window.__pthHL.run().cards === 2), label + ': Fold: the small blind, the next card');
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──

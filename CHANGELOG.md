@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Higher or Lower — three poker modes** (`web.44`, narmod: « more like poker », A + B + C) —
+  `games/hilo.mjs` rewritten: `MODES` on the arcade's tiles (records: `pth_game_best_hilo` for « The hand »,
+  `pth_hl_best` {tourney, both}: best stack and level). **The hand**: a right guess or a push adds the card to
+  the hand; five cards → `showdown()`: pot × `HAND_X[cat]` (×1 … ×4) banked; cash out = pot × `handX()` so far.
+  **The tournament**: `STACK0` 1,000, `BLINDS` 12 levels × `BLIND_EVERY` 5 cards (`TOURNEY_CARDS` 60);
+  `betAmount()` Bet / Raise (half the stack, ≥ 2 BB) / All-In (keys 1 2 3), `settleBet()` even money (a push
+  gives the bet back) — with odds-based payouts every bet would be neutral, even money makes bet sizing matter;
+  Fold (key 4, new `n4` in `shell.mjs`) costs the small blind; score = the final stack, 0 when out. **Hand +
+  tournament**: the cards won build a hand, the showdown pays `HAND_BB[cat]` big blinds. Poker-table look: an
+  oval of felt in a wooden rail, the shoe in a wooden box with its count, chip stacks for the pot / the bet, the
+  hand in five places with its name, a showdown band. Trophy: 10 right guesses in a row. 12 keys + `hlHint` and
+  `hlRules` (8 lines) × 83. Tests: `test-games` (modes, hand ×, BB, bets, even money, levels),
+  `test-games-browser` (showdown, All-In, Fold).
 - **The secret word, an easter egg** (`web.40`) — `games/index.mjs` `tryLaunch()` no longer opens the mini-games
   page: it unlocks the mode with every game (`unlockAll`, counted `unlock_word`) and calls
   `ui/login-arcade.mjs` `secretWord(already)`: `loginBackToStep1()` (the header unfolds as from any mode), then

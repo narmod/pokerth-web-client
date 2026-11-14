@@ -77,6 +77,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJSwap', 'wwJAce', 'wwJSave', 'wwJSaveSay', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwTrap', 'wwTrapBoard', 'wwTrapCounterfeit', 'wwTrapWheel', 'wwTrapFlush', 'wwTrapKicker', 'wwTrapFive', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
+  'hlModeHand', 'hlModeHandD', 'hlModeTourney', 'hlModeTourneyD', 'hlModeBoth', 'hlModeBothD', 'hlStack', 'hlLevel', 'hlBust', 'hlDone', 'hlShowdown', 'hlHandHint',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
@@ -203,6 +204,19 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(o.hi === 28 && o.lo === 20 && o.eq === 3, 'Higher or Lower: from a 7, 28 higher, 20 lower, 3 pushes');
   ok(mult(o.hi, o.lo) === 1.65 && mult(o.lo, o.hi) === 2.3 && mult(0, 48) === 0 && mult(47, 1) === 1.05,
     'Higher or Lower: the long shot pays more (×' + mult(o.hi, o.lo) + ' / ×' + mult(o.lo, o.hi) + '), never less than ×1.05');
+  {
+    const HL = await import('../public/modules/games/hilo.mjs');
+    ok(HL.MODES.map((m) => m.id).join(',') === 'hand,tourney,both', 'Higher or Lower: three ways to play (the hand, the tournament, both)');
+    const pairH = [c(7, 0), c(7, 2)], straight = [c(5, 0), c(6, 1), c(7, 2), c(8, 3), c(9, 0)], royal = [c(10, 2), c(11, 2), c(12, 2), c(13, 2), c(14, 2)];
+    ok(HL.handX([c(7, 0)]) === 1 && HL.handX(pairH) === 1.2 && HL.handX(straight) === 1.9 && HL.handX(royal) === 4
+      && HL.HAND_X.every((x, i) => i === 0 || x > HL.HAND_X[i - 1]), 'Higher or Lower, the hand: the pot × the hand (×1 high card, ×1.2 a pair, ×1.9 a straight, ×4 a royal flush)');
+    ok(HL.HAND_BB[0] === 0 && HL.HAND_BB[1] === 2 && HL.HAND_BB[9] === 100 && HL.HAND_BB.every((x, i) => i === 0 || x > HL.HAND_BB[i - 1]), 'Hand + tournament: the showdown pays 2 big blinds (a pair) … 100 (a royal flush)');
+    ok(HL.betAmount('bet', 1000, 20) === 20 && HL.betAmount('raise', 1000, 20) === 500 && HL.betAmount('raise', 60, 50) === 60 && HL.betAmount('allin', 730, 20) === 730 && HL.betAmount('bet', 15, 20) === 15,
+      'the tournament: Bet = the big blind, Raise = half the stack (at least 2 big blinds), All-In = the stack, never more than the stack');
+    ok(HL.settleBet(1000, 200, 1) === 1200 && HL.settleBet(1000, 200, -1) === 800 && HL.settleBet(1000, 200, 0) === 1000, 'the tournament: even money, a push gives the bet back');
+    ok(HL.levelAt(0) === 0 && HL.levelAt(4) === 0 && HL.levelAt(5) === 1 && HL.levelAt(999) === HL.BLINDS.length - 1 && HL.TOURNEY_CARDS === 60
+      && HL.BLINDS.every((b, i) => b[1] === 2 * b[0] && (i === 0 || b[1] > HL.BLINDS[i - 1][1])), 'the tournament: 12 levels of 5 cards, the blinds go up');
+  }
   const { aceAction, tellFor, TELLS } = await import('../public/modules/games/bluff.mjs');
   const rb = rng('bluff-test');
   let bets = 0, bluffs = 0, checksAhead = 0, tellOnBluff = 0, tellOnBet = 0;

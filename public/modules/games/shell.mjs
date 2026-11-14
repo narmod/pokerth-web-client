@@ -347,8 +347,10 @@ export function run(def, gameMod, opts = {}) {
     const send = (a, down, info) => { if (!game || !rulesBox.hidden || (shell.paused && down)) return; try { game.input(a, down, info || {}); } catch (e) {} };
     const KEYS = { Space: 'jump', ArrowUp: 'jump', KeyW: 'jump', ArrowDown: 'duck', KeyS: 'duck',
       ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', Enter: 'jump', NumpadEnter: 'jump',
-      // 1 2 3: a game's own choices (Who Wins?'s jokers); ignored by the others.
-      Digit1: 'n1', Digit2: 'n2', Digit3: 'n3', Numpad1: 'n1', Numpad2: 'n2', Numpad3: 'n3' };
+      // 1 2 3: a game's own choices (Who Wins?'s jokers, Higher or Lower's bets); ignored by the others.
+      Digit1: 'n1', Digit2: 'n2', Digit3: 'n3', Numpad1: 'n1', Numpad2: 'n2', Numpad3: 'n3',
+      // 4: Higher or Lower's Fold (web.44).
+      Digit4: 'n4', Numpad4: 'n4' };
     function onKey(e) {
       if (closed || !screen.classList.contains('active')) return;
       // A window opened from the header (options, trophies…) or a field: its keys.
