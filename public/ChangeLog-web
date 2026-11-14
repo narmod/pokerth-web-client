@@ -1,4 +1,7 @@
-2026-11-14 version 2.1.11-web.47 (current series):
+2026-11-14 version 2.1.11-web.48 (current series):
+- bugfix: iPad home-screen app — the top bar no longer looks blurred, as if behind fog; the page titles, the table name and « Waiting for players » line up with the icons again
+
+2026-11-14 version 2.1.11-web.47:
 - improvement: Ace Dash — seen from behind, the Ace now runs the right way: his feet kick up one after the other instead of swinging sideways
 - new: Ace Dash — jump again in the air for a backflip: a much higher jump that clears a card wall, the dealer button or a flying card
 

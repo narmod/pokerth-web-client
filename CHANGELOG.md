@@ -269,6 +269,14 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **iPad home-screen app — blurred header** (`web.48`, narmod) — iPadOS 26 draws its scroll-edge effect over the
+  top of the web view and only replaces the blur by a plain colour when a fixed/sticky element touches the top
+  edge (WebKit `fixedContainerEdges`). The headers are in normal flow, so the bar looked fogged. New
+  `#pth-top-tint` (`pokerth-client.html` + `pokerth.css`, `data-pwa-iphone` only): fixed, full width, the
+  header's opaque `--panel`, `max(5px, safe-area-inset-top)` high, `pointer-events:none`, z-index 21. The
+  centred `.cp-title` (create / privacy / arcade) now centres on the content box in standalone (it took the
+  inset into account and sat in the status bar); same for the table name on wide screens and the lobby
+  « Waiting for players » status.
 - **Mini-games already played stay open** (`web.28`) — before the mode (`web.21`) the secret word opened every game
   and kept nothing on the device, so those players fell back to the trophy thresholds and lost games they played.
   `games/index.mjs`: `playedGames(owned)` — a game's own secret trophy (`GAME_TROPHY`) or a best score above 0 — and

@@ -591,6 +591,28 @@ body {
 }
 :root[data-pwa-iphone="1"] #s-game.urgent::after { bottom: auto; height: var(--app-h, 100dvh); }
 :root[data-pwa-iphone="1"] .lob-scrim { bottom: auto; height: var(--app-h, 100dvh); }
+/* Header « fog » in the iPad home-screen app (narmod 2026-11-14). iOS/iPadOS 26
+   lays a system scroll-edge effect over the top of the web view (a blur under
+   the status bar and the window controls; the "hard" style on iPad). WebKit
+   only turns it into a plain colour when an element with position:fixed or
+   sticky sits at the top edge: it reads that element's colour
+   (LocalFrameView::fixedContainerEdges, hit test at the top centre, 4 px down).
+   Our headers are in normal flow, so iPadOS blurred the header itself — the
+   title and the icons looked faded. This strip is that fixed element: the
+   header's own colour (opaque), full width, over the header's top padding
+   only (the status-bar inset, at least 5 px to cover the sample point), never
+   tappable. Below the overlays (about 120, modals 1200+), above the headers
+   (connect 20); an open header menu (391) passes over it, as before. */
+#pth-top-tint { display: none; }
+:root[data-pwa-iphone="1"] #pth-top-tint {
+  display: block;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: max(5px, env(safe-area-inset-top, 0px));
+  z-index: 21;
+  pointer-events: none;
+  background: var(--panel);
+  background: rgb(from var(--panel) r g b);
+}
 @media (max-width: 899.98px) {
   /* lobby drawers and their scrim start under the header (--ovl-top) */
   :root[data-pwa-iphone="1"] #s-lobby .lobby-grid > #players-panel,
@@ -7638,6 +7660,17 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
     padding-top: max(4px, env(safe-area-inset-top)) !important;
     padding-left: max(8px, env(safe-area-inset-left)) !important;
     padding-right: max(8px, env(safe-area-inset-right)) !important;
+  }
+  /* Every label centred in absolute (top:50%) in these bars — the page
+     titles, the table name (wide screens), the lobby « Waiting for players »
+     — took the whole bar, inset included, and sat half in the status bar,
+     above the icons (iPad, 2026-11-14). Centre them on the content box:
+     50% + (padding-top - padding-bottom) / 2, with the 4 px base bottom. */
+  #s-create .cp-title,
+  #privacy-page .cp-title, #s-arcade .cp-title,
+  #s-game .header-brand--game,
+  #s-lobby .lobby-wait-status {
+    top: calc(50% + (max(4px, env(safe-area-inset-top)) - 4px) / 2);
   }
 }
 
