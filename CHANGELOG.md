@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Video Poker — a slot machine** (`web.46`, narmod: « more like a slot machine », cabinet B, ideas 1 2 6 8) —
+  `games/videopoker.mjs` redrawn as a burgundy cabinet (marquee, chasing `bulbs()`, LED meters on wide screens),
+  a green screen, the pay table (phone: two columns; wide: five bet columns, the current bet lit) and five reels
+  (`spin()`: staggered stops with clicks, a bounce, the red pay line; reduced motion = quick). Panel buttons:
+  HOLD ×5, BET ONE (1→5), BET MAX (5 and deal), Cash out, Deal / Draw / Collect. Rules moved to the new
+  `games/videopoker-rules.mjs`: `VARIANTS` jacks (9/6), bonus (8/5, four aces 80), deuces (2s wild), joker
+  (53 cards, `JOKER` 52 wild, kings or better); `facts()` counts wild cards, `payOf()` = per credit × bet with
+  a natural royal 4,000 at 5 credits. Endless session from 100 credits (no hand limit); the meter counts up
+  (`G.shown`). Records per machine: `pth_vp_best` (free) and `pth_vp_daily` (daily seed
+  `vp-<day>-<variant>-<hand>`). Test hook `__pthVP` unchanged; `PAY` / `payRow` kept for Jacks or Better.
 - **Higher or Lower — three poker modes** (`web.44`, narmod: « more like poker », A + B + C) —
   `games/hilo.mjs` rewritten: `MODES` on the arcade's tiles (records: `pth_game_best_hilo` for « The hand »,
   `pth_hl_best` {tourney, both}: best stack and level). **The hand**: a right guess or a push adds the card to

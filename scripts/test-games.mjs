@@ -74,7 +74,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'gmPick', 'ach_house', 'ach_house_d',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
-  'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
+  'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'vpVarJacks', 'vpVarBonus', 'vpVarDeuces', 'vpVarJoker', 'vpVarJacksD', 'vpVarBonusD', 'vpVarDeucesD', 'vpVarJokerD', 'vpKings', 'vpFiveKind', 'vpWildRoyal', 'vpFourDeuces', 'vpFourAces', 'vpFour2to4', 'vpFour5toK', 'vpCashOut', 'ach_videopoker', 'ach_videopoker_d',
   'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJSwap', 'wwJAce', 'wwJSave', 'wwJSaveSay', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwTrap', 'wwTrapBoard', 'wwTrapCounterfeit', 'wwTrapWheel', 'wwTrapFlush', 'wwTrapKicker', 'wwTrapFive', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'hlModeHand', 'hlModeHandD', 'hlModeTourney', 'hlModeTourneyD', 'hlModeBoth', 'hlModeBothD', 'hlStack', 'hlLevel', 'hlBust', 'hlDone', 'hlShowdown', 'hlHandHint',
@@ -139,7 +139,34 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(typeof rng('x')() === 'number', 'rng gives numbers');
   ok(payRow([c(11, 0), c(11, 1), c(4, 2), c(7, 3), c(9, 0)]) === PAY.length - 1 && payRow([c(10, 0), c(10, 1), c(4, 2), c(7, 3), c(9, 0)]) === -1,
     'Video Poker: a pair of jacks pays, a pair of tens does not');
-  ok(PAY[payRow([c(10, 2), c(11, 2), c(12, 2), c(13, 2), c(14, 2)])][1] === 800, 'Video Poker: the royal flush pays 800 per credit');
+  ok(PAY[payRow([c(10, 2), c(11, 2), c(12, 2), c(13, 2), c(14, 2)])][1] === 250, 'Video Poker: the royal flush pays 250 per credit');
+  {
+    const R = await import('../public/modules/games/videopoker-rules.mjs');
+    const { JOKER } = await import('../public/modules/games/poker-hand.mjs');
+    const V = (id) => R.variantOf(id), row = (cards, id) => { const v = V(id), i = R.rowOf(cards, v); return i < 0 ? '' : v.rows[i][0]; };
+    const royal = [c(10, 2), c(11, 2), c(12, 2), c(13, 2), c(14, 2)];
+    const ji = R.rowOf(royal, V('jacks'));
+    ok(R.payOf(V('jacks'), ji, 5) === R.ROYAL_MAX && R.payOf(V('jacks'), ji, 4) === 1000 && R.payOf(V('jacks'), ji, 1) === 250,
+      'Video Poker: a royal flush pays 250 a credit, and 4,000 at the max bet');
+    const fullJ = [c(9, 0), c(9, 1), c(9, 2), c(4, 0), c(4, 1)], v = V('jacks');
+    ok(R.payOf(v, R.rowOf(fullJ, v), 3) === 27, 'Video Poker: other hands pay per credit (full house 9 × 3)');
+    ok(row([c(14, 0), c(14, 1), c(14, 2), c(14, 3), c(5, 0)], 'bonus') !== row([c(9, 0), c(9, 1), c(9, 2), c(9, 3), c(5, 0)], 'bonus')
+      && V('bonus').rows[R.rowOf([c(14, 0), c(14, 1), c(14, 2), c(14, 3), c(5, 0)], V('bonus'))][2] === 80, 'Bonus Poker: four aces pay 80');
+    ok(R.rowOf([c(2, 0), c(2, 1), c(2, 2), c(2, 3), c(9, 0)], V('deuces')) >= 0 && V('deuces').rows[R.rowOf([c(2, 0), c(2, 1), c(2, 2), c(2, 3), c(9, 0)], V('deuces'))][2] === 200,
+      'Deuces Wild: four deuces pay 200');
+    ok(R.rowOf([c(11, 0), c(11, 1), c(4, 2), c(7, 3), c(9, 0)], V('deuces')) === -1 && R.rowOf([c(11, 0), c(11, 1), c(2, 2), c(7, 3), c(9, 0)], V('deuces')) >= 0,
+      'Deuces Wild: a pair does not pay, a deuce makes it three of a kind');
+    const wr = R.rowOf([c(2, 0), c(11, 2), c(12, 2), c(13, 2), c(14, 2)], V('deuces'));
+    ok(wr >= 0 && V('deuces').rows[wr][2] === 25, 'Deuces Wild: a wild royal flush pays 25');
+    ok(R.rowOf([c(13, 0), c(13, 1), c(4, 2), c(7, 3), c(9, 0)], V('joker')) >= 0 && R.rowOf([c(12, 0), c(12, 1), c(4, 2), c(7, 3), c(9, 0)], V('joker')) === -1,
+      'Joker Poker: kings or better pay, queens do not');
+    const five = R.rowOf([c(8, 0), c(8, 1), c(8, 2), c(8, 3), JOKER], V('joker'));
+    ok(five >= 0 && V('joker').rows[five][2] === 200, 'Joker Poker: four eights and the joker are five of a kind (200)');
+    const dj = R.deckOf(V('joker'), 'vp-test-1'), dj2 = R.deckOf(V('joker'), 'vp-test-1'), dd = R.deckOf(V('deuces'), 'vp-test-1');
+    ok(dj.length === 53 && new Set(dj).size === 53 && dj.includes(JOKER) && dj.join() === dj2.join() && dd.length === 52 && !dd.includes(JOKER),
+      'Joker Poker deals 53 cards (the joker in), the others 52; same seed, same deck');
+    ok(R.VARIANTS.length === 4 && R.MAX_BET === 5, 'four machines, bet 1 to 5');
+  }
   // Who Wins?: every deal is nine different cards and its answer is the real one.
   const { makeDeal } = await import('../public/modules/games/whowins.mjs');
   const r = rng('who-wins-test');

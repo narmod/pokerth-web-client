@@ -190,10 +190,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'videopoker');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Vidéo Poker', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'videopoker' && document.getElementById('ar-title').textContent === 'Vidéo Poker'), label + ': its card then Space opens Video Poker');
+  const vpt = await pg.evaluate(() => ({ chips: document.querySelectorAll('#pth-game .vp-chip').length, tiles: document.querySelectorAll('#pth-game .vp-tiles > *').length }));
+  ok(vpt.chips === 2 && vpt.tiles === 4, label + ': the title offers daily / free and the four machines (' + vpt.chips + ', ' + vpt.tiles + ')');
+  await shot(pg, label + '-vp-title');
   await pg.keyboard.press('Space');
-  await sleep(400);
-  const vp0 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: document.querySelector('#pth-game .vp-cr').textContent, h: document.querySelector('#pth-game .vp-h').textContent }));
-  ok(vp0.st === 'hold' && vp0.cr === '95' && vp0.h === '1/20', label + ': a hand is dealt for 5 credits (' + vp0.cr + ', ' + vp0.h + ')');
+  await pg.waitForFunction(() => window.__pthVP.state() === 'hold', null, { timeout: 4000 }).catch(() => {});
+  const vp0 = await pg.evaluate(() => ({ st: window.__pthVP.state(), v: window.__pthVP.run().v.id, bet: window.__pthVP.run().bet, cr: document.querySelector('#pth-game .vp-cr').textContent, h: document.querySelector('#pth-game .vp-h').textContent }));
+  ok(vp0.st === 'hold' && vp0.v === 'jacks' && vp0.bet === 5 && vp0.cr === '95' && vp0.h === '1', label + ': the reels stop, a hand is dealt at the max bet (' + vp0.v + ', ' + vp0.cr + ', ' + vp0.h + ')');
   await shot(pg, label + '-vp-hold');
   await pg.keyboard.press('Space');                // holds the first card
   await sleep(150);
@@ -202,7 +205,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('ArrowDown');
   await pg.waitForFunction(() => window.__pthVP.state() === 'win', null, { timeout: 4000 }).catch(() => {});
   const vp1 = await pg.evaluate(() => ({ st: window.__pthVP.state(), win: window.__pthVP.run().win }));
-  ok(vp1.st === 'win' && vp1.win === 5, label + ': Jacks or Better pays 5 (' + vp1.st + ', ' + vp1.win + ')');
+  ok(vp1.st === 'win' && vp1.win === 5, label + ': Jacks or Better pays 1 a credit, 5 at 5 credits (' + vp1.st + ', ' + vp1.win + ')');
   await shot(pg, label + '-vp-win');
   await pg.keyboard.press('ArrowUp');
   await sleep(300);
@@ -215,7 +218,21 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   if (vp2.st === 'win') { await pg.keyboard.press('ArrowDown'); await sleep(300); }
   const vp3 = await pg.evaluate(() => ({ st: window.__pthVP.state(), cr: +document.querySelector('#pth-game .vp-cr').textContent }));
   ok(vp3.st === 'ready' && vp3.cr === 95 + (vp2.st === 'win' ? vp2.win : 0), label + ': collected, ready for the next hand (' + vp3.cr + ')');
-  await pg.keyboard.press('Escape'); await sleep(200);
+  await pg.waitForFunction(() => { const G = window.__pthVP.run(); return G.shown === G.credits; }, null, { timeout: 5000 }).catch(() => {});
+  ok(await pg.evaluate(() => { const G = window.__pthVP.run(); return G.shown === G.credits; }), label + ': the credit meter counts up to the new total');
+  await pg.keyboard.press('ArrowUp'); await sleep(100);
+  ok(await pg.evaluate(() => window.__pthVP.run().bet === 1), label + ': BET ONE (↑) cycles the bet back to 1');
+  await pg.keyboard.press('ArrowDown');
+  await pg.waitForFunction(() => window.__pthVP.state() === 'hold', null, { timeout: 4000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthVP.state() === 'hold' && window.__pthVP.run().hand === 2 && window.__pthVP.run().credits === +document.querySelector('#pth-game .vp-cr').textContent), label + ': no hand limit: a second hand for 1 credit');
+  await pg.evaluate(() => { const G = window.__pthVP.run(); G.cards = [0, 14, 4, 20, 34]; G.held = [true, true, true, true, true]; });   // nothing
+  await pg.keyboard.press('ArrowDown');
+  await pg.waitForFunction(() => window.__pthVP.state() === 'ready', null, { timeout: 4000 }).catch(() => {});
+  await pg.evaluate(() => { window.__pthVP.run().focus = 'cash'; });
+  await pg.keyboard.press('Space');
+  await sleep(300);
+  ok(await pg.evaluate(() => window.__pthVP.state() === 'over'), label + ': Cash out ends the session, the credits are the score');
+  await shot(pg, label + '-vp-over');
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Who Wins?: the right hand scores, a wrong one costs a heart ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
@@ -375,7 +392,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Space');
   await sleep(300);
   // A 7♦ face up, a K♠ next: ↑ wins.
-  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 5; G.shoe = G.shoe.filter((c) => c !== 5 && c !== 37); G.shoe.push(37); });
+  await pg.evaluate(() => { const G = window.__pthHL.run(); G.cur = 5; G.hand = [5]; G.shoe = G.shoe.filter((c) => c !== 5 && c !== 37); G.shoe.push(37); });
   await shot(pg, label + '-hl-guess');
   await pg.keyboard.press('ArrowUp');
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});

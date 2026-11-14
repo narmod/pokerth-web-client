@@ -1,156 +1,174 @@
 // @ts-check
 // ═══════════════════════════════════════════════════════════════════
-// Video Poker (Jacks or Better) — hidden mini-game (web extension, narmod
-// 2026-10-16), in the arcade behind the training nickname « mascot ».
+// Video Poker — hidden mini-game (web extension, narmod 2026-10-16), in the
+// arcade behind the training nickname « mascot ». Since web.46 (narmod
+// 2026-11-14: « more like a slot machine »), a slot machine: a burgundy
+// cabinet with chasing bulbs, a golden marquee with LED counters, a green
+// screen where the five cards turn on reels, and the panel's buttons.
 //
-// The casino classic: five cards, keep (HOLD) the ones you want, draw the
-// others once, paid by the hand (PAY, per credit; the bet is always BET).
-// A session is HANDS hands from START credits (it ends sooner when the
-// credits no longer cover the bet); the score is the credits left.
-//   Daily challenge  every hand dealt from a deck seeded by the (UTC) day and
-//                    the hand number (deal.mjs): the same deals for everyone
-//   Free game        fresh shuffles
-//   Double or nothing  after a win, against the Ace: he turns a card, you pick
-//                    one of four face down — higher doubles the win, equal
-//                    keeps it, lower loses it; up to MAX_DOUBLE times
-// Keys: ←/→ card, Space hold, ↓ draw / deal; after a win ←/→ and Space pick
-// « Double » or « Collect » (↑ doubles, ↓ collects). A tap does the same.
+// Five cards, keep (HOLD) the ones you want, draw the others once, paid by
+// the hand on the variant's pay table (videopoker-rules.mjs: Jacks or
+// Better, Bonus Poker, Deuces Wild, Joker Poker).
+//   Bet          1 to 5 credits a hand: BET ONE adds one (5 → 1), BET MAX
+//                bets 5 and deals; a natural royal flush pays 4,000 at 5.
+//   Session      START credits, no limit of hands: play until the credits
+//                run out or « Cash out »; the score is the credits then.
+//   Daily        every hand dealt from a deck seeded by the (UTC) day, the
+//                variant and the hand number (the same deals for everyone).
+//   Double       after a win, against the Ace: he turns a card, you pick one
+//                of four face down — higher doubles the win, equal keeps it,
+//                lower loses it; up to MAX_DOUBLE times.
+// The reels spin and stop one by one (a click each); a held reel is locked;
+// the credits count up when you collect; the bulbs race on a win.
+// Keys: ←/→ card (or button), Space hold, ↓ draw / deal, ↑ bet one (between
+// hands) or double (after a win). Taps on the reels and the buttons.
 // Secret trophy « Video Poker »: three doubles won in a row.
 // ═══════════════════════════════════════════════════════════════════
 
-import { evalCards, rankOf } from './poker-hand.mjs';
+import { rankOf } from './poker-hand.mjs';
 import { deckFor } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
-import { felt, drawBackCard, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { drawBackCard, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { VARIANTS, variantOf, rowOf, payOf, madeBy, deckOf, MAX_BET } from './videopoker-rules.mjs';
 
-export const BET = 5, START = 100, HANDS = 20, MAX_DOUBLE = 5, TROPHY_DOUBLES = 3;
-// Paytable per credit, best first: [label key, pays, test(eval)].
-export const PAY = [
-  ['oddsRoyal', 800, (e) => e.cat === 9],
-  ['oddsSF', 50, (e) => e.cat === 8],
-  ['oddsQuads', 25, (e) => e.cat === 7],
-  ['oddsFull', 9, (e) => e.cat === 6],
-  ['oddsFlush', 6, (e) => e.cat === 5],
-  ['oddsStraight', 4, (e) => e.cat === 4],
-  ['oddsTrips', 3, (e) => e.cat === 3],
-  ['oddsTwoPair', 2, (e) => e.cat === 2],
-  ['vpJacks', 1, (e) => e.cat === 1 && rankOf(e.best[0]) >= 11],
-];
-/** Row of the paytable a five-card hand pays (-1: nothing). */
-export function payRow(cards) {
-  const e = evalCards(cards);
-  for (let i = 0; i < PAY.length; i++) if (PAY[i][2](e)) return i;
-  return -1;
-}
+export const START = 100, MAX_DOUBLE = 5, TROPHY_DOUBLES = 3;
+export { VARIANTS, MAX_BET };
+const JACKS = VARIANTS[0];
+// The old pay table (Jacks or Better), kept for its tests: [label key, per credit, test(eval)].
+export const PAY = JACKS.rows.map((r) => [r[1], r[2]]);
+/** Row of the Jacks or Better pay table five cards pay (-1: nothing). */
+export const payRow = (cards) => rowOf(cards, JACKS);
+
+// Best scores: free game per variant; daily per day and variant.
+const BEST_KEY = 'pth_vp_best', DAILY_KEY = 'pth_vp_daily';
+const load = (k) => { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
 export function create(shell) {
   const { t, esc, sound } = shell;
   const img = imageCache();
   const ace = aceActor(shell.layer);
-  const btns = buttons();
   shell.touchPad(false);
   shell.hud.classList.add('on-felt');
-  shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('vpCredits')) + '</div><div class="ar-num vp-cr">0</div></div>'
-    + '<div><div class="ar-lab">' + esc(t('vpHands')) + '</div><div class="ar-num vp-h">0/' + HANDS + '</div></div></div>'
-    + '<div class="ar-hand"><div class="ar-name vp-mode"></div></div>';
+  // The machine shows its own counters; the HUD keeps them for the tests, hidden.
+  shell.hud.innerHTML = '<div class="vp-hud" hidden><span class="vp-cr">0</span><span class="vp-h">0</span><span class="vp-mode"></span></div>';
   const hCr = /** @type {HTMLElement} */ (shell.hud.querySelector('.vp-cr'));
   const hH = /** @type {HTMLElement} */ (shell.hud.querySelector('.vp-h'));
   const hMode = /** @type {HTMLElement} */ (shell.hud.querySelector('.vp-mode'));
   ensureBoxCss();
 
-  const dailyKey = 'pth_game_daily_videopoker';
-  const dailyBest = (day) => { try { const v = JSON.parse(localStorage.getItem(dailyKey) || 'null'); return v && v.d === day ? v.s : 0; } catch (e) { return 0; } };
-  const setDailyBest = (day, s) => { try { localStorage.setItem(dailyKey, JSON.stringify({ d: day, s })); } catch (e) {} };
-
-  let state = 'title', mode = 0, G = null, time = 0, timer = 0;
-  function newGame(daily) {
-    G = { daily, day: dayKey(), credits: START, hand: 0, deck: [], cards: [], held: [false, false, false, false, false], flip: [0, 0, 0, 0, 0],
-      cursor: 0, win: 0, row: -1, msg: '', focus: 'collect', dbl: null, chain: 0, bestRow: -1, bestCards: null, fx: [], say: null,
-      yayUntil: 0, koUntil: 0 };
+  let state = 'title', daily = true, vi = 0, G = null, time = 0, timer = 0;
+  const V = () => VARIANTS[vi];
+  const tone = (f, d, v) => { try { if (typeof window.playTone === 'function') window.playTone(f, d, v); } catch (e) {} };
+  function newGame() {
+    G = { daily, day: dayKey(), v: V(), credits: START, shown: START, bet: MAX_BET, hand: 0, deck: [], cards: [], held: [false, false, false, false, false],
+      stopAt: [0, 0, 0, 0, 0], clicked: [true, true, true, true, true], spinFrom: 0,
+      cursor: 0, focus: 'deal', win: 0, row: -1, msg: '', dbl: null, chain: 0, bestRow: -1, bestCards: null, peak: START,
+      fx: [], winAt: -9, yayUntil: 0, koUntil: 0, tickAt: 0 };
     renderHud();
   }
   function renderHud() {
-    hCr.textContent = fmt(G.credits);
-    hH.textContent = G.hand + '/' + HANDS;
-    hMode.textContent = G.daily ? t('psDaily') + ' · ' + G.day : t('psFree');
+    hCr.textContent = String(G.credits);
+    hH.textContent = String(G.hand);
+    hMode.textContent = (G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · ' + t(G.v.key);
   }
-  const say = (s, life = 2.4) => { G.say = { s, t: 0, life }; };
 
   function titlePanel() {
-    const day = dayKey(), db = dailyBest(day), fb = shell.best.get();
-    const tile = (i, icon, name, sub) => '<button type="button" class="gm-tile' + (i === mode ? ' on' : '') + '" data-i="' + i + '"><i>' + icon + '</i><b>'
-      + esc(name) + '</b><small>' + sub + '</small></button>';
-    shell.panel('<h2>' + esc(t('vpName')) + '</h2><p>' + esc(t('vpHint')) + '</p><div class="gm-tiles">'
-      + tile(0, '📅', t('psDaily'), esc(day) + (db ? ' · ' + esc(fmt(db)) : ''))
-      + tile(1, '🎰', t('psFree'), fb ? esc(t('arRecord', { n: fmt(fb) })) : '&nbsp;')
-      + '</div>');
+    const day = dayKey(), best = load(BEST_KEY), dl = load(DAILY_KEY);
+    const rec = (v) => {
+      const b = daily ? (dl.d === day && dl.v ? dl.v[v.id] || 0 : 0) : best[v.id] || 0;
+      return b ? esc(t('arRecord', { n: fmt(b) })) : '&nbsp;';
+    };
+    const tile = (v, i) => '<button type="button" class="gm-tile' + (i === vi ? ' on' : '') + '" data-i="' + i + '"><i>' + ['🃏', '💰', '2️⃣', '🤡'][i] + '</i><b>'
+      + esc(t(v.key)) + '</b><small>' + esc(t(v.desc)) + '</small><small class="vp-rec">' + rec(v) + '</small></button>';
+    const chip = (d, icon, name) => '<button type="button" class="vp-chip' + (daily === d ? ' on' : '') + '" data-d="' + (d ? 1 : 0) + '">' + icon + ' ' + esc(name) + '</button>';
+    shell.panel('<h2>' + esc(t('vpName')) + '</h2><p>' + esc(t('vpHint')) + '</p>'
+      + '<div class="vp-chips">' + chip(true, '📅', t('psDaily') + ' · ' + day) + chip(false, '🎰', t('psFree')) + '</div>'
+      + '<div class="gm-tiles vp-tiles">' + VARIANTS.map(tile).join('') + '</div>');
     shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
       b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { mode = +(b.getAttribute('data-i') || 0); start(); });
+      b.addEventListener('click', () => { vi = +(b.getAttribute('data-i') || 0); start(); });
+    });
+    shell.root.querySelectorAll('.pg-panel .vp-chip').forEach((b) => {
+      b.addEventListener('pointerdown', (e) => e.stopPropagation());
+      b.addEventListener('click', () => { daily = b.getAttribute('data-d') === '1'; titlePanel(); });
     });
   }
-  newGame(true);
+  newGame();
   titlePanel();
   // Browser tests only (navigator.webdriver): reach the game state.
-  try { if (navigator.webdriver) window.__pthVP = { run: () => G, state: () => state }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthVP = { run: () => G, state: () => state, layout: () => L() }; } catch (e) {}
 
   function start() {
     clearTimeout(timer);
-    newGame(mode === 0);
+    newGame();
     state = 'ready'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile'); ace.king(false);
     deal();
   }
 
+  // ── The reels ─────────────────────────────────────────────────────
+  const spinning = (i) => time < G.stopAt[i];
+  function spin(list, then) {
+    const quick = shell.reduced, base = time + (quick ? 0.05 : 0.38);
+    G.spinFrom = time;
+    list.forEach((i, k) => { G.stopAt[i] = base + (quick ? 0 : 0.15 * k); G.clicked[i] = false; });
+    const last = Math.max(...list.map((i) => G.stopAt[i]), time);
+    if (list.length) sound('notifyCard');
+    clearTimeout(timer);
+    timer = setTimeout(then, Math.max(0, last - time) * 1000 + 160);
+  }
+
   // ── A hand ────────────────────────────────────────────────────────
+  function bettable() { return Math.min(G.bet, G.credits); }
   function deal() {
-    if (G.hand >= HANDS || G.credits < BET) { finish(); return; }
+    if (state !== 'ready') return;
+    if (G.credits < 1) { finish(); return; }
+    G.bet = bettable();
     G.hand++;
-    G.credits -= BET;
-    G.deck = deckFor(G.daily ? 'vp-' + G.day + '-' + G.hand : null);
+    G.credits -= G.bet; G.shown = G.credits;
+    G.deck = deckOf(G.v, G.daily ? 'vp-' + G.day + '-' + G.v.id + '-' + G.hand : null);
     G.cards = G.deck.splice(0, 5);
     G.held = [false, false, false, false, false];
-    G.flip = [0, 1, 2, 3, 4].map((i) => time + 0.08 * i);
-    G.row = -1; G.win = 0; G.msg = ''; G.cursor = 0; G.chain = 0;
-    state = 'hold';
-    sound('notifyCard');
+    G.row = -1; G.win = 0; G.msg = ''; G.cursor = 0; G.chain = 0; G.dbl = null;
+    state = 'spin';
     renderHud();
+    spin([0, 1, 2, 3, 4], () => { if (state === 'spin') { state = 'hold'; G.focus = 'draw'; } });
   }
   function toggle(i) {
     if (state !== 'hold') return;
     G.held[i] = !G.held[i]; G.cursor = i;
-    sound('notifyAction');
+    tone(G.held[i] ? 880 : 660, 0.05, 0.05);
   }
   function drawCards() {
     if (state !== 'hold') return;
-    let k = 0;
-    for (let i = 0; i < 5; i++) if (!G.held[i]) { G.cards[i] = G.deck.shift(); G.flip[i] = time + 0.08 * k++; }
-    if (k) sound('notifyCard');
-    G.row = payRow(G.cards);
+    const list = [];
+    for (let i = 0; i < 5; i++) if (!G.held[i]) { G.cards[i] = G.deck.shift(); list.push(i); }
+    state = 'draw';
+    spin(list, settle);
+  }
+  function settle() {
+    if (state !== 'draw') return;
+    G.row = rowOf(G.cards, G.v);
     if (G.row >= 0 && (G.bestRow < 0 || G.row < G.bestRow)) { G.bestRow = G.row; G.bestCards = G.cards.slice(); }
-    G.win = G.row >= 0 ? PAY[G.row][1] * BET : 0;
-    const settle = 0.08 * k + 0.25;
-    state = 'show';
-    timer = setTimeout(() => {
-      if (state !== 'show') return;
-      if (G.win) {
-        G.msg = t(PAY[G.row][0] === 'vpJacks' ? 'vpJacks' : evalCards(G.cards).nameKey);
-        G.fx.push({ s: '+' + fmt(G.win), x: L().cardsX, y: L().cardsY - L().ch / 2 - 14, t: 0, life: 1.3, gold: true, big: G.row <= 3 });
-        G.yayUntil = performance.now() + 900;
-        sound(G.row <= 2 ? 'notifyBigWin' : 'notifyRaise');
-        state = 'win'; G.focus = 'collect';
-      } else {
-        G.msg = '';
-        G.koUntil = performance.now() + 700;
-        nextOrEnd();
-      }
-    }, settle * 1000);
+    G.win = payOf(G.v, G.row, G.bet);
+    if (G.win) {
+      G.msg = t(G.v.rows[G.row][1]);
+      G.winAt = time;
+      G.yayUntil = performance.now() + 1100;
+      sound(G.win >= 25 * G.bet ? 'notifyBigWin' : 'notifyRaise');
+      state = 'win'; G.focus = 'collect';
+    } else {
+      G.msg = '';
+      G.koUntil = performance.now() + 700;
+      nextOrEnd();
+    }
   }
   function collect() {
     if (state !== 'win') return;
-    G.credits += G.win;
-    G.fx.push({ s: '+' + fmt(G.win), x: 60, y: 40, t: 0, life: 1, gold: true });
+    G.credits += G.win;               // the counter counts up to it (update)
+    G.peak = Math.max(G.peak, G.credits);
     sound('notifyAction');
     G.win = 0; G.dbl = null;
     renderHud();
@@ -158,20 +176,23 @@ export function create(shell) {
   }
   function nextOrEnd() {
     renderHud();
-    if (G.hand >= HANDS || G.credits < BET) { state = 'end'; timer = setTimeout(finish, 900); }
-    else state = 'ready';
+    if (G.credits < 1 && !G.win) { state = 'end'; clearTimeout(timer); timer = setTimeout(finish, 1100); }
+    else { state = 'ready'; G.focus = 'deal'; }
   }
+  function betOne() { if (state !== 'ready') return; G.bet = G.bet >= MAX_BET ? 1 : G.bet + 1; tone(520 + 80 * G.bet, 0.06, 0.06); }
+  function betMax() { if (state !== 'ready') return; G.bet = MAX_BET; tone(920, 0.06, 0.06); deal(); }
+  function cashOut() { if (state !== 'ready') return; sound('notifyAction'); finish(); }
 
   // ── Double or nothing ─────────────────────────────────────────────
   let dblCount = 0;
   function double() {
     if (state !== 'win' || G.chain >= MAX_DOUBLE) return;
     dblCount++;
-    const deck = deckFor(G.daily ? 'vp-' + G.day + '-' + G.hand + '-d' + dblCount : null);
-    G.dbl = { cards: deck.slice(0, 5), pick: -1, flip: time };
+    const deck = deckFor(G.daily ? 'vp-' + G.day + '-' + G.v.id + '-' + G.hand + '-d' + dblCount : null);
+    G.dbl = { cards: deck.slice(0, 5), pick: -1, flip: time, flip2: 0 };
     G.cursor = 1;
+    G.msg = t('vpPick');
     state = 'double';
-    say(t('vpPick'), 3);
     sound('notifyCard');
   }
   function pick(i) {
@@ -181,21 +202,22 @@ export function create(shell) {
     const mine = rankOf(d.cards[i]), his = rankOf(d.cards[0]);
     state = 'dres';
     sound('notifyCard');
+    clearTimeout(timer);
     timer = setTimeout(() => {
       if (state !== 'dres') return;
+      const L0 = L();
       if (mine > his) {
         G.win *= 2; G.chain++;
-        G.fx.push({ s: '×2  ' + fmt(G.win), x: L().cardsX, y: L().cardsY - L().ch / 2 - 14, t: 0, life: 1.3, gold: true, big: true });
-        G.yayUntil = performance.now() + 900; sound('notifyRaise');
+        G.fx.push({ s: '×2  ' + fmt(G.win), x: L0.rx, y: L0.ry - L0.rh / 2 - 10, t: 0, life: 1.3, gold: true, big: true });
+        G.yayUntil = performance.now() + 900; G.winAt = time; sound('notifyRaise');
         if (G.chain >= TROPHY_DOUBLES) shell.grant('videopoker');
-        state = 'win';
-        G.focus = 'collect';
+        state = 'win'; G.focus = 'collect'; G.msg = t(G.v.rows[G.row][1]);
       } else if (mine === his) {
-        G.fx.push({ s: '=', x: L().cardsX, y: L().cardsY - L().ch / 2 - 14, t: 0, life: 1, gold: true });
-        state = 'win'; G.focus = 'collect';
+        G.fx.push({ s: '=', x: L0.rx, y: L0.ry - L0.rh / 2 - 10, t: 0, life: 1, gold: true });
+        state = 'win'; G.focus = 'collect'; G.msg = t(G.v.rows[G.row][1]);
       } else {
-        G.fx.push({ s: '−' + fmt(G.win), x: L().cardsX, y: L().cardsY - L().ch / 2 - 14, t: 0, life: 1.2, red: true });
-        G.win = 0; G.chain = 0; G.koUntil = performance.now() + 1200;
+        G.fx.push({ s: '−' + fmt(G.win), x: L0.rx, y: L0.ry - L0.rh / 2 - 10, t: 0, life: 1.2, red: true });
+        G.win = 0; G.chain = 0; G.koUntil = performance.now() + 1200; G.msg = '';
         sound('notifyFold');
         G.dbl = null;
         nextOrEnd();
@@ -209,67 +231,118 @@ export function create(shell) {
     clearTimeout(timer);
     state = 'over';
     shell.ended();
-    const score = G.credits;
-    let record = false, prev;
-    if (G.daily) { prev = dailyBest(G.day); if (score > prev) { setDailyBest(G.day, score); record = prev > 0; } }
-    else { prev = shell.best.get(); if (score > prev) { shell.best.set(score); record = prev > 0; } }
+    const score = G.credits, id = G.v.id;
+    let record = false, prev = 0;
+    if (G.daily) {
+      const dl = load(DAILY_KEY), day = G.day;
+      const map = dl.d === day && dl.v ? dl.v : {};
+      prev = map[id] || 0;
+      if (score > prev) { map[id] = score; save(DAILY_KEY, { d: day, v: map }); record = prev > 0; }
+    } else {
+      const best = load(BEST_KEY);
+      prev = best[id] || 0;
+      if (score > prev) { best[id] = score; save(BEST_KEY, best); record = prev > 0; }
+      if (score > shell.best.get()) shell.best.set(score);
+    }
     ace.mood(score > START ? 'mc-m-yay' : 'mc-m-smile'); ace.pose(score > START ? 'wave' : 'idle');
     if (record) sound('notifyBigWin');
-    G.res = { score, record, prev: prev || 0 };
+    G.res = { score, record, prev };
     renderResult();
   }
   function renderResult() {
     if (state !== 'over' || !G.res) return;
     const { score, record, prev } = G.res;
     const best = G.bestCards && G.bestRow >= 0
-      ? '<p>' + esc(t('psBestLine', { h: t(PAY[G.bestRow][0] === 'vpJacks' ? 'vpJacks' : evalCards(G.bestCards).nameKey) })) + '</p>'
+      ? '<p>' + esc(t('psBestLine', { h: t(G.v.rows[G.bestRow][1]) })) + '</p>'
         + '<div class="ar-show">' + G.bestCards.map((c) => cardHtml(c, 'lg')).join('') + '</div>'
       : '';
-    shell.panel('<div class="vp-box"><h2>' + esc(fmt(score)) + '</h2><p class="pg-dim">' + esc(t('vpCredits')) + '</p>' + best
-      + '<p class="pg-dim">' + esc(G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · '
+    shell.panel('<div class="vp-box"><h2>' + esc(fmt(score)) + '</h2><p class="pg-dim">' + esc(t('vpCredits')) + ' · ' + esc(t('vpHands')) + ' ' + G.hand + '</p>' + best
+      + '<p class="pg-dim">' + esc(t(G.v.key)) + ' · ' + esc(G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · '
       + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
       + '<p class="pg-blink">' + esc(t('psAgain')) + '</p></div>', true);
   }
 
-  // ── Layout (world px) ─────────────────────────────────────────────
+  // ── Layout (world px): the cabinet, the screen, the reels, the panel ──
   function L() {
-    const W = shell.W, H = shell.H;
-    let top = 46;
-    try { top = Math.max(40, shell.hud.offsetHeight / (shell.k || 1) + 6); } catch (e) {}
-    const narrow = W < 430;
-    const ptW = narrow ? W - 16 : Math.min(176, W * 0.32);
-    const ptX = narrow ? 8 : 12, ptY = top;
-    const ptRows = narrow ? 5 : 9, rowH = narrow ? 13 : 16;
-    const ptH = ptRows * rowH + 8;
-    const areaL = narrow ? 8 : ptX + ptW + 14, areaR = narrow ? W - 8 : W - 12;
-    const gap = 6, cw = Math.min(64, (areaR - areaL - 4 * gap) / 5), ch = cw * 1.4;
-    const cardsX = (areaL + areaR) / 2;
-    const btnH = 34, btnY = H - btnH / 2 - 10;
-    const cardsY = narrow ? (ptY + ptH + btnY - btnH / 2) / 2 - 6 : Math.max(top + 30 + ch / 2, (top + btnY) / 2 - 8);
-    const xs = [0, 1, 2, 3, 4].map((i) => cardsX + (i - 2) * (cw + gap));
-    return { W, H, narrow, top, ptX, ptY, ptW, ptH, rowH, cw, ch, gap, cardsX, cardsY, xs, btnY, btnH, areaL, areaR };
+    const W = shell.W, H = shell.H, narrow = W < 430, v = G.v, rows = v.rows.length;
+    const m = narrow ? 6 : 10, my = 4, mh = narrow ? 26 : 34;
+    const ctrlH = narrow ? 66 : 58;
+    const sx = m, sy = my + mh + 6, sw = W - 2 * m, sh = H - sy - ctrlH - 10;
+    const ix = sx + 4, iy = sy + 4, iw = sw - 8, ih = sh - 8;
+    // The pay table: on top in two columns (phone), at the left with the 5 bet columns (wide).
+    const side = !narrow, ptW = side ? Math.min(iw * 0.5, 340) : iw;
+    const per = Math.ceil(rows / 2);
+    const rowH = narrow ? 10.5 : Math.min(20, (ih - 30) / rows);
+    const ptTop = side ? iy + Math.max(4, (ih - 20 - rows * rowH) / 2) : iy + 4;
+    const ptBot = side ? iy : ptTop + per * rowH + 4;
+    // The reels.
+    const ax = side ? ix + ptW + 8 : ix, aw = side ? iw - ptW - 12 : iw;
+    const infoH = narrow ? 14 : 16;
+    const zTop = ptBot + (narrow ? 14 : 18), zBot = iy + ih - infoH - (narrow ? 24 : 28);
+    const gap = narrow ? 3 : 6, need = narrow ? 2.0 : 1.8;
+    let cw = Math.min(narrow ? 44 : 84, (aw - (narrow ? 8 : 24) - 4 * gap) / 5 - 4), ch = cw * 1.4;
+    if (ch * need > zBot - zTop) { ch = Math.max(30, (zBot - zTop) / need); cw = ch / 1.4; }
+    const rw = cw + 4, rh = ch * need;
+    const rx = ax + aw / 2, ry = (zTop + zBot) / 2 - 2;
+    const xs = [0, 1, 2, 3, 4].map((i) => rx + (i - 2) * (rw + gap));
+    // The panel's buttons.
+    const cy0 = sy + sh + 6;
+    const B = [];
+    if (narrow) {
+      const bh = 23, y1 = cy0 + 6, y2 = cy0 + ctrlH - bh - 6, w5 = (W - 2 * m - 12 - 16) / 5;
+      for (let i = 0; i < 5; i++) B.push({ id: 'hold' + i, x: m + 6 + i * (w5 + 4), y: y1, w: w5, h: bh });
+      const tot = W - 2 * m - 12, big = tot * 0.34, sm = (tot - big - 12) / 3;
+      B.push({ id: 'one', x: m + 6, y: y2, w: sm, h: bh }, { id: 'max', x: m + 10 + sm, y: y2, w: sm, h: bh },
+        { id: 'cash', x: m + 14 + 2 * sm, y: y2, w: sm, h: bh }, { id: 'main', x: m + 18 + 3 * sm, y: y2, w: big, h: bh });
+    } else {
+      const bh = 24, y1 = cy0 + (ctrlH - bh) / 2, sbh = (ctrlH - 14) / 2;
+      for (let i = 0; i < 5; i++) { const w = Math.min(64, rw); B.push({ id: 'hold' + i, x: xs[i] - w / 2, y: y1, w, h: bh }); }
+      const x0 = m + 8, w1 = Math.min(84, (ptW - 30) * 0.3), w2 = Math.min(80, (ptW - 30) * 0.28), w3 = ptW - 16 - w1 - w2;
+      const tall = state === 'win' || state === 'double' || state === 'dres';
+      B.push(tall ? { id: 'one', x: x0, y: cy0 + 6, w: w1, h: ctrlH - 12 } : { id: 'one', x: x0, y: cy0 + 5, w: w1, h: sbh }, { id: 'max', x: x0, y: cy0 + 9 + sbh, w: w1, h: sbh },
+        { id: 'cash', x: x0 + w1 + 6, y: cy0 + 6, w: w2, h: ctrlH - 12 }, { id: 'main', x: x0 + w1 + w2 + 12, y: cy0 + 6, w: w3, h: ctrlH - 12 });
+    }
+    return { W, H, narrow, m, my, mh, ctrlH, sx, sy, sw, sh, ix, iy, iw, ih, side, ptW, per, rowH, ptTop, ax, aw, infoH,
+      gap, cw, ch, rw, rh, rx, ry, xs, cy0, B };
   }
-  function cardAt(l, x, y) {
-    for (let i = 0; i < 5; i++) if (Math.abs(x - l.xs[i]) <= l.cw / 2 + l.gap / 2 && Math.abs(y - l.cardsY) <= l.ch / 2 + 12) return i;
+  /** What a panel button says and whether it works now. */
+  function btnInfo(id) {
+    const st = state;
+    if (id.startsWith('hold')) {
+      const i = +id.slice(4);
+      if (st === 'double') return { label: i ? '?' : 'A♠', on: i > 0, lit: i === G.cursor };
+      return { label: 'HOLD', on: st === 'hold', lit: st === 'hold' && G.held[i] };
+    }
+    if (id === 'one') return st === 'win' || st === 'double' || st === 'dres'
+      ? { label: t('vpDouble'), on: st === 'win' && G.chain < MAX_DOUBLE, kind: 'red' }
+      : { label: 'BET ONE', on: st === 'ready', kind: 'blue' };
+    if (id === 'max') return st === 'win' || st === 'double' || st === 'dres' ? { label: '', on: false, hidden: true } : { label: 'BET MAX', on: st === 'ready', kind: 'blue' };
+    if (id === 'cash') return { label: t('vpCashOut'), on: st === 'ready', kind: 'grey' };
+    // main: deal / draw / collect
+    if (st === 'win' || st === 'double' || st === 'dres') return { label: t('vpCollect') + ' ' + fmt(G.win), on: st === 'win', kind: 'red', lit: true };
+    if (st === 'hold' || st === 'draw') return { label: t('vpDraw'), on: st === 'hold', kind: 'red', lit: st === 'hold' };
+    return { label: t('vpDeal'), on: st === 'ready', kind: 'red', lit: st === 'ready' };
+  }
+  function hitButton(l, x, y) { for (const b of l.B) if (x >= b.x && x <= b.x + b.w && y >= b.y - 2 && y <= b.y + b.h + 2) return b.id; return null; }
+  function reelAt(l, x, y) {
+    for (let i = 0; i < 5; i++) if (Math.abs(x - l.xs[i]) <= l.rw / 2 + l.gap / 2 && Math.abs(y - l.ry) <= l.rh / 2 + 10) return i;
     return -1;
   }
-  function layoutButtons(l) {
-    btns.reset();
-    const w = Math.min(220, l.areaR - l.areaL - (l.narrow ? 60 : 0)), cx = l.narrow ? Math.min(l.W - 8 - w / 2, l.cardsX + 26) : l.cardsX;
-    if (state === 'ready' || state === 'end') btns.add({ id: 'deal', x: cx, y: l.btnY, w, h: l.btnH, label: t('vpDeal'), key: 'Space / ↓', off: state === 'end' });
-    else if (state === 'hold' || state === 'show') btns.add({ id: 'draw', x: cx, y: l.btnY, w, h: l.btnH, label: t('vpDraw'), key: '↓', off: state === 'show' });
-    else if (state === 'win' || state === 'dres' || state === 'double') {
-      const half = (w - 8) / 2;
-      btns.add({ id: 'double', x: cx - half / 2 - 4, y: l.btnY, w: half, h: l.btnH, label: t('vpDouble'), kind: 'red', key: '↑', off: state !== 'win' || G.chain >= MAX_DOUBLE });
-      btns.add({ id: 'collect', x: cx + half / 2 + 4, y: l.btnY, w: half, h: l.btnH, label: t('vpCollect') + (G.win ? ' ' + fmt(G.win) : ''), key: '↓', off: state !== 'win' });
-    }
+  function press(id) {
+    if (id.startsWith('hold')) { const i = +id.slice(4); if (state === 'hold') toggle(i); else if (state === 'double') pick(i); return; }
+    if (id === 'one') { if (state === 'win') double(); else betOne(); }
+    else if (id === 'max') betMax();
+    else if (id === 'cash') cashOut();
+    else if (id === 'main') { if (state === 'win') collect(); else if (state === 'hold') drawCards(); else deal(); }
   }
+  const ORDER = { ready: ['one', 'max', 'cash', 'main'], win: ['one', 'main'] };
 
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
     if (state === 'title') {
-      if (a === 'left' || a === 'right') { mode = mode ? 0 : 1; titlePanel(); }
+      if (a === 'left' || a === 'right') { vi = (vi + (a === 'left' ? VARIANTS.length - 1 : 1)) % VARIANTS.length; titlePanel(); }
+      else if (a === 'duck') { daily = !daily; titlePanel(); }
       else if (a === 'jump' && info.x == null) start();
       return;
     }
@@ -278,16 +351,22 @@ export function create(shell) {
       return;
     }
     const l = L();
-    layoutButtons(l);
     const up = a === 'jump' && (info.code === 'ArrowUp' || info.code === 'KeyW' || info.pad === 'up');
     if (info.x != null) {
-      const b = btns.hit(info.x, info.y);
-      if (b) { press(b); return; }
-      const c = cardAt(l, info.x, info.y);
+      const b = hitButton(l, info.x, info.y);
+      if (b) { if (btnInfo(b).on) press(b); return; }
+      const c = reelAt(l, info.x, info.y);
       if (c >= 0) { if (state === 'hold') toggle(c); else if (state === 'double') pick(c); }
       return;
     }
-    if (state === 'ready') { if (a === 'jump' || a === 'duck') deal(); return; }
+    if (state === 'ready') {
+      const o = ORDER.ready, i = Math.max(0, o.indexOf(G.focus));
+      if (a === 'left' || a === 'right') G.focus = o[(i + (a === 'left' ? o.length - 1 : 1)) % o.length];
+      else if (up) betOne();
+      else if (a === 'duck') deal();
+      else if (a === 'jump') press(G.focus);
+      return;
+    }
     if (state === 'hold') {
       if (a === 'left') G.cursor = (G.cursor + 4) % 5;
       else if (a === 'right') G.cursor = (G.cursor + 1) % 5;
@@ -296,10 +375,10 @@ export function create(shell) {
       return;
     }
     if (state === 'win') {
-      if (a === 'left' || a === 'right') G.focus = G.focus === 'collect' && G.chain < MAX_DOUBLE ? 'double' : 'collect';
+      if (a === 'left' || a === 'right') G.focus = G.focus === 'main' && G.chain < MAX_DOUBLE ? 'one' : 'main';
       else if (a === 'duck') collect();
       else if (up) double();
-      else if (a === 'jump') { if (G.focus === 'double') double(); else collect(); }
+      else if (a === 'jump') press(G.focus);
       return;
     }
     if (state === 'double') {
@@ -308,18 +387,18 @@ export function create(shell) {
       else if (a === 'jump') pick(G.cursor);
     }
   }
-  function press(id) {
-    if (id === 'deal') deal();
-    else if (id === 'draw') drawCards();
-    else if (id === 'double') double();
-    else if (id === 'collect') collect();
-  }
 
   function update(dt) {
     time += dt;
     if (!G) return;
     stepFloaters(G.fx, dt);
-    if (G.say) { G.say.t += dt; if (G.say.t > G.say.life) G.say = null; }
+    // A click as each reel stops.
+    for (let i = 0; i < 5; i++) if (!G.clicked[i] && time >= G.stopAt[i]) { G.clicked[i] = true; tone(1300 - 90 * i, 0.03, 0.06); }
+    // The credits count up to what was collected.
+    if (G.shown < G.credits) {
+      G.shown = Math.min(G.credits, G.shown + Math.max(1, Math.ceil((G.credits - G.shown) * dt * 5)));
+      if (time - G.tickAt > 0.06) { G.tickAt = time; tone(1500, 0.02, 0.035); }
+    } else if (G.shown > G.credits) G.shown = G.credits;
     if (state !== 'over' && state !== 'title') {
       const now = performance.now();
       ace.mood(now < G.koUntil ? 'mc-m-ko' : now < G.yayUntil ? 'mc-m-yay' : state === 'double' ? 'mc-m-cool' : 'mc-m-smile');
@@ -328,73 +407,190 @@ export function create(shell) {
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
-  function draw(g) {
-    const l = L(), W = l.W, H = l.H;
-    felt(g, W, H, shell.theme.light);
-    drawPaytable(g, l);
-    const showCards = G.cards.length;
+  const GOLD = '#f5d77a';
+  function bulbs(g, x, y, w, h, n, speed, all) {
+    const per = Math.max(4, (2 * (w + h)) / n);
+    let k = 0;
+    const ph = Math.floor(time * speed);
+    const dot = (px, py) => {
+      const on = all ? ph % 2 === 0 : (k + ph) % 3 === 0; k++;
+      g.beginPath(); g.arc(px, py, 2.1, 0, Math.PI * 2);
+      if (on) { g.save(); g.fillStyle = '#fff3b0'; g.shadowColor = '#ffd36a'; g.shadowBlur = 6; g.fill(); g.restore(); } else { g.fillStyle = '#7a5a20'; g.fill(); }
+    };
+    for (let px = x; px <= x + w; px += per) dot(px, y);
+    for (let py = y + per; py <= y + h; py += per) dot(x + w, py);
+    for (let px = x + w - per; px >= x; px -= per) dot(px, y + h);
+    for (let py = y + h - per; py > y; py -= per) dot(x, py);
+  }
+  function led(g, x, y, w, h, lab, val) {
+    rr(g, x, y, w, h, 4); g.fillStyle = '#0a0606'; g.fill(); g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 1; g.stroke();
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '700 ' + Math.max(6, h * 0.22) + 'px Inter, system-ui, sans-serif'; g.fillStyle = 'rgba(255,255,255,.55)';
+    g.fillText(lab, x + w / 2, y + h * 0.24);
+    g.save(); g.shadowColor = '#ff3b2f'; g.shadowBlur = 6;
+    g.font = '700 ' + Math.max(9, h * 0.5) + 'px Inconsolata, monospace'; g.fillStyle = '#ff3b2f';
+    g.fillText(val, x + w / 2, y + h * 0.66); g.restore();
+  }
+  const KIND = { red: ['#ff4a4a', '#b0101e'], blue: ['#4a7ae0', '#1d3f9a'], gold: ['#ffd84a', '#c99a10'], grey: ['#8a909a', '#4a4f58'] };
+  function machineButton(g, b, info, focused) {
+    const col = info.kind ? KIND[info.kind] : KIND.gold;
+    g.save();
+    if (!info.on) g.globalAlpha = 0.45;
+    const gr = g.createLinearGradient(0, b.y, 0, b.y + b.h); gr.addColorStop(0, col[0]); gr.addColorStop(1, col[1]);
+    rr(g, b.x, b.y + 2, b.w, b.h, Math.min(10, b.h * 0.3)); g.fillStyle = 'rgba(0,0,0,.5)'; g.fill();
+    rr(g, b.x, b.y, b.w, b.h, Math.min(10, b.h * 0.3)); g.fillStyle = gr; g.fill();
+    if (info.lit && info.on) { g.shadowColor = col[0]; g.shadowBlur = 10; g.strokeStyle = 'rgba(255,255,255,.75)'; g.lineWidth = 1.2; g.stroke(); g.shadowBlur = 0; }
+    else { g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 1; g.stroke(); }
+    if (focused) { rr(g, b.x - 2, b.y - 2, b.w + 4, b.h + 4, Math.min(12, b.h * 0.35)); g.strokeStyle = '#f5f0e3'; g.lineWidth = 2; g.stroke(); }
+    g.fillStyle = info.kind ? '#fff' : '#3a2600'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    fitFont(g, info.label, b.w - 6, Math.min(12, b.h * 0.42), 800); g.fillText(info.label, b.x + b.w / 2, b.y + b.h / 2 + 0.5);
+    g.restore();
+  }
+  /** The five reels: the card on the pay line, the neighbours turning by. */
+  function drawReels(g, l) {
     const dbl = (state === 'double' || state === 'dres') && G.dbl;
-    for (let i = 0; i < 5 && state !== 'title'; i++) {
-      const x = l.xs[i];
-      let y = l.cardsY;
-      if (!dbl && state === 'hold' && G.held[i]) y -= 6;
-      g.save(); g.translate(x, y);
-      if (dbl) {
-        const d = G.dbl, open = i === 0 ? time >= d.flip + 0.15 : (state === 'dres' && (i === d.pick ? true : time >= d.flip2 + 0.5));
-        if (open) drawFace(g, img, d.cards[i], l.cw, l.ch); else { g.restore(); drawBackCard(g, img, x, y, l.cw, l.ch); g.save(); g.translate(x, y); }
-        if (i === 0) { g.font = '700 9px Inter, system-ui, sans-serif'; g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText('A♠', 0, l.ch / 2 + 4); }
-        if (state === 'dres' && i === d.pick) { rr(g, -l.cw / 2 - 3, -l.ch / 2 - 3, l.cw + 6, l.ch + 6, 6); g.strokeStyle = '#f5d77a'; g.lineWidth = 2; g.stroke(); }
-        if (state === 'double' && i === G.cursor && i > 0) { rr(g, -l.cw / 2 - 3, -l.ch / 2 - 3, l.cw + 6, l.ch + 6, 6); g.strokeStyle = '#f5f0e3'; g.lineWidth = 2; g.stroke(); }
-        if (state === 'dres' && i > 0 && i !== d.pick) { g.fillStyle = 'rgba(0,0,0,.35)'; rr(g, -l.cw / 2, -l.ch / 2, l.cw, l.ch, 4); g.fill(); }
-      } else if (showCards && time >= G.flip[i]) {
-        drawFace(g, img, G.cards[i], l.cw, l.ch);
-        if (state === 'hold' && keyboardFirst() && i === G.cursor) { rr(g, -l.cw / 2 - 3, -l.ch / 2 - 3, l.cw + 6, l.ch + 6, 6); g.strokeStyle = '#f5f0e3'; g.lineWidth = 2; g.stroke(); }
-        if ((state === 'ready' || state === 'end') && G.cards.length && G.row >= 0 && !inBest(i)) { g.fillStyle = 'rgba(0,0,0,.35)'; rr(g, -l.cw / 2, -l.ch / 2, l.cw, l.ch, 4); g.fill(); }
-      } else { g.restore(); drawBackCard(g, img, x, y, l.cw, l.ch); g.save(); g.translate(x, y); }
-      if (!dbl && G.held[i] && (state === 'hold' || state === 'show')) {
-        g.font = '700 ' + Math.max(8, Math.min(11, l.cw * 0.2)) + 'px Inter, system-ui, sans-serif';
-        const label = t('vpHeld').toUpperCase(), tw = Math.min(l.cw + 4, g.measureText(label).width + 8);
-        rr(g, -tw / 2, l.ch / 2 + 4, tw, 14, 4); g.fillStyle = '#d8b25a'; g.fill();
-        g.fillStyle = '#141414'; g.textAlign = 'center'; g.textBaseline = 'middle'; fitFont(g, label, tw - 4, Math.max(8, Math.min(11, l.cw * 0.2))); g.fillText(label, 0, l.ch / 2 + 11.5);
+    for (let i = 0; i < 5; i++) {
+      const x = l.xs[i], top = l.ry - l.rh / 2, step = l.ch + 6;
+      g.save();
+      rr(g, x - l.rw / 2, top, l.rw, l.rh, 6); g.fillStyle = '#f4efe2'; g.fill(); g.clip();
+      const card = dbl ? G.dbl.cards[i] : G.cards[i] != null ? G.cards[i] : i * 11;
+      const sp = !dbl && spinning(i);
+      // Stopped: a small bounce as it lands.
+      const since = time - G.stopAt[i], bounce = !sp && since < 0.14 ? Math.sin((since / 0.14) * Math.PI) * 5 : 0;
+      const off = sp ? ((time - G.spinFrom) * 1100 + i * 37) % step : -bounce;
+      for (let k = -2; k <= 2; k++) {
+        const c = k === 0 && !sp ? card : (card + k * 17 + (sp ? Math.floor((time - G.spinFrom) * 20) : 0) + 520) % 52, y = l.ry + k * step + off;
+        g.save(); g.translate(x, y);
+        let face = true;
+        if (dbl && k === 0 && i > 0) {
+          const d = G.dbl, open = state === 'dres' && (i === d.pick || time >= d.flip2 + 0.5);
+          if (!open) { g.restore(); drawBackCard(g, img, x, y, l.cw, l.ch); face = false; }
+        }
+        if (face) {
+          if (sp) { g.globalAlpha = 0.5; drawFace(g, img, c, l.cw, l.ch); g.translate(0, -step * 0.2); g.globalAlpha = 0.3; drawFace(g, img, c, l.cw, l.ch); }
+          else drawFace(g, img, c, l.cw, l.ch);
+          g.restore();
+        }
+      }
+      // The drum: dark at the top and the bottom, a shine in the middle.
+      const shd = g.createLinearGradient(0, top, 0, top + l.rh);
+      shd.addColorStop(0, 'rgba(0,0,0,.8)'); shd.addColorStop(0.24, 'rgba(0,0,0,.2)'); shd.addColorStop(0.42, 'rgba(255,255,255,.06)');
+      shd.addColorStop(0.58, 'rgba(255,255,255,.06)'); shd.addColorStop(0.76, 'rgba(0,0,0,.2)'); shd.addColorStop(1, 'rgba(0,0,0,.8)');
+      g.fillStyle = shd; g.fillRect(x - l.rw / 2, top, l.rw, l.rh);
+      // After a hand: the cards that don't count, dimmed.
+      if (!dbl && (state === 'win' || state === 'ready' || state === 'end') && G.row >= 0 && G.cards.length && made.indexOf(G.cards[i]) < 0) {
+        g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x - l.rw / 2, top, l.rw, l.rh);
       }
       g.restore();
+      rr(g, x - l.rw / 2, top, l.rw, l.rh, 6); g.strokeStyle = 'rgba(0,0,0,.6)'; g.lineWidth = 2; g.stroke();
+      // Held: the reel locked, its frame lit. The cursor (keyboard): a white frame.
+      if (!dbl && G.held[i] && (state === 'hold' || state === 'draw')) {
+        rr(g, x - l.rw / 2 - 2, top - 2, l.rw + 4, l.rh + 4, 7); g.strokeStyle = GOLD; g.lineWidth = 2; g.stroke();
+        g.font = '900 ' + Math.max(7, Math.min(10, l.cw * 0.2)) + 'px Inter, system-ui, sans-serif'; g.fillStyle = GOLD; g.textAlign = 'center'; g.textBaseline = 'bottom';
+        fitFont(g, t('vpHeld').toUpperCase(), l.rw + 6, Math.max(7, Math.min(10, l.cw * 0.2)), 900);
+        g.fillText(t('vpHeld').toUpperCase(), x, top - 3);
+      }
+      const cur = (state === 'hold' && keyboardFirst() && i === G.cursor) || (state === 'double' && i === G.cursor && i > 0);
+      if (cur) { rr(g, x - l.rw / 2 - 4, top - 4, l.rw + 8, l.rh + 8, 8); g.strokeStyle = '#f5f0e3'; g.lineWidth = 1.5; g.stroke(); }
     }
-    // The hand that paid, under the cards.
-    if (G && G.msg && (state === 'win' || state === 'ready' || state === 'end')) {
-      g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'middle';
-      fitFont(g, G.msg, l.areaR - l.areaL, 15, 700, 'Cinzel, Georgia, serif');
-      g.fillText(G.msg, l.cardsX, l.cardsY + l.ch / 2 + 16);
-    }
-    if (state !== 'title') { layoutButtons(l); btns.draw(g, keyboardFirst(), state === 'win' ? G.focus : null); }
-    // The Ace, bottom left (portrait) or beside the cards (landscape).
-    let ax = l.narrow ? 26 : l.xs[4] + l.cw / 2 + 34, ay = l.narrow ? H - 4 : Math.min(H - 6, l.cardsY + l.ch / 2 + 6), s = l.narrow ? 0.22 : 0.3;
-    if (!l.narrow && ax > W - 22) { ax = W - 26; ay = l.btnY + 14; s = 0.22; }
-    ace.place(ax, ay, s, shell.k);
-    if (G && G.say && state !== 'title') {
-      const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
-      bubble(g, G.say.s, Math.min(ax + 8, W - 20), ay - 228 * s - 2, W, a);
-    }
-    if (G) drawFloaters(g, G.fx);
+    // The pay line.
+    const L0 = l.xs[0] - l.rw / 2 - 6, R0 = l.xs[4] + l.rw / 2 + 6;
+    g.save(); g.strokeStyle = 'rgba(230,40,40,.85)'; g.lineWidth = 1.5; g.shadowColor = '#ff2a2a'; g.shadowBlur = 6;
+    g.beginPath(); g.moveTo(L0, l.ry - l.ch / 2 - 3); g.lineTo(R0, l.ry - l.ch / 2 - 3); g.moveTo(L0, l.ry + l.ch / 2 + 3); g.lineTo(R0, l.ry + l.ch / 2 + 3); g.stroke();
+    g.fillStyle = '#e62828'; for (const xx of [L0, R0]) { g.beginPath(); g.moveTo(xx, l.ry - 6); g.lineTo(xx + (xx < l.rx ? 6 : -6), l.ry); g.lineTo(xx, l.ry + 6); g.closePath(); g.fill(); }
+    g.restore();
   }
-  function inBest(i) {
-    if (G.row < 0) return true;
-    return evalCards(G.cards).best.indexOf(G.cards[i]) >= 0;
+  let made = [];
+  /** fillText that squeezes the text horizontally when even the smallest font is too wide. */
+  function fillFit(g, s, x, y, maxW) {
+    const w = g.measureText(s).width;
+    if (w <= maxW) { g.fillText(s, x, y); return; }
+    g.save(); g.translate(x, y); g.scale(maxW / w, 1); g.fillText(s, 0, 0); g.restore();
   }
   function drawPaytable(g, l) {
-    const rows = PAY.length, cols = l.narrow ? 2 : 1, per = Math.ceil(rows / cols);
-    const colW = (l.ptW - (cols - 1) * 6) / cols;
-    rr(g, l.ptX, l.ptY, l.ptW, l.ptH, 8); g.fillStyle = 'rgba(8,24,16,.55)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.45)'; g.lineWidth = 1; g.stroke();
-    const lit = G && (state === 'win' || state === 'ready' || state === 'end' || state === 'double' || state === 'dres') ? G.row : -1;
-    for (let i = 0; i < rows; i++) {
-      const c = Math.floor(i / per), r = i % per;
-      const x = l.ptX + 4 + c * (colW + 6), y = l.ptY + 4 + r * l.rowH + l.rowH / 2;
-      if (i === lit) { rr(g, x - 2, y - l.rowH / 2 + 1, colW, l.rowH - 2, 4); g.fillStyle = 'rgba(216,178,90,.9)'; g.fill(); }
-      const fs = l.narrow ? 9 : 11;
-      g.fillStyle = i === lit ? '#141414' : '#f5f0e3'; g.textBaseline = 'middle';
-      g.textAlign = 'left'; const label = t(PAY[i][0]); fitFont(g, label, colW - 40, fs, 600); g.fillText(label, x + 2, y);
-      g.textAlign = 'right'; g.font = '700 ' + fs + 'px Inconsolata, monospace'; g.fillStyle = i === lit ? '#141414' : '#d8b25a';
-      g.fillText(fmt(PAY[i][1] * BET), x + colW - 6, y);
+    const v = G.v, lit = state === 'win' || state === 'ready' || state === 'end' || state === 'double' || state === 'dres' ? G.row : -1;
+    const blink = lit >= 0 && time - G.winAt < 1.5 && Math.floor((time - G.winAt) * 6) % 2 === 0;
+    g.textBaseline = 'middle';
+    if (l.narrow) {
+      const hw = (l.iw - 8) / 2;
+      v.rows.forEach((r, i) => {
+        const c = Math.floor(i / l.per), k = i % l.per, x0 = l.ix + 4 + c * hw, y = l.ptTop + k * l.rowH + l.rowH / 2;
+        if (i === lit && !blink) { g.fillStyle = 'rgba(255,255,255,.22)'; g.fillRect(x0, y - l.rowH / 2, hw - 3, l.rowH); }
+        g.textAlign = 'left'; g.fillStyle = GOLD;
+        fitFont(g, t(r[1]).toUpperCase(), hw - 34, 7.5, 800); fillFit(g, t(r[1]).toUpperCase(), x0 + 2, y, hw - 34);
+        g.textAlign = 'right'; g.font = '700 8px Inconsolata, monospace'; g.fillText(fmt(payOf(v, i, G.bet)), x0 + hw - 6, y);
+      });
+      return;
     }
+    const nameW = l.ptW * 0.34, colW = (l.ptW - nameW - 8) / MAX_BET, colX = (c) => l.ix + 4 + nameW + c * colW + colW / 2;
+    g.fillStyle = 'rgba(216,178,90,.32)'; g.fillRect(colX(G.bet - 1) - colW / 2 + 1, l.ptTop - 3, colW - 2, v.rows.length * l.rowH + 5);
+    v.rows.forEach((r, i) => {
+      const y = l.ptTop + i * l.rowH + l.rowH / 2;
+      if (i === lit && !blink) { g.fillStyle = 'rgba(255,255,255,.22)'; g.fillRect(l.ix + 2, y - l.rowH / 2, l.ptW - 2, l.rowH); }
+      g.textAlign = 'left'; g.fillStyle = GOLD;
+      fitFont(g, t(r[1]).toUpperCase(), nameW - 6, Math.min(11, l.rowH * 0.6), 800); fillFit(g, t(r[1]).toUpperCase(), l.ix + 6, y, nameW - 6);
+      g.textAlign = 'center'; g.font = '700 ' + Math.min(10.5, l.rowH * 0.58) + 'px Inconsolata, monospace';
+      for (let c = 0; c < MAX_BET; c++) { g.fillStyle = GOLD; fitFont(g, fmt(payOf(v, i, c + 1)), colW - 2, Math.min(10.5, l.rowH * 0.58), 700, 'Inconsolata, monospace'); g.fillText(fmt(payOf(v, i, c + 1)), colX(c), y); }
+    });
+  }
+  function draw(g) {
+    const W = shell.W, H = shell.H;
+    if (state === 'title' || !G) { g.fillStyle = '#2a070c'; g.fillRect(0, 0, W, H); return; }
+    const l = L();
+    made = G.row >= 0 && G.cards.length ? madeBy(G.cards, G.v, G.row) : [];
+    const winning = time - G.winAt < 1.6;
+    // The cabinet.
+    const cab = g.createLinearGradient(0, 0, W, 0); cab.addColorStop(0, '#3a0a10'); cab.addColorStop(0.5, '#6e1420'); cab.addColorStop(1, '#3a0a10');
+    g.fillStyle = cab; g.fillRect(0, 0, W, H);
+    // The marquee: the variant's name, the LED counters (wide).
+    rr(g, l.m, l.my, W - 2 * l.m, l.mh, 8);
+    const mq = g.createLinearGradient(0, l.my, 0, l.my + l.mh); mq.addColorStop(0, '#ffcf4a'); mq.addColorStop(1, '#c4851a');
+    g.fillStyle = mq; g.fill(); g.strokeStyle = '#fff1b8'; g.lineWidth = 1.5; g.stroke();
+    bulbs(g, l.m + 3, l.my + 3, W - 2 * l.m - 6, l.mh - 6, l.narrow ? 34 : 70, winning ? 14 : 5, winning);
+    const ledW = l.narrow ? 0 : 92, title = t(G.v.key).toUpperCase();
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#5a0a12';
+    fitFont(g, title, W - 2 * l.m - 2 * ledW - (l.narrow ? 50 : 70), l.narrow ? 12 : 17, 900, 'Cinzel, Georgia, serif');
+    g.fillText(title, W / 2, l.my + l.mh / 2 + 1);
+    if (!l.narrow) {
+      led(g, l.m + 8, l.my + 4, ledW, l.mh - 8, t('vpCredits').toUpperCase(), fmt(G.shown));
+      led(g, W - l.m - 8 - ledW, l.my + 4, ledW, l.mh - 8, 'WIN', fmt(G.win || 0));
+    }
+    // The screen in its ring of bulbs.
+    bulbs(g, l.sx - 3, l.sy - 3, l.sw + 6, l.sh + 6, l.narrow ? 40 : 90, winning ? 14 : 4, winning);
+    rr(g, l.sx, l.sy, l.sw, l.sh, 10); g.fillStyle = '#05060a'; g.fill();
+    rr(g, l.ix, l.iy, l.iw, l.ih, 7);
+    const scr = g.createRadialGradient(l.ix + l.iw / 2, l.iy + l.ih / 2, 10, l.ix + l.iw / 2, l.iy + l.ih / 2, Math.max(l.iw, l.ih) * 0.7);
+    scr.addColorStop(0, '#22744a'); scr.addColorStop(1, '#0f3d27');
+    g.fillStyle = scr; g.fill();
+    g.save(); rr(g, l.ix, l.iy, l.iw, l.ih, 7); g.clip();
+    drawPaytable(g, l);
+    drawReels(g, l);
+    // Under the reels: the hand that paid, or what to do.
+    if (G.msg && state !== 'spin' && state !== 'hold' && state !== 'draw') {
+      g.save(); g.fillStyle = GOLD; g.textAlign = 'center'; g.textBaseline = 'middle'; g.shadowColor = '#000'; g.shadowBlur = 4;
+      const big = state === 'win' || state === 'ready' || state === 'end';
+      fitFont(g, big ? G.msg.toUpperCase() : G.msg, l.aw - 10, big ? (l.narrow ? 13 : 17) : (l.narrow ? 9 : 11), 900);
+      g.fillText(big ? G.msg.toUpperCase() : G.msg, l.rx, l.ry + l.rh / 2 + (l.narrow ? 11 : 14)); g.restore();
+    }
+    // The screen's line: win, bet, credits.
+    const by = l.iy + l.ih - l.infoH / 2 - 3;
+    g.font = '800 ' + (l.narrow ? 8.5 : 11) + 'px Inter, system-ui, sans-serif'; g.textBaseline = 'middle'; g.fillStyle = GOLD;
+    g.textAlign = 'left'; g.fillText('WIN ' + fmt(G.win || 0), l.ix + 6, by);
+    g.textAlign = 'center'; g.fillText('BET ' + G.bet, l.ix + l.iw / 2, by);
+    g.textAlign = 'right'; g.fillText(t('vpCredits').toUpperCase() + ' ' + fmt(G.shown), l.ix + l.iw - 6, by);
+    g.restore();
+    // A win: the screen's frame flashes gold.
+    if (winning && Math.floor((time - G.winAt) * 8) % 2 === 0) { rr(g, l.ix - 1, l.iy - 1, l.iw + 2, l.ih + 2, 8); g.strokeStyle = '#ffd84a'; g.lineWidth = 3; g.stroke(); }
+    else { rr(g, l.ix, l.iy, l.iw, l.ih, 7); g.strokeStyle = 'rgba(255,255,255,.15)'; g.lineWidth = 1; g.stroke(); }
+    // The panel.
+    rr(g, l.m, l.cy0, W - 2 * l.m, l.ctrlH, 8);
+    const pan = g.createLinearGradient(0, l.cy0, 0, l.cy0 + l.ctrlH); pan.addColorStop(0, '#9aa0a8'); pan.addColorStop(1, '#4e535b');
+    g.fillStyle = pan; g.fill();
+    const kb = keyboardFirst();
+    for (const b of l.B) { const info = btnInfo(b.id); if (!info.hidden) machineButton(g, b, info, kb && (state === 'ready' || state === 'win') && G.focus === b.id); }
+    // The Ace on the marquee.
+    ace.place(l.narrow ? l.m + 16 : l.m + ledW + 26, l.my + l.mh - 2, l.narrow ? 0.1 : 0.13, shell.k);
+    drawFloaters(g, G.fx);
   }
 
   return {
@@ -411,6 +607,13 @@ function ensureBoxCss() {
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .vp-box .ar-show{flex-wrap:nowrap}#pth-game .vp-box h2{color:#f5d77a}'
     + '#pth-game.pg-light .vp-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
-    + '#pth-game.pg-light .vp-box h2{color:#8a6510}';
+    + '#pth-game.pg-light .vp-box h2{color:#8a6510}'
+    + '#pth-game .vp-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:2px 0 6px;pointer-events:auto}'
+    + '#pth-game .vp-chip{font:600 12px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:999px;border:1px solid rgba(216,178,90,.45);background:rgba(11,18,16,.6);color:#f5f0e3;cursor:pointer}'
+    + '#pth-game .vp-chip.on{background:#d8b25a;color:#141414;border-color:#d8b25a}'
+    + '#pth-game.pg-light .vp-chip{background:rgba(255,255,255,.7);color:#1d222b}#pth-game.pg-light .vp-chip.on{background:#d8b25a;color:#141414}'
+    + '#pth-game .gm-tile .vp-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .vp-rec{color:#8a6a10}'
+    + '#pth-game .vp-tiles{flex-wrap:wrap}#pth-game .vp-tiles .gm-tile{flex:1 1 calc(50% - 12px)}'
+    + '@media (min-width:700px){#pth-game .vp-tiles{flex-wrap:nowrap}#pth-game .vp-tiles .gm-tile{flex:1 1 0}}';
   document.head.appendChild(st);
 }

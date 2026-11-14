@@ -1,4 +1,11 @@
-2026-11-14 version 2.1.11-web.45 (current series):
+2026-11-14 version 2.1.11-web.46 (current series):
+- new: Video Poker is now a real slot machine: a burgundy cabinet with chasing lights, a lit marquee, a green screen and the cards on five reels that stop one by one
+- new: Video Poker — bet 1 to 5 credits with BET ONE / BET MAX; the pay table shows every bet, and a royal flush pays 4,000 at the max bet
+- new: Video Poker — four machines: Jacks or Better, Bonus Poker (four of a kind pay more), Deuces Wild (the 2s are wild) and Joker Poker (53 cards, the joker is wild)
+- new: Video Poker — no more 20-hand limit: play until your credits run out or press Cash out; the credits count up on a win and the lights race round the screen
+- improvement: Video Poker — the daily challenge has its own deals and record for each machine
+
+2026-11-14 version 2.1.11-web.45:
 - improvement: Higher or Lower — a printed casino felt instead of the wooden table: a double gold line round the table, the two card places in dashes, « PokerTH » in the felt; the shoe is a neat stack of cards with the count on a badge; bigger cards in the tournament
 
 2026-11-14 version 2.1.11-web.44:
