@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Všechny trofeje, bravo! Tady je moje překvapení, tajné slovo: v tréninkovém režimu napiš jako přezdívku **{w}** a stiskni Připojit. Otevře moji hernu skrytých her. Ať to zůstane mezi námi!",
   arcadePlay: "Hrát teď",
   arcadeMode: "**Bravo!** Odemkl jsi **minihry**. Čekají na tebe další tajemné hry… trénuj dál a objev je!",
+  arcadeEgg: "Psst… našel jsi mé **tajné slovo**! 🥚 Easter egg odemčen: **všechny minihry** jsou otevřené. Pst, zůstane to mezi námi!",
+  arcadeEggAgain: "Pěkný pokus! 😄 Všechno je **už odemčené** — v rukávu už nemám žádné eso… no, skoro.",
   c5Events: 'Nadcházející pohárové hry. Vytvářejí je správci pohárů; hráči se registrují na webu poháru nebo v jeho vlákně na fóru — hra WEC ve 22:00 (serverového času) registraci nevyžaduje. Časy jsou uvedeny v serverovém i ve tvém místním čase; klepni na událost a tlačítko dole se jí přizpůsobí.',
   c5Posts: 'Nejnovější příspěvky z fóra pokerth.net, jeden řádek na téma, nejnovější nahoře. Barevný štítek je fórum, ze kterého pochází (General, BBC, WEC…). Klepni na příspěvek a přečti si ho tady — pak se označí jako přečtený; ↗ ho otevře na fóru. Plná tečka znamená dosud nepřečtený; odznak na tlačítku je počítá a **Označit vše jako přečtené** je všechny smaže.',
   c5Adv: 'Všechny volby, podle sekcí. Piš do vyhledávacího pole a najdeš tu pravou; každý přepínač platí okamžitě. Volby označené **web** existují jen v tomto webovém klientovi.',

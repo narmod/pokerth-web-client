@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Todos os troféus, parabéns! Aqui está a minha surpresa, uma palavra secreta: no modo treino, escreve **{w}** como alcunha e carrega em Ligar. Abre a minha arcada de jogos escondidos. Fica entre nós!",
   arcadePlay: "Jogar agora",
   arcadeMode: "**Bravo!** Desbloqueaste os **minijogos**. Há mais jogos mistério à tua espera… continua a treinar para os descobrir!",
+  arcadeEgg: "Psst… encontraste a minha **palavra secreta**! 🥚 Easter egg desbloqueado: **todos os minijogos** estão abertos. Chiu, fica entre nós!",
+  arcadeEggAgain: "Boa tentativa! 😄 Está tudo **já desbloqueado**: já não tenho nenhum ás na manga… bem, quase.",
   c5Events: 'As próximas partidas das taças. São criadas pelos administradores das taças; os jogadores inscrevem-se no sítio da taça ou no respetivo tópico do fórum — a partida da WEC às 22:00 (hora do servidor) não precisa de inscrição. As horas são mostradas na hora do servidor e na tua hora local; toca num evento e o botão em baixo acompanha-o.',
   c5Posts: 'As publicações mais recentes do fórum pokerth.net, uma linha por tópico, as mais novas em cima. A etiqueta colorida indica o fórum de origem (General, BBC, WEC…). Toca numa publicação para a leres aqui — fica marcada como lida; ↗ abre-a no fórum. Um ponto cheio indica que ainda não foi lida; o emblema do botão conta-as e **Marcar tudo como lido** limpa-as todas.',
   c5Adv: 'Todas as opções, por secção. Escreve na caixa de pesquisa para encontrar uma; cada interruptor aplica-se de imediato. As opções marcadas com **web** só existem neste cliente web.',

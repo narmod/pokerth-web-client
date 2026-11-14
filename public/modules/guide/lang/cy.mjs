@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Pob tlws, bravo! Dyma fy syrpréis, gair cyfrinachol: yn y modd ymarfer, teipia **{w}** fel llysenw a phwysa Cysylltu. Mae’n agor fy arcêd o gemau cudd. Rhyngom ni’n dau!",
   arcadePlay: "Chwarae nawr",
   arcadeMode: "**Bravo!** Rwyt ti wedi datgloi'r **gemau bach**. Mae mwy o gemau dirgel yn aros amdanat… dal ati i ymarfer i'w darganfod!",
+  arcadeEgg: "Psst… rwyt ti wedi dod o hyd i'm **gair cyfrinachol**! 🥚 Wy Pasg wedi'i ddatgloi: mae **pob gêm fach** ar agor. Shh, rhyngom ni mae hynny!",
+  arcadeEggAgain: "Ymgais dda! 😄 Mae popeth **wedi'i ddatgloi yn barod** — does dim ace ar ôl yn fy llawes… wel, bron.",
   c5Events: 'Y gemau cwpan i ddod. Gweinyddwyr y cwpanau sy’n eu creu; mae chwaraewyr yn cofrestru ar wefan y cwpan neu yn ei edefyn fforwm — nid oes angen cofrestru ar gyfer gêm WEC am 22:00 (amser y gweinydd). Dangosir yr amseroedd yn amser y gweinydd ac yn eich amser lleol; tapiwch ddigwyddiad ac mae’r botwm ar y gwaelod yn ei ddilyn.',
   c5Posts: 'Negeseuon diweddaraf fforwm pokerth.net, un llinell i bob pwnc, y mwyaf newydd yn gyntaf. Y tag lliw yw’r fforwm y daw ohono (General, BBC, WEC…). Tapiwch neges i’w darllen yma — caiff ei marcio wedyn fel wedi’i darllen; mae ↗ yn ei hagor ar y fforwm. Mae dot llawn yn golygu heb ei darllen eto; mae’r bathodyn ar y botwm yn eu cyfrif, ac mae **Marcio\'r cyfan fel wedi\'i ddarllen** yn eu clirio i gyd.',
   c5Adv: 'Pob dewis, fesul adran. Teipiwch yn y blwch chwilio i ddod o hyd i un; mae pob switsh yn gweithio ar unwaith. Dim ond yn y cleient gwe hwn y mae’r dewisiadau sydd wedi’u marcio **web** ar gael.',

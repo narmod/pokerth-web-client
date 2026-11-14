@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Barcha kuboklar, barakalla! Mana mening syurprizim, maxfiy soʻz: mashq rejimida taxallus sifatida **{w}** deb yozing va Ulanish tugmasini bosing. U yashirin oʻyinlar arkadamni ochadi. Oramizda qolsin!",
   arcadePlay: "Hozir oʻynash",
   arcadeMode: "**Barakalla!** Sen **mini o'yinlar**ni ochding. Seni yana sirli o'yinlar kutmoqda… ularni topish uchun mashqni davom ettir!",
+  arcadeEgg: "Pss… mening **maxfiy so'zimni** topdingiz! 🥚 Syurpriz ochildi: **barcha mini o'yinlar** ochiq. Tss, bu oramizda qolsin!",
+  arcadeEggAgain: "Yaxshi urinish! 😄 Hammasi **allaqachon ochiq** — yengimda tuz qolmadi… deyarli.",
   c5Events: 'Yaqinlashayotgan kubok oʻyinlari. Ularni kubok adminlari yaratadi; oʻyinchilar kubok saytida yoki uning forumdagi mavzusida roʻyxatdan oʻtadi — soat 22:00 dagi (server vaqti) WEC oʻyini uchun roʻyxatdan oʻtish shart emas. Vaqtlar server vaqti va mahalliy vaqtingizda koʻrsatiladi; tadbirga bosing, pastdagi tugma unga ergashadi.',
   c5Posts: 'pokerth.net forumidagi soʻnggi postlar, har bir mavzuga bitta qator, eng yangilari tepada. Rangli belgi — post kelgan forum (General, BBC, WEC…). Postni shu yerda oʻqish uchun unga bosing — u oʻqilgan deb belgilanadi; ↗ uni forumda ochadi. Toʻla nuqta — hali oʻqilmagan; tugmadagi nishon ularni sanaydi, **Hammasini oʻqilgan deb belgilash** esa barchasini tozalaydi.',
   c5Adv: 'Barcha sozlamalar, boʻlimlar boʻyicha. Birini topish uchun qidiruv maydoniga yozing; har bir kalit darhol qoʻllanadi. **web** bilan belgilangan sozlamalar faqat shu veb-mijozda mavjud.',

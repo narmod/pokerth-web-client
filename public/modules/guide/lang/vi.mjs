@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Đủ tất cả cúp, tuyệt vời! Đây là bất ngờ của tôi, một từ bí mật: ở chế độ luyện tập, nhập **{w}** làm biệt danh rồi nhấn Kết nối. Nó mở khu trò chơi bí mật của tôi. Giữ bí mật giữa chúng ta nhé!",
   arcadePlay: "Chơi ngay",
   arcadeMode: "**Tuyệt vời!** Bạn đã mở khóa **trò chơi nhỏ**. Còn nhiều trò chơi bí ẩn đang chờ bạn… hãy tiếp tục luyện tập để khám phá!",
+  arcadeEgg: "Suỵt… bạn đã tìm ra **từ bí mật** của tôi! 🥚 Easter egg đã mở: **tất cả mini game** đều mở. Suỵt, chuyện này giữa chúng ta thôi!",
+  arcadeEggAgain: "Thử hay đấy! 😄 Mọi thứ **đã mở hết rồi** — tôi chẳng còn con át nào trong tay áo… à, gần như thế.",
   c5Events: 'Các ván cúp sắp tới. Chúng do quản trị viên của các cúp tạo; người chơi đăng ký trên trang web của cúp hoặc trong chủ đề diễn đàn của cúp — ván WEC lúc 22:00 (giờ máy chủ) không cần đăng ký. Giờ được hiển thị theo giờ máy chủ và giờ địa phương của bạn; chạm vào một sự kiện và nút ở dưới sẽ theo sự kiện đó.',
   c5Posts: 'Các bài viết mới nhất của diễn đàn pokerth.net, mỗi chủ đề một dòng, mới nhất ở trên. Nhãn màu cho biết diễn đàn nguồn (General, BBC, WEC…). Chạm vào một bài để đọc ngay tại đây — bài đó sẽ được đánh dấu là đã đọc; ↗ mở nó trên diễn đàn. Chấm đặc nghĩa là chưa đọc; huy hiệu trên nút đếm số bài đó, và **Đánh dấu tất cả là đã đọc** xóa hết.',
   c5Adv: 'Mọi tùy chọn, theo từng mục. Gõ vào ô tìm kiếm để tìm một tùy chọn; mỗi công tắc có hiệu lực ngay. Các tùy chọn được đánh dấu **web** chỉ có trong ứng dụng web này.',

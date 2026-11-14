@@ -47,6 +47,19 @@ async function pick(pg, id) {
   await sleep(100);
   await pg.keyboard.press('Space');
 }
+// The secret word (web.40): back on the choice of modes, the card out of its
+// egg, the Ace's word; then the card's tap opens the mini-games page.
+async function secretWord(pg) {
+  await pg.evaluate(() => App.connect());
+  await pg.waitForFunction(() => /🥚|😄/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 15000 }).catch(() => {});
+  const r = await pg.evaluate(() => ({
+    step1: document.getElementById('login-step1').style.display !== 'none',
+    card: !document.getElementById('login-card-arcade').hidden, page: !!document.getElementById('pth-game'),
+    bubble: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '', all: localStorage.getItem('pth_arcade_all'),
+  }));
+  await pg.evaluate(() => { window.loginOpenArcade(); });   // resolves when the page closes: not awaited
+  return r;
+}
 console.log('test-games-browser');
 for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const { ctx, pg } = await fresh(w, h);
@@ -55,7 +68,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.fill('#nick', '');
   await pg.type('#nick', 'Mascotte', { delay: 15 });
   await pg.evaluate(() => { window._achSeen = []; window.addEventListener('pth-achievement', (e) => window._achSeen.push(e.detail && e.detail.id)); });
-  await pg.evaluate(() => App.connect());
+  const egg = await secretWord(pg);
+  ok(egg.step1 && egg.card && !egg.page && egg.all === '1' && /mot secret/.test(egg.bubble), label + ': the secret word: back on the modes, the card out of its egg, the Ace\'s word, no page (« ' + egg.bubble.slice(0, 40) + '… »)');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   const st = await pg.evaluate(() => ({
     open: !!document.getElementById('pth-game'), nick: document.getElementById('nick').value,
@@ -508,7 +522,11 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     login: document.getElementById('s-connect').classList.contains('active') }));
   ok(closed.gone && !closed.pad && !closed.on && closed.login, label + ': Esc from the arcade page goes back to the login and releases the gamepad and the mascot');
   if (label === 'desktop') ok(closed.ach.indexOf('runner') >= 0, label + ': secret trophy granted on the way out');
-  // An ordinary nickname: a normal training game, no overlay.
+  // An ordinary nickname: a normal training game, no overlay (the secret word
+  // left the login on the choice of modes: training again first).
+  ok(await pg.evaluate(() => document.getElementById('login-step1').style.display !== 'none'), label + ': back on the choice of modes');
+  await pg.evaluate(() => { loginPickMode(document.querySelector('.login-card[onclick*="\'offline\'"]'), 'offline'); });
+  await sleep(500);
   await pg.fill('#nick', 'Narmod');
   await pg.evaluate(() => App.connect());
   await sleep(2500);
@@ -519,7 +537,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
 {
   const { ctx, pg } = await fresh(390, 844);
   await pg.fill('#nick', 'Mascotte');
-  await pg.evaluate(() => App.connect());
+  await secretWord(pg);
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await pg.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[data-art="house"]').closest('.gm-card'); c.querySelector('[data-rules]').click(); });
   await sleep(200);

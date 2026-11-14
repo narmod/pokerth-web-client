@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Vse trofeje, bravo! Tukaj je moje presenečenje, skrivna beseda: v načinu treninga vpiši **{w}** kot vzdevek in pritisni Poveži. Odpre mojo igralnico skritih iger. Naj ostane med nama!",
   arcadePlay: "Igraj zdaj",
   arcadeMode: "**Bravo!** Odklenil si **mini igre**. Čakajo te še skrivnostne igre … treniraj naprej in jih odkrij!",
+  arcadeEgg: "Psst… našel si mojo **skrivno besedo**! 🥚 Velikonočno jajce odklenjeno: **vse mini igre** so odprte. Pst, to ostane med nama!",
+  arcadeEggAgain: "Lep poskus! 😄 Vse je **že odklenjeno** — v rokavu nimam več asa… no, skoraj.",
   c5Events: 'Prihajajoče igre pokalov. Ustvarjajo jih skrbniki pokalov; igralci se prijavijo na strani pokala ali v njegovi temi na forumu — igra WEC ob 22:00 (po strežniškem času) prijave ne potrebuje. Časi so prikazani po strežniškem in po tvojem lokalnem času; tapni dogodek in gumb spodaj mu sledi.',
   c5Posts: 'Najnovejše objave s foruma pokerth.net, ena vrstica na temo, najnovejše zgoraj. Barvna oznaka je forum, iz katerega prihaja (General, BBC, WEC…). Tapni objavo, da jo prebereš tukaj — takrat se označi kot prebrana; ↗ jo odpre na forumu. Polna pika pomeni še neprebrano; značka na gumbu jih šteje, **Označi vse kot prebrano** pa jih počisti vse.',
   c5Adv: 'Vse možnosti, po razdelkih. Vpiši v iskalno polje, da najdeš katero; vsako stikalo učinkuje takoj. Možnosti z oznako **web** obstajajo samo v tem spletnem odjemalcu.',

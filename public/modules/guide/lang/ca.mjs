@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Tots els trofeus, bravo! Aquí tens la meva sorpresa, una paraula secreta: en mode entrenament, escriu **{w}** com a sobrenom i prem Connecta. Obre la meva sala de jocs amagats. Que quedi entre nosaltres!",
   arcadePlay: "Juga ara",
   arcadeMode: "**Bravo!** Has desbloquejat els **minijocs**. T'esperen més jocs misteriosos… continua entrenant per descobrir-los!",
+  arcadeEgg: "Psst… has trobat la meva **paraula secreta**! 🥚 Easter egg desbloquejat: **tots els minijocs** estan oberts. Xst, que quedi entre nosaltres!",
+  arcadeEggAgain: "Bon intent! 😄 Tot està **ja desbloquejat**: no em queda cap as a la màniga… bé, gairebé.",
   c5Events: 'Les properes partides de copa. Les creen els administradors de cada copa; els jugadors s’inscriuen al lloc de la copa o al seu fil del fòrum — la partida de la WEC de les 22:00 (hora del servidor) no necessita inscripció. Les hores es mostren en hora del servidor i en la teva hora local; toca un esdeveniment i el botó de sota el segueix.',
   c5Posts: 'Les darreres publicacions del fòrum de pokerth.net, una línia per tema, les més recents a dalt. L’etiqueta de color indica el fòrum d’origen (General, BBC, WEC…). Toca una publicació per llegir-la aquí — queda marcada com a llegida; ↗ l’obre al fòrum. Un punt ple vol dir que encara no s’ha llegit; la insígnia del botó les compta, i **Marca-ho tot com a llegit** les dona totes per llegides.',
   c5Adv: 'Totes les opcions, per secció. Escriu al quadre de cerca per trobar-ne una; cada interruptor s’aplica a l’instant. Les opcions marcades **web** només existeixen en aquest client web.',

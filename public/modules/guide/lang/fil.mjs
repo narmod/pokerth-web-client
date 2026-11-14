@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Lahat ng tropeo, bravo! Ito ang sorpresa ko, isang lihim na salita: sa training mode, i-type ang **{w}** bilang palayaw at pindutin ang Kumonekta. Binubuksan nito ang arcade ko ng mga nakatagong laro. Sa atin-atin lang ito!",
   arcadePlay: "Maglaro na",
   arcadeMode: "**Galing!** Na-unlock mo ang **mga mini game**. May iba pang misteryosong laro na naghihintay sa iyo… magpatuloy sa pagsasanay para matuklasan ang mga ito!",
+  arcadeEgg: "Psst… nahanap mo ang **lihim kong salita**! 🥚 Easter egg na-unlock: **lahat ng mini-game** ay bukas na. Shh, sa atin lang 'yan!",
+  arcadeEggAgain: "Magandang subok! 😄 Lahat ay **naka-unlock na** — wala na akong alas sa manggas… well, halos.",
   c5Events: 'Ang mga paparating na laro ng cup. Ginagawa ang mga ito ng mga admin ng cup; nagpaparehistro ang mga manlalaro sa site ng cup o sa forum thread nito — walang kailangang rehistrasyon ang laro ng WEC sa 22:00 (oras ng server). Ipinapakita ang mga oras sa oras ng server at sa lokal mong oras; i-tap ang isang event at susundan ito ng button sa ibaba.',
   c5Posts: 'Ang mga pinakabagong post ng forum ng pokerth.net, isang linya bawat topic, pinakabago sa itaas. Ang may-kulay na tag ay ang forum na pinagmulan nito (General, BBC, WEC…). I-tap ang isang post para basahin ito rito — mamarkahan na itong nabasa; binubuksan ito ng ↗ sa forum. Ang punong tuldok ay hindi pa nababasa; binibilang sila ng badge sa button, at nililinis lahat ng **Markahan lahat na nabasa**.',
   c5Adv: 'Lahat ng option, ayon sa seksyon. Mag-type sa search box para makahanap ng isa; agad na gumagana ang bawat switch. Ang mga option na may markang **web** ay nasa web client na ito lang.',

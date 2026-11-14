@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Alla troféer, bravo! Här är min överraskning, ett hemligt ord: skriv **{w}** som smeknamn i träningsläget och tryck på Anslut. Det öppnar min arkad med gömda spel. Det stannar mellan oss!",
   arcadePlay: "Spela nu",
   arcadeMode: "**Bravo!** Du har låst upp **minispelen**. Fler mysteriespel väntar på dig … fortsätt träna för att upptäcka dem!",
+  arcadeEgg: "Psst… du hittade mitt **hemliga ord**! 🥚 Påskägg upplåst: **alla minispel** är öppna. Hyss, det stannar mellan oss!",
+  arcadeEggAgain: "Bra försök! 😄 Allt är **redan upplåst** — jag har inga fler ess i rockärmen… nästan.",
   c5Events: 'Kommande cupmatcher. De skapas av cupernas administratörer; spelarna anmäler sig på cupens webbplats eller i dess forumtråd — WEC-spelet kl. 22:00 (servertid) kräver ingen anmälan. Tiderna visas i servertid och i din lokala tid; tryck på en händelse så följer knappen längst ned den.',
   c5Posts: 'De senaste inläggen i forumet på pokerth.net, en rad per ämne, nyaste först. Den färgade etiketten visar vilket forum det kommer från (General, BBC, WEC…). Tryck på ett inlägg för att läsa det här — det markeras då som läst; ↗ öppnar det i forumet. En fylld prick betyder oläst; siffran på knappen räknar dem, och **Markera allt som läst** rensar alla.',
   c5Adv: 'Alla alternativ, per avsnitt. Skriv i sökrutan för att hitta ett; varje reglage gäller direkt. Alternativ märkta **web** finns bara i den här webbklienten.',

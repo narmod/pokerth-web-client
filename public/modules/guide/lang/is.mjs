@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Allir bikararnir, bravó! Hér er glaðningurinn minn, leyniorð: í æfingaham skaltu slá inn **{w}** sem gælunafn og ýta á Tengjast. Það opnar spilasalinn minn með földum leikjum. Höldum því á milli okkar!",
   arcadePlay: "Spila núna",
   arcadeMode: "**Bravó!** Þú hefur opnað **smáleikina**. Fleiri leyndarleikir bíða þín… haltu áfram að æfa til að uppgötva þá!",
+  arcadeEgg: "Psst… þú fannst **leyniorðið** mitt! 🥚 Páskaegg opnað: **allir smáleikirnir** eru opnir. Uss, þetta er á milli okkar!",
+  arcadeEggAgain: "Góð tilraun! 😄 Allt er **þegar opið** — ég á engan ás eftir í erminni… ja, næstum.",
   c5Events: 'Komandi bikarleikir. Stjórnendur bikarkeppnanna búa þá til; leikmenn skrá sig á síðu bikarsins eða í þræði hans á spjallborðinu — WEC-leikurinn kl. 22:00 (að tíma netþjóns) þarf enga skráningu. Tímarnir eru sýndir að tíma netþjóns og í þínum staðartíma; pikkaðu á viðburð og hnappurinn neðst fylgir honum.',
   c5Posts: 'Nýjustu færslurnar á spjallborði pokerth.net, ein lína á hvert umræðuefni, nýjast efst. Litaði merkimiðinn sýnir úr hvaða spjallborði hún kemur (General, BBC, WEC…). Pikkaðu á færslu til að lesa hana hér — hún er þá merkt sem lesin; ↗ opnar hana á spjallborðinu. Fylltur punktur þýðir ólesið; talan á hnappnum telur þær, og **Merkja allt sem lesið** hreinsar þær allar.',
   c5Adv: 'Allir valkostir, eftir hlutum. Skrifaðu í leitarreitinn til að finna einn; hver rofi tekur gildi strax. Valkostir merktir **web** eru aðeins til í þessum vefbiðlara.',

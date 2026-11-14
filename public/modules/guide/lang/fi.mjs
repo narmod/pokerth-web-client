@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Kaikki palkinnot, bravo! Tässä yllätykseni, salainen sana: kirjoita harjoitustilassa nimimerkiksi **{w}** ja paina Yhdistä. Se avaa piilopelien pelihallini. Pidetään se meidän välisenämme!",
   arcadePlay: "Pelaa nyt",
   arcadeMode: "**Bravo!** Avasit **minipelit**. Lisää salaisia pelejä odottaa… jatka harjoittelua löytääksesi ne!",
+  arcadeEgg: "Psst… löysit **salasanani**! 🥚 Pääsiäismuna avattu: **kaikki minipelit** ovat auki. Hys, tämä jää meidän välillemme!",
+  arcadeEggAgain: "Hyvä yritys! 😄 Kaikki on **jo avattu** — minulla ei ole enää ässää hihassa… no, melkein.",
   c5Events: 'Tulevat cup-pelit. Ne luovat cupien ylläpitäjät; pelaajat ilmoittautuvat cupin sivustolla tai sen foorumiketjussa — WEC-peli klo 22:00 (palvelimen aikaa) ei vaadi ilmoittautumista. Ajat näytetään palvelimen aikana ja paikallisena aikanasi; napauta tapahtumaa, niin alareunan painike seuraa sitä.',
   c5Posts: 'pokerth.net-foorumin uusimmat viestit, rivi aihetta kohti, uusimmat ensin. Värillinen tunniste kertoo, mistä foorumista viesti on (General, BBC, WEC…). Napauta viestiä lukeaksesi sen täällä — se merkitään silloin luetuksi; ↗ avaa sen foorumilla. Täytetty piste tarkoittaa lukematonta; painikkeen merkki laskee ne, ja **Merkitse kaikki luetuiksi** tyhjentää ne kaikki.',
   c5Adv: 'Kaikki asetukset osioittain. Kirjoita hakukenttään löytääksesi haluamasi; jokainen kytkin tulee voimaan heti. Merkinnällä **web** varustetut asetukset ovat vain tässä verkkoasiakkaassa.',

@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Gbogbo ife ẹ̀yẹ, o ṣeun! Ìyàlẹ́nu mi nìyí, ọ̀rọ̀ àṣírí kan: ní ipò ìdánrawò, tẹ **{w}** gẹ́gẹ́ bí orúkọ ìnagijẹ kí o sì tẹ Sopọ̀. Ó ṣí gbọ̀ngàn eré àṣírí mi. Kí ó wà láàárín wa!",
   arcadePlay: "Ṣeré báyìí",
   arcadeMode: "**Kú iṣẹ́!** O ti ṣí **àwọn eré kékeré**. Àwọn eré àṣírí míì ń dúró dè ọ́… máa bá ìdánrawò lọ kí o lè rí wọn!",
+  arcadeEgg: "Psst… o ti rí **ọ̀rọ̀ àṣírí** mi! 🥚 Ìyàlẹ́nu tí a fi pamọ́ ṣí: **gbogbo eré kékeré** ti ṣí. Ṣṣṣ, láàrin àwa nìkan ni!",
+  arcadeEggAgain: "Ìgbìyànjú tó dára! 😄 Gbogbo nǹkan **ti ṣí tẹ́lẹ̀** — kò sí ace kankan mọ́ nínú àpá aṣọ mi… ó dára, ó fẹ́rẹ̀.",
   c5Events: 'Àwọn eré ife tí ń bọ̀. Àwọn alábòójútó ife ló ń ṣẹ̀dá wọn; àwọn òṣèré ń forúkọ sílẹ̀ lórí ojú-òpó ife náà tàbí nínú àkọlé àpéjọ rẹ̀ — eré WEC ní 22:00 (àkókò olupin) kò nílò ìforúkọsílẹ̀. A ń fi àkókò hàn ní àkókò olupin àti ní àkókò agbègbè rẹ; tẹ ìṣẹ̀lẹ̀ kan, bọ́tìnì ìsàlẹ̀ yóò sì tẹ̀lé e.',
   c5Posts: 'Àwọn àròkọ tuntun ti àpéjọ pokerth.net, ìlà kan fún kókó kọ̀ọ̀kan, tuntun jù lọ ní òkè. Àmì aláwọ̀ ni àpéjọ tí ó ti wá (General, BBC, WEC…). Tẹ àròkọ kan láti kà á níbí — a ó sì sàmì sí i bí èyí tí a ti kà; ↗ ń ṣí i lórí àpéjọ. Àmì kíkún túmọ̀ sí pé a kò tíì kà á; àmì-ìdámọ̀ lórí bọ́tìnì ń kà wọ́n, **Sàmì sí gbogbo rẹ̀ bí èyí tí a ti kà** sì ń pa gbogbo wọn rẹ́.',
   c5Adv: 'Gbogbo àṣàyàn, ní ìpín-ìpín. Tẹ̀wé sínú àpótí ìwádìí láti rí ọ̀kan; ìyípadà kọ̀ọ̀kan ń ṣiṣẹ́ lẹ́sẹ̀kẹsẹ̀. Àwọn àṣàyàn tí a sàmì sí **web** wà nínú oníbàárà wẹ́ẹ̀bù yìí nìkan.',

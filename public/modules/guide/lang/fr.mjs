@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Tous les trophées, bravo ! Voici ma surprise, un mot secret : en mode entraînement, tape **{w}** comme pseudo puis Connexion. Il ouvre mon arcade de jeux cachés. Ça reste entre nous !",
   arcadePlay: "Jouer maintenant",
   arcadeMode: "**Bravo !** Tu as débloqué les **mini-jeux**. D'autres jeux mystère t'attendent… continue l'entraînement pour les découvrir !",
+  arcadeEgg: "Psst… tu as trouvé mon **mot secret** ! 🥚 Easter egg débloqué : **tous les mini-jeux** sont ouverts. Chut, ça reste entre nous !",
+  arcadeEggAgain: "Bien essayé ! 😄 Tout est **déjà débloqué** : je n'ai plus d'As dans ma manche… enfin, presque.",
   c5Events: 'Les prochaines parties de coupe. Elles sont créées par les admins de la coupe ; les joueurs s’inscrivent sur le site de la coupe ou dans son fil du forum — la partie WEC de 22:00 (heure du serveur) ne demande aucune inscription. Les heures sont affichées à l’heure du serveur et à ton heure locale ; touche un événement et le bouton du bas le suit.',
   c5Posts: 'Les derniers messages du forum pokerth.net, une ligne par sujet, les plus récents en haut. L’étiquette de couleur indique le forum d’origine (General, BBC, WEC…). Touche un post pour le lire ici — il est alors marqué comme lu ; ↗ l’ouvre sur le forum. Une pastille pleine = pas encore lu ; la pastille rouge du bouton les compte, et **Tout marquer comme lu** les efface tous.',
   c5Adv: 'Toutes les options, par section. Tape dans le champ de recherche pour en trouver une ; chaque interrupteur s’applique immédiatement. Les options marquées **web** n’existent que dans ce client web.',

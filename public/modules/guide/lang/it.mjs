@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Tutti i trofei, bravo! Ecco la mia sorpresa, una parola segreta: in modalità allenamento scrivi **{w}** come nickname e premi Connetti. Apre la mia sala giochi nascosta. Resta tra noi!",
   arcadePlay: "Gioca ora",
   arcadeMode: "**Bravo!** Hai sbloccato i **minigiochi**. Altri giochi misteriosi ti aspettano… continua ad allenarti per scoprirli!",
+  arcadeEgg: "Psst… hai trovato la mia **parola segreta**! 🥚 Easter egg sbloccato: **tutti i minigiochi** sono aperti. Shh, resta tra noi!",
+  arcadeEggAgain: "Bel tentativo! 😄 È **già tutto sbloccato**: non ho più assi nella manica… beh, quasi.",
   c5Events: 'Le prossime partite di coppa. Le creano gli admin delle coppe; i giocatori si iscrivono sul sito della coppa o nella sua discussione sul forum — la partita WEC delle 22:00 (ora del server) non richiede iscrizione. Gli orari sono mostrati nell’ora del server e nella tua ora locale; tocca un evento e il pulsante in basso lo segue.',
   c5Posts: 'Gli ultimi post del forum di pokerth.net, una riga per discussione, i più recenti in alto. L’etichetta colorata indica il forum di provenienza (General, BBC, WEC…). Tocca un post per leggerlo qui — viene segnato come letto; ↗ lo apre sul forum. Un pallino pieno indica che non è ancora letto; il badge sul pulsante li conta e **Segna tutto come letto** li azzera tutti.',
   c5Adv: 'Tutte le opzioni, per sezione. Scrivi nella casella di ricerca per trovarne una; ogni interruttore si applica subito. Le opzioni contrassegnate da **web** esistono solo in questo client web.',

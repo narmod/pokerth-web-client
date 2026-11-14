@@ -4,9 +4,11 @@
 // 2026-10-16). Not in the official QML client.
 //
 // In training (server « Training vs bots »), typing the secret word as the
-// nickname and pressing Connect opens the mini-games page (menu.mjs: Ace Runner,
-// House of Cards, Poker Solitaire… Ace Dash, Poker Run) instead of a table (App.connect() in pokerth.js asks
-// tryLaunch() first). The word is the translation of gameWordAce (« mascot »)
+// nickname and pressing Connect unlocks the Mini-games mode with every game
+// (menu.mjs: Ace Runner, House of Cards, Poker Solitaire… Ace Dash, Poker
+// Run) instead of starting a table: back on the choice of modes, its card
+// comes out of an egg (web.40; App.connect() in pokerth.js asks tryLaunch()
+// first). The word is the translation of gameWordAce (« mascot »)
 // in the current language, plus the English word, which works in every
 // language. Matching ignores case,
 // accents and surrounding spaces. The real nickname is put back in the field
@@ -220,15 +222,29 @@ export async function launch(id) {
   } finally { open = false; shellNow = null; }
 }
 
-/** Called by App.connect() in training: true when a game opened instead. */
+/**
+ * Called by App.connect() in training: true when the nickname was the secret
+ * word (no table then). Since web.40 it no longer opens the mini-games page:
+ * it unlocks the mode with every game, and the login goes back to the choice
+ * of modes for the easter egg (ui/login-arcade.mjs) — or, when every game is
+ * already open, for the Ace's joke.
+ */
 export function tryLaunch(nick) {
   const id = gameForNick(nick);
   if (!id) return false;
-  if (!allUnlocked()) countUnlock('word');
-  unlockAll();
   restoreNick();
-  launch(id);
+  secretWord().catch((e) => { try { console.warn('[games]', e); } catch (e2) {} });
   return true;
+}
+async function secretWord() {
+  const st = await currentState();
+  const already = !!(st && st.mode && st.open === st.total);
+  if (!already) {
+    if (!allUnlocked()) countUnlock('word');
+    unlockAll();
+  }
+  const la = await import('../ui/login-arcade.mjs');
+  await la.secretWord(already);
 }
 
 export function isOpen() { return open; }

@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Zonke izindebe, halala! Nansi into yami emangalisayo, igama eliyimfihlo: kumodi yokuzijwayeza, thayipha **{w}** njengesiteketiso bese ucindezela Xhuma. Livula i-arcade yami yemidlalo efihliwe. Akuhlale phakathi kwethu!",
   arcadePlay: "Dlala manje",
   arcadeMode: "**Wenze kahle!** Uvule **imidlalo emincane**. Eminye imidlalo eyimfihlakalo isakulindile… qhubeka uzijwayeze ukuze uyithole!",
+  arcadeEgg: "Psst… uthole **igama lami eliyimfihlo**! 🥚 Isimanga sivuliwe: **yonke imidlalo emincane** ivuliwe. Shh, lokhu kuphakathi kwethu!",
+  arcadeEggAgain: "Umzamo omuhle! 😄 Konke **sekuvuliwe kakade** — angisenayo i-ace emkhonweni… kahle, cishe.",
   c5Events: 'Imidlalo yezindebe ezayo. Idalwa ngabaphathi bezindebe; abadlali babhalisa kuwebhusayithi yendebe noma endikimbeni yayo yeforamu — umdlalo we-WEC ngo-22:00 (ngesikhathi seseva) awudingi ukubhalisa. Izikhathi zikhonjiswa ngesikhathi seseva nangesikhathi sakho sendawo; thepha umcimbi bese inkinobho engezansi iyawulandela.',
   c5Posts: 'Okuthunyelwe kwakamuva kweforamu ye-pokerth.net, umugqa owodwa ngesihloko, okusha kuqala. Ithegi enombala iyiforamu okuvela kuyo (General, BBC, WEC…). Thepha okuthunyelwe ukuze ukufunde lapha — bese kumakwa njengokufundiwe; i-↗ ikuvula eforamu. Ichashazi eligcwele lisho ukuthi akukafundwa; ibheji enkinobhweni iyakubala, futhi **Maka konke njengokufundiwe** kukusula konke.',
   c5Adv: 'Zonke izinketho, ngesigaba. Bhala ebhokisini lokusesha ukuze uthole eyodwa; iswishi ngayinye isebenza ngokushesha. Izinketho ezimakwe ngo-**web** zikhona kuleli klayenti lewebhu kuphela.',

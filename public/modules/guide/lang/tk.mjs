@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Ähli kuboklar, bravo! Ine meniň sowgadym, gizlin söz: türgenleşik düzgüninde lakam hökmünde **{w}** ýaz we Birikdir düwmesine bas. Ol gizlin oýunlarymyň arkadasyny açýar. Goý, aramyzda galsyn!",
   arcadePlay: "Häzir oýna",
   arcadeMode: "**Berekella!** Sen **mini oýunlary** açdyň. Seni ýene syrly oýunlar garaşýar… olary tapmak üçin türgenleşigi dowam et!",
+  arcadeEgg: "Pss… sen meniň **gizlin sözümi** tapdyň! 🥚 Garaşylmadyk sowgat açyldy: **ähli mini oýunlar** açyk. Şş, bu aramyzda galsyn!",
+  arcadeEggAgain: "Gowy synanyşyk! 😄 Hemme zat **eýýäm açyk** — ýeňimde tuz galmady… diýen ýaly.",
   c5Events: 'Geljek kubok oýunlary. Olary kubok adminleri döredýär; oýunçylar kubogyň saýtynda ýa-da forumdaky temasynda ýazylýarlar — sagat 22:00-daky (serwer wagty) WEC oýny üçin ýazylmak gerek däl. Wagtlar serwer wagty we ýerli wagtyňyz boýunça görkezilýär; bir çärä basyň, aşakdaky düwme oňa eýerer.',
   c5Posts: 'pokerth.net forumynyň iň soňky ýazgylary, her tema bir setir, iň täzeleri ýokarda. Reňkli bellik ýazgynyň gelen forumydyr (General, BBC, WEC…). Ýazgyny şu ýerde okamak üçin oňa basyň — ol okalan diýip bellenýär; ↗ ony forumda açýar. Doly nokat — entek okalmadyk; düwmedäki nyşan olary sanaýar, **Hemmesini okalan diýip belle** bolsa hemmesini arassalaýar.',
   c5Adv: 'Ähli opsiýalar, bölümler boýunça. Birini tapmak üçin gözleg meýdançasyna ýazyň; her açar derrew işleýär. **web** bilen bellenen opsiýalar diňe şu web kliýentinde bar.',

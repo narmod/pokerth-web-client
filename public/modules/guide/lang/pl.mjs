@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Wszystkie trofea, brawo! Oto moja niespodzianka, sekretne słowo: w trybie treningu wpisz **{w}** jako pseudonim i naciśnij Połącz. Otwiera ono mój salon ukrytych gier. Niech to zostanie między nami!",
   arcadePlay: "Graj teraz",
   arcadeMode: "**Brawo!** Odblokowałeś **minigry**. Czekają na ciebie kolejne tajemnicze gry… trenuj dalej, aby je odkryć!",
+  arcadeEgg: "Psst… znalazłeś moje **sekretne słowo**! 🥚 Easter egg odblokowany: **wszystkie minigry** są otwarte. Ćśś, to zostaje między nami!",
+  arcadeEggAgain: "Niezła próba! 😄 Wszystko jest **już odblokowane** — nie mam już asa w rękawie… no, prawie.",
   c5Events: 'Nadchodzące gry pucharowe. Tworzą je administratorzy pucharów; gracze zapisują się na stronie pucharu lub w jego wątku na forum — gra WEC o 22:00 (czas serwera) nie wymaga zapisów. Godziny są pokazane w czasie serwera i w twoim czasie lokalnym; dotknij wydarzenia, a przycisk na dole za nim podąży.',
   c5Posts: 'Najnowsze posty z forum pokerth.net, jedna linia na temat, najnowsze na górze. Kolorowa etykieta to forum, z którego pochodzi (General, BBC, WEC…). Dotknij posta, aby przeczytać go tutaj — zostanie wtedy oznaczony jako przeczytany; ↗ otwiera go na forum. Pełna kropka oznacza, że jeszcze nie przeczytany; plakietka na przycisku je liczy, a **Oznacz wszystko jako przeczytane** czyści je wszystkie.',
   c5Adv: 'Wszystkie opcje, według sekcji. Wpisz tekst w polu wyszukiwania, aby znaleźć opcję; każdy przełącznik działa od razu. Opcje oznaczone **web** istnieją tylko w tym kliencie webowym.',

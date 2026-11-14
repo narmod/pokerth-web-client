@@ -96,6 +96,8 @@ export default {
   arcadeReveal: "Every trophy — bravo! Here is my surprise, a secret word: in training mode, type **{w}** as your nickname and press Connect. It opens my arcade of hidden games. Keep it between us!",
   arcadePlay: "Play now",
   arcadeMode: "**Bravo!** You've unlocked the **mini-games**. More mystery games are waiting for you… keep training to discover them!",
+  arcadeEgg: "Psst… you found my **secret word**! 🥚 Easter egg unlocked: **every mini-game** is open. Shh, that stays between us!",
+  arcadeEggAgain: "Nice try! 😄 Everything is **already unlocked** — there's no ace left up my sleeve… well, almost.",
   c5Events: 'The upcoming cup games. They are created by the cup admins; players register on the cup’s site or in its forum thread — the WEC game at 22:00 (server time) needs no registration. Times are shown in server time and in your local time; tap an event and the button at the bottom follows it.',
   c5Posts: 'The latest posts of the pokerth.net forum, one line per topic, newest first. The coloured tag is the forum it comes from (General, BBC, WEC…). Tap a post to read it here — it is then marked as read; ↗ opens it on the forum. A filled dot means not read yet; the badge on the button counts them, and **Mark all as read** clears them all.',
   c5Adv: 'Every option, by section. Type in the search box to find one; each switch applies at once. Options marked **web** exist only in this web client.',

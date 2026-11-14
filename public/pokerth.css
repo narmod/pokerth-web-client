@@ -1744,6 +1744,16 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   100% { opacity: 1; filter: none; transform: none; }
 }
 @keyframes lc-fade { from { opacity: 0; } to { opacity: 1; } }
+/* The secret word's easter egg (web.40): out of its egg, the card's glow runs
+   through the colours of the rainbow. */
+.login-card.lc-egg { animation: lc-mat 1.5s cubic-bezier(.2,.7,.2,1) both, lc-egg 1.2s linear 3; }
+@keyframes lc-egg {
+  0%, 100% { border-color: #ff5a5f; box-shadow: 0 0 0 1px #ff5a5f, 0 0 26px 6px rgba(255,90,95,.45); }
+  20% { border-color: #ffb400; box-shadow: 0 0 0 1px #ffb400, 0 0 26px 6px rgba(255,180,0,.45); }
+  40% { border-color: #4cd964; box-shadow: 0 0 0 1px #4cd964, 0 0 26px 6px rgba(76,217,100,.45); }
+  60% { border-color: #3fa9f5; box-shadow: 0 0 0 1px #3fa9f5, 0 0 26px 6px rgba(63,169,245,.45); }
+  80% { border-color: #a66cff; box-shadow: 0 0 0 1px #a66cff, 0 0 26px 6px rgba(166,108,255,.45); }
+}
 .lc-new { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: #d8a93a; color: #1a1305;
   font-size: calc(10px * var(--interface-scale)); font-weight: 800; letter-spacing: .04em; vertical-align: 2px; line-height: 1.5; }
 .lc-tx { flex: 1; min-width: 0; }

@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **The secret word, an easter egg** (`web.40`) — `games/index.mjs` `tryLaunch()` no longer opens the mini-games
+  page: it unlocks the mode with every game (`unlockAll`, counted `unlock_word`) and calls
+  `ui/login-arcade.mjs` `secretWord(already)`: `loginBackToStep1()` (the header unfolds as from any mode), then
+  the card's appearance in its easter-egg variant — `backlight(el, { egg: true })`: a golden egg wobbles and
+  cracks where the card will be, its shell flies apart at the flash, rainbow rays, confetti, `eggJingle()`; the
+  card's glow runs through the rainbow (`.lc-egg`) — and the Ace's `arcadeEgg` note (« Play now » / « Close »,
+  `window.guideArcadeEgg`). Every game already open: no light, the Ace's joke `arcadeEggAgain`. 2 guide keys × 83.
+  Tests: `test-login-arcade-browser` (back on the modes, the egg, 10/10, the joke, from the trophies),
+  `test-games-browser` (the page through the card).
 - **Ace Runner — venues, day and night, the climb, a fairer score** (`web.39`) — new `games/runner-scenery.mjs`
   (precached): `VENUES` (club, Las Vegas, cruise, Monte-Carlo, Macao, final table), `venueOf(level)` one every
   `VENUE_EVERY` = 10 levels, `skyAt(p)` / `dayAt(t)` a day/night cycle of `DAY_S` = 150 s (sun, moon, stars, lit

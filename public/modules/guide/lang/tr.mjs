@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Tüm kupalar, bravo! İşte sürprizim, gizli bir kelime: antrenman modunda takma ad olarak **{w}** yaz ve Bağlan’a bas. Gizli oyunlarımın salonunu açar. Aramızda kalsın!",
   arcadePlay: "Şimdi oyna",
   arcadeMode: "**Bravo!** **Mini oyunların** kilidini açtın. Seni başka gizemli oyunlar da bekliyor… onları keşfetmek için antrenmana devam et!",
+  arcadeEgg: "Pışş… **gizli kelimemi** buldun! 🥚 Sürpriz açıldı: **tüm mini oyunlar** açık. Şşş, aramızda kalsın!",
+  arcadeEggAgain: "İyi denemeydi! 😄 Her şey **zaten açık** — yenimde hiç as kalmadı… yani, neredeyse.",
   c5Events: 'Yaklaşan kupa oyunları. Bunları kupa yöneticileri oluşturur; oyuncular kupanın sitesinden veya forum başlığından kaydolur — 22:00’deki (sunucu saatiyle) WEC oyunu kayıt gerektirmez. Saatler sunucu saatiyle ve senin yerel saatinle gösterilir; bir etkinliğe dokun, alttaki düğme onu izler.',
   c5Posts: 'pokerth.net forumunun son gönderileri, konu başına bir satır, en yenisi en üstte. Renkli etiket gönderinin geldiği forumdur (General, BBC, WEC…). Bir gönderiyi burada okumak için ona dokun — o zaman okundu olarak işaretlenir; ↗ onu forumda açar. Dolu nokta henüz okunmadı demektir; düğmedeki rozet bunları sayar ve **Tümünü okundu olarak işaretle** hepsini temizler.',
   c5Adv: 'Tüm seçenekler, kısım kısım. Birini bulmak için arama kutusuna yaz; her anahtar anında uygulanır. **web** ile işaretli seçenekler yalnızca bu web istemcisinde vardır.',

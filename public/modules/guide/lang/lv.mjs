@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Visas trofejas, bravo! Lūk, mans pārsteigums, slepens vārds: treniņa režīmā ieraksti **{w}** kā segvārdu un nospied Pieslēgties. Tas atver manu slēpto spēļu arkādi. Lai tas paliek starp mums!",
   arcadePlay: "Spēlēt tagad",
   arcadeMode: "**Bravo!** Tu atbloķēji **minispēles**. Tevi gaida vēl noslēpumainas spēles… turpini treniņu, lai tās atklātu!",
+  arcadeEgg: "Psst… tu atradi manu **slepeno vārdu**! 🥚 Lieldienu ola atbloķēta: **visas minispēles** ir atvērtas. Šš, tas paliek starp mums!",
+  arcadeEggAgain: "Labs mēģinājums! 😄 Viss ir **jau atbloķēts** — man piedurknē vairs nav neviena dūža… nu, gandrīz.",
   c5Events: 'Gaidāmās kausu spēles. Tās izveido kausu administratori; spēlētāji piesakās kausa vietnē vai tā foruma tēmā — WEC spēlei plkst. 22:00 (pēc servera laika) pieteikšanās nav vajadzīga. Laiki ir norādīti servera laikā un tavā vietējā laikā; pieskaries pasākumam, un poga apakšā tam sekos.',
   c5Posts: 'Jaunākie ieraksti pokerth.net forumā, viena rinda katrai tēmai, jaunākie augšā. Krāsainā birka rāda, no kura foruma tas nāk (General, BBC, WEC…). Pieskaries ierakstam, lai to izlasītu šeit — tad tas tiek atzīmēts kā lasīts; ↗ atver to forumā. Aizpildīts punkts nozīmē, ka vēl nav lasīts; žetons uz pogas tos skaita, un **Atzīmēt visus kā lasītus** notīra tos visus.',
   c5Adv: 'Visas opcijas, pa sadaļām. Raksti meklēšanas lodziņā, lai atrastu vajadzīgo; katrs slēdzis iedarbojas uzreiz. Ar **web** atzīmētās opcijas ir tikai šajā tīmekļa klientā.',

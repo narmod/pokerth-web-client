@@ -19,6 +19,12 @@
 // congratulates the player (guide: window.guideArcadeMode). At the table, the
 // trophy that unlocks the mode is followed by a toast that does not say what
 // it is (pth_arcade_toast).
+//
+// The secret word typed in training (games/index.mjs, web.40) no longer opens
+// the mini-games page: back on the choice of modes (the header unfolds as
+// from any mode), the card comes out of a golden egg in a rainbow light, then
+// the Ace congratulates — an easter egg. With every game already open, the
+// Ace only says so, with a smile (secretWord()).
 // ═══════════════════════════════════════════════════════════════════
 
 const SEEN_KEY = 'pth_arcade_seen';
@@ -87,6 +93,39 @@ async function celebrate(card) {
   try { if (typeof window.guideArcadeMode === 'function') window.guideArcadeMode(); } catch (e) {}
 }
 
+/**
+ * The secret word (games/index.mjs): back on the choice of modes, then the
+ * easter egg — or, with every game already open (`already`), the Ace's joke.
+ */
+export async function secretWord(already) {
+  celebrating = true;   // no ordinary light meanwhile
+  try {
+    // Back on the choice of modes, the header unfolding as from any mode.
+    if (typeof window.loginBackToStep1 === 'function') window.loginBackToStep1();
+    await new Promise((r) => setTimeout(r, soft() ? 50 : FOLD_MS + 120));
+    await refresh();
+    const card = document.getElementById('login-card-arcade');
+    const guide = (again) => { try { if (typeof window.guideArcadeEgg === 'function') window.guideArcadeEgg(again); } catch (e) {} };
+    if (already || !card || card.hidden) {
+      guide(true);
+      if (typeof window.guideArcadeEgg !== 'function') { try { window.showToast && window.showToast('🕹️ ' + tr('arcadeToast')); } catch (e) {} }
+      return;
+    }
+    setFlag(SHOWN_KEY);
+    setFlag(TOAST_KEY);
+    stat('celebrated');
+    card.classList.add('lc-hide');
+    try { card.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+    try {
+      const { backlight, motionOff } = await import('./backlight.mjs');
+      const off = motionOff();
+      await backlight(card, { egg: true, onFlash: () => { card.classList.remove('lc-hide'); card.classList.add(off ? 'lc-fade' : 'lc-egg'); } });
+    } catch (e) { card.classList.remove('lc-hide'); }
+    setTimeout(() => card.classList.remove('lc-egg', 'lc-fade'), 3800);
+    guide(false);
+  } finally { celebrating = false; }
+}
+
 function render() {
   const card = document.getElementById('login-card-arcade');
   if (!card) return;
@@ -144,6 +183,7 @@ export async function openArcade() {
 
 if (typeof window !== 'undefined') {
   window.loginOpenArcade = openArcade;
+  window.loginSecretWord = secretWord;
   // A trophy won: the mode may have just been unlocked. At the table, a toast
   // after the trophy's own (the card waits for the login to appear).
   // A training game ended (offline/server.mjs): with the mode unlocked or not

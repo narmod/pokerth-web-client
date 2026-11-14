@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Al die trofeë, bravo! Hier is my verrassing, ’n geheime woord: tik in oefenmodus **{w}** as jou bynaam en druk Koppel. Dit maak my arkade van versteekte speletjies oop. Hou dit tussen ons!",
   arcadePlay: "Speel nou",
   arcadeMode: "**Bravo!** Jy het die **minispeletjies** oopgesluit. Nog geheimsinnige speletjies wag vir jou … hou aan oefen om hulle te ontdek!",
+  arcadeEgg: "Psst… jy het my **geheime woord** gevind! 🥚 Easter egg ontsluit: **al die minispeletjies** is oop. Sjuut, dis tussen ons!",
+  arcadeEggAgain: "Mooi probeer! 😄 Alles is **reeds ontsluit** — ek het nie meer 'n aas in my mou nie… wel, amper.",
   c5Events: 'Die komende bekerspelle. Hulle word deur die beker-admins geskep; spelers skryf in op die webwerf van die beker of in sy forumdraad — die WEC-spel om 22:00 (bedienertyd) vereis geen inskrywing nie. Tye word in bedienertyd en in jou plaaslike tyd gewys; tik op ’n geleentheid en die knoppie onderaan volg dit.',
   c5Posts: 'Die jongste plasings van die pokerth.net-forum, een reël per onderwerp, nuutste eerste. Die gekleurde etiket is die forum waarvandaan dit kom (General, BBC, WEC…). Tik op ’n plasing om dit hier te lees — dit word dan as gelees gemerk; ↗ maak dit op die forum oop. ’n Gevulde kolletjie beteken nog nie gelees nie; die kenteken op die knoppie tel hulle, en **Merk alles as gelees** maak hulle almal skoon.',
   c5Adv: 'Elke opsie, per afdeling. Tik in die soekkassie om een te vind; elke skakelaar geld onmiddellik. Opsies gemerk **web** bestaan slegs in hierdie webkliënt.',

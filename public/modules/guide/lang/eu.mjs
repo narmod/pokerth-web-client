@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Trofeo guztiak, bravo! Hona hemen nire ezustekoa, hitz sekretu bat: entrenamendu moduan, idatzi **{w}** ezizen gisa eta sakatu Konektatu. Ezkutuko jokoen arkadea irekitzen du. Gure artean geratu dadila!",
   arcadePlay: "Jokatu orain",
   arcadeMode: "**Bikain!** **Minijokoak** desblokeatu dituzu. Joko misteriotsu gehiago zain dituzu… jarraitu entrenatzen aurkitzeko!",
+  arcadeEgg: "Psst… nire **hitz sekretua** aurkitu duzu! 🥚 Easter egga desblokeatuta: **minijoko guztiak** irekita daude. Txist, gure artean geratzen da!",
+  arcadeEggAgain: "Saiakera polita! 😄 Dena **desblokeatuta dago jada**: ez zait batekorik geratzen mahukan… beno, ia.",
   c5Events: 'Hurrengo kopa-partidak. Kopako administratzaileek sortzen dituzte; jokalariek kopako webgunean edo haren foroko harian ematen dute izena — WECen 22:00etako partidak (zerbitzariaren orduan) ez du izen-ematerik behar. Orduak zerbitzariaren orduan eta zure tokiko orduan erakusten dira; sakatu ekitaldi bat eta beheko botoiak jarraituko dio.',
   c5Posts: 'pokerth.net foroko azken mezuak, lerro bat gai bakoitzeko, berrienak goian. Kolorezko etiketak mezuaren foroa adierazten du (General, BBC, WEC…). Sakatu mezu bat hemen irakurtzeko — orduan irakurritzat markatzen da; ↗ ikurrak foroan irekitzen du. Puntu beteak oraindik irakurri gabea dela esan nahi du; botoiko txapak horiek zenbatzen ditu, eta **Markatu guztiak irakurritzat** botoiak denak garbitzen ditu.',
   c5Adv: 'Aukera guztiak, atalka. Idatzi bilaketa-koadroan bat aurkitzeko; etengailu bakoitza berehala aplikatzen da. **web** marka duten aukerak web bezero honetan soilik daude.',

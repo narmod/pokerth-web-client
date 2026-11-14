@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Kõik trofeed, braavo! Siin on minu üllatus, salasõna: treeningrežiimis kirjuta hüüdnimeks **{w}** ja vajuta Ühenda. See avab minu peidetud mängude arkaadi. Jäägu see meie vahele!",
   arcadePlay: "Mängi kohe",
   arcadeMode: "**Braavo!** Avasid **minimängud**. Sind ootavad veel salamängud… treeni edasi, et need avastada!",
+  arcadeEgg: "Psst… leidsid mu **salasõna**! 🥚 Lihavõttemuna avatud: **kõik minimängud** on lahti. Šš, see jääb meie vahele!",
+  arcadeEggAgain: "Hea katse! 😄 Kõik on **juba avatud** — mul pole enam ässa varrukas… noh, peaaegu.",
   c5Events: 'Tulevased karikamängud. Neid loovad karikate administraatorid; mängijad registreeruvad karika lehel või selle foorumiteemas — WEC-i mäng kell 22:00 (serveri aja järgi) registreerumist ei vaja. Ajad on näidatud nii serveri kui ka sinu kohaliku aja järgi; puuduta sündmust ja all olev nupp järgib seda.',
   c5Posts: 'pokerth.net-i foorumi viimased postitused, üks rida teema kohta, uusimad eespool. Värviline silt näitab, millisest foorumist see pärineb (General, BBC, WEC…). Puuduta postitust, et seda siin lugeda — see märgitakse siis loetuks; ↗ avab selle foorumis. Täidetud täpp tähendab, et see on veel lugemata; nupul olev märk loendab neid ja **Märgi kõik loetuks** kustutab need kõik.',
   c5Adv: 'Kõik valikud, jaotiste kaupa. Kirjuta otsinguväljale, et mõni leida; iga lüliti rakendub kohe. Märgisega **web** valikud on olemas ainult selles veebikliendis.',

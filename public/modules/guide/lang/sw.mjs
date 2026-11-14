@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Vikombe vyote, hongera! Hii ndiyo zawadi yangu, neno la siri: katika hali ya mazoezi, andika **{w}** kama jina la utani kisha ubonyeze Unganisha. Linafungua ukumbi wangu wa michezo iliyofichwa. Ibaki kati yetu!",
   arcadePlay: "Cheza sasa",
   arcadeMode: "**Hongera!** Umefungua **michezo midogo**. Michezo mingine ya siri inakusubiri… endelea kufanya mazoezi ili uigundue!",
+  arcadeEgg: "Psst… umegundua **neno langu la siri**! 🥚 Mshangao umefunguliwa: **michezo midogo yote** iko wazi. Shh, hii ni kati yetu!",
+  arcadeEggAgain: "Jaribio zuri! 😄 Kila kitu **tayari kimefunguliwa** — sina tena dume kwenye mkono wa shati… vizuri, karibu.",
   c5Events: 'Michezo ijayo ya vikombe. Huundwa na wasimamizi wa vikombe; wachezaji hujisajili kwenye tovuti ya kikombe au kwenye uzi wake wa jukwaa — mchezo wa WEC saa 22:00 (saa ya seva) hauhitaji usajili. Nyakati zinaonyeshwa kwa saa ya seva na kwa saa yako ya eneo; gusa tukio na kitufe kilicho chini hulifuata.',
   c5Posts: 'Machapisho ya hivi karibuni ya jukwaa la pokerth.net, mstari mmoja kwa kila mada, mapya kwanza. Lebo ya rangi ni jukwaa yanakotoka (General, BBC, WEC…). Gusa chapisho ili kulisoma hapa — kisha huwekwa alama kuwa limesomwa; ↗ hulifungua kwenye jukwaa. Kitone kilichojaa kinamaanisha bado halijasomwa; beji kwenye kitufe huyahesabu, na **Weka zote kama zimesomwa** huyafuta yote.',
   c5Adv: 'Kila chaguo, kwa sehemu. Andika kwenye kisanduku cha kutafuta ili kupata moja; kila swichi hutumika papo hapo. Chaguo zilizowekwa alama ya **web** zipo tu kwenye mteja huu wa wavuti.',

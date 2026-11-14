@@ -1533,6 +1533,22 @@ async function arcadeMode() {
   try { if (M) M.react('wave'); } catch (e) {}
 }
 
+// The secret word typed in training (web.40): back on the choice of modes,
+// the card has come out of its egg — or everything was already open, and the
+// Ace says so with a smile. « Play now » opens the mini-games page.
+async function arcadeEgg(again) {
+  arcadeNote = true;
+  await note(again ? 'arcadeEggAgain' : 'arcadeEgg', [btn('arcadePlay', true), btn('close')], (id) => {
+    arcadeNote = false;
+    endOnDemand();
+    if (id === 'arcadePlay') {
+      try { if (typeof window.arcadeStat === 'function') window.arcadeStat('celebrate_play'); } catch (e) {}
+      try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {}
+    }
+  });
+  try { if (M) M.react(again ? 'hop' : 'cheer'); } catch (e) {}
+}
+
 // ── Live game list (C1 / C2) ───────────────────────────────────────
 function onGames() {
   if (!available() || !state.isOn()) return;
@@ -1737,6 +1753,7 @@ window._guideApply = apply;
 window._guideRefresh = () => { if (showing && showing.kind === 'ctx' && showing.run && showing.run.ctx.tour && M && M.bubbleOpen()) renderStep({ keepFold: true }); };
 window.guideToggle = toggle;
 window.guideArcadeMode = () => { arcadeMode().catch(() => {}); };
+window.guideArcadeEgg = (again) => { arcadeEgg(!!again).catch(() => {}); };
 // The mini-games opened another way (the login card): the bubble goes.
 window.guideArcadeModeClose = () => { if (arcadeNote && showing && showing.kind === 'note') { arcadeNote = false; endOnDemand(); } };
 /** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */

@@ -160,9 +160,42 @@ console.log('test-login-arcade-browser');
   await sleep(800);
   await pg.fill('#nick', 'Mascotte');
   await pg.evaluate(() => App.connect());
+  // web.40: no page — back on the choice of modes, the card out of its egg.
+  await sleep(250);
+  const mid = await pg.evaluate(() => ({ step1: document.getElementById('login-step1').style.display !== 'none', fold: document.querySelector('#s-connect .card').classList.contains('login-in-mode'), page: !!document.getElementById('pth-game') }));
+  ok(mid.step1 && !mid.fold && !mid.page, 'Mascotte: back on the choice of modes, the header unfolding, no mini-games page');
+  await sleep(1400);
+  const egg = await pg.evaluate(() => ({ canvas: !!document.querySelector('canvas.pth-backlight'), hide: document.getElementById('login-card-arcade').classList.contains('lc-hide') }));
+  ok(egg.canvas && egg.hide, 'Mascotte: the easter egg plays round the empty card');
+  await pg.waitForFunction(() => /🥚/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 12000 }).catch(() => {});
+  const c = await card(pg);
+  const st = await pg.evaluate(() => ({ all: localStorage.getItem('pth_arcade_all'), shown: localStorage.getItem('pth_arcade_shown'), bub: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '', cls: document.getElementById('login-card-arcade').className }));
+  ok(c.shown && /10\/10/.test(c.desc) && st.all === '1' && st.shown === '1', 'Mascotte: the card with every game, unlocked for good (' + c.desc + ')');
+  ok(/mot secret/.test(st.bub), 'Mascotte: the Ace\'s easter-egg word (« ' + st.bub.slice(0, 50) + '… »)');
+  // Typed again: everything is open already — the Ace's joke, no light.
+  await pg.evaluate(() => loginPickMode(document.querySelector('.login-card[onclick*="\'offline\'"]'), 'offline'));
+  await sleep(500);
+  await pg.fill('#nick', 'mascotte');
+  await pg.evaluate(() => App.connect());
+  await pg.waitForFunction(() => /😄/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 8000 }).catch(() => {});
+  const again = await pg.evaluate(() => ({ step1: document.getElementById('login-step1').style.display !== 'none', canvas: !!document.querySelector('canvas.pth-backlight'), page: !!document.getElementById('pth-game'), bub: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '' }));
+  ok(again.step1 && !again.canvas && !again.page && /déjà débloqué/.test(again.bub), 'Mascotte again: back on the modes, the Ace\'s joke, no light (« ' + again.bub.slice(0, 50) + '… »)');
+  await pg.evaluate(() => { const b = [...document.querySelectorAll('#ace-dock .ad-bubble button')].find((x) => /Jouer/.test(x.textContent)); if (b) b.click(); });
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  const n = await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-card').length);
-  ok(n === 10 && await pg.evaluate(() => localStorage.getItem('pth_arcade_all') === '1'), 'Mascotte: every game, and the mode stays unlocked on this device (' + n + ')');
+  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-card').length) === 10, 'Mascotte again: « Play now » opens the page with every game');
+  await ctx.close();
+}
+{
+  // The mode already there from the trophies, some games still closed: the
+  // secret word opens the rest with the easter egg.
+  const { ctx, pg } = await open(393, 852, 12, { pth_lang: 'en', pth_arcade_shown: '1', pth_arcade_seen: '1' });
+  await pg.evaluate(() => { loginPickMode(document.querySelector('.login-card[onclick*="\'offline\'"]'), 'offline'); });
+  await sleep(800);
+  await pg.fill('#nick', 'Mascot');
+  await pg.evaluate(() => App.connect());
+  await pg.waitForFunction(() => /🥚/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 15000 }).catch(() => {});
+  const c = await card(pg);
+  ok(/10\/10/.test(c.desc), 'mode from the trophies (3/10): the secret word opens all ten, with the egg (' + c.desc + ')');
   await ctx.close();
 }
 for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {

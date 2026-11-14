@@ -83,6 +83,8 @@ export default {
   arcadeReveal: "Todos os trofeos, bravo! Velaquí a miña sorpresa, unha palabra secreta: no modo adestramento, escribe **{w}** como alcume e preme Conectar. Abre a miña arcade de xogos agochados. Que quede entre nós!",
   arcadePlay: "Xogar agora",
   arcadeMode: "**Bravo!** Desbloqueaches os **minixogos**. Agárdante máis xogos misteriosos… segue adestrando para descubrilos!",
+  arcadeEgg: "Psst… atopaches a miña **palabra secreta**! 🥚 Easter egg desbloqueado: **todos os minixogos** están abertos. Chis, que quede entre nós!",
+  arcadeEggAgain: "Bo intento! 😄 Está todo **xa desbloqueado**: non me queda ningún ás na manga… bo, case.",
   c5Events: 'As próximas partidas das copas. Créanas os administradores das copas; os xogadores inscríbense no sitio da copa ou no seu fío do foro — a partida da WEC ás 22:00 (hora do servidor) non precisa inscrición. As horas amósanse en hora do servidor e na túa hora local; toca un evento e o botón de abaixo ségueo.',
   c5Posts: 'As últimas publicacións do foro de pokerth.net, unha liña por tema, as máis recentes arriba. A etiqueta de cor indica o foro de orixe (General, BBC, WEC…). Toca unha publicación para lela aquí — queda marcada como lida; ↗ ábrea no foro. Un punto cheo indica que aínda non se leu; a insignia do botón cóntaas, e **Marcar todo como lido** dáas todas por lidas.',
   c5Adv: 'Todas as opcións, por seccións. Escribe na caixa de busca para atopar unha; cada interruptor aplícase ao momento. As opcións marcadas con **web** só existen neste cliente web.',
