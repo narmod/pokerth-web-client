@@ -14,6 +14,9 @@
 //   Lanes      ← → (keys, pad, swipe) — one lane at a time, smoothly
 //   Jump       ↑, Space, tap or swipe up — always the same height; a jump
 //              pressed just before landing is kept (JUMP_BUF_MS)
+//   Backflip   jump again in the air (web.47): a higher jump and a backflip,
+//              once per jump — high enough to clear a card wall, the dealer
+//              button or a flying card; near the felt it is a buffered jump
 //   Duck       ↓ held, or a swipe down for a short roll (DUCK_SWIPE_MS)
 //   Obstacles  chip stacks (jump or change lane), flying cards (duck), card
 //              walls and the rolling dealer button (change lane). Every row
@@ -37,7 +40,8 @@ import { CHIP, fmt, backUrl, cardHtml, newDeck, imageCache, drawFace, rr, aceAct
 const PZ = 4;                 // the Ace's depth in front of the camera
 const ZN = 0.8, ZFAR = 62, Z_SPAWN = 60, SEG = 2;   // near plane, fog end, where rows appear, felt band length
 const LANE = 1.6, HALF = 2.45, RAIL = 0.55;         // lane width, half the felt, the rail
-const GRAV = 19, JUMP_V = 6.3, DIVE_V = -11, LANE_V = 12.5;
+const GRAV = 19, JUMP_V = 6.3, JUMP2_V = 7.6, DIVE_V = -11, LANE_V = 12.5;
+const FLIP_S = 0.6, FLIP_LOW = 0.35;                // the backflip's length; below that height, falling, a press is a buffered jump
 const STAND = 1.15, DUCKH = 0.55;                   // the Ace's height, standing and ducking
 const BLIND_EVERY = 300;
 const SPEED0 = 11, SPEED_LVL = 1.15, SPEED_T = 0.015, SPEED_MAX = 24;
@@ -50,6 +54,16 @@ const CSS = `
 #${ACE_ID} .mc-card3d{transition:transform .42s cubic-bezier(.3,1.3,.5,1)}
 #${ACE_ID}.adash-back .mc-card3d{transform:rotateY(180deg)}
 #${ACE_ID}.adash-back .run .mc-lean,#${ACE_ID}.adash-back .air .mc-lean,#${ACE_ID}.adash-back .duck .mc-lean{transform:none}
+#${ACE_ID}.adash-back .run .mc-legL{animation:adLeg .3s ease-in-out infinite alternate}
+#${ACE_ID}.adash-back .run .mc-legR{animation:adLeg .3s ease-in-out infinite alternate-reverse}
+#${ACE_ID}.adash-back .run .mc-armL{animation:adArmL .3s ease-in-out infinite alternate-reverse}
+#${ACE_ID}.adash-back .run .mc-armR{animation:adArmR .3s ease-in-out infinite alternate}
+@keyframes adLeg{from{transform:scaleY(1)}to{transform:translateY(-3px) scaleY(.68)}}
+@keyframes adArmL{from{transform:rotate(6deg) scaleY(1)}to{transform:rotate(-4deg) scaleY(.8)}}
+@keyframes adArmR{from{transform:rotate(-6deg) scaleY(1)}to{transform:rotate(4deg) scaleY(.8)}}
+#${ACE_ID}.adash-back .air .mc-legL{transform:rotate(10deg) scaleY(.78)}#${ACE_ID}.adash-back .air .mc-legR{transform:rotate(-10deg) scaleY(.78)}
+#${ACE_ID}.adash-back .flip .mc-legL,#${ACE_ID}.adash-back .flip .mc-legR{transform:scaleY(.55)}
+#${ACE_ID}.adash-back .flip .mc-armL{transform:rotate(-40deg)}#${ACE_ID}.adash-back .flip .mc-armR{transform:rotate(40deg)}
 #pth-game .adash-chip{display:inline-block;width:.8em;height:.8em;border-radius:50%;background:#b3261e;vertical-align:-.05em;margin-right:.25em;
   box-shadow:inset 0 0 0 .14em #f5f0e3,inset 0 0 0 .24em #b3261e}
 @media (prefers-reduced-motion:reduce){#${ACE_ID} .mc-card3d{transition:none}}
@@ -123,7 +137,7 @@ export function create(shell) {
 
   function newRun() {
     G = { t: 0, travel: 0, dist: 0, bonus: 0, chips: 0, level: 1, speed: SPEED0,
-      lane: 1, x: 0, y: 0, vy: 0, onGround: true, duck: false, duckKey: false, duckUntil: 0, jumpBuf: 0, lean: 0,
+      lane: 1, x: 0, y: 0, vy: 0, onGround: true, dbl: false, flipAt: -1, duck: false, duckKey: false, duckUntil: 0, jumpBuf: 0, lean: 0,
       allInUntil: 0, allInWarned: false, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
       obj: [], items: [], fx: [], deck: newDeck(), hand: [], ev: evalCards([]),
       spawnAt: 6, rows: 0, free: 1, nextCard: 2, nextPower: 14, overAt: 0 };
@@ -217,7 +231,18 @@ export function create(shell) {
   }
 
   // ── Input ─────────────────────────────────────────────────────────
-  const doJump = () => { G.vy = JUMP_V; G.onGround = false; G.duckUntil = 0; };
+  const doJump = () => { G.vy = JUMP_V; G.onGround = false; G.dbl = false; G.duckUntil = 0; };
+  /** Jump again in the air: higher, with a backflip (once per jump). */
+  function backflip() {
+    G.vy = JUMP2_V; G.dbl = true; G.flipAt = G.t;
+    sound('notifyRaise'); buzz(15);
+  }
+  /** The backflip's angle now (0 when none), eased in and out. */
+  function flipAngle() {
+    if (G.flipAt < 0 || shell.reduced) return 0;
+    const f = clamp((G.t - G.flipAt) / FLIP_S, 0, 1);
+    return 360 * (f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2);
+  }
   function input(a, down, info) {
     const now = performance.now();
     if (a === 'jump' && down && state !== 'run') {
@@ -227,7 +252,11 @@ export function create(shell) {
     if (state !== 'run' || !down && a !== 'duck') return;
     if (a === 'left') G.lane = Math.max(0, G.lane - 1);
     else if (a === 'right') G.lane = Math.min(2, G.lane + 1);
-    else if (a === 'jump') { if (G.onGround) doJump(); else G.jumpBuf = now + JUMP_BUF_MS; }
+    else if (a === 'jump') {
+      if (G.onGround) doJump();
+      else if (!G.dbl && (G.vy > 0 || G.y > FLIP_LOW)) backflip();
+      else G.jumpBuf = now + JUMP_BUF_MS;
+    }
     else if (a === 'duck') {
       if (down && info && info.swipe) G.duckUntil = now + DUCK_SWIPE_MS;   // a swipe: a short roll
       else G.duckKey = down;
@@ -267,7 +296,8 @@ export function create(shell) {
     G.lean += (clamp(dx, -1, 1) - G.lean) * Math.min(1, dt * 14);
     if (!G.onGround) {
       G.vy -= GRAV * dt; G.y += G.vy * dt;
-      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
+      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
+      else if (G.flipAt >= 0 && G.t - G.flipAt >= FLIP_S) G.flipAt = -1;
     }
     G.duck = (G.duckKey || now < G.duckUntil) && G.onGround;
     camX += (G.x * 0.55 - camX) * Math.min(1, dt * 7);
@@ -291,10 +321,13 @@ export function create(shell) {
       const adx = Math.abs(G.x - o.x);
       if (adx >= o.hw + 0.26) { if (adx < o.hw + 0.7) o.nearLat = true; continue; }
       o.lat = true;
+      // Over the top: a stack with a jump; a card wall or the dealer button with a backflip.
       let hit;
-      if (o.kind === 'stack') { hit = G.y < o.h; if (!hit && G.y - o.h < 0.15) o.vclose = true; }
-      else if (o.kind === 'fly') hit = top > o.y0;
-      else hit = true;
+      if (o.kind === 'fly') { hit = top > o.y0 && G.y < o.y1; if (!hit && G.y >= o.y1 && G.y - o.y1 < 0.15) o.vclose = true; }
+      else {
+        const h = o.kind === 'stack' ? o.h : o.kind === 'wall' ? o.h : o.r * 2;
+        hit = G.y < h; if (!hit && G.y - h < 0.15) o.vclose = true;
+      }
       if (!hit) continue;
       if (king) smash(o);
       else if (now < G.safeUntil) { /* still blinking after the insurance paid */ }
@@ -309,7 +342,7 @@ export function create(shell) {
     G.items = G.items.filter((i) => i.z > ZN - 0.3 && !i.got);
     if (G.travel >= G.spawnAt) { spawnRow(); G.spawnAt += G.speed * gapTime(); }
 
-    ace.pose(!G.onGround ? 'air' : G.duck ? 'duck' : 'run');
+    ace.pose(!G.onGround ? (G.flipAt >= 0 ? 'flip' : 'air') : G.duck ? 'duck' : 'run');
     ace.mood(now < G.yayUntil ? 'mc-m-yay' : now < G.coolUntil ? 'mc-m-cool' : !G.onGround ? 'mc-m-jump' : king ? 'mc-m-fierce' : 'mc-m-smile');
     const ending = king && G.allInUntil - now < ALLIN_WARN_MS;
     if (ending && !G.allInWarned) { G.allInWarned = true; buzz(25); }
@@ -595,10 +628,10 @@ export function create(shell) {
     gF.setTransform(shell.dpr * shell.k, 0, 0, shell.dpr * shell.k, 0, 0);
     gF.clearRect(0, 0, shell.W, shell.H);
   }
-  function placeAce(x, y, rot, alpha) {
+  function placeAce(x, y, rot, alpha, flip) {
     const p = P(x, y, PZ);
     // The sprite is ~178 px from the feet to the top of the card.
-    ace.place(p[0], p[1], (STAND * F / PZ) / 178, shell.k, rot);
+    ace.place(p[0], p[1], (STAND * F / PZ) / 178, shell.k, rot, flip);
     ace.fade(alpha);
   }
 
@@ -635,7 +668,7 @@ export function create(shell) {
       rr(gF, bx - 1.5, by - 1.5, bw + 3, bh + 3, 5); gF.strokeStyle = warn ? 'rgba(232,80,63,.9)' : 'rgba(245,197,24,.8)'; gF.lineWidth = 1; gF.stroke();
     }
     const blink = state === 'run' && now < G.safeUntil && Math.floor(now / 90) % 2;
-    placeAce(G.x, G.y, state === 'run' ? clamp(G.lean * 9, -12, 12) : 0, blink ? 0.35 : 1);
+    placeAce(G.x, G.y, state === 'run' ? clamp(G.lean * 9, -12, 12) : 0, blink ? 0.35 : 1, state === 'run' ? flipAngle() : 0);
   }
 
   return {

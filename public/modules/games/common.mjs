@@ -193,10 +193,13 @@ export function aceActor(layer) {
       }
       pos.classList.toggle('ar-ending', !!(on && ending));
     },
-    place(x, y, s, k, rot) {
+    place(x, y, s, k, rot, flip) {
       // Origin on the feet: they land on (x, y) whatever the scale and the tilt.
+      // flip (degrees): a somersault round his middle, top towards the viewer
+      // (Ace Dash's backflip, seen from behind).
       box.style.transform = 'translate(' + (x * k - 84) + 'px,' + (y * k - 212) + 'px) scale(' + s * k + ')'
-        + (rot ? ' rotate(' + rot + 'deg)' : '');
+        + (rot ? ' rotate(' + rot + 'deg)' : '')
+        + (flip ? ' translateY(-96px) perspective(520px) rotateX(' + (-flip) + 'deg) translateY(96px)' : '');
     },
     show(on) { root.style.display = on ? '' : 'none'; },
     /** Opacity of the Ace (1 = normal), e.g. a blink while protected. */

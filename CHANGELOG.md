@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash — running from behind, the backflip** (`web.47`, narmod) — the run cycle seen from behind
+  (`.adash-back .run`: `adLeg` lifts each foot with a `scaleY` from the hip, the arms swing short) instead of Ace
+  Runner's side-view swing; a second jump in the air (`backflip()`: `JUMP2_V` 7.6, once per jump, buffered as a
+  normal jump when falling below `FLIP_LOW`) with a backflip (`ace.place(…, flip)`: `rotateX` round his middle,
+  `FLIP_S` 0.6 s, none with reduced motion; `flip` pose: tucked legs). Collisions by height: a card wall
+  (1.6 m), the dealer button (its diameter) and a flying card (above `y1`) can now be cleared from above; close
+  calls count over them too. `adHint` / `adRules` updated in all 83 languages.
 - **Video Poker — a slot machine** (`web.46`, narmod: « more like a slot machine », cabinet B, ideas 1 2 6 8) —
   `games/videopoker.mjs` redrawn as a burgundy cabinet (marquee, chasing `bulbs()`, LED meters on wide screens),
   a green screen, the pay table (phone: two columns; wide: five bet columns, the current bet lit) and five reels

@@ -482,6 +482,22 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => window.__pthDash.run().lane === 2), label + ': → → to the right lane, and no further');
   await pg.keyboard.press('Space'); await sleep(120);
   ok(await pg.evaluate(() => window.__pthDash.run().y > 0.2), label + ': Space jumps');
+  await pg.evaluate(() => { const G = window.__pthDash.run(); G.peak = 0; G.obj = []; });
+  await pg.keyboard.press('Space');
+  await sleep(60);
+  const flipOn = await pg.evaluate(() => ({ dbl: window.__pthDash.run().dbl, cls: document.querySelector('#pth-game-ace .mc-pos').className }));
+  ok(flipOn.dbl === true && / flip\b/.test(' ' + flipOn.cls), label + ': Space again in the air: the backflip (' + flipOn.cls + ')');
+  let peak = 0;
+  for (let i = 0; i < 12; i++) { peak = Math.max(peak, await pg.evaluate(() => window.__pthDash.run().y)); await sleep(40); }
+  ok(peak > 1.6, label + ': the backflip goes higher than a card wall (' + peak.toFixed(2) + ' m)');
+  await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
+  const wallOk = await pg.evaluate(() => new Promise((res) => {
+    const G = window.__pthDash.run();
+    G.onGround = false; G.y = 2; G.vy = 3; G.dbl = true; G.spawnAt = G.travel + 30;
+    G.obj = [{ kind: 'wall', x: G.x, z: 4.6, h: 1.6, hw: 0.66, dz: 0.3, tilt: 0 }];
+    setTimeout(() => res({ st: window.__pthDash.state(), done: !!G.obj.length && !!G.obj[0].done || !G.obj.length }), 260);
+  }));
+  ok(wallOk.st === 'run' && wallOk.done, label + ': over the top of a card wall, no crash (' + wallOk.st + ')');
   if (label === 'phone') {
     // A swipe to the left, drawn with the mouse on the stage (pointer events).
     const r = await pg.evaluate(() => { const b = document.querySelector('#pth-game .pg-stage').getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
