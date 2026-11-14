@@ -99,6 +99,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — modes, Endless** (`web.32`, narmod: no tables; three modes instead — Endless, TV show, Daily
+  challenge) — `games/whowins.mjs`: the tables page and its stars are gone (`TABLES` → `LEVELS`, `starsFor` /
+  `tableOpen` / `pth_ww_tables` removed); the title shows the modes (`MODES`), first `endless`: 3 hearts, a level
+  every `LEVEL_EVERY` = 5 right answers (`levelOf`), a banner on the board at each level, HUD « Level n », best level
+  per mode in `pth_ww_best`, result with again / modes. Trophy: 30 right answers (the Ace's level cleared). Keys:
+  +`wwModeEndless(D)`, `wwLevel`, `wwLevelLab`, `wwModes`; −7 table keys; rules line 4 × 83. Tests updated.
 - **Who Wins? — the tables, 2/3** (`web.31`) — `games/whowins.mjs`: six tables of `TABLE_DEALS` = 10 showdowns,
   3 hearts each (`TABLES`: pairs & high card · flushes & straights · kickers · traps · split pots · the Ace's table,
   5 s, a mix), each dealing what it teaches by rejection sampling (`dealOnce`, `trapOf`: board plays, counterfeited

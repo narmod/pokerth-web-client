@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.31 (current series):
+2026-11-14 version 2.1.11-web.32 (current series):
+- improvement: Who Wins? — the six tables make way for game modes; first one, Endless: 3 hearts and a new level every 5 right answers, from pairs to the Ace's table, with a banner at each level
+- improvement: the secret trophy « Who Wins? » is won by clearing the Ace's level in Endless
+
+2026-11-14 version 2.1.11-web.31:
 - new: Who Wins? — six tables of 10 hands to clear with 3 hearts each: pairs & high card, flushes & straights, kickers, traps, split pots, then the Ace's table
 - new: Who Wins? — up to 3 stars per table (★ cleared, ★★ one mistake at most, ★★★ none); a star opens the next table
 - improvement: the secret trophy « Who Wins? » is now won by clearing the Ace's table (players who have it keep it)
