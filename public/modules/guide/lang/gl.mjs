@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Mesa de adestramento: escolle o número de xogadores, un estilo de xogo (o ritmo) e o nivel dos xogadores do ordenador, e despois crea a mesa. Nada do que fagas aquí conta para ningunha clasificación.',
   c5Ranking: 'A clasificación oficial de **PokerTH** e as das comunidades (**BBC**, **WEC**) en lapelas. Busca un xogador, escolle **Tempada** ou **De sempre** e toca un nome para abrir o perfil — tocar a súa gráfica alterna entre barras e torta.',
   c5Trophies: "Os teus trofeos de adestramento. Un pequeno segredo: gaña **todos** os trofeos desta lista e ao final terei unha sorpresa para ti!",
-  arcadeReveal: "Todos os trofeos, bravo! Velaquí a miña sorpresa, unha palabra secreta: no modo adestramento, escribe **{w}** como alcume e preme Conectar. Abre a miña arcade de xogos agochados. Que quede entre nós!",
+  arcadeReveal: "Todos os trofeos, bravo! Velaquí a miña sorpresa, unha palabra secreta: no modo adestramento, escribe **{w}** como alcume e preme Conectar. Próbaa e mira que pasa… Que quede entre nós!",
   arcadePlay: "Xogar agora",
   arcadeMode: "**Bravo!** Desbloqueaches os **minixogos**. Agárdante máis xogos misteriosos… segue adestrando para descubrilos!",
   arcadeEgg: "Psst… atopaches a miña **palabra secreta**! 🥚 Easter egg desbloqueado: **todos os minixogos** están abertos. Chis, que quede entre nós!",

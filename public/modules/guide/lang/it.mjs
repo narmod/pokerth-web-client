@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Tavolo di allenamento: scegli il numero di giocatori, uno stile di gioco (il ritmo) e il livello dei giocatori computer, poi crea il tavolo. Niente qui conta per una classifica.',
   c5Ranking: 'La classifica ufficiale **PokerTH** e quelle delle community (**BBC**, **WEC**) in schede. Cerca un giocatore, scegli **Stagione** o **Di sempre** e tocca un nome per aprire il profilo — toccando il suo grafico passi da barre a torta e viceversa.',
   c5Trophies: "I tuoi trofei di allenamento. Un piccolo segreto: vinci **tutti** i trofei di questa lista e alla fine ti aspetta una sorpresa!",
-  arcadeReveal: "Tutti i trofei, bravo! Ecco la mia sorpresa, una parola segreta: in modalità allenamento scrivi **{w}** come nickname e premi Connetti. Apre la mia sala giochi nascosta. Resta tra noi!",
+  arcadeReveal: "Tutti i trofei, bravo! Ecco la mia sorpresa, una parola segreta: in modalità allenamento scrivi **{w}** come nickname e premi Connetti. Provala e vedrai cosa succede… Resta tra noi!",
   arcadePlay: "Gioca ora",
   arcadeMode: "**Bravo!** Hai sbloccato i **minigiochi**. Altri giochi misteriosi ti aspettano… continua ad allenarti per scoprirli!",
   arcadeEgg: "Psst… hai trovato la mia **parola segreta**! 🥚 Easter egg sbloccato: **tutti i minigiochi** sono aperti. Shh, resta tra noi!",

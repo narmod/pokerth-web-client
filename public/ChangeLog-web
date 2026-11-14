@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.40 (current series):
+2026-11-14 version 2.1.11-web.41 (current series):
+- improvement: when the Mini-games mode appears (or hatches out of its egg), the Ace just says his word, with « Close » only; picking any mode closes it
+- improvement: with every trophy, the Ace still gives his secret word, but no longer says what it does: try it and see
+
+2026-11-14 version 2.1.11-web.40:
 - improvement: the secret word no longer opens the mini-games page: it brings you back to the choice of modes, where the Mini-games card hatches out of a golden egg in a rainbow light, with every game open — an easter egg
 - new: typed again when everything is already open, the secret word makes the Ace crack a little joke
 

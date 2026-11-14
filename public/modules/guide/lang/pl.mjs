@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Stół treningowy: wybierz liczbę graczy, styl gry (tempo) i poziom graczy komputerowych, a potem utwórz stół. Nic tutaj nie liczy się do żadnego rankingu.',
   c5Ranking: 'Oficjalny ranking **PokerTH** i rankingi społeczności (**BBC**, **WEC**) w zakładkach. Wyszukaj gracza, wybierz **Sezon** lub **Wszech czasów** i dotknij nazwy, aby otworzyć profil — dotknięcie jego wykresu przełącza między słupkowym a kołowym.',
   c5Trophies: "Twoje trofea treningowe. Mały sekret: zdobądź **wszystkie** trofea z tej listy, a na koniec czeka cię niespodzianka!",
-  arcadeReveal: "Wszystkie trofea, brawo! Oto moja niespodzianka, sekretne słowo: w trybie treningu wpisz **{w}** jako pseudonim i naciśnij Połącz. Otwiera ono mój salon ukrytych gier. Niech to zostanie między nami!",
+  arcadeReveal: "Wszystkie trofea, brawo! Oto moja niespodzianka, sekretne słowo: w trybie treningu wpisz **{w}** jako pseudonim i naciśnij Połącz. Spróbuj i zobacz, co się stanie… Niech to zostanie między nami!",
   arcadePlay: "Graj teraz",
   arcadeMode: "**Brawo!** Odblokowałeś **minigry**. Czekają na ciebie kolejne tajemnicze gry… trenuj dalej, aby je odkryć!",
   arcadeEgg: "Psst… znalazłeś moje **sekretne słowo**! 🥚 Easter egg odblokowany: **wszystkie minigry** są otwarte. Ćśś, to zostaje między nami!",

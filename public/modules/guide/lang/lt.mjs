@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Treniruočių stalas: pasirink žaidėjų skaičių, žaidimo stilių (tempą) ir kompiuterio žaidėjų lygį, tada sukurk stalą. Niekas čia neįskaitoma į jokį reitingą.',
   c5Ranking: 'Oficialus **PokerTH** reitingas ir bendruomenių reitingai (**BBC**, **WEC**) skirtukuose. Ieškok žaidėjo, pasirink **Sezonas** arba **Visų laikų** ir bakstelėk vardą, kad atvertum profilį — bakstelėjus jo diagramą, ji persijungia tarp stulpelių ir skritulio.',
   c5Trophies: "Tavo treniruočių trofėjai. Mažytė paslaptis: laimėk **visus** šio sąrašo trofėjus, ir pabaigoje turėsiu tau staigmeną!",
-  arcadeReveal: "Visi trofėjai, bravo! Štai mano staigmena, slaptas žodis: treniruočių režimu įvesk **{w}** kaip slapyvardį ir spausk Prisijungti. Jis atveria mano paslėptų žaidimų arkadą. Tegul tai lieka tarp mūsų!",
+  arcadeReveal: "Visi trofėjai, bravo! Štai mano staigmena, slaptas žodis: treniruočių režimu įvesk **{w}** kaip slapyvardį ir spausk Prisijungti. Pabandyk ir pamatysi, kas nutiks… Tegul tai lieka tarp mūsų!",
   arcadePlay: "Žaisti dabar",
   arcadeMode: "**Bravo!** Atrakinai **mini žaidimus**. Tavęs laukia dar paslaptingų žaidimų… treniruokis toliau, kad juos atrastum!",
   arcadeEgg: "Pst… radai mano **slaptą žodį**! 🥚 Velykų kiaušinis atrakintas: **visi mini žaidimai** atidaryti. Ššš, tai lieka tarp mūsų!",

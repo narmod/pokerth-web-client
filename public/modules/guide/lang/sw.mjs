@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Meza ya mazoezi: chagua idadi ya wachezaji, mtindo wa mchezo (kasi) na kiwango cha wachezaji wa kompyuta, kisha unda meza. Hakuna chochote hapa kinachohesabiwa kwenye viwango.',
   c5Ranking: 'Viwango rasmi vya **PokerTH** na vya jumuiya (**BBC**, **WEC**) katika vichupo. Tafuta mchezaji, chagua **Msimu** au **Wakati wote**, na gusa jina kufungua wasifu — kugusa chati yake hubadilisha kati ya pau na duara.',
   c5Trophies: "Vikombe vyako vya mazoezi. Siri ndogo: shinda vikombe **vyote** katika orodha hii na mwishoni nitakuwa na zawadi ya kushtukiza kwako!",
-  arcadeReveal: "Vikombe vyote, hongera! Hii ndiyo zawadi yangu, neno la siri: katika hali ya mazoezi, andika **{w}** kama jina la utani kisha ubonyeze Unganisha. Linafungua ukumbi wangu wa michezo iliyofichwa. Ibaki kati yetu!",
+  arcadeReveal: "Vikombe vyote, hongera! Hii ndiyo zawadi yangu, neno la siri: katika hali ya mazoezi, andika **{w}** kama jina la utani kisha ubonyeze Unganisha. Jaribu uone kitakachotokea… Ibaki kati yetu!",
   arcadePlay: "Cheza sasa",
   arcadeMode: "**Hongera!** Umefungua **michezo midogo**. Michezo mingine ya siri inakusubiri… endelea kufanya mazoezi ili uigundue!",
   arcadeEgg: "Psst… umegundua **neno langu la siri**! 🥚 Mshangao umefunguliwa: **michezo midogo yote** iko wazi. Shh, hii ni kati yetu!",

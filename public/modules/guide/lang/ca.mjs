@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Taula d’entrenament: tria el nombre de jugadors, un estil de joc (el ritme) i el nivell dels jugadors d’ordinador, i després crea la taula. Res del que passi aquí compta per a cap classificació.',
   c5Ranking: 'La classificació oficial de **PokerTH** i les de la comunitat (**BBC**, **WEC**) en pestanyes. Cerca un jugador, tria una **Temporada** o **Tots els temps**, i toca un nom per obrir-ne el perfil — tocar-ne el gràfic alterna entre barres i pastís.',
   c5Trophies: "Els teus trofeus d’entrenament. Un petit secret: guanya **tots** els trofeus d’aquesta llista i al final et tindré una sorpresa!",
-  arcadeReveal: "Tots els trofeus, bravo! Aquí tens la meva sorpresa, una paraula secreta: en mode entrenament, escriu **{w}** com a sobrenom i prem Connecta. Obre la meva sala de jocs amagats. Que quedi entre nosaltres!",
+  arcadeReveal: "Tots els trofeus, bravo! Aquí tens la meva sorpresa, una paraula secreta: en mode entrenament, escriu **{w}** com a sobrenom i prem Connecta. Prova-ho i mira què passa… Que quedi entre nosaltres!",
   arcadePlay: "Juga ara",
   arcadeMode: "**Bravo!** Has desbloquejat els **minijocs**. T'esperen més jocs misteriosos… continua entrenant per descobrir-los!",
   arcadeEgg: "Psst… has trobat la meva **paraula secreta**! 🥚 Easter egg desbloquejat: **tots els minijocs** estan oberts. Xst, que quedi entre nosaltres!",

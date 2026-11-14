@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Itafula lokuzijwayeza: khetha inani labadlali, isitayela somdlalo (ijubane) kanye nezinga labadlali bekhompyutha, bese udala itafula. Akukho lutho lapha olubalelwa kunoma yiliphi izinga.',
   c5Ranking: 'Izinga elisemthethweni le-**PokerTH** namazinga emiphakathi (**BBC**, **WEC**) kumathebhu. Sesha umdlali, khetha **Isizini** noma **Kusukela ekuqaleni**, bese uthepha igama ukuze uvule iphrofayela — ukuthepha ishadi layo kushintsha phakathi kwamabha nephayi.',
   c5Trophies: "Izindebe zakho zokuzijwayeza. Imfihlo encane: wina **zonke** izindebe ezikulolu hlu bese ekugcineni nginokumangaza okukulindile!",
-  arcadeReveal: "Zonke izindebe, halala! Nansi into yami emangalisayo, igama eliyimfihlo: kumodi yokuzijwayeza, thayipha **{w}** njengesiteketiso bese ucindezela Xhuma. Livula i-arcade yami yemidlalo efihliwe. Akuhlale phakathi kwethu!",
+  arcadeReveal: "Zonke izindebe, halala! Nansi into yami emangalisayo, igama eliyimfihlo: kumodi yokuzijwayeza, thayipha **{w}** njengesiteketiso bese ucindezela Xhuma. Zama ubone ukuthi kwenzekani… Akuhlale phakathi kwethu!",
   arcadePlay: "Dlala manje",
   arcadeMode: "**Wenze kahle!** Uvule **imidlalo emincane**. Eminye imidlalo eyimfihlakalo isakulindile… qhubeka uzijwayeze ukuze uyithole!",
   arcadeEgg: "Psst… uthole **igama lami eliyimfihlo**! 🥚 Isimanga sivuliwe: **yonke imidlalo emincane** ivuliwe. Shh, lokhu kuphakathi kwethu!",

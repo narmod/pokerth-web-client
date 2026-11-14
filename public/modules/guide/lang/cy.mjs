@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Bwrdd ymarfer: dewiswch nifer y chwaraewyr, arddull gêm (y cyflymder) a lefel y chwaraewyr cyfrifiadur, yna crëwch y bwrdd. Nid oes dim byd yma’n cyfrif tuag at safle.',
   c5Ranking: 'Safle swyddogol **PokerTH** a rhai’r gymuned (**BBC**, **WEC**) mewn tabiau. Chwiliwch am chwaraewr, dewiswch **Tymor** neu **Erioed**, a thapiwch enw i agor y proffil — mae tapio’r siart yn newid rhwng bariau a chylch.',
   c5Trophies: "Dy dlysau ymarfer. Cyfrinach fach: enilla **bob un** o’r tlysau yn y rhestr hon ac mi fydd gen i syrpréis i ti ar y diwedd!",
-  arcadeReveal: "Pob tlws, bravo! Dyma fy syrpréis, gair cyfrinachol: yn y modd ymarfer, teipia **{w}** fel llysenw a phwysa Cysylltu. Mae’n agor fy arcêd o gemau cudd. Rhyngom ni’n dau!",
+  arcadeReveal: "Pob tlws, bravo! Dyma fy syrpréis, gair cyfrinachol: yn y modd ymarfer, teipia **{w}** fel llysenw a phwysa Cysylltu. Rho gynnig arni a gweld beth sy’n digwydd… Rhyngom ni’n dau!",
   arcadePlay: "Chwarae nawr",
   arcadeMode: "**Bravo!** Rwyt ti wedi datgloi'r **gemau bach**. Mae mwy o gemau dirgel yn aros amdanat… dal ati i ymarfer i'w darganfod!",
   arcadeEgg: "Psst… rwyt ti wedi dod o hyd i'm **gair cyfrinachol**! 🥚 Wy Pasg wedi'i ddatgloi: mae **pob gêm fach** ar agor. Shh, rhyngom ni mae hynny!",

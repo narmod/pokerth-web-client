@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Harjoituspöytä: valitse pelaajien määrä, pelityyli (tahti) ja tietokonepelaajien taso ja luo sitten pöytä. Mikään täällä ei vaikuta mihinkään rankingiin.',
   c5Ranking: 'Virallinen **PokerTH**-ranking ja yhteisöjen listat (**BBC**, **WEC**) välilehdillä. Etsi pelaajaa, valitse **Kausi** tai **Kaikkien aikojen** ja avaa profiili napauttamalla nimeä — kaavion napauttaminen vaihtaa pylväiden ja piirakan välillä.',
   c5Trophies: "Harjoituspalkintosi. Pieni salaisuus: voita **kaikki** tämän listan palkinnot, niin lopussa minulla on sinulle yllätys!",
-  arcadeReveal: "Kaikki palkinnot, bravo! Tässä yllätykseni, salainen sana: kirjoita harjoitustilassa nimimerkiksi **{w}** ja paina Yhdistä. Se avaa piilopelien pelihallini. Pidetään se meidän välisenämme!",
+  arcadeReveal: "Kaikki palkinnot, bravo! Tässä yllätykseni, salainen sana: kirjoita harjoitustilassa nimimerkiksi **{w}** ja paina Yhdistä. Kokeile ja katso, mitä tapahtuu… Pidetään se meidän välisenämme!",
   arcadePlay: "Pelaa nyt",
   arcadeMode: "**Bravo!** Avasit **minipelit**. Lisää salaisia pelejä odottaa… jatka harjoittelua löytääksesi ne!",
   arcadeEgg: "Psst… löysit **salasanani**! 🥚 Pääsiäismuna avattu: **kaikki minipelit** ovat auki. Hys, tämä jää meidän välillemme!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Meja latihan: pilih bilangan pemain, gaya permainan (rentaknya) dan tahap pemain komputer, kemudian cipta meja. Tiada apa-apa di sini dikira dalam mana-mana peringkat.',
   c5Ranking: 'Peringkat rasmi **PokerTH** dan peringkat komuniti (**BBC**, **WEC**) dalam tab. Cari pemain, pilih **Musim** atau **Sepanjang masa**, dan ketik nama untuk membuka profil — mengetik cartanya menukar antara bar dan pai.',
   c5Trophies: "Trofi latihan anda. Satu rahsia kecil: menangi **semua** trofi dalam senarai ini dan pada akhirnya saya ada kejutan untuk anda!",
-  arcadeReveal: "Semua trofi, syabas! Inilah kejutan saya, satu perkataan rahsia: dalam mod latihan, taip **{w}** sebagai nama samaran dan tekan Sambung. Ia membuka arked permainan tersembunyi saya. Biar ia kekal antara kita!",
+  arcadeReveal: "Semua trofi, syabas! Inilah kejutan saya, satu perkataan rahsia: dalam mod latihan, taip **{w}** sebagai nama samaran dan tekan Sambung. Cuba dan lihat apa yang berlaku… Biar ia kekal antara kita!",
   arcadePlay: "Main sekarang",
   arcadeMode: "**Syabas!** Anda telah membuka **permainan mini**. Lebih banyak permainan misteri menanti anda… teruskan berlatih untuk menemuinya!",
   arcadeEgg: "Psst… anda jumpa **perkataan rahsia** saya! 🥚 Easter egg dibuka: **semua permainan mini** terbuka. Syy, ini antara kita sahaja!",

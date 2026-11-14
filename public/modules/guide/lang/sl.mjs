@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Miza za vadbo: izberi število igralcev, slog igre (tempo) in raven računalniških igralcev, nato ustvari mizo. Nič tukaj se ne šteje v nobeno uvrstitev.',
   c5Ranking: 'Uradna lestvica **PokerTH** in lestvice skupnosti (**BBC**, **WEC**) v zavihkih. Poišči igralca, izberi **Sezona** ali **Vseh časov** in tapni ime, da odpreš profil — tap na njegov grafikon preklopi med stolpci in krogom.',
   c5Trophies: "Tvoje trofeje iz treninga. Majhna skrivnost: osvoji **vse** trofeje s tega seznama in na koncu te čaka presenečenje!",
-  arcadeReveal: "Vse trofeje, bravo! Tukaj je moje presenečenje, skrivna beseda: v načinu treninga vpiši **{w}** kot vzdevek in pritisni Poveži. Odpre mojo igralnico skritih iger. Naj ostane med nama!",
+  arcadeReveal: "Vse trofeje, bravo! Tukaj je moje presenečenje, skrivna beseda: v načinu treninga vpiši **{w}** kot vzdevek in pritisni Poveži. Poskusi in poglej, kaj se zgodi… Naj ostane med nama!",
   arcadePlay: "Igraj zdaj",
   arcadeMode: "**Bravo!** Odklenil si **mini igre**. Čakajo te še skrivnostne igre … treniraj naprej in jih odkrij!",
   arcadeEgg: "Psst… našel si mojo **skrivno besedo**! 🥚 Velikonočno jajce odklenjeno: **vse mini igre** so odprte. Pst, to ostane med nama!",

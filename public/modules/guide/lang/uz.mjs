@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Mashq stoli: oʻyinchilar sonini, oʻyin uslubini (surʼatini) va kompyuter oʻyinchilari darajasini tanlang, soʻng stolni yarating. Bu yerdagi hech narsa reytingga hisoblanmaydi.',
   c5Ranking: 'Rasmiy **PokerTH** reytingi va hamjamiyat reytinglari (**BBC**, **WEC**) varaqlarda. Oʻyinchini qidiring, **Mavsum** yoki **Butun davr**ni tanlang va profilni ochish uchun ismga bosing — uning diagrammasiga bossangiz, ustunli va doiraviy koʻrinish almashadi.',
   c5Trophies: "Mashq kuboklaringiz. Kichik sir: bu roʻyxatdagi **barcha** kuboklarni yuting, oxirida sizni syurpriz kutadi!",
-  arcadeReveal: "Barcha kuboklar, barakalla! Mana mening syurprizim, maxfiy soʻz: mashq rejimida taxallus sifatida **{w}** deb yozing va Ulanish tugmasini bosing. U yashirin oʻyinlar arkadamni ochadi. Oramizda qolsin!",
+  arcadeReveal: "Barcha kuboklar, barakalla! Mana mening syurprizim, maxfiy soʻz: mashq rejimida taxallus sifatida **{w}** deb yozing va Ulanish tugmasini bosing. Sinab koʻring, nima boʻlishini koʻrasiz… Oramizda qolsin!",
   arcadePlay: "Hozir oʻynash",
   arcadeMode: "**Barakalla!** Sen **mini o'yinlar**ni ochding. Seni yana sirli o'yinlar kutmoqda… ularni topish uchun mashqni davom ettir!",
   arcadeEgg: "Pss… mening **maxfiy so'zimni** topdingiz! 🥚 Syurpriz ochildi: **barcha mini o'yinlar** ochiq. Tss, bu oramizda qolsin!",

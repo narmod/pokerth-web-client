@@ -165,7 +165,7 @@ function unfold() {
 export async function openArcade() {
   setFlag(SEEN_KEY);
   stat('login_open');
-  try { if (typeof window.guideArcadeModeClose === 'function') window.guideArcadeModeClose(); } catch (e) {}
+  try { if (typeof window.guideArcadeModeClose === 'function') window.guideArcadeModeClose(true); } catch (e) {}
   render();
   try {
     const g = await import('../games/index.mjs');

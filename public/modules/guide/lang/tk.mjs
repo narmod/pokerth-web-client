@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Türgenleşik stoly: oýunçylaryň sanyny, oýun stilini (depgini) we kompýuter oýunçylarynyň derejesini saýlaň, soňra stoly dörediň. Bu ýerde hiç zat reýtinge hasaplanmaýar.',
   c5Ranking: 'Resmi **PokerTH** reýtingi we jemgyýet reýtingleri (**BBC**, **WEC**) goýmalarda. Oýunçy gözläň, **Möwsüm** ýa-da **Ähli döwür** saýlaň we profili açmak üçin ada basyň — onuň diagrammasyna basmak sütünler bilen tegelek diagrammanyň arasynda geçirýär.',
   c5Trophies: "Türgenleşik kuboklaryň. Kiçijik syr: bu sanawdaky **ähli** kuboklary gazan, ahyrynda saňa garaşylmadyk sowgat bar!",
-  arcadeReveal: "Ähli kuboklar, bravo! Ine meniň sowgadym, gizlin söz: türgenleşik düzgüninde lakam hökmünde **{w}** ýaz we Birikdir düwmesine bas. Ol gizlin oýunlarymyň arkadasyny açýar. Goý, aramyzda galsyn!",
+  arcadeReveal: "Ähli kuboklar, bravo! Ine meniň sowgadym, gizlin söz: türgenleşik düzgüninde lakam hökmünde **{w}** ýaz we Birikdir düwmesine bas. Synap gör, näme boljagyny görersiň… Goý, aramyzda galsyn!",
   arcadePlay: "Häzir oýna",
   arcadeMode: "**Berekella!** Sen **mini oýunlary** açdyň. Seni ýene syrly oýunlar garaşýar… olary tapmak üçin türgenleşigi dowam et!",
   arcadeEgg: "Pss… sen meniň **gizlin sözümi** tapdyň! 🥚 Garaşylmadyk sowgat açyldy: **ähli mini oýunlar** açyk. Şş, bu aramyzda galsyn!",

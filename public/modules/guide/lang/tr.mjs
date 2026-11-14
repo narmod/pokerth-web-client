@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Antrenman masası: oyuncu sayısını, bir oyun stilini (tempoyu) ve bilgisayar oyuncularının seviyesini seç, ardından masayı oluştur. Buradaki hiçbir şey herhangi bir sıralamaya sayılmaz.',
   c5Ranking: 'Resmî **PokerTH** sıralaması ve topluluk sıralamaları (**BBC**, **WEC**) sekmelerde. Bir oyuncu ara, **Sezon** ya da **Tüm zamanlar** seç ve profili açmak için bir isme dokun — grafiğine dokunmak çubuk ile pasta arasında geçiş yapar.',
   c5Trophies: "Antrenman kupaların. Küçük bir sır: bu listedeki **tüm** kupaları kazan, sonunda sana bir sürprizim olacak!",
-  arcadeReveal: "Tüm kupalar, bravo! İşte sürprizim, gizli bir kelime: antrenman modunda takma ad olarak **{w}** yaz ve Bağlan’a bas. Gizli oyunlarımın salonunu açar. Aramızda kalsın!",
+  arcadeReveal: "Tüm kupalar, bravo! İşte sürprizim, gizli bir kelime: antrenman modunda takma ad olarak **{w}** yaz ve Bağlan’a bas. Dene de ne olacağını gör… Aramızda kalsın!",
   arcadePlay: "Şimdi oyna",
   arcadeMode: "**Bravo!** **Mini oyunların** kilidini açtın. Seni başka gizemli oyunlar da bekliyor… onları keşfetmek için antrenmana devam et!",
   arcadeEgg: "Pışş… **gizli kelimemi** buldun! 🥚 Sürpriz açıldı: **tüm mini oyunlar** açık. Şşş, aramızda kalsın!",

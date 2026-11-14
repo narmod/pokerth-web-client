@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Entrenamendu-mahaia: aukeratu jokalari kopurua, joko-estilo bat (erritmoa) eta ordenagailuko jokalarien maila, eta sortu mahaia. Hemen ezer ez da sailkapenerako kontatzen.',
   c5Ranking: '**PokerTH** sailkapen ofiziala eta komunitatekoak (**BBC**, **WEC**) fitxatan. Bilatu jokalari bat, aukeratu **Denboraldia** edo **Garai guztietakoa**, eta sakatu izen bat profila irekitzeko — bere grafikoa sakatuz gero, barren eta tartaren artean aldatzen da.',
   c5Trophies: "Zure entrenamendu-trofeoak. Sekretu txiki bat: irabazi zerrenda honetako trofeo **guztiak** eta amaieran ezustekoa izango duzu!",
-  arcadeReveal: "Trofeo guztiak, bravo! Hona hemen nire ezustekoa, hitz sekretu bat: entrenamendu moduan, idatzi **{w}** ezizen gisa eta sakatu Konektatu. Ezkutuko jokoen arkadea irekitzen du. Gure artean geratu dadila!",
+  arcadeReveal: "Trofeo guztiak, bravo! Hona hemen nire ezustekoa, hitz sekretu bat: entrenamendu moduan, idatzi **{w}** ezizen gisa eta sakatu Konektatu. Probatu eta ikusi zer gertatzen den… Gure artean geratu dadila!",
   arcadePlay: "Jokatu orain",
   arcadeMode: "**Bikain!** **Minijokoak** desblokeatu dituzu. Joko misteriotsu gehiago zain dituzu… jarraitu entrenatzen aurkitzeko!",
   arcadeEgg: "Psst… nire **hitz sekretua** aurkitu duzu! 🥚 Easter egga desblokeatuta: **minijoko guztiak** irekita daude. Txist, gure artean geratzen da!",

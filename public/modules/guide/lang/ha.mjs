@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Teburin atisaye: zaɓi adadin ’yan wasa, salon wasa (saurin) da matakin ’yan wasan kwamfuta, sannan ka ƙirƙiri teburin. Babu abin da ke nan da ake ƙirgawa a cikin wani matsayi.',
   c5Ranking: 'Matsayin hukuma na **PokerTH** da na al’ummomi (**BBC**, **WEC**) a cikin shafuka. Nemi ɗan wasa, zaɓi **Kaka** ko **Duk lokaci**, sannan ka taɓa suna don buɗe bayaninsa — taɓa jadawalinsa yana canja tsakanin sanduna da da’ira.',
   c5Trophies: "Kofunanka na horo. Ƙaramin sirri: ci **dukan** kofunan da ke cikin wannan jerin, a ƙarshe ina da abin mamaki a gare ka!",
-  arcadeReveal: "Dukan kofuna, madalla! Ga abin mamakina, kalmar sirri: a yanayin horo, rubuta **{w}** a matsayin laƙabi sannan ka danna Haɗa. Tana buɗe ɗakin wasannina na ɓoye. Ya zauna tsakaninmu!",
+  arcadeReveal: "Dukan kofuna, madalla! Ga abin mamakina, kalmar sirri: a yanayin horo, rubuta **{w}** a matsayin laƙabi sannan ka danna Haɗa. Gwada ka ga abin da zai faru… Ya zauna tsakaninmu!",
   arcadePlay: "Yi wasa yanzu",
   arcadeMode: "**Madalla!** Ka buɗe **ƙananan wasanni**. Ƙarin wasannin asiri suna jiranka… ci gaba da horo don gano su!",
   arcadeEgg: "Psst… ka gano **kalmar sirrina**! 🥚 An buɗe abin mamaki: **duk ƙananan wasanni** a buɗe suke. Shh, wannan tsakaninmu ne!",

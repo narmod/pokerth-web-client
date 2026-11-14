@@ -93,7 +93,7 @@ export default {
   // C5 — windows (first opening)
   c5Ranking: 'The official **PokerTH** ranking and the community ones (**BBC**, **WEC**) in tabs. Search a player, pick a **Season** or **All-Time**, and tap a name to open the profile — tapping its chart switches between bars and pie.',
   c5Trophies: "Your training trophies. A little secret: win **every** trophy in this list and I’ll have a surprise for you at the end!",
-  arcadeReveal: "Every trophy — bravo! Here is my surprise, a secret word: in training mode, type **{w}** as your nickname and press Connect. It opens my arcade of hidden games. Keep it between us!",
+  arcadeReveal: "Every trophy — bravo! Here is my surprise, a secret word: in training mode, type **{w}** as your nickname and press Connect. Try it and see what happens… Keep it between us!",
   arcadePlay: "Play now",
   arcadeMode: "**Bravo!** You've unlocked the **mini-games**. More mystery games are waiting for you… keep training to discover them!",
   arcadeEgg: "Psst… you found my **secret word**! 🥚 Easter egg unlocked: **every mini-game** is open. Shh, that stays between us!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Məşq masası: oyunçuların sayını, oyun üslubunu (tempi) və kompüter oyunçularının səviyyəsini seçin, sonra masanı yaradın. Burada heç nə reytinqə hesablanmır.',
   c5Ranking: 'Rəsmi **PokerTH** reytinqi və icma reytinqləri (**BBC**, **WEC**) vərəqlərdədir. Oyunçu axtarın, **Mövsüm** və ya **Bütün dövrlər** seçin və profili açmaq üçün ada toxunun — diaqrama toxunmaq sütunlarla dairə arasında keçid edir.',
   c5Trophies: "Məşq kubokların. Kiçik bir sirr: bu siyahıdakı **bütün** kubokları qazan, sonda səni sürpriz gözləyir!",
-  arcadeReveal: "Bütün kuboklar, bravo! Budur mənim sürprizim, gizli söz: məşq rejimində ləqəb kimi **{w}** yaz və Qoşul düyməsinə bas. Gizli oyunlar arkadamı açır. Qoy aramızda qalsın!",
+  arcadeReveal: "Bütün kuboklar, bravo! Budur mənim sürprizim, gizli söz: məşq rejimində ləqəb kimi **{w}** yaz və Qoşul düyməsinə bas. Sına və nə baş verdiyinə bax… Qoy aramızda qalsın!",
   arcadePlay: "İndi oyna",
   arcadeMode: "**Bravo!** **Mini oyunları** açdın. Səni daha sirli oyunlar gözləyir… onları kəşf etmək üçün məşqə davam et!",
   arcadeEgg: "Pıss… mənim **gizli sözümü** tapdın! 🥚 Sürpriz açıldı: **bütün mini oyunlar** açıqdır. Şşş, aramızda qalsın!",

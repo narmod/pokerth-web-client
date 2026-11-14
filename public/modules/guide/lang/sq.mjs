@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Tavolinë stërvitjeje: zgjidh numrin e lojtarëve, një stil loje (ritmin) dhe nivelin e lojtarëve të kompjuterit, pastaj krijo tavolinën. Asgjë këtu nuk llogaritet në ndonjë renditje.',
   c5Ranking: 'Renditja zyrtare **PokerTH** dhe ato të komunitetit (**BBC**, **WEC**) në skeda. Kërko një lojtar, zgjidh **Sezoni** ose **Të gjitha kohërat** dhe prek një emër për të hapur profilin — prekja e grafikut të tij kalon mes shtyllave dhe grafikut rrethor.',
   c5Trophies: "Trofetë e tua të stërvitjes. Një sekret i vogël: fito **të gjitha** trofetë e kësaj liste dhe në fund të pret një surprizë!",
-  arcadeReveal: "Të gjitha trofetë, bravo! Ja surpriza ime, një fjalë e fshehtë: në modalitetin e stërvitjes, shkruaj **{w}** si pseudonim dhe shtyp Lidhu. Ajo hap arkadën time të lojërave të fshehura. Le të mbetet mes nesh!",
+  arcadeReveal: "Të gjitha trofetë, bravo! Ja surpriza ime, një fjalë e fshehtë: në modalitetin e stërvitjes, shkruaj **{w}** si pseudonim dhe shtyp Lidhu. Provoje dhe shiko çfarë ndodh… Le të mbetet mes nesh!",
   arcadePlay: "Luaj tani",
   arcadeMode: "**Bravo!** Ke zhbllokuar **mini-lojërat**. Të presin edhe lojëra misterioze… vazhdo stërvitjen për t'i zbuluar!",
   arcadeEgg: "Psst… e gjete **fjalën time të fshehtë**! 🥚 Easter egg i zhbllokuar: **të gjitha minilojërat** janë të hapura. Shët, mbetet mes nesh!",

@@ -877,6 +877,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // 'change' → App.onServerOrGuestChange() configure les champs à afficher.
 var LOGIN_MODE_KEY = { "pokerthnet":"loginNetTitle", "offline":"loginOfflineTitle", "lan-dedi":"loginLanTitle" };
 function loginPickMode(card, value) {
+  // The Ace's word on the Mini-games mode (guide): a mode picked closes it.
+  try { if (typeof window.guideArcadeModeClose === "function") window.guideArcadeModeClose(false); } catch (e) {}
   var sm = document.getElementById("server-mode");
   if (sm) { sm.value = value; sm.dispatchEvent(new Event("change", { bubbles: true })); }
   // La barre retour reflète la carte choisie (déjà traduite dans le DOM) ;

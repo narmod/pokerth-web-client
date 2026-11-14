@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Mesang pang-ensayo: piliin ang bilang ng mga manlalaro, isang istilo ng laro (ang bilis) at ang level ng mga computer player, saka gawin ang mesa. Walang anuman dito ang ibinibilang sa ranking.',
   c5Ranking: 'Ang opisyal na ranking ng **PokerTH** at ang mga ranking ng komunidad (**BBC**, **WEC**) sa mga tab. Maghanap ng manlalaro, pumili ng **Season** o **All-Time**, at i-tap ang isang pangalan para buksan ang profile — kapag na-tap ang chart nito, nagpapalit ito sa pagitan ng bar at pie.',
   c5Trophies: "Ang iyong mga tropeo sa pagsasanay. Isang maliit na lihim: makuha mo ang **lahat** ng tropeo sa listahang ito at may sorpresa ako sa iyo sa dulo!",
-  arcadeReveal: "Lahat ng tropeo, bravo! Ito ang sorpresa ko, isang lihim na salita: sa training mode, i-type ang **{w}** bilang palayaw at pindutin ang Kumonekta. Binubuksan nito ang arcade ko ng mga nakatagong laro. Sa atin-atin lang ito!",
+  arcadeReveal: "Lahat ng tropeo, bravo! Ito ang sorpresa ko, isang lihim na salita: sa training mode, i-type ang **{w}** bilang palayaw at pindutin ang Kumonekta. Subukan mo at tingnan kung ano ang mangyayari… Sa atin-atin lang ito!",
   arcadePlay: "Maglaro na",
   arcadeMode: "**Galing!** Na-unlock mo ang **mga mini game**. May iba pang misteryosong laro na naghihintay sa iyo… magpatuloy sa pagsasanay para matuklasan ang mga ito!",
   arcadeEgg: "Psst… nahanap mo ang **lihim kong salita**! 🥚 Easter egg na-unlock: **lahat ng mini-game** ay bukas na. Shh, sa atin lang 'yan!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Träningsbord: välj antal spelare, en spelstil (tempot) och datorspelarnas nivå, och skapa sedan bordet. Inget här räknas in i någon rankning.',
   c5Ranking: 'Den officiella **PokerTH**-rankningen och gemenskapernas rankningar (**BBC**, **WEC**) i flikar. Sök efter en spelare, välj **Säsong** eller **Genom tiderna** och tryck på ett namn för att öppna profilen — ett tryck på dess diagram växlar mellan staplar och paj.',
   c5Trophies: "Dina träningstroféer. En liten hemlighet: vinn **alla** troféer i den här listan så har jag en överraskning till dig på slutet!",
-  arcadeReveal: "Alla troféer, bravo! Här är min överraskning, ett hemligt ord: skriv **{w}** som smeknamn i träningsläget och tryck på Anslut. Det öppnar min arkad med gömda spel. Det stannar mellan oss!",
+  arcadeReveal: "Alla troféer, bravo! Här är min överraskning, ett hemligt ord: skriv **{w}** som smeknamn i träningsläget och tryck på Anslut. Prova och se vad som händer… Det stannar mellan oss!",
   arcadePlay: "Spela nu",
   arcadeMode: "**Bravo!** Du har låst upp **minispelen**. Fler mysteriespel väntar på dig … fortsätt träna för att upptäcka dem!",
   arcadeEgg: "Psst… du hittade mitt **hemliga ord**! 🥚 Påskägg upplåst: **alla minispel** är öppna. Hyss, det stannar mellan oss!",

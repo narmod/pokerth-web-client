@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Oefentafel: kies het aantal spelers, een speelstijl (het tempo) en het niveau van de computerspelers, en maak dan de tafel aan. Niets hiervan telt mee voor een ranglijst.',
   c5Ranking: 'De officiële **PokerTH**-ranglijst en die van de community’s (**BBC**, **WEC**) in tabbladen. Zoek een speler, kies **Seizoen** of **Aller tijden** en tik op een naam om het profiel te openen — tikken op de grafiek wisselt tussen staaf en taart.',
   c5Trophies: "Je trainingstrofeeën. Een geheimpje: win **alle** trofeeën in deze lijst en aan het eind heb ik een verrassing voor je!",
-  arcadeReveal: "Alle trofeeën, bravo! Hier is mijn verrassing, een geheim woord: typ in de trainingsmodus **{w}** als bijnaam en druk op Verbinden. Het opent mijn arcade met verborgen spellen. Houd het onder ons!",
+  arcadeReveal: "Alle trofeeën, bravo! Hier is mijn verrassing, een geheim woord: typ in de trainingsmodus **{w}** als bijnaam en druk op Verbinden. Probeer het en kijk wat er gebeurt… Houd het onder ons!",
   arcadePlay: "Nu spelen",
   arcadeMode: "**Bravo!** Je hebt de **minigames** ontgrendeld. Er wachten nog meer geheime spellen op je… blijf trainen om ze te ontdekken!",
   arcadeEgg: "Psst… je hebt mijn **geheime woord** gevonden! 🥚 Easter egg ontgrendeld: **alle minigames** staan open. Sst, dat blijft onder ons!",

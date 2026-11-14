@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Træningsbord: vælg antallet af spillere, en spillestil (tempoet) og computerspillernes niveau, og opret så bordet. Intet her tæller med på en rangliste.',
   c5Ranking: 'Den officielle **PokerTH**-rangliste og fællesskabernes (**BBC**, **WEC**) i faner. Søg efter en spiller, vælg **Sæson** eller **Alle tider**, og tryk på et navn for at åbne profilen — et tryk på diagrammet skifter mellem søjler og lagkage.',
   c5Trophies: "Dine træningstrofæer. En lille hemmelighed: vind **alle** trofæerne på denne liste, så har jeg en overraskelse til dig til sidst!",
-  arcadeReveal: "Alle trofæerne, bravo! Her er min overraskelse, et hemmeligt ord: skriv **{w}** som kaldenavn i træningstilstand, og tryk på Forbind. Det åbner min arkade med skjulte spil. Det bliver mellem os!",
+  arcadeReveal: "Alle trofæerne, bravo! Her er min overraskelse, et hemmeligt ord: skriv **{w}** som kaldenavn i træningstilstand, og tryk på Forbind. Prøv det, og se hvad der sker… Det bliver mellem os!",
   arcadePlay: "Spil nu",
   arcadeMode: "**Bravo!** Du har låst op for **minispillene**. Flere mystiske spil venter på dig … bliv ved med at træne for at opdage dem!",
   arcadeEgg: "Psst… du har fundet mit **hemmelige ord**! 🥚 Easter egg låst op: **alle minispil** er åbne. Shh, det bliver mellem os!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Tréninkový stůl: zvol počet hráčů, herní styl (tempo) a úroveň počítačových hráčů a pak stůl vytvoř. Nic z toho se nezapočítává do žádného žebříčku.',
   c5Ranking: 'Oficiální žebříček **PokerTH** a komunitní žebříčky (**BBC**, **WEC**) v záložkách. Vyhledej hráče, vyber **Sezóna** nebo **Celkově** a klepnutím na jméno otevři profil — klepnutím na jeho graf přepneš mezi sloupci a koláčem.',
   c5Trophies: "Tvoje tréninkové trofeje. Malé tajemství: získej **všechny** trofeje z tohoto seznamu a na konci pro tebe budu mít překvapení!",
-  arcadeReveal: "Všechny trofeje, bravo! Tady je moje překvapení, tajné slovo: v tréninkovém režimu napiš jako přezdívku **{w}** a stiskni Připojit. Otevře moji hernu skrytých her. Ať to zůstane mezi námi!",
+  arcadeReveal: "Všechny trofeje, bravo! Tady je moje překvapení, tajné slovo: v tréninkovém režimu napiš jako přezdívku **{w}** a stiskni Připojit. Zkus to a uvidíš, co se stane… Ať to zůstane mezi námi!",
   arcadePlay: "Hrát teď",
   arcadeMode: "**Bravo!** Odemkl jsi **minihry**. Čekají na tebe další tajemné hry… trénuj dál a objev je!",
   arcadeEgg: "Psst… našel jsi mé **tajné slovo**! 🥚 Easter egg odemčen: **všechny minihry** jsou otevřené. Pst, zůstane to mezi námi!",

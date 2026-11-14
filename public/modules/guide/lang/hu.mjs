@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Gyakorlóasztal: válaszd ki a játékosok számát, a játékstílust (a tempót) és a gépi játékosok szintjét, majd hozd létre az asztalt. Itt semmi sem számít bele a ranglistába.',
   c5Ranking: 'A hivatalos **PokerTH** ranglista és a közösségiek (**BBC**, **WEC**) füleken. Keress egy játékosra, válaszd az **Évad** vagy a **Minden idők** nézetet, és koppints egy névre a profil megnyitásához — a diagramjára koppintva oszlop és torta között váltasz.',
   c5Trophies: "Az edzés trófeáid. Egy kis titok: szerezd meg a lista **összes** trófeáját, és a végén meglepetéssel várlak!",
-  arcadeReveal: "Az összes trófea, bravó! Íme a meglepetésem, egy titkos szó: edzés módban írd be becenévnek: **{w}**, majd nyomd meg a Csatlakozás gombot. Megnyitja a rejtett játékaim játéktermét. Maradjon köztünk!",
+  arcadeReveal: "Az összes trófea, bravó! Íme a meglepetésem, egy titkos szó: edzés módban írd be becenévnek: **{w}**, majd nyomd meg a Csatlakozás gombot. Próbáld ki, és meglátod, mi történik… Maradjon köztünk!",
   arcadePlay: "Játék most",
   arcadeMode: "**Bravó!** Feloldottad a **minijátékokat**. További titkos játékok várnak… gyakorolj tovább, hogy felfedezd őket!",
   arcadeEgg: "Pszt… megtaláltad a **titkos szavamat**! 🥚 Húsvéti tojás feloldva: **az összes minijáték** nyitva. Csitt, ez maradjon köztünk!",

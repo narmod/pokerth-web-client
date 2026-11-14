@@ -80,6 +80,8 @@ console.log('test-login-arcade-browser');
   const after = await pg.evaluate(() => ({ canvas: !!document.querySelector('canvas.pth-backlight'), hide: document.getElementById('login-card-arcade').classList.contains('lc-hide'),
     shown: localStorage.getItem('pth_arcade_shown'), bubble: (document.querySelector('.ad-bubble') || {}).textContent || '' }));
   ok(!after.canvas && !after.hide && after.shown === '1' && /mini-jeux/i.test(after.bubble), 'then the card stays and the Ace congratulates (' + after.bubble.slice(0, 50) + '…)');
+  const bb = await pg.evaluate(() => [...document.querySelectorAll('#ace-dock .ad-bubble button')].map((b) => b.textContent.trim()));
+  ok(bb.length === 1 && bb[0] === 'Fermer', 'his word only, with « Close » — no « Play now » (' + bb.join(', ') + ')');
   await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await sleep(400);
@@ -103,7 +105,7 @@ console.log('test-login-arcade-browser');
     '…then reveals it: game 1 open, numbered, with its kind (' + m.open.join(',') + ', ' + m.kind + ')');
   ok(await pg.evaluate(() => JSON.parse(localStorage.getItem('pth_arcade_revealed') || '[]').join(',')) === 'whowins', 'the reveal is remembered (pth_arcade_revealed)');
   await sleep(300);
-  ok(['unlock_trophies', 'celebrated', 'login_open', 'menu_open', 'reveal_1'].every((e) => pg.arcadeEvents.includes(e)),
+  ok(['unlock_trophies', 'celebrated', 'celebrate_play', 'login_open', 'menu_open', 'reveal_1'].every((e) => pg.arcadeEvents.includes(e)),
     'the statistics follow (/__arcade: ' + pg.arcadeEvents.join(', ') + ')');
   ok(m.lock === 9 && m.names.every((n) => n === 'Jeu mystère') && m.quiet,
     'the 9 others are mystery games: no name, icon, kind, rules or play button');
@@ -172,17 +174,22 @@ console.log('test-login-arcade-browser');
   const st = await pg.evaluate(() => ({ all: localStorage.getItem('pth_arcade_all'), shown: localStorage.getItem('pth_arcade_shown'), bub: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '', cls: document.getElementById('login-card-arcade').className }));
   ok(c.shown && /10\/10/.test(c.desc) && st.all === '1' && st.shown === '1', 'Mascotte: the card with every game, unlocked for good (' + c.desc + ')');
   ok(/mot secret/.test(st.bub), 'Mascotte: the Ace\'s easter-egg word (« ' + st.bub.slice(0, 50) + '… »)');
+  const btns = await pg.evaluate(() => [...document.querySelectorAll('#ace-dock .ad-bubble button')].map((b) => b.textContent.trim()));
+  ok(btns.length === 1 && btns[0] === 'Fermer', 'Mascotte: only « Close » under the Ace\'s word (' + btns.join(', ') + ')');
   // Typed again: everything is open already — the Ace's joke, no light.
   await pg.evaluate(() => loginPickMode(document.querySelector('.login-card[onclick*="\'offline\'"]'), 'offline'));
   await sleep(500);
+  ok(await pg.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open'); return !b || !/🥚/.test(b.textContent); }),
+    'a mode picked while the Ace\'s word is up: as « Close »');
   await pg.fill('#nick', 'mascotte');
   await pg.evaluate(() => App.connect());
   await pg.waitForFunction(() => /😄/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 8000 }).catch(() => {});
   const again = await pg.evaluate(() => ({ step1: document.getElementById('login-step1').style.display !== 'none', canvas: !!document.querySelector('canvas.pth-backlight'), page: !!document.getElementById('pth-game'), bub: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '' }));
   ok(again.step1 && !again.canvas && !again.page && /déjà débloqué/.test(again.bub), 'Mascotte again: back on the modes, the Ace\'s joke, no light (« ' + again.bub.slice(0, 50) + '… »)');
-  await pg.evaluate(() => { const b = [...document.querySelectorAll('#ace-dock .ad-bubble button')].find((x) => /Jouer/.test(x.textContent)); if (b) b.click(); });
+  await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-card').length) === 10, 'Mascotte again: « Play now » opens the page with every game');
+  const op = await pg.evaluate(() => ({ n: document.querySelectorAll('#pth-game .gm-card').length, bub: (document.querySelector('#ace-dock .ad-bubble.ad-open') || {}).textContent || '' }));
+  ok(op.n === 10 && !/😄/.test(op.bub), 'Mascotte again: the card opens the page with every game, the Ace\'s word closed (' + op.n + ')');
   await ctx.close();
 }
 {

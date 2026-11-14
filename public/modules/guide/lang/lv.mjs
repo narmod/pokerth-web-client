@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Treniņu galds: izvēlies spēlētāju skaitu, spēles stilu (tempu) un datora spēlētāju līmeni, tad izveido galdu. Nekas no šejienes netiek ieskaitīts nevienā reitingā.',
   c5Ranking: 'Oficiālais **PokerTH** reitings un kopienu reitingi (**BBC**, **WEC**) cilnēs. Meklē spēlētāju, izvēlies **Sezona** vai **Visu laiku** un pieskaries vārdam, lai atvērtu profilu — pieskāriens tā diagrammai pārslēdz starp stabiņiem un sektoriem.',
   c5Trophies: "Tavas treniņa trofejas. Mazs noslēpums: izcīni **visas** šī saraksta trofejas, un beigās tevi gaidīs pārsteigums!",
-  arcadeReveal: "Visas trofejas, bravo! Lūk, mans pārsteigums, slepens vārds: treniņa režīmā ieraksti **{w}** kā segvārdu un nospied Pieslēgties. Tas atver manu slēpto spēļu arkādi. Lai tas paliek starp mums!",
+  arcadeReveal: "Visas trofejas, bravo! Lūk, mans pārsteigums, slepens vārds: treniņa režīmā ieraksti **{w}** kā segvārdu un nospied Pieslēgties. Pamēģini un redzēsi, kas notiks… Lai tas paliek starp mums!",
   arcadePlay: "Spēlēt tagad",
   arcadeMode: "**Bravo!** Tu atbloķēji **minispēles**. Tevi gaida vēl noslēpumainas spēles… turpini treniņu, lai tās atklātu!",
   arcadeEgg: "Psst… tu atradi manu **slepeno vārdu**! 🥚 Lieldienu ola atbloķēta: **visas minispēles** ir atvērtas. Šš, tas paliek starp mums!",

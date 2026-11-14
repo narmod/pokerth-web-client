@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Bàn luyện tập: chọn số người chơi, một phong cách chơi (nhịp độ) và cấp độ của người chơi máy tính, rồi tạo bàn. Không có gì ở đây được tính vào bảng xếp hạng nào cả.',
   c5Ranking: 'Bảng xếp hạng chính thức **PokerTH** và các bảng của cộng đồng (**BBC**, **WEC**) theo từng thẻ. Tìm một người chơi, chọn **Mùa** hoặc **Mọi thời đại**, rồi chạm vào một tên để mở hồ sơ — chạm vào biểu đồ sẽ chuyển giữa dạng cột và dạng tròn.',
   c5Trophies: "Cúp luyện tập của bạn. Một bí mật nhỏ: giành **tất cả** cúp trong danh sách này và cuối cùng tôi sẽ có một bất ngờ cho bạn!",
-  arcadeReveal: "Đủ tất cả cúp, tuyệt vời! Đây là bất ngờ của tôi, một từ bí mật: ở chế độ luyện tập, nhập **{w}** làm biệt danh rồi nhấn Kết nối. Nó mở khu trò chơi bí mật của tôi. Giữ bí mật giữa chúng ta nhé!",
+  arcadeReveal: "Đủ tất cả cúp, tuyệt vời! Đây là bất ngờ của tôi, một từ bí mật: ở chế độ luyện tập, nhập **{w}** làm biệt danh rồi nhấn Kết nối. Thử đi rồi xem chuyện gì xảy ra… Giữ bí mật giữa chúng ta nhé!",
   arcadePlay: "Chơi ngay",
   arcadeMode: "**Tuyệt vời!** Bạn đã mở khóa **trò chơi nhỏ**. Còn nhiều trò chơi bí ẩn đang chờ bạn… hãy tiếp tục luyện tập để khám phá!",
   arcadeEgg: "Suỵt… bạn đã tìm ra **từ bí mật** của tôi! 🥚 Easter egg đã mở: **tất cả mini game** đều mở. Suỵt, chuyện này giữa chúng ta thôi!",

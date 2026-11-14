@@ -1517,35 +1517,22 @@ async function revealArcade() {
 
 // ── The Mini-games mode appears on the login (web.24) ───────────────
 // modules/ui/login-arcade.mjs, once its card has appeared in the light: the
-// Ace congratulates the player — tips on or off — and « Play now » opens the
-// mini-games page.
+// Ace congratulates the player — tips on or off. Only « Close » (web.41,
+// narmod: the card is right there); picking any mode closes it too
+// (guideArcadeModeClose, from loginPickMode and the card's tap).
 let arcadeNote = false;
 async function arcadeMode() {
   arcadeNote = true;
-  await note('arcadeMode', [btn('arcadePlay', true), btn('close')], (id) => {
-    arcadeNote = false;
-    endOnDemand();
-    if (id === 'arcadePlay') {
-      try { if (typeof window.arcadeStat === 'function') window.arcadeStat('celebrate_play'); } catch (e) {}
-      try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {}
-    }
-  });
+  await note('arcadeMode', [btn('close', true)], () => { arcadeNote = false; endOnDemand(); });
   try { if (M) M.react('wave'); } catch (e) {}
 }
 
 // The secret word typed in training (web.40): back on the choice of modes,
 // the card has come out of its egg — or everything was already open, and the
-// Ace says so with a smile. « Play now » opens the mini-games page.
+// Ace says so with a smile. Only « Close », as for arcadeMode.
 async function arcadeEgg(again) {
   arcadeNote = true;
-  await note(again ? 'arcadeEggAgain' : 'arcadeEgg', [btn('arcadePlay', true), btn('close')], (id) => {
-    arcadeNote = false;
-    endOnDemand();
-    if (id === 'arcadePlay') {
-      try { if (typeof window.arcadeStat === 'function') window.arcadeStat('celebrate_play'); } catch (e) {}
-      try { if (typeof window.loginOpenArcade === 'function') window.loginOpenArcade(); } catch (e) {}
-    }
-  });
+  await note(again ? 'arcadeEggAgain' : 'arcadeEgg', [btn('close', true)], () => { arcadeNote = false; endOnDemand(); });
   try { if (M) M.react(again ? 'hop' : 'cheer'); } catch (e) {}
 }
 
@@ -1755,7 +1742,15 @@ window.guideToggle = toggle;
 window.guideArcadeMode = () => { arcadeMode().catch(() => {}); };
 window.guideArcadeEgg = (again) => { arcadeEgg(!!again).catch(() => {}); };
 // The mini-games opened another way (the login card): the bubble goes.
-window.guideArcadeModeClose = () => { if (arcadeNote && showing && showing.kind === 'note') { arcadeNote = false; endOnDemand(); } };
+// A mode picked on the login while the Ace's word is up: as « Close ». The
+// Mini-games card itself (played): counted as the funnel's « played after the
+// Ace's word » step (celebrate_play, formerly his « Play now »).
+window.guideArcadeModeClose = (played) => {
+  if (!(arcadeNote && showing && showing.kind === 'note')) return;
+  arcadeNote = false;
+  endOnDemand();
+  if (played) { try { if (typeof window.arcadeStat === 'function') window.arcadeStat('celebrate_play'); } catch (e) {} }
+};
 /** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */
 window._guideMoreHelp = helpEntry;
 /** The Help entries of the menus (H4: the help window is gone, the Ace answers). */

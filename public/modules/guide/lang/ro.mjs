@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Masă de antrenament: alege numărul de jucători, un stil de joc (ritmul) și nivelul jucătorilor calculatorului, apoi creează masa. Nimic de aici nu contează pentru vreun clasament.',
   c5Ranking: 'Clasamentul oficial **PokerTH** și cele ale comunității (**BBC**, **WEC**), în file. Caută un jucător, alege **Sezon** sau **Din toate timpurile** și atinge un nume ca să-i deschizi profilul — atingerea graficului comută între bare și plăcintă.',
   c5Trophies: "Trofeele tale de antrenament. Un mic secret: câștigă **toate** trofeele din această listă și la final te așteaptă o surpriză!",
-  arcadeReveal: "Toate trofeele, bravo! Iată surpriza mea, un cuvânt secret: în modul antrenament, scrie **{w}** ca pseudonim și apasă Conectare. Deschide sala mea de jocuri ascunse. Rămâne între noi!",
+  arcadeReveal: "Toate trofeele, bravo! Iată surpriza mea, un cuvânt secret: în modul antrenament, scrie **{w}** ca pseudonim și apasă Conectare. Încearcă și vezi ce se întâmplă… Rămâne între noi!",
   arcadePlay: "Joacă acum",
   arcadeMode: "**Bravo!** Ai deblocat **mini-jocurile**. Te așteaptă și alte jocuri misterioase… continuă antrenamentul ca să le descoperi!",
   arcadeEgg: "Psst… mi-ai găsit **cuvântul secret**! 🥚 Easter egg deblocat: **toate mini-jocurile** sunt deschise. Șșt, rămâne între noi!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Æfingaborð: veldu fjölda leikmanna, leikstíl (hraðann) og getustig tölvuleikmannanna og búðu svo til borðið. Ekkert hér telur til stiga.',
   c5Ranking: 'Opinberi **PokerTH** stigalistinn og listar samfélagsins (**BBC**, **WEC**) í flipum. Leitaðu að leikmanni, veldu **Tímabil** eða **Frá upphafi** og pikkaðu á nafn til að opna prófílinn — pikk á grafið skiptir milli súlu- og kökurits.',
   c5Trophies: "Æfingabikararnir þínir. Lítið leyndarmál: vinndu **alla** bikarana á þessum lista og í lokin er ég með óvæntan glaðning fyrir þig!",
-  arcadeReveal: "Allir bikararnir, bravó! Hér er glaðningurinn minn, leyniorð: í æfingaham skaltu slá inn **{w}** sem gælunafn og ýta á Tengjast. Það opnar spilasalinn minn með földum leikjum. Höldum því á milli okkar!",
+  arcadeReveal: "Allir bikararnir, bravó! Hér er glaðningurinn minn, leyniorð: í æfingaham skaltu slá inn **{w}** sem gælunafn og ýta á Tengjast. Prófaðu og sjáðu hvað gerist… Höldum því á milli okkar!",
   arcadePlay: "Spila núna",
   arcadeMode: "**Bravó!** Þú hefur opnað **smáleikina**. Fleiri leyndarleikir bíða þín… haltu áfram að æfa til að uppgötva þá!",
   arcadeEgg: "Psst… þú fannst **leyniorðið** mitt! 🥚 Páskaegg opnað: **allir smáleikirnir** eru opnir. Uss, þetta er á milli okkar!",

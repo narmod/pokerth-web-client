@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Trejna tablo: elektu la nombron de ludantoj, ludstilon (la ritmon) kaj la nivelon de la komputilaj ludantoj, poste kreu la tablon. Nenio ĉi tie kalkuliĝas por rangigo.',
   c5Ranking: 'La oficiala rangigo **PokerTH** kaj la komunumaj (**BBC**, **WEC**) en langetoj. Serĉu ludanton, elektu **Sezono** aŭ **Ĉiam**, kaj tuŝu nomon por malfermi la profilon — tuŝi ĝian diagramon ŝanĝas inter stangoj kaj torto.',
   c5Trophies: "Viaj trejnaj trofeoj. Eta sekreto: gajnu **ĉiujn** trofeojn de ĉi tiu listo, kaj fine mi havos surprizon por vi!",
-  arcadeReveal: "Ĉiuj trofeoj, brave! Jen mia surprizo, sekreta vorto: en trejna reĝimo tajpu **{w}** kiel kaŝnomon kaj premu Konekti. Ĝi malfermas mian arkadon de kaŝitaj ludoj. Restu inter ni!",
+  arcadeReveal: "Ĉiuj trofeoj, brave! Jen mia surprizo, sekreta vorto: en trejna reĝimo tajpu **{w}** kiel kaŝnomon kaj premu Konekti. Provu kaj vidu, kio okazas… Restu inter ni!",
   arcadePlay: "Ludi nun",
   arcadeMode: "**Brave!** Vi malŝlosis la **minilúdojn**. Pliaj misteraj ludoj atendas vin… daŭre trejniĝu por malkovri ilin!",
   arcadeEgg: "Pst… vi trovis mian **sekretan vorton**! 🥚 Paska ovo malŝlosita: **ĉiuj miniludoj** estas malfermitaj. Ŝ, tio restas inter ni!",

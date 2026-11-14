@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Treeninglaud: vali mängijate arv, mängustiil (tempo) ja arvutimängijate tase, seejärel loo laud. Siin ei lähe miski ühegi edetabeli arvestusse.',
   c5Ranking: 'Ametlik **PokerTH** edetabel ja kogukondade edetabelid (**BBC**, **WEC**) vahekaartidel. Otsi mängijat, vali **Hooaeg** või **Kogu aeg** ja puuduta nime, et avada profiil — selle diagrammi puudutamine vahetab tulp- ja sektordiagrammi vahel.',
   c5Trophies: "Sinu treeningtrofeed. Väike saladus: võida **kõik** selle nimekirja trofeed ja lõpus on mul sulle üllatus!",
-  arcadeReveal: "Kõik trofeed, braavo! Siin on minu üllatus, salasõna: treeningrežiimis kirjuta hüüdnimeks **{w}** ja vajuta Ühenda. See avab minu peidetud mängude arkaadi. Jäägu see meie vahele!",
+  arcadeReveal: "Kõik trofeed, braavo! Siin on minu üllatus, salasõna: treeningrežiimis kirjuta hüüdnimeks **{w}** ja vajuta Ühenda. Proovi ja vaata, mis juhtub… Jäägu see meie vahele!",
   arcadePlay: "Mängi kohe",
   arcadeMode: "**Braavo!** Avasid **minimängud**. Sind ootavad veel salamängud… treeni edasi, et need avastada!",
   arcadeEgg: "Psst… leidsid mu **salasõna**! 🥚 Lihavõttemuna avatud: **kõik minimängud** on lahti. Šš, see jääb meie vahele!",

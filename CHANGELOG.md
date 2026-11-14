@@ -137,6 +137,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **The Ace's word on the Mini-games mode** (`web.41`) — `guide/index.mjs`: `arcadeMode` / `arcadeEgg` /
+  `arcadeEggAgain` show « Close » only (no « Play now »); `loginPickMode()` calls
+  `guideArcadeModeClose(false)` — a mode picked closes it as « Close »; the card's tap
+  (`openArcade` → `guideArcadeModeClose(true)`) is now the funnel's `celebrate_play` step (admin label « Mini-games
+  opened while the Ace's word is up »). `arcadeReveal` (every trophy): « It opens my arcade of hidden games » →
+  « Try it and see what happens… » × 83, since the word now gives the Ace's joke once everything is open.
 - **Who Wins? — no Split, the Ace top right, arcade tiles** (`web.38`, narmod) — `games/whowins.mjs`: the Split
   button and ↓ are gone; `find()` never returns a tie, `TRAPS` loses `board`, level 5 `wwT5` becomes Strong hands
   (a full house or better, was Split pots), so the Daily hands change too. The Ace stands top right (in the HUD band,

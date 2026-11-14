@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Tábìlì ìdánrawò: yan iye àwọn òṣèré, ọ̀nà eré kan (ìyára rẹ̀) àti ìpele àwọn òṣèré kọ̀ǹpútà, lẹ́yìn náà ṣẹ̀dá tábìlì náà. Kò sí ohun tí ó wà níbí tí a ń kà mọ́ ipò kankan.',
   c5Ranking: 'Ipò **PokerTH** ti ìjọba àti ti àwọn àwùjọ (**BBC**, **WEC**) nínú àwọn ojú-ewé. Wá òṣèré kan, yan **Sáà** tàbí **Láti ìbẹ̀rẹ̀**, kí o sì tẹ orúkọ kan láti ṣí àkọsílẹ̀ rẹ̀ — títẹ àwòrán ìṣirò rẹ̀ ń yí padà láàárín ọ̀pá àti àwòrán ìyípo.',
   c5Trophies: "Àwọn ife ẹ̀yẹ ìdánrawò rẹ. Àṣírí kékeré kan: gba **gbogbo** ife ẹ̀yẹ inú àkójọ yìí, ní ìparí mo ní ìyàlẹ́nu kan fún ọ!",
-  arcadeReveal: "Gbogbo ife ẹ̀yẹ, o ṣeun! Ìyàlẹ́nu mi nìyí, ọ̀rọ̀ àṣírí kan: ní ipò ìdánrawò, tẹ **{w}** gẹ́gẹ́ bí orúkọ ìnagijẹ kí o sì tẹ Sopọ̀. Ó ṣí gbọ̀ngàn eré àṣírí mi. Kí ó wà láàárín wa!",
+  arcadeReveal: "Gbogbo ife ẹ̀yẹ, o ṣeun! Ìyàlẹ́nu mi nìyí, ọ̀rọ̀ àṣírí kan: ní ipò ìdánrawò, tẹ **{w}** gẹ́gẹ́ bí orúkọ ìnagijẹ kí o sì tẹ Sopọ̀. Gbìyànjú rẹ̀ kí o rí ohun tó máa ṣẹlẹ̀… Kí ó wà láàárín wa!",
   arcadePlay: "Ṣeré báyìí",
   arcadeMode: "**Kú iṣẹ́!** O ti ṣí **àwọn eré kékeré**. Àwọn eré àṣírí míì ń dúró dè ọ́… máa bá ìdánrawò lọ kí o lè rí wọn!",
   arcadeEgg: "Psst… o ti rí **ọ̀rọ̀ àṣírí** mi! 🥚 Ìyàlẹ́nu tí a fi pamọ́ ṣí: **gbogbo eré kékeré** ti ṣí. Ṣṣṣ, láàrin àwa nìkan ni!",

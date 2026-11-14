@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Bord traenála: roghnaigh líon na n-imreoirí, stíl chluiche (an luas) agus leibhéal na n-imreoirí ríomhaire, ansin cruthaigh an bord. Ní áirítear aon rud anseo i rangú ar bith.',
   c5Ranking: 'Rangú oifigiúil **PokerTH** agus rangaithe an phobail (**BBC**, **WEC**) i gcluaisíní. Cuardaigh imreoir, roghnaigh **Séasúr** nó **Riamh**, agus tapáil ainm chun an phróifíl a oscailt — má thapálann tú a chairt, athraíonn sé idir barraí agus pióg.',
   c5Trophies: "Do chorn traenála. Rún beag: buaigh **gach** corn sa liosta seo agus beidh iontas agam duit ag an deireadh!",
-  arcadeReveal: "Gach corn, bravó! Seo é m’iontas, focal rúnda: sa mhód traenála, clóscríobh **{w}** mar leasainm agus brúigh Ceangail. Osclaíonn sé mo stuara cluichí folaithe. Fanann sé eadrainn!",
+  arcadeReveal: "Gach corn, bravó! Seo é m’iontas, focal rúnda: sa mhód traenála, clóscríobh **{w}** mar leasainm agus brúigh Ceangail. Bain triail as agus feic cad a tharlaíonn… Fanann sé eadrainn!",
   arcadePlay: "Imir anois",
   arcadeMode: "**Maith thú!** Dhíghlasáil tú na **mionchluichí**. Tá tuilleadh cluichí rúnda ag fanacht leat… lean ort ag traenáil chun iad a aimsiú!",
   arcadeEgg: "Psst… d'aimsigh tú m'**fhocal rúnda**! 🥚 Ubh Cásca díghlasáilte: tá **gach mionchluiche** oscailte. Ist, eadrainn féin é sin!",

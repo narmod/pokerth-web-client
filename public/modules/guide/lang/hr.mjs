@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Stol za vježbu: odaberi broj igrača, stil igre (tempo) i razinu računalnih igrača, zatim stvori stol. Ništa se ovdje ne računa u rang-listu.',
   c5Ranking: 'Službena ljestvica **PokerTH** i ljestvice zajednice (**BBC**, **WEC**) u karticama. Potraži igrača, odaberi **Sezona** ili **Svih vremena** i dodirni ime da otvoriš profil — dodir na njegov grafikon prebacuje između stupaca i torte.',
   c5Trophies: "Tvoji trofeji s treninga. Mala tajna: osvoji **sve** trofeje s ovog popisa i na kraju te čeka iznenađenje!",
-  arcadeReveal: "Svi trofeji, bravo! Evo mog iznenađenja, tajne riječi: u načinu treninga upiši **{w}** kao nadimak i pritisni Spoji. Otvara moju igraonicu skrivenih igara. Neka ostane među nama!",
+  arcadeReveal: "Svi trofeji, bravo! Evo mog iznenađenja, tajne riječi: u načinu treninga upiši **{w}** kao nadimak i pritisni Spoji. Probaj i vidi što će se dogoditi… Neka ostane među nama!",
   arcadePlay: "Igraj sada",
   arcadeMode: "**Bravo!** Otključao si **mini igre**. Čekaju te još tajanstvene igre… nastavi trenirati da ih otkriješ!",
   arcadeEgg: "Psst… pronašao si moju **tajnu riječ**! 🥚 Easter egg otključan: **sve mini igre** su otvorene. Pst, to ostaje među nama!",

@@ -80,7 +80,7 @@ export default {
   c5CreateOffline: 'Bòrd trèanaidh: tagh an àireamh de chluicheadairean, stoidhle geama (an astar) agus ìre nan cluicheadairean coimpiutair, an uair sin cruthaich am bòrd. Chan eil dad an-seo a’ cunntadh airson rangachadh sam bith.',
   c5Ranking: 'Rangachadh oifigeil **PokerTH** agus rangachaidhean nan coimhearsnachdan (**BBC**, **WEC**) ann an tabaichean. Lorg cluicheadair, tagh **Seusan** no **Fad na h-ùine**, agus thoir gnogag air ainm gus a’ phròifil fhosgladh — atharraichidh gnogag air a’ chairt-dhealbh aice eadar bàraichean is cearcall.',
   c5Trophies: "Do chuachan trèanaidh. Dìomhaireachd bheag: buannaich **gach** cuach san liosta seo agus bidh iongnadh agam dhut aig an deireadh!",
-  arcadeReveal: "Gach cuach, math fhèin! Seo an t-iongnadh agam, facal dìomhair: sa mhodh trèanaidh, sgrìobh **{w}** mar fhar-ainm is brùth Ceangail. Fosglaidh e an arcade agam de gheamannan falaichte. Cùm e eadarainn!",
+  arcadeReveal: "Gach cuach, math fhèin! Seo an t-iongnadh agam, facal dìomhair: sa mhodh trèanaidh, sgrìobh **{w}** mar fhar-ainm is brùth Ceangail. Feuch e is chì thu dè thachras… Cùm e eadarainn!",
   arcadePlay: "Cluich an-dràsta",
   arcadeMode: "**Math fhèin!** Thug thu glas far nan **geamannan beaga**. Tha barrachd gheamannan dìomhair a’ feitheamh ort… cùm a’ trèanadh gus an lorg!",
   arcadeEgg: "Psst… lorg thu am **facal dìomhair** agam! 🥚 Ugh na Càisge fosgailte: tha **gach mion-gheama** fosgailte. Ist, eadarainn fhìn sin!",
