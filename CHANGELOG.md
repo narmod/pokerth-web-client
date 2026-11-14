@@ -99,6 +99,13 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Who Wins? — the tables, 2/3** (`web.31`) — `games/whowins.mjs`: six tables of `TABLE_DEALS` = 10 showdowns,
+  3 hearts each (`TABLES`: pairs & high card · flushes & straights · kickers · traps · split pots · the Ace's table,
+  5 s, a mix), each dealing what it teaches by rejection sampling (`dealOnce`, `trapOf`: board plays, counterfeited
+  pocket pair, wheel, flush vs flush, kicker, only five cards count). Stars (`starsFor`): ★ cleared, ★★ one mistake
+  at most, ★★★ none; a star opens the next table (`tableOpen`); stars and best per table in `pth_ww_tables`. Tables
+  page (keys ← → ↓, Space) and result (next / again / tables). Secret trophy: the Ace's table cleared (was 20 right
+  answers in one game). 14 keys + `ach_whowins_d` + rules lines 3–4 × 83 languages. Tests: `test-games`, `test-games-browser`.
 - **Who Wins? — the show, 1/3** (`web.30`, narmod's redesign: TV reveal, tables with stars, traps explained,
   effects) — `games/whowins.mjs`: the hands are dealt face up and the board turned over (`REVEAL`: flop, turn, river,
   card flips) before the clock starts (state `deal`; a tap turns the rest over without answering); a pot of chips

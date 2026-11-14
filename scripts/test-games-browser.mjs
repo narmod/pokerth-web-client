@@ -231,6 +231,40 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const ww2 = await pg.evaluate(() => ({ ok: window.__pthWW.run().ok, lives: window.__pthWW.run().lives, hud: document.querySelector('#pth-game .ww-lives').textContent }));
   const sh = await pg.evaluate(() => window.__pthWW.run().shake);
   ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡' && sh > 0, label + ': a wrong answer costs a heart and shakes the table (' + ww2.hud + ')');
+  // The tables (web.31): play table 1 to its end, one mistake → ★★, table 2 opens.
+  const playOut = async (wrongAt) => {
+    for (let k = 0; k < 12; k++) {
+      await pg.waitForFunction(() => ['ask', 'over'].includes(window.__pthWW.state()), null, { timeout: 5000 }).catch(() => {});
+      if (await pg.evaluate(() => window.__pthWW.state()) === 'over') return;
+      const w = await pg.evaluate(() => window.__pthWW.run().q.win);
+      const n = await pg.evaluate(() => window.__pthWW.run().n);
+      await pg.keyboard.press(keyFor(wrongAt.includes(n) ? (w === 1 ? -1 : 1) : w));
+      await sleep(470);
+      await pg.keyboard.press('Space');
+    }
+  };
+  await playOut([]);
+  await sleep(300);
+  const tb = await pg.evaluate(() => ({ st: window.__pthWW.state(), res: window.__pthWW.run().res, n: window.__pthWW.run().n,
+    prog: JSON.parse(localStorage.getItem('pth_ww_tables') || '{}'), panel: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '',
+    btns: [...document.querySelectorAll('#pth-game .pg-panel [data-do]')].map((b) => b.getAttribute('data-do')).join(',') }));
+  ok(tb.st === 'over' && tb.n === 10 && tb.res.cleared && tb.res.stars === 2 && tb.prog.stars[0] === 2 && tb.res.opened && /Table réussie/.test(tb.panel) && tb.btns === 'next,again,tables',
+    label + ': table 1 played to its 10th hand with one mistake: cleared, ★★, table 2 opens (' + tb.btns + ')');
+  await pg.keyboard.press('Space');                // the next table
+  await sleep(300);
+  const t2 = await pg.evaluate(() => ({ cur: window.__pthWW.table(), st: window.__pthWW.state(), hud: document.querySelector('#pth-game .ww-tlab').textContent }));
+  ok(t2.cur === 1 && ['deal', 'ask'].includes(t2.st) && t2.hud === 'Table 2', label + ': Space goes on to table 2 (' + t2.hud + ')');
+  await playOut([1, 2, 3]);
+  await sleep(300);
+  const t3 = await pg.evaluate(() => ({ res: window.__pthWW.run().res, prog: JSON.parse(localStorage.getItem('pth_ww_tables') || '{}'),
+    btns: [...document.querySelectorAll('#pth-game .pg-panel [data-do]')].map((b) => b.getAttribute('data-do')).join(',') }));
+  ok(!t3.res.cleared && t3.res.stars === 0 && t3.prog.stars[1] === 0 && t3.btns === 'again,tables', label + ': three mistakes: out of hearts, no star, table 3 stays locked');
+  await pg.click('#pth-game .pg-panel [data-do="tables"]');
+  await sleep(300);
+  const pk = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .ww-tab')].map((b) => (b.classList.contains('lock') ? 'L' : 'O') + (b.querySelector('.ww-st') || {}).textContent).join(' '));
+  ok(pk === 'O★★☆ O☆☆☆ L🔒 L🔒 L🔒 L🔒', label + ': the tables page shows the stars and the locked tables (' + pk + ')');
+  await pg.keyboard.press('Space');                // back in a game, as before the tables
+  await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Higher or Lower: a right guess grows the pot, Space banks it, a wrong one costs a heart ──

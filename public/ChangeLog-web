@@ -1,4 +1,9 @@
-2026-11-14 version 2.1.11-web.30 (current series):
+2026-11-14 version 2.1.11-web.31 (current series):
+- new: Who Wins? — six tables of 10 hands to clear with 3 hearts each: pairs & high card, flushes & straights, kickers, traps, split pots, then the Ace's table
+- new: Who Wins? — up to 3 stars per table (★ cleared, ★★ one mistake at most, ★★★ none); a star opens the next table
+- improvement: the secret trophy « Who Wins? » is now won by clearing the Ace's table (players who have it keep it)
+
+2026-11-14 version 2.1.11-web.30:
 - improvement: Who Wins? — the board is turned over like on TV (flop, turn, river) before the clock starts; a tap shows it at once
 - improvement: Who Wins? — a pot of chips goes to the winning hand and grows with your streak; a wrong answer shakes the table
 - new: Who Wins? — « On fire »: from 5 right answers in a row the board glows gold and points count double

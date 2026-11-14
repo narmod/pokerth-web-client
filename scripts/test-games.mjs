@@ -75,7 +75,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
-  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
+  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwTable', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwLocked', 'wwStarsRule', 'wwCleared', 'wwFailed', 'wwNext', 'wwRetry', 'wwTables', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
@@ -154,6 +154,30 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   }
   ok(okDeals, 'Who Wins?: 300 deals, nine distinct cards each, the right answer every time');
   const WW = await import('../public/modules/games/whowins.mjs');
+  // The tables (web.31): each deals what it teaches, the traps are found.
+  {
+    const R = (await import('../public/modules/games/deal.mjs')).rng;
+    const rnd = R ? R('ww-tables') : Math.random;
+    const P = await import('../public/modules/games/poker-hand.mjs');
+    const sample = (i, n) => Array.from({ length: n }, () => WW.TABLES[i].deal(rnd));
+    const right = (q) => { const c = P.compareHands(P.rankHand(q.a.concat(q.board)), P.rankHand(q.b.concat(q.board))); return q.win === (c > 0 ? 1 : c < 0 ? -1 : 0); };
+    const s = WW.TABLES.map((_, i) => sample(i, 40));
+    ok(s.every((l) => l.every(right)) && s[0].every((q) => q.win !== 0 && q.ra.cat <= 2 && q.rb.cat <= 2)
+      && s[1].every((q) => [q.ra.cat, q.rb.cat].some((c) => c === 4 || c === 5))
+      && s[2].filter((q) => WW.trapOf(q) === 'kicker').length > 15 && s[3].filter((q) => WW.trapOf(q)).length >= 36
+      && s[4].filter((q) => q.win === 0).length >= 10 && WW.TABLES[5].time < WW.TABLES[0].time,
+      'Who Wins? tables: pairs & high card, flushes & straights, kickers, traps, split pots, the Ace\'s faster mix (right answers every time)');
+    const C = (r, s2) => 13 * s2 + r - 2;                       // rank 2..14, suit 0..3
+    const deal = (board, a, b) => { const ra = P.rankHand(a.concat(board)), rb = P.rankHand(b.concat(board)); const c = P.compareHands(ra, rb); return { board, a, b, ra, rb, win: c > 0 ? 1 : c < 0 ? -1 : 0 }; };
+    const cf = deal([C(13, 0), C(13, 1), C(10, 0), C(10, 1), C(5, 2)], [C(3, 2), C(3, 3)], [C(12, 1), C(7, 1)]);
+    const wh = deal([C(14, 0), C(2, 1), C(3, 2), C(9, 3), C(13, 0)], [C(4, 0), C(5, 1)], [C(13, 1), C(9, 2)]);
+    const bd = deal([C(10, 0), C(11, 1), C(12, 2), C(13, 3), C(14, 0)], [C(2, 1), C(3, 2)], [C(4, 3), C(5, 0)]);
+    const kk = deal([C(14, 0), C(14, 1), C(9, 2), C(6, 3), C(3, 0)], [C(13, 2), C(2, 3)], [C(12, 3), C(4, 1)]);
+    ok(WW.trapOf(cf) === 'counterfeit' && WW.trapOf(wh) === 'wheel' && WW.trapOf(bd) === 'board' && WW.trapOf(kk) === 'kicker' && kk.win === 1,
+      'trapOf(): a counterfeited pocket pair, the wheel, the board plays, the kicker');
+    ok(WW.starsFor(true, 0) === 3 && WW.starsFor(true, 1) === 2 && WW.starsFor(true, 2) === 1 && WW.starsFor(false, 3) === 0
+      && WW.tableOpen(0, [0]) && !WW.tableOpen(1, [0]) && WW.tableOpen(1, [1]), 'starsFor() / tableOpen(): ★★★ no mistake, ★★ one, ★ cleared; a star opens the next table');
+  }
   ok(WW.points(9, 1) === 28 && WW.points(9, 3) === 33 && WW.points(9, 5) === 66 && WW.points(0, 0) === 10
     && WW.REVEAL.every((x, i) => i === 0 || x >= WW.REVEAL[i - 1]) && WW.REVEAL_END < 2.5,
     'Who Wins?: points (speed, streak, doubled in Fever from ' + WW.FEVER_STREAK + ' in a row); the board turned over in ' + WW.REVEAL_END.toFixed(2) + ' s');

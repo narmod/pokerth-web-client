@@ -14,7 +14,14 @@
 //            the same kind (pair against pair, flush against flush…), and
 //            now and then a split pot
 // Keys: ← left hand, → right hand, ↓ Split; Space goes on after an answer.
-// Secret trophy « Who Wins? »: TROPHY_RIGHT right answers in one game.
+//
+// The tables (web.31): six tables of TABLE_DEALS showdowns, LIVES hearts
+// each, that follow the learning — pairs and high card, flushes and
+// straights, kickers, traps, split pots, then the Ace's table (faster, a mix
+// of all). A table is cleared with a heart left: ★, ★★ with one mistake at
+// most, ★★★ without any; a star opens the next table (stars and best score
+// per table on this device: pth_ww_tables). Secret trophy « Who Wins? »:
+// the Ace's table cleared.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
 // board is turned over like on TV — the flop, the turn, the river — then the
@@ -25,12 +32,12 @@
 // « Reduce animations »: the board is shown at once, no shaking.
 // ═══════════════════════════════════════════════════════════════════
 
-import { rankHand, compareHands, NAME_KEYS } from './poker-hand.mjs';
+import { rankHand, compareHands, NAME_KEYS, rankOf } from './poker-hand.mjs';
 import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 
-export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, TROPHY_RIGHT = 20, FEVER_STREAK = 5;
+export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, FEVER_STREAK = 5, TABLE_DEALS = 10;
 // The board turned over (s after the deal): the three flop cards, the turn,
 // the river; each card turns in FLIP s.
 export const FLIP = 0.28, REVEAL = [0.25, 0.37, 0.49, 1.15, 1.85];
@@ -45,6 +52,71 @@ export function points(tLeft, streak) {
  * A showdown for `level` (0, 1, 2…): { board, a, b, ra, rb, win } — win 1
  * (left), -1 (right) or 0 (split). rnd: the random source (tests seed it).
  */
+// ── A random showdown, what makes it tricky ───────────────────────
+/** Nine cards: { board, a, b, ra, rb, win } — win 1 (left), -1 (right), 0 (split). */
+export function dealOnce(rnd = Math.random) {
+  const d = shuffled(rnd);
+  const board = d.slice(0, 5), a = d.slice(5, 7), b = d.slice(7, 9);
+  const ra = rankHand(a.concat(board)), rb = rankHand(b.concat(board));
+  const c = compareHands(ra, rb);
+  return { board, a, b, ra, rb, win: c > 0 ? 1 : c < 0 ? -1 : 0 };
+}
+// Cards that make a category before the kickers (pair 2, two pair 4…).
+const MADE = { 1: 2, 2: 4, 3: 3, 7: 4 };
+/**
+ * What makes a showdown tricky, or null:
+ *   'board'        a split where the board itself is the best hand
+ *   'counterfeit'  a pocket pair that does not play (the board's two pairs are higher)
+ *   'wheel'        a straight A-2-3-4-5: the ace plays low
+ *   'flush'        flush against flush: the highest card of the suit decides
+ *   'kicker'       the same pair / two pair / trips / quads: the kicker decides
+ *   'five'         a split although the hole cards differ: only five cards count
+ */
+export function trapOf(q) {
+  const onBoard = (r) => r.best.every((c) => q.board.indexOf(c) >= 0);
+  if (q.win === 0 && onBoard(q.ra) && onBoard(q.rb)) return 'board';
+  const cf = (h, r) => rankOf(h[0]) === rankOf(h[1]) && r.cat === 2 && h.every((c) => r.best.indexOf(c) < 0);
+  if (cf(q.a, q.ra) || cf(q.b, q.rb)) return 'counterfeit';
+  if ((q.ra.cat === 4 && q.ra.tb[0] === 5) || (q.rb.cat === 4 && q.rb.tb[0] === 5)) return 'wheel';
+  if (q.ra.cat === 5 && q.rb.cat === 5 && q.win !== 0) return 'flush';
+  if (q.ra.cat === q.rb.cat && MADE[q.ra.cat] && q.win !== 0) {
+    let d = 0;
+    while (d < 5 && q.ra.tb[d] === q.rb.tb[d]) d++;
+    if (d >= MADE[q.ra.cat]) return 'kicker';
+  }
+  if (q.win === 0 && (rankOf(q.a[0]) + rankOf(q.a[1]) !== rankOf(q.b[0]) + rankOf(q.b[1]))) return 'five';
+  return null;
+}
+/** The first of `tries` deals that `ok` accepts, else the last one. */
+function find(rnd, ok, tries) {
+  let q = null;
+  for (let i = 0; i < tries; i++) { q = dealOnce(rnd); if (ok(q)) return q; }
+  return q;
+}
+const TRAPS = ['counterfeit', 'wheel', 'flush', 'kicker', 'board'];
+// The six tables: their deals and their clock (s).
+export const TABLES = [
+  { key: 'wwT1', time: 9, deal: (rnd) => find(rnd, (q) => q.win !== 0 && q.ra.cat <= 2 && q.rb.cat <= 2, 400) },
+  { key: 'wwT2', time: 9, deal: (rnd) => find(rnd, (q) => q.win !== 0 && (q.ra.cat === 4 || q.ra.cat === 5 || q.rb.cat === 4 || q.rb.cat === 5), 1500) },
+  { key: 'wwT3', time: 8, deal: (rnd) => (rnd() < 0.65 ? find(rnd, (q) => trapOf(q) === 'kicker', 2000) : find(rnd, (q) => q.win !== 0 && q.ra.cat === q.rb.cat, 400)) },
+  { key: 'wwT4', time: 8, deal: (rnd) => { const want = TRAPS[Math.floor(rnd() * TRAPS.length)]; return find(rnd, (q) => trapOf(q) === want, 6000); } },
+  { key: 'wwT5', time: 8, deal: (rnd) => (rnd() < 0.5 ? find(rnd, (q) => q.win === 0, 3000) : find(rnd, (q) => q.win !== 0 && q.ra.cat === q.rb.cat, 400)) },
+  { key: 'wwT6', time: 5, deal: (rnd) => TABLES[Math.floor(rnd() * 5)].deal(rnd) },
+];
+/** Stars for a table played: 0 (out of hearts), ★ cleared, ★★ one mistake at most, ★★★ none. */
+export function starsFor(cleared, wrong) { return !cleared ? 0 : wrong === 0 ? 3 : wrong === 1 ? 2 : 1; }
+/** Is table i open? (stars: the stars won per table) */
+export const tableOpen = (i, stars) => i === 0 || (stars[i - 1] || 0) > 0;
+// Stars and best score per table, on this device.
+const PROG_KEY = 'pth_ww_tables';
+export function loadProgress() {
+  try {
+    const p = JSON.parse(localStorage.getItem(PROG_KEY) || '{}');
+    return { stars: TABLES.map((_, i) => Math.max(0, Math.min(3, (p.stars || [])[i] | 0))), best: TABLES.map((_, i) => Math.max(0, (p.best || [])[i] | 0)) };
+  } catch (e) { return { stars: TABLES.map(() => 0), best: TABLES.map(() => 0) }; }
+}
+function saveProgress(p) { try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); } catch (e) {} }
+
 export function makeDeal(level, rnd = Math.random) {
   const wantSame = rnd() < Math.min(0.75, 0.15 + 0.12 * level);
   const wantSplit = level >= 2 && rnd() < 0.1;
@@ -72,21 +144,30 @@ export function create(shell) {
   shell.touchPad(false);
   shell.hud.classList.add('on-felt');
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('hcScore')) + '</div><div class="ar-num ww-score">0</div></div>'
+    + '<div><div class="ar-lab ww-tlab">&nbsp;</div><div class="ar-num ww-prog"></div></div>'
     + '<div><div class="ar-lab">&nbsp;</div><div class="ar-num ww-lives"></div></div></div>'
     + '<div class="ar-hand"><div class="ar-name ww-streak"></div></div>';
   const hScore = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-score'));
   const hLives = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-lives'));
   const hStreak = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-streak'));
+  const hTab = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-tlab'));
+  const hProg = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-prog'));
   ensureCss();
 
   let state = 'title', G = null, time = 0, timer = 0;
+  let cur = 0;                    // the table played
+  let sel = 0;                    // the table picked on the tables page (keys)
+  let prog = loadProgress();
+  { const first = prog.stars.findIndex((s) => !s); sel = first < 0 ? TABLES.length - 1 : first; }
   function newGame() {
-    G = { score: 0, lives: LIVES, right: 0, streak: 0, bestStreak: 0, q: null, tMax: TIME_MAX, tLeft: TIME_MAX, answer: null, ok: false,
+    G = { score: 0, lives: LIVES, right: 0, n: 0, streak: 0, bestStreak: 0, q: null, tMax: TIME_MAX, tLeft: TIME_MAX, answer: null, ok: false,
       fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0, dealT: 0, snd: 0, pot: 3, fly: null, shake: 0 };
     renderHud();
   }
   function renderHud() {
     hScore.textContent = fmt(G.score);
+    hTab.textContent = state === 'title' ? '\u00a0' : t('wwTable', { n: cur + 1 });
+    hProg.textContent = state === 'title' ? '' : Math.min(G.n, TABLE_DEALS) + '/' + TABLE_DEALS;
     hLives.textContent = '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
     const fever = G.streak >= FEVER_STREAK;
     hStreak.textContent = fever ? '🔥 ' + t('wwFever') : G.streak >= 2 ? '×' + G.streak : '';
@@ -94,31 +175,49 @@ export function create(shell) {
   }
   const say = (s, life = 1.8) => { G.say = { s, t: 0, life }; };
 
+  const starStr = (n) => '★'.repeat(n) + '☆'.repeat(3 - n);
+  /** The tables page: the six tables, their stars, the locked ones. */
   function titlePanel() {
-    const best = shell.best.get();
-    shell.panel('<h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p>'
-      + (best ? '<p class="pg-dim">' + esc(t('arRecord', { n: fmt(best) })) + '</p>' : '')
-      + '<p class="pg-blink">' + esc(t('arTapStart')) + '</p>');
+    prog = loadProgress();
+    if (!tableOpen(sel, prog.stars)) sel = 0;
+    const tile = (tb, i) => {
+      const open = tableOpen(i, prog.stars);
+      return '<button type="button" class="ww-tab' + (i === sel ? ' on' : '') + (open ? '' : ' lock') + (i === TABLES.length - 1 ? ' boss' : '') + '" data-i="' + i + '"'
+        + (open ? '' : ' aria-disabled="true"') + '>'
+        + '<small>' + esc(t('wwTable', { n: i + 1 })) + '</small><b>' + esc(t(tb.key)) + '</b>'
+        + '<span class="ww-st">' + (open ? starStr(prog.stars[i]) : '🔒') + '</span>'
+        + '<small class="ww-sub">' + (open ? (prog.best[i] ? esc(t('arRecord', { n: fmt(prog.best[i]) })) : '&nbsp;') : esc(t('wwLocked'))) + '</small></button>';
+    };
+    shell.panel('<div class="ww-pick"><h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p>'
+      + '<div class="ww-tabs">' + TABLES.map(tile).join('') + '</div>'
+      + '<p class="pg-dim ww-rule">' + esc(t('wwStarsRule')) + '</p></div>');
+    shell.root.querySelectorAll('.pg-panel .ww-tab').forEach((b) => {
+      b.addEventListener('pointerdown', (e) => e.stopPropagation());
+      b.addEventListener('click', () => { const i = +(b.getAttribute('data-i') || 0); if (tableOpen(i, prog.stars)) { sel = i; start(i); } });
+    });
   }
   newGame();
   titlePanel();
-  try { if (navigator.webdriver) window.__pthWW = { run: () => G, state: () => state }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthWW = { run: () => G, state: () => state, table: () => cur, start: (i) => start(i) }; } catch (e) {}
 
-  function start() {
+  function start(i) {
     clearTimeout(timer);
+    cur = Math.max(0, Math.min(TABLES.length - 1, i == null ? sel : i));
     newGame();
     state = 'ask'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile');
     next();
   }
   function next() {
-    G.q = makeDeal(Math.floor(G.right / 5));
-    G.tMax = Math.max(TIME_MIN, TIME_MAX - 0.3 * G.right);
+    G.q = TABLES[cur].deal(Math.random);
+    G.n++;
+    G.tMax = TABLES[cur].time;
     G.tLeft = G.tMax; G.answer = null; G.shown = time;
     G.fly = null; G.pot = 3 + Math.min(G.streak, 7);
     // The board is turned over first (at once with « Reduce animations »).
     G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
     state = shell.reduced ? 'ask' : 'deal';
+    renderHud();
     sound('notifyCard');
   }
   /** The board is all turned over: the clock starts. */
@@ -140,7 +239,6 @@ export function create(shell) {
       if (G.streak === FEVER_STREAK) G.fx.push({ s: '🔥 ' + t('wwFever'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.6, gold: true, big: true });
       G.yayUntil = performance.now() + 700;
       sound(G.streak === FEVER_STREAK ? 'notifyBigWin' : G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
-      if (G.right === TROPHY_RIGHT) shell.grant('whowins');
     } else {
       G.lives--; G.streak = 0;
       if (!shell.reduced) G.shake = 0.4;
@@ -155,25 +253,53 @@ export function create(shell) {
   function goOn() {
     if (state !== 'shown') return;
     clearTimeout(timer);
-    if (G.lives <= 0) finish(); else next();
+    if (G.lives <= 0 || G.n >= TABLE_DEALS) finish(); else next();
   }
   function finish() {
     state = 'over';
     shell.ended();
-    const score = G.score, prev = shell.best.get(), record = score > prev;
-    if (record) shell.best.set(score);
-    if (record && prev) sound('notifyBigWin');
-    ace.mood('mc-m-smile'); ace.pose('idle');
-    G.res = { score, record, prev };
+    const cleared = G.lives > 0, wrong = G.n - G.right;
+    const stars = starsFor(cleared, wrong);
+    prog = loadProgress();
+    const prevTable = prog.best[cur], record = G.score > prevTable;
+    const opened = cleared && cur + 1 < TABLES.length && !tableOpen(cur + 1, prog.stars);
+    prog.stars[cur] = Math.max(prog.stars[cur], stars);
+    if (record) prog.best[cur] = G.score;
+    saveProgress(prog);
+    // The best score on any table (the record shown in the menu).
+    if (G.score > shell.best.get()) shell.best.set(G.score);
+    // The secret trophy: the Ace's table cleared.
+    if (cleared && cur === TABLES.length - 1) shell.grant('whowins');
+    sound(cleared ? (stars === 3 ? 'notifyBigWin' : 'notifyWinner') : 'notifyFold');
+    ace.mood(cleared ? 'mc-m-yay' : 'mc-m-ko'); ace.pose(cleared ? 'wave' : 'idle');
+    if (cleared && cur + 1 < TABLES.length) sel = cur + 1;
+    G.res = { score: G.score, record: record && prevTable > 0, cleared, stars, opened };
+    renderHud();
     renderResult();
   }
+  /** The result: the table cleared (its stars) or out of hearts, what next. */
   function renderResult() {
     if (state !== 'over' || !G.res) return;
-    const { score, record, prev } = G.res;
-    shell.panel('<div class="ww-box"><h2>' + esc(fmt(score)) + '</h2>'
-      + '<p class="ar-final">✓ ' + fmt(G.right) + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
-      + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p></div>', true);
+    const { score, record, cleared, stars, opened } = G.res;
+    const hasNext = cleared && cur + 1 < TABLES.length;
+    const btn = (id, label, ghost) => '<button type="button" class="pg-btn' + (ghost ? ' pg-ghost' : '') + '" data-do="' + id + '">' + esc(label) + '</button>';
+    shell.panel('<div class="ww-box"><p class="pg-dim">' + esc(t('wwTable', { n: cur + 1 }) + ' · ' + t(TABLES[cur].key)) + '</p>'
+      + '<h2>' + esc(cleared ? t('wwCleared') : t('wwFailed')) + '</h2>'
+      + '<p class="ww-big">' + starStr(stars) + '</p>'
+      + '<p class="ar-final">' + esc(fmt(score)) + ' · ✓ ' + fmt(G.right) + '/' + TABLE_DEALS + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
+      + (record ? '<p class="pg-dim">' + esc(t('arNewRecord')) + '</p>' : '')
+      + (opened ? '<p class="ww-open">🔓 ' + esc(t('wwTable', { n: cur + 2 }) + ' · ' + t(TABLES[cur + 1].key)) + '</p>' : '')
+      + '<div class="ww-btns">' + (hasNext ? btn('next', t('wwNext')) + btn('again', t('wwRetry'), true) : btn('again', t('wwRetry'))) + btn('tables', t('wwTables'), true) + '</div></div>', true);
+    shell.root.querySelectorAll('.pg-panel [data-do]').forEach((b) => {
+      b.addEventListener('pointerdown', (e) => e.stopPropagation());
+      b.addEventListener('click', () => act(b.getAttribute('data-do')));
+    });
+  }
+  function act(what) {
+    if (state !== 'over') return;
+    if (what === 'next') start(cur + 1);
+    else if (what === 'again') start(cur);
+    else { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderHud(); titlePanel(); }
   }
 
   // ── Layout (world px) ─────────────────────────────────────────────
@@ -215,8 +341,19 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
-    if (state === 'title') { if (a === 'jump') start(); return; }
-    if (state === 'over') { if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); } return; }
+    if (state === 'title') {
+      // Arrows pick a table (open ones only), Space plays it.
+      const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
+      if (step) {
+        let k = sel;
+        for (let j = 0; j < TABLES.length; j++) { k = (k + step + TABLES.length) % TABLES.length; if (tableOpen(k, prog.stars)) break; }
+        sel = k; titlePanel(); return;
+      }
+      if (a === 'jump' && info.x == null) start(sel);
+      return;
+    }
+    // The result: Space goes on (the next table when cleared, else again).
+    if (state === 'over') { if (a === 'jump' && info.x == null) act(G.res && G.res.cleared && cur + 1 < TABLES.length ? 'next' : 'again'); return; }
     if (state === 'shown') { if (a === 'jump' && time - G.shownAt > 0.4) goOn(); return; }
     // During the deal: a tap or a key turns the rest of the board over.
     if (state === 'deal') { revealed(); return; }
@@ -383,6 +520,29 @@ function ensureCss() {
   st.textContent = '#pth-game .ww-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:12px;'
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .ww-box h2{color:#f5d77a}#pth-game .ww-lives{color:#ff8a80;letter-spacing:2px}'
+    // The tables page and the result.
+    + '#pth-game .ww-pick{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(620px,100%);pointer-events:auto}'
+    + '#pth-game .ww-pick p{margin:0}#pth-game .ww-rule{font-size:12px}'
+    + '#pth-game .ww-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}'
+    + '@media (max-width:520px){#pth-game .ww-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+    + '#pth-game .ww-tab{appearance:none;border:0;cursor:pointer;min-width:0;padding:8px 6px 7px;border-radius:12px;background:rgba(11,18,16,.84);color:#f5f0e3;'
+    + 'box-shadow:inset 0 0 0 1px rgba(216,178,90,.3);display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s}'
+    + '#pth-game .ww-tab small{font:600 10px Inconsolata,monospace;color:#9bb0a3;letter-spacing:.06em;text-transform:uppercase}'
+    + '#pth-game .ww-tab b{font:700 14px/1.15 Cinzel,Georgia,serif;overflow-wrap:anywhere;min-height:2.3em;display:flex;align-items:center}'
+    + '#pth-game .ww-tab .ww-st{color:#f5d77a;font-size:16px;letter-spacing:2px;line-height:1.1}'
+    + '#pth-game .ww-tab .ww-sub{text-transform:none;letter-spacing:0;min-height:1.2em}'
+    + '#pth-game .ww-tab.on{box-shadow:inset 0 0 0 2px #d8b25a,0 0 16px rgba(216,178,90,.3);transform:translateY(-2px)}'
+    + '#pth-game .ww-tab.lock{opacity:.55;cursor:default}#pth-game .ww-tab.boss b{color:#ffb84d}'
+    + '#pth-game .ww-tab:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}'
+    + '#pth-game .pg-panel .ww-big{font-size:30px;color:#f5d77a;letter-spacing:4px;margin:0;line-height:1.1}'
+    + '#pth-game .ww-box{min-width:min(330px,100%)}#pth-game .ww-box h2{font-size:clamp(18px,3.4vw,24px);white-space:nowrap}'
+    + '#pth-game .ww-open{color:#7ee2a0;margin:0}'
+    + '#pth-game .ww-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;pointer-events:auto;margin-top:4px}'
+    + '@media (max-height:420px){#pth-game .ww-tab b{min-height:0;font-size:13px}#pth-game .ww-tab{padding:5px 6px}#pth-game .ww-pick>p:not(.ww-rule){display:none}}'
+    + '#pth-game.pg-light .ww-tab{background:rgba(255,252,246,.96);color:#1d222b;box-shadow:inset 0 0 0 1px rgba(140,105,20,.35)}'
+    + '#pth-game.pg-light .ww-tab small{color:#5a6470}#pth-game.pg-light .ww-tab .ww-st,#pth-game.pg-light .pg-panel .ww-big{color:#a07a12}'
+    + '#pth-game.pg-light .ww-tab.on{box-shadow:inset 0 0 0 2px #a07a12,0 0 14px rgba(160,122,18,.25)}#pth-game.pg-light .ww-tab.boss b{color:#b5521b}'
+    + '#pth-game.pg-light .ww-open{color:#1e7a46}'
     + '#pth-game .ww-streak.ww-fever{color:#ffb84d;text-shadow:0 0 8px rgba(255,150,40,.8);animation:ww-fever 1s ease-in-out infinite alternate}'
     + '@keyframes ww-fever{from{opacity:.75}to{opacity:1}}@media (prefers-reduced-motion:reduce){#pth-game .ww-streak.ww-fever{animation:none}}'
     + '#pth-game.pg-light .ww-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
