@@ -75,7 +75,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'ach_videopoker', 'ach_videopoker_d',
-  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJ50', 'wwJAce', 'wwJTime', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
+  'wwName', 'wwHint', 'wwSplit', 'wwTooSlow', 'wwFever', 'wwT1', 'wwT2', 'wwT3', 'wwT4', 'wwT5', 'wwT6', 'wwModeEndless', 'wwModeEndlessD', 'wwLevel', 'wwLevelLab', 'wwModes', 'wwModeTv', 'wwModeTvD', 'wwQuestion', 'wwQLab', 'wwSafe', 'wwJ50', 'wwJAce', 'wwJTime', 'wwMillion', 'wwLost', 'wwKeep', 'wwModeDaily', 'wwModeDailyD', 'wwHandLab', 'wwDailyToday', 'wwDailyStreak', 'wwDailyDone', 'wwDailyPractice', 'wwDailyPracticeShort', 'wwTrap', 'wwTrapBoard', 'wwTrapCounterfeit', 'wwTrapWheel', 'wwTrapFlush', 'wwTrapKicker', 'wwTrapFive', 'wwRetry', 'wwRules', 'ach_whowins', 'ach_whowins_d', 'gmAgain',
   'hlName', 'hlHint', 'hlHigher', 'hlLower', 'hlCash', 'hlPot', 'hlRules', 'ach_hilo', 'ach_hilo_d',
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
@@ -188,6 +188,12 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     const a1 = WW.dailyAfter(null, '2026-11-14', 300, 8), a2 = WW.dailyAfter(a1, '2026-11-15', 250, 7), a3 = WW.dailyAfter(a2, '2026-11-17', 400, 9);
     ok(WW.dayBefore('2026-03-01') === '2026-02-28' && a1.streak === 1 && a2.streak === 2 && a3.streak === 1 && a3.score === 400,
       'Daily challenge: the streak grows with each day in a row, back to 1 after a missed day');
+    const seen = new Set();
+    for (let i = 0; i < 400; i++) { const tr = WW.trapOf(WW.LEVELS[3 + (i % 3)].deal(rnd)); if (tr) seen.add(tr); }
+    const m = (x) => x.length * 7;
+    const wl = WW.wrapLines(m, 'Only five cards count: the extra card in a hand changes nothing', 140), wc = WW.wrapLines(m, '只算五张牌手里多出来的牌不起作用所以平分底池', 70);
+    ok([...seen].every((tr) => WW.TRAP_KEYS[tr]) && seen.size >= 5 && wl.length > 2 && wl.every((l) => m(l) <= 140) && wc.length > 2 && wc.every((l) => m(l) <= 70),
+      'traps explained: every trap has its explanation (' + [...seen].join(', ') + '); lines wrap by words, or by letters without spaces');
   }
   ok(WW.points(9, 1) === 28 && WW.points(9, 3) === 33 && WW.points(9, 5) === 66 && WW.points(0, 0) === 10
     && WW.REVEAL.every((x, i) => i === 0 || x >= WW.REVEAL[i - 1]) && WW.REVEAL_END < 2.5,

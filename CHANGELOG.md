@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Who Wins? — the traps explained** (`web.35`) — `games/whowins.mjs`: after a mistake (or a timeout) on a
+  showdown `trapOf()` finds tricky, a card at the bottom of the felt explains it (`TRAP_KEYS`: board, counterfeit,
+  wheel, flush, kicker, five; `wrapLines()` wraps by words, or by letters for scripts without spaces), in the three
+  modes; the next hand waits 5 s instead of 2.6 s (Space still goes on). 7 keys + a rules sentence × 83. Tests:
+  `test-games`, `test-games-browser`.
 - **Who Wins? — the Daily challenge** (`web.34`) — `games/whowins.mjs`: mode `daily`: `DAILY_HANDS` = 10 hands
   dealt by `dailyDeals(day)` (seed `pth-whowins-<UTC day>`, levels `DAILY_LEVEL`, from pairs to the Ace's), the same
   for every player, no server; mistakes go on; points as in Endless; only the first game of the day counts

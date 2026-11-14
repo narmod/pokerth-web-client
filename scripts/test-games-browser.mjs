@@ -233,6 +233,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const ww2 = await pg.evaluate(() => ({ ok: window.__pthWW.run().ok, lives: window.__pthWW.run().lives, hud: document.querySelector('#pth-game .ww-lives').textContent }));
   const sh = await pg.evaluate(() => window.__pthWW.run().shake);
   ok(!ww2.ok && ww2.lives === 2 && ww2.hud === '❤❤♡' && sh > 0, label + ': a wrong answer costs a heart and shakes the table (' + ww2.hud + ')');
+  await sleep(250); await pg.keyboard.press('Space');   // go on (a trap explained would wait longer)
   // Endless (web.32): a level every 5 right answers, the banner, the HUD.
   const answerRight = async () => {
     await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
@@ -314,6 +315,20 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(500);
   const tl = await pg.evaluate(() => (document.querySelector('#pth-game .ww-tab[data-m="2"]') || {}).textContent || '');
   ok(/Aujourd'hui/.test(tl), label + ': the Daily tile shows today\'s score (' + tl + ')');
+  // The traps explained (web.35): a mistake on a counterfeited pair, the Ace explains it.
+  await pg.click('#pth-game .ww-tab[data-m="1"]');
+  await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});
+  const tp = await pg.evaluate(async () => {
+    const W = await import('/modules/games/whowins.mjs'); let q;
+    for (let i = 0; i < 400; i++) { q = W.LEVELS[3].deal(Math.random); if (W.trapOf(q) === 'counterfeit') break; }
+    window.__pthWW.run().q = q; return { win: q.win, trap: W.trapOf(q) };
+  });
+  await pg.keyboard.press(keyFor(tp.win === 1 ? -1 : tp.win === -1 ? 0 : 1));
+  await sleep(300);
+  const tp2 = await pg.evaluate(() => ({ trap: window.__pthWW.run().trap, ok: window.__pthWW.run().ok }));
+  ok(tp.trap === 'counterfeit' && !tp2.ok && tp2.trap === 'counterfeit', label + ': a mistake on a trap: the Ace explains it (' + tp2.trap + ')');
+  await sleep(400); await pg.keyboard.press('Space'); await sleep(300);
+  ok(await pg.evaluate(() => window.__pthWW.run().trap == null), label + ': the next hand: the explanation is gone');
   await pg.keyboard.press('Space');                // back in a game, as before the modes
   await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(200);

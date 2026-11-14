@@ -31,6 +31,10 @@
 //      it; points as in Endless. Only the first game of the day counts (its
 //      score, the streak of days in a row: pth_ww_daily), the others are
 //      practice.
+// The traps explained (web.35): after a mistake on a tricky showdown
+// (trapOf: the board plays, a counterfeited pocket pair, the wheel, flush
+// against flush, the kicker, only five cards count), the Ace explains it in a
+// card at the bottom of the felt, in every mode; the next hand waits longer.
 // Secret trophy « Who Wins? »: the million.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
@@ -97,6 +101,21 @@ export function trapOf(q) {
   }
   if (q.win === 0 && (rankOf(q.a[0]) + rankOf(q.a[1]) !== rankOf(q.b[0]) + rankOf(q.b[1]))) return 'five';
   return null;
+}
+// Each trap's explanation (i18n key).
+export const TRAP_KEYS = { board: 'wwTrapBoard', counterfeit: 'wwTrapCounterfeit', wheel: 'wwTrapWheel', flush: 'wwTrapFlush', kicker: 'wwTrapKicker', five: 'wwTrapFive' };
+/** Lines of `s` no wider than maxW (words; letter by letter for scripts without spaces). */
+export function wrapLines(measure, s, maxW) {
+  const words = /\s/.test(s) ? s.split(/\s+/) : Array.from(s);
+  const sep = /\s/.test(s) ? ' ' : '';
+  const out = [];
+  let line = '';
+  for (const w of words) {
+    const tryL = line ? line + sep + w : w;
+    if (line && measure(tryL) > maxW) { out.push(line); line = w; } else line = tryL;
+  }
+  if (line) out.push(line);
+  return out;
 }
 /** The first of `tries` deals that `ok` accepts, else the last one. */
 function find(rnd, ok, tries) {
@@ -281,7 +300,7 @@ export function create(shell) {
     G.n++;
     G.tMax = LEVELS[G.level].time + (tv() ? TV_EXTRA : 0);
     G.tLeft = G.tMax; G.answer = null; G.shown = time;
-    G.fly = null; G.pot = tv() ? 3 + Math.floor(G.right / 2) : 3 + Math.min(G.streak, 7);
+    G.fly = null; G.trap = null; G.pot = tv() ? 3 + Math.floor(G.right / 2) : 3 + Math.min(G.streak, 7);
     // The board is turned over first (at once with « Reduce animations »).
     G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
     state = shell.reduced ? 'ask' : 'deal';
@@ -337,10 +356,13 @@ export function create(shell) {
       G.koUntil = performance.now() + 900;
       if (pick == null) say(t('wwTooSlow'));
       sound('notifyFold');
+      // A trap: the Ace explains it.
+      const trap = trapOf(q);
+      G.trap = trap && TRAP_KEYS[trap] ? trap : null;
     }
     renderHud();
     clearTimeout(timer);
-    timer = setTimeout(goOn, G.ok ? 1400 : 2600);
+    timer = setTimeout(goOn, G.ok ? 1400 : G.trap ? 5000 : 2600);
   }
   function goOn() {
     if (state !== 'shown') return;
@@ -562,6 +584,24 @@ export function create(shell) {
       chip(g, x, y, r, i);
     }
   }
+  /** The Ace explains the trap: a card at the bottom of the felt. */
+  function drawTrap(g, l) {
+    // Sizes in world px: the phone's world is scaled up, the text kept small.
+    const fs = l.narrow ? 7.5 : 12, lh = l.narrow ? 9.5 : 16, pad = l.narrow ? 7 : 12;
+    const left = l.narrow ? 40 : 14, w = Math.min(l.W - left - 8, 460), x = l.narrow ? left : (l.W - w) / 2;
+    const title = '🪤 ' + t('wwTrap'), body = t(TRAP_KEYS[G.trap]);
+    g.save();
+    g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
+    const lines = wrapLines((s2) => g.measureText(s2).width, body, w - 2 * pad).slice(0, 5);
+    const h = pad * 2 + lh * (lines.length + 1), y = l.H - h - 6;
+    rr(g, x, y, w, h, l.narrow ? 8 : 12); g.fillStyle = 'rgba(245,240,227,.97)'; g.fill();
+    g.strokeStyle = '#d8b25a'; g.lineWidth = 1.5; g.stroke();
+    g.textAlign = 'left'; g.textBaseline = 'top';
+    g.fillStyle = '#8a5a00'; g.font = '700 ' + fs + 'px Inter, system-ui, sans-serif'; g.fillText(title, x + pad, y + pad);
+    g.fillStyle = '#1d222b'; g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
+    lines.forEach((ln, i) => g.fillText(ln, x + pad, y + pad + lh * (i + 1)));
+    g.restore();
+  }
   function draw(g) {
     const l = L(), W = l.W, H = l.H;
     felt(g, W, H, shell.theme.light);
@@ -624,6 +664,7 @@ export function create(shell) {
       }
       layoutButtons(l);
       btns.draw(g, keyboardFirst(), null);
+      if (G.trap && (state === 'shown' || state === 'over')) drawTrap(g, l);
     }
     g.restore();
     // The Ace, a corner of the felt.
