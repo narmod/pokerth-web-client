@@ -2,9 +2,10 @@
 // ═══════════════════════════════════════════════════════════════════
 // Higher or Lower — hidden mini-game (web extension, narmod 2026-10-16), in
 // the arcade behind the training nickname « mascot ». Three ways to play
-// since web.44 (narmod 2026-11-14: « more like poker »), at a poker table:
-// the Ace deals from a wooden shoe, chips instead of a bare number, the
-// actions of the table (Bet, Raise, All-In, Fold) and the showdown.
+// since web.44 (narmod 2026-11-14: « more like poker »), on a casino felt
+// (web.45: gold lines and card places printed on it): the Ace deals from the
+// shoe, chips instead of a bare number, the actions of the table (Bet,
+// Raise, All-In, Fold) and the showdown.
 //
 // Will the next card of the shoe be higher or lower than the one face up?
 // Aces high, 2s low, the same rank is a push. One deck in the shoe,
@@ -150,7 +151,7 @@ export function create(shell) {
   }
   newGame();
   titlePanel();
-  try { if (navigator.webdriver) window.__pthHL = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m) }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthHL = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m), layout: () => L() }; } catch (e) {}
 
   function start(m) {
     clearTimeout(timer);
@@ -340,10 +341,11 @@ export function create(shell) {
     const histY = top + 12;
     // The hand: five small places above the buttons, its name under them.
     const sw = narrow ? Math.min(38, (W - 60) / 5 - 6) : 36, sh = sw * 1.4;
-    const handY = btnTop - 22 - sh / 2;
+    const handY = btnTop - 30 - sh / 2;
     // On a phone the pot (or the bet) sits under the cards; on a wide screen, beside the shoe.
-    const zoneTop = histY + 24, zoneBot = handY - sh / 2 - (narrow ? 34 : 12);
-    let cw = narrow ? Math.min(78, W * 0.3) : 84, ch = cw * 1.4;
+    // The plain tournament has no hand: the cards take its room.
+    const zoneTop = histY + 24, zoneBot = (mode === 'tourney' ? btnTop - 8 : handY - sh / 2) - (narrow ? 40 : 12);
+    let cw = narrow ? Math.min(mode === 'tourney' ? 96 : 84, W * 0.3) : 84, ch = cw * 1.4;
     if (ch > zoneBot - zoneTop) { ch = Math.max(60, zoneBot - zoneTop); cw = ch / 1.4; }
     const cardY = (zoneTop + zoneBot) / 2;
     const potY = narrow ? cardY + ch / 2 + 18 : cardY - 8;
@@ -454,38 +456,46 @@ export function create(shell) {
       g.strokeStyle = edge; g.globalAlpha = 0.7; g.lineWidth = 1; g.setLineDash([2, 3]); g.beginPath(); g.ellipse(x, yy, r * 0.75, r * 0.3, 0, 0, Math.PI * 2); g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
     }
   }
-  /** The poker table: an oval of lighter felt in a wooden rail. */
-  function table(g, l) {
+  /** The felt, printed as on a casino table (web.45, narmod's pick « C »): a double gold line round the
+   *  table, the two card places in dashes, « PokerTH » faintly where there is room. */
+  function backdrop(g, l) {
+    const W = l.W;
+    felt(g, W, l.H, shell.theme.light);
+    if (state === 'title') return;
     g.save();
-    g.beginPath(); g.ellipse(l.W / 2, l.tableY, l.tableRx + 9, l.tableRy + 9, 0, 0, Math.PI * 2);
-    const rail = g.createLinearGradient(0, l.tableY - l.tableRy, 0, l.tableY + l.tableRy); rail.addColorStop(0, '#6b4528'); rail.addColorStop(1, '#3e2614');
-    g.fillStyle = rail; g.fill();
-    g.beginPath(); g.ellipse(l.W / 2, l.tableY, l.tableRx, l.tableRy, 0, 0, Math.PI * 2);
-    const f = g.createRadialGradient(l.W / 2, l.tableY, 10, l.W / 2, l.tableY, Math.max(l.tableRx, l.tableRy));
-    f.addColorStop(0, shell.theme.light ? '#48a876' : '#2c8a5a'); f.addColorStop(1, shell.theme.light ? '#2a7a52' : '#17573a');
-    g.fillStyle = f; g.fill();
-    g.strokeStyle = 'rgba(216,178,90,.45)'; g.lineWidth = 1.2; g.beginPath(); g.ellipse(l.W / 2, l.tableY, l.tableRx - 8, l.tableRy - 8, 0, 0, Math.PI * 2); g.stroke();
+    const top = l.histY - 8, bot = l.rowY(0) - l.btnH / 2 - 5;
+    g.strokeStyle = shell.theme.light ? 'rgba(255,246,214,.45)' : 'rgba(232,206,140,.32)'; g.lineWidth = 1.5;
+    rr(g, 10, top, W - 20, bot - top, 22); g.stroke();
+    rr(g, 15, top + 5, W - 30, bot - top - 10, 18); g.stroke();
+    g.setLineDash([4, 4]);
+    for (const x of [l.cardX, l.shoeX]) { rr(g, x - l.cw / 2 - 7, l.cardY - l.ch / 2 - 7, l.cw + 14, l.ch + 14, 10); g.stroke(); }
+    g.setLineDash([]);
+    // The name, between the cards and the hand (or the buttons), when it fits.
+    const y0 = l.cardY + l.ch / 2 + (l.narrow ? 34 : 8), y1 = mode === 'tourney' ? bot - 6 : l.handY - l.sh / 2 - 4;
+    const size = Math.min(W * 0.14, 90, (y1 - y0) * 0.9);
+    if (size >= 16) {
+      g.globalAlpha = 0.08; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '900 ' + Math.round(size) + 'px Cinzel, Georgia, serif'; g.fillStyle = '#f5e7c0';
+      g.fillText('PokerTH', W / 2, (y0 + y1) / 2);
+    }
     g.restore();
   }
-  /** The dealer's shoe: a wooden box, the backs of the cards peeking out. */
-  function shoeBox(g, l) {
+  /** The shoe as a neat stack of backs, the cards left on a small badge. */
+  function shoeStack(g, l) {
     const x = l.shoeX, y = l.cardY, w = l.cw, h = l.ch;
-    for (let k = 3; k >= 1; k--) drawBackCard(g, img, x + k * 2, y - k * 2, w, h);
-    g.save();
-    const by = y + h * 0.3, bh = h * 0.24;
-    const wood = g.createLinearGradient(0, by, 0, by + bh); wood.addColorStop(0, '#6b4528'); wood.addColorStop(1, '#3e2614');
-    g.fillStyle = wood; rr(g, x - w / 2 - 5, by, w + 14, bh, 5); g.fill();
-    g.strokeStyle = 'rgba(216,178,90,.5)'; g.lineWidth = 1; g.stroke();
-    g.fillStyle = 'rgba(245,240,227,.8)'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = '700 ' + Math.round(Math.max(9, w * 0.12)) + 'px Inconsolata, monospace';
-    g.fillText(String(G.shoe.length), x + 2, by + bh / 2 + 1);
+    for (let k = 4; k >= 1; k--) drawBackCard(g, img, x + k * 1.5, y - k * 1.5, w, h);
+    drawBackCard(g, img, x, y, w, h);
+    const bx = x + w / 2 - 4, by = y + h / 2 - 4, txt = String(G.shoe.length);
+    g.save(); g.font = '700 10px Inconsolata, monospace';
+    const bw = Math.max(20, g.measureText(txt).width + 10);
+    rr(g, bx - bw / 2, by - 9, bw, 18, 9); g.fillStyle = 'rgba(11,18,16,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.6)'; g.lineWidth = 1; g.stroke();
+    g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, bx, by + 0.5);
     g.restore();
   }
   function draw(g) {
     const l = L(), W = l.W, H = l.H;
-    felt(g, W, H, shell.theme.light);
+    backdrop(g, l);
     if (state !== 'title') {
-      table(g, l);
       // Cards already out, small, in a row (the last ones).
       const sw = 16, sh = 22, max = Math.max(4, Math.floor((W - 24) / (sw + 3)));
       const list = G.seen.slice(-max);
@@ -493,7 +503,7 @@ export function create(shell) {
       list.forEach((n, i) => { g.save(); g.globalAlpha = 0.85; g.translate(x0 + i * (sw + 3), l.histY + sh / 2); drawFace(g, img, n, sw, sh); g.restore(); });
       // The card face up, and the shoe with the next one.
       g.save(); g.translate(l.cardX, l.cardY); drawFace(g, img, G.cur, l.cw, l.ch); g.restore();
-      shoeBox(g, l);
+      shoeStack(g, l);
       if (G.next >= 0) {
         const p = Math.min(1, (time - G.flipAt) / 0.25);
         g.save(); g.translate(l.shoeX, l.cardY); g.scale(Math.max(0.05, Math.abs(1 - 2 * p)), 1);

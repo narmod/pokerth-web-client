@@ -150,6 +150,11 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Higher or Lower — the printed felt** (`web.45`, narmod's pick « C » among 4 mockups) — `games/hilo.mjs`:
+  `backdrop()` replaces the oval table in its wooden rail: a double gold line round the playing area, the card
+  places in dashes, « PokerTH » faintly where there is room; `shoeStack()` replaces the wooden shoe box (a stack
+  of backs, the count on a badge); the plain tournament (no hand) gives the cards its room; the hand row and its
+  name stay inside the lines. Test hook `__pthHL.layout()`.
 - **Ace Runner — the club's furniture** (`web.43`, narmod's pick 2-3-4-5-6-7-8) — `games/runner-scenery.mjs`:
   `tables()` draws `PROPS` in the order of `CLUB_PROPS`: `players` (the card table with players' silhouettes,
   chips, two cards; a seat empty now and then), `bar` (counter, stools, a lit shelf of bottles), `billiard`,

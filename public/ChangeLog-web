@@ -1,4 +1,7 @@
-2026-11-14 version 2.1.11-web.44 (current series):
+2026-11-14 version 2.1.11-web.45 (current series):
+- improvement: Higher or Lower — a printed casino felt instead of the wooden table: a double gold line round the table, the two card places in dashes, « PokerTH » in the felt; the shoe is a neat stack of cards with the count on a badge; bigger cards in the tournament
+
+2026-11-14 version 2.1.11-web.44:
 - new: Higher or Lower becomes a poker game, at a poker table (wooden rail, the Ace's shoe, chips), with three ways to play
 - new: Higher or Lower — « The hand »: each right guess (or a tie) puts the card in your hand; at five cards the showdown multiplies the pot by your hand, from ×1.2 (a pair) to ×4 (a royal flush)
 - new: Higher or Lower — « The tournament »: 1,000 chips, blinds up every 5 cards, 12 levels; pick Bet, Raise or All-In then higher or lower, paid even money, or Fold for the small blind
