@@ -137,6 +137,12 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Ace Runner — softer venues** (`web.42`, narmod: « hard on the eyes, the windows ») — `games/runner-scenery.mjs`:
+  muted sky palette (`SKY`), a softer sun and moon, dimmer stars; `haze()` fades far layers into the sky; skyline
+  windows 22 % lit at 0.4 alpha (was 45 % at 0.75), thinner neon with less glow; the club's tall windows (bright
+  stripes going by) become small arched windows with curtains, wainscoting and wall lamps; the cruise railing
+  posts 90 px apart in a soft grey; muted lanterns and lotus tower; dimmer spotlights and flashes; a light veil
+  (`VEIL` 0.12) over the whole scenery.
 - **The Ace's word on the Mini-games mode** (`web.41`) — `guide/index.mjs`: `arcadeMode` / `arcadeEgg` /
   `arcadeEggAgain` show « Close » only (no « Play now »); `loginPickMode()` calls
   `guideArcadeModeClose(false)` — a mode picked closes it as « Close »; the card's tap
