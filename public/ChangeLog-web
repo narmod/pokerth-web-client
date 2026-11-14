@@ -1,4 +1,9 @@
-2026-11-14 version 2.1.11-web.32 (current series):
+2026-11-14 version 2.1.11-web.33 (current series):
+- new: Who Wins? — the TV show: 15 questions from 100 chips to a million, harder as you climb; one mistake ends it, but questions 5 and 10 are safe levels you keep
+- new: Who Wins? — three jokers in the TV show, once each: 50/50, the Ace's help (names both hands) and +5 s (keys 1 2 3)
+- improvement: the secret trophy « Who Wins? » is won by reaching the million in the TV show (players who have it keep it)
+
+2026-11-14 version 2.1.11-web.32:
 - improvement: Who Wins? — the six tables make way for game modes; first one, Endless: 3 hearts and a new level every 5 right answers, from pairs to the Ace's table, with a banner at each level
 - improvement: the secret trophy « Who Wins? » is won by clearing the Ace's level in Endless
 

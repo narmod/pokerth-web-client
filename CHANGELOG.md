@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Who Wins? — the TV show** (`web.33`) — `games/whowins.mjs`: mode `tv` (first on the title): 15 questions up
+  `LADDER` (100 → 1 000 000 chips), dealt from `TV_LEVEL` (the Endless levels, harder as it climbs), clock
+  `TV_EXTRA` = 3 s longer; one mistake or a timeout ends it with the last safe level passed (`SAFE` = questions 5
+  and 10, `keptAfter()`); jokers once each — 50/50 (`fiftyOut()`: a wrong answer taken away, its hand crossed out
+  or Split greyed), the Ace's help (both hands named in blue), +5 s — as a row of buttons and keys 1 2 3 (new
+  shell actions `n1`–`n3`, ignored by the other games). HUD: chips · Question n/15; best chips in `pth_ww_best.tv`.
+  Secret trophy: the million (was the Ace's level in Endless). 11 keys + `ach_whowins_d` + a rules line × 83.
 - **Storage on this device** (`web.29`) — Advanced options › Reset & backup: `ui/storage-usage.mjs` shows the size of
   the `pth_*` localStorage entries (2 bytes a character) with the five largest groups (`pth_av_*`, `pth_game_best_*`…),
   whether saving works (a probe written, read back, removed) and the other data from `navigator.storage.estimate()`.

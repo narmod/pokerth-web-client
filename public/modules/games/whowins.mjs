@@ -19,8 +19,13 @@
 //   ♾️ Endless — LIVES hearts; every LEVEL_EVERY right answers the next level,
 //      following the learning (LEVELS): pairs and high card, flushes and
 //      straights, kickers, traps, split pots, then the Ace's mix (faster).
-// (The TV show and the Daily challenge come next.) Secret trophy « Who
-// Wins? »: the Ace's level cleared in Endless.
+//   📺 The TV show (web.33) — 15 questions up the LADDER, 100 to a million
+//      chips, harder as it climbs (TV_LEVEL); one mistake ends the show but
+//      questions 5 and 10 are safe levels (SAFE: you leave with them); the
+//      clock is TV_EXTRA s longer. Three jokers, once each (buttons, keys
+//      1 2 3): 50/50 takes a wrong answer away, the Ace's help names both
+//      hands, +5 s.
+// (The Daily challenge comes next.) Secret trophy « Who Wins? »: the million.
 //
 // The show (web.30, narmod 2026-11-14): the hands are dealt face up and the
 // board is turned over like on TV — the flop, the turn, the river — then the
@@ -104,11 +109,21 @@ export const LEVELS = [
 ];
 /** The level reached after `right` right answers. */
 export const levelOf = (right) => Math.min(LEVELS.length - 1, Math.floor(right / LEVEL_EVERY));
-// The ways to play, on the title (web.32: Endless; the TV show and the Daily
-// challenge come next).
+// The ways to play, on the title (the Daily challenge comes next).
 export const MODES = [
+  { id: 'tv', icon: '📺', key: 'wwModeTv', desc: 'wwModeTvD' },
   { id: 'endless', icon: '♾️', key: 'wwModeEndless', desc: 'wwModeEndlessD' },
 ];
+// The TV show: the chips of each question, its safe levels (indexes), the
+// level each question is dealt from, the extra seconds on its clock.
+export const LADDER = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000];
+export const SAFE = [4, 9];
+export const TV_LEVEL = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5];
+export const TV_EXTRA = 3;
+/** The chips you leave with after k right answers then a mistake (the last safe level passed). */
+export function keptAfter(k) { let v = 0; for (const i of SAFE) if (k > i) v = LADDER[i]; return v; }
+/** The 50/50 joker: one of the two wrong answers (1 left, -1 right, 0 split), taken away. */
+export function fiftyOut(win, rnd = Math.random) { const wrong = [1, -1, 0].filter((x) => x !== win); return wrong[Math.floor(rnd() * 2) % 2]; }
 // Best level reached per mode, on this device.
 const BEST_KEY = 'pth_ww_best';
 function loadBest() { try { return JSON.parse(localStorage.getItem(BEST_KEY) || '{}') || {}; } catch (e) { return {}; } }
@@ -151,19 +166,22 @@ export function create(shell) {
   ensureCss();
 
   let state = 'title', G = null, time = 0, timer = 0;
-  let mode = 'endless';           // the way of playing
+  let mode = 'tv';                // the way of playing
   let sel = 0;                    // the mode picked on the title (keys)
   function newGame() {
     G = { score: 0, lives: LIVES, right: 0, n: 0, level: 0, streak: 0, bestStreak: 0, q: null, tMax: TIME_MAX, tLeft: TIME_MAX, answer: null, ok: false,
-      fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0, dealT: 0, snd: 0, pot: 3, fly: null, shake: 0 };
+      fx: [], say: null, yayUntil: 0, koUntil: 0, shown: 0, dealT: 0, snd: 0, pot: 3, fly: null, shake: 0,
+      won: 0, jok: { j50: true, jace: true, jtime: true }, out: null, hint: false };
     renderHud();
   }
+  const tv = () => mode === 'tv';
   function renderHud() {
-    hScore.textContent = fmt(G.score);
-    hTab.textContent = state === 'title' ? ' ' : t('wwLevelLab');
-    hProg.textContent = state === 'title' ? '' : String(G.level + 1);
-    hLives.textContent = '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
-    const fever = G.streak >= FEVER_STREAK;
+    const play = state !== 'title';
+    hScore.textContent = fmt(tv() ? G.won : G.score);
+    hTab.textContent = !play ? '\u00a0' : tv() ? t('wwQLab') : t('wwLevelLab');
+    hProg.textContent = !play ? '' : tv() ? Math.min(G.right + 1, LADDER.length) + '/' + LADDER.length : String(G.level + 1);
+    hLives.textContent = tv() ? '' : '❤'.repeat(Math.max(0, G.lives)) + '♡'.repeat(Math.max(0, LIVES - G.lives));
+    const fever = !tv() && G.streak >= FEVER_STREAK;
     hStreak.textContent = fever ? '🔥 ' + t('wwFever') : G.streak >= 2 ? '×' + G.streak : '';
     hStreak.classList.toggle('ww-fever', fever);
   }
@@ -174,11 +192,13 @@ export function create(shell) {
   function titlePanel() {
     const best = loadBest();
     const tile = (m, i) => {
-      const rec = m.id === 'endless' ? shell.best.get() : 0, lv = (best[m.id] || {}).level || 0;
+      const b = best[m.id] || {};
+      const rec = m.id === 'endless' ? (shell.best.get() ? esc(t('arRecord', { n: fmt(shell.best.get()) })) + (b.level ? ' · ' + esc(t('wwLevel', { n: b.level })) : '') : '')
+        : m.id === 'tv' ? (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '') : '';
       return '<button type="button" class="ww-tab' + (i === sel ? ' on' : '') + '" data-m="' + i + '">'
         + '<span class="ww-ic" aria-hidden="true">' + m.icon + '</span><b>' + esc(t(m.key)) + '</b>'
         + '<small class="ww-sub">' + esc(t(m.desc)) + '</small>'
-        + '<small class="ww-rec">' + (rec ? esc(t('arRecord', { n: fmt(rec) })) + (lv ? ' · ' + esc(t('wwLevel', { n: lv })) : '') : '&nbsp;') + '</small></button>';
+        + '<small class="ww-rec">' + (rec || '&nbsp;') + '</small></button>';
     };
     shell.panel('<div class="ww-pick"><h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p>'
       + '<div class="ww-tabs ww-modes">' + MODES.map(tile).join('') + '</div>'
@@ -199,18 +219,25 @@ export function create(shell) {
     state = 'ask'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile');
     next();
-    banner(levelName(0));
+    if (!tv()) banner(levelName(0));
   }
   /** A gold line over the board for a while (a new level). */
   function banner(s2) { G.ban = { s: s2, t: 0, life: 2.4 }; }
   function next() {
-    const lv = levelOf(G.right);
-    if (lv > G.level) { G.level = lv; banner(levelName(lv)); sound('notifyRaise'); }
+    if (tv()) {
+      // The TV show: the question's chips on the board, its level, a longer clock.
+      G.level = TV_LEVEL[Math.min(G.right, TV_LEVEL.length - 1)];
+      banner(t('wwQuestion', { n: G.right + 1 }) + ' · ' + fmt(LADDER[G.right]));
+      G.out = null; G.hint = false;
+    } else {
+      const lv = levelOf(G.right);
+      if (lv > G.level) { G.level = lv; banner(levelName(lv)); sound('notifyRaise'); }
+    }
     G.q = LEVELS[G.level].deal(Math.random);
     G.n++;
-    G.tMax = LEVELS[G.level].time;
+    G.tMax = LEVELS[G.level].time + (tv() ? TV_EXTRA : 0);
     G.tLeft = G.tMax; G.answer = null; G.shown = time;
-    G.fly = null; G.pot = 3 + Math.min(G.streak, 7);
+    G.fly = null; G.pot = tv() ? 3 + Math.floor(G.right / 2) : 3 + Math.min(G.streak, 7);
     // The board is turned over first (at once with « Reduce animations »).
     G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
     state = shell.reduced ? 'ask' : 'deal';
@@ -219,15 +246,36 @@ export function create(shell) {
   }
   /** The board is all turned over: the clock starts. */
   function revealed() { G.dealT = REVEAL_END; state = 'ask'; G.tLeft = G.tMax; }
+  /** A joker of the TV show, once each. */
+  function joker(id) {
+    if (!tv() || state !== 'ask' || !G.jok[id]) return;
+    G.jok[id] = false;
+    const l = L();
+    if (id === 'j50') G.out = fiftyOut(G.q.win);
+    else if (id === 'jace') G.hint = true;              // the hands' names, in blue under them
+    else { G.tLeft += 5; G.tMax += 5; G.fx.push({ s: '+5 s', x: shell.W / 2, y: l.barY + 18, t: 0, life: 1.1, gold: true }); }
+    sound('notifyAction');
+  }
   function answer(pick) {
     if (state !== 'ask') return;
+    if (pick != null && tv() && pick === G.out) return;     // taken away by the 50/50
     const q = G.q;
     G.answer = pick;
     G.ok = pick === q.win;
     state = 'shown';
     // The pot goes to the winning hand (half to each on a split).
     G.fly = { t: 0, n: G.pot, win: q.win };
-    if (G.ok) {
+    if (G.ok && tv()) {
+      G.right++; G.streak++;
+      G.won = LADDER[G.right - 1];
+      const l = L();
+      const safe = SAFE.indexOf(G.right - 1) >= 0, top = G.right === LADDER.length;
+      G.fx.push({ s: '💰 ' + fmt(G.won), x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.3, gold: true, big: true });
+      if (safe) G.fx.push({ s: '🛟 ' + t('wwSafe'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.8, gold: true, big: true });
+      if (top) { G.fx.push({ s: '🏆 ' + t('wwMillion'), x: shell.W / 2, y: l.boardY, t: 0, life: 2.4, gold: true, big: true }); shell.grant('whowins'); }
+      G.yayUntil = performance.now() + 700;
+      sound(top ? 'notifyBigWin' : safe ? 'notifyWinner' : 'notifyRaise');
+    } else if (G.ok) {
       G.right++; G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak);
       const pts = points(G.tLeft, G.streak);
       G.score += pts;
@@ -236,10 +284,10 @@ export function create(shell) {
       if (G.streak === FEVER_STREAK) G.fx.push({ s: '🔥 ' + t('wwFever'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.6, gold: true, big: true });
       G.yayUntil = performance.now() + 700;
       sound(G.streak === FEVER_STREAK ? 'notifyBigWin' : G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
-      // The secret trophy: the Ace's level cleared.
-      if (G.right === LEVEL_EVERY * LEVELS.length) shell.grant('whowins');
     } else {
-      G.lives--; G.streak = 0;
+      // The TV show: one mistake ends it, with the last safe level passed.
+      if (tv()) { G.lives = 0; G.won = keptAfter(G.right); } else G.lives--;
+      G.streak = 0;
       if (!shell.reduced) G.shake = 0.4;
       G.koUntil = performance.now() + 900;
       if (pick == null) say(t('wwTooSlow'));
@@ -252,11 +300,21 @@ export function create(shell) {
   function goOn() {
     if (state !== 'shown') return;
     clearTimeout(timer);
-    if (G.lives <= 0) finish(); else next();
+    if (G.lives <= 0 || (tv() && G.right >= LADDER.length)) finish(); else next();
   }
   function finish() {
     state = 'over';
     shell.ended();
+    if (tv()) {
+      const best = loadBest(), prevTv = (best.tv || {}).best || 0;
+      if (G.won > prevTv) { best.tv = Object.assign({}, best.tv, { best: G.won }); saveBest(best); }
+      const top = G.right >= LADDER.length;
+      ace.mood(top ? 'mc-m-yay' : 'mc-m-smile'); ace.pose(top ? 'wave' : 'idle');
+      G.res = { tv: true, top, record: G.won > prevTv && prevTv > 0 };
+      renderHud();
+      renderResult();
+      return;
+    }
     const score = G.score, prev = shell.best.get(), record = score > prev;
     if (record) shell.best.set(score);
     const best = loadBest(), lv = G.level + 1;
@@ -270,12 +328,21 @@ export function create(shell) {
   /** The result: the score, the level reached, again or the modes. */
   function renderResult() {
     if (state !== 'over' || !G.res) return;
-    const { score, record, prev } = G.res;
     const btn = (id, label, ghost) => '<button type="button" class="pg-btn' + (ghost ? ' pg-ghost' : '') + '" data-do="' + id + '">' + esc(label) + '</button>';
-    shell.panel('<div class="ww-box"><p class="pg-dim">' + esc(levelName(G.level)) + '</p><h2>' + esc(fmt(score)) + '</h2>'
-      + '<p class="ar-final">✓ ' + fmt(G.right) + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
-      + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<div class="ww-btns">' + btn('again', t('wwRetry')) + btn('modes', t('wwModes'), true) + '</div></div>', true);
+    const btns2 = '<div class="ww-btns">' + btn('again', t('wwRetry')) + btn('modes', t('wwModes'), true) + '</div></div>';
+    if (G.res.tv) {
+      const { top, record } = G.res;
+      shell.panel('<div class="ww-box"><p class="pg-dim">📺 ' + esc(t('wwModeTv')) + ' · ' + esc(t('wwQuestion', { n: Math.min(G.right + (top ? 0 : 1), LADDER.length) })) + '</p>'
+        + '<h2>' + esc(top ? t('wwMillion') : t('wwLost')) + '</h2>'
+        + '<p class="ww-won">💰 ' + esc(fmt(G.won)) + '</p>'
+        + (top ? '' : '<p class="ar-final">' + esc(t('wwKeep', { n: fmt(G.won) })) + '</p>')
+        + (record ? '<p class="pg-dim">' + esc(t('arNewRecord')) + '</p>' : '') + btns2, true);
+    } else {
+      const { score, record, prev } = G.res;
+      shell.panel('<div class="ww-box"><p class="pg-dim">' + esc(levelName(G.level)) + '</p><h2>' + esc(fmt(score)) + '</h2>'
+        + '<p class="ar-final">✓ ' + fmt(G.right) + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
+        + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>' + btns2, true);
+    }
     shell.root.querySelectorAll('.pg-panel [data-do]').forEach((b) => {
       b.addEventListener('pointerdown', (e) => e.stopPropagation());
       b.addEventListener('click', () => act(b.getAttribute('data-do')));
@@ -299,7 +366,7 @@ export function create(shell) {
       const cw = Math.min(46, (W - 16 - 4 * gap) / 5), ch = cw * 1.4;
       const hcw = Math.min(54, (W / 2 - 24 - gap) / 2), hch = hcw * 1.4;
       const barY = top + 4;
-      const total = ch + 34 + hch + 24, room = btnY - btnH / 2 - 16 - (top + 18);
+      const total = ch + 34 + hch + 24, room = btnY - btnH / 2 - 16 - (top + 18) - (mode === 'tv' ? 40 : 0);
       const boardY = top + 18 + Math.max(0, (room - total) / 2) + ch / 2;
       const handY = boardY + ch / 2 + 34 + hch / 2;
       return { W, H, narrow, top, gap, cw, ch, hcw, hch, barY, boardY, handY, ax: W / 4, bx: (3 * W) / 4, btnY, btnH };
@@ -313,14 +380,20 @@ export function create(shell) {
   }
   const handXs = (l, cx) => [cx - (l.hcw + l.gap) / 2, cx + (l.hcw + l.gap) / 2];
   function handAt(l, x, y) {
-    if (Math.abs(y - l.handY) > l.hch / 2 + 16) return 0;
+    if (Math.abs(y - l.handY) > l.hch / 2 + 16) return null;
     if (Math.abs(x - l.ax) <= l.hcw + l.gap + 10) return 1;
     if (Math.abs(x - l.bx) <= l.hcw + l.gap + 10) return -1;
-    return 0;
+    return null;
   }
   function layoutButtons(l) {
     btns.reset();
-    if (state === 'ask') btns.add({ id: 'split', x: l.W / 2, y: l.btnY, w: Math.min(180, l.W - 120), h: l.btnH, label: t('wwSplit'), kind: 'ghost', key: '↓' });
+    if (state === 'ask') btns.add({ id: 'split', x: l.W / 2, y: l.btnY, w: Math.min(180, l.W - 120), h: l.btnH, label: t('wwSplit'), kind: 'ghost', key: '↓', off: tv() && G.out === 0 });
+    // The TV show's jokers, a row above.
+    if (tv() && (state === 'ask' || state === 'deal')) {
+      const w = Math.min(104, (l.W - 32) / 3), y = l.btnY - l.btnH - 8;
+      [['j50', 'wwJ50', '1'], ['jace', 'wwJAce', '2'], ['jtime', 'wwJTime', '3']].forEach(([id, key, k], i) =>
+        btns.add({ id, x: l.W / 2 + (i - 1) * (w + 8), y, w, h: 28, label: t(key), kind: 'gold', key: k, off: !G.jok[id] || state !== 'ask' }));
+    }
   }
 
   // ── Input ─────────────────────────────────────────────────────────
@@ -341,12 +414,17 @@ export function create(shell) {
     const l = L();
     layoutButtons(l);
     if (info.x != null) {
-      if (btns.hit(info.x, info.y) === 'split') { answer(0); return; }
+      const id = btns.hit(info.x, info.y);
+      if (id === 'split') { answer(0); return; }
+      if (id === 'j50' || id === 'jace' || id === 'jtime') { joker(id); return; }
       const h = handAt(l, info.x, info.y);
-      if (h) answer(h);
+      if (h != null) answer(h);
       return;
     }
-    if (a === 'left') answer(1);
+    if (a === 'n1') joker('j50');
+    else if (a === 'n2') joker('jace');
+    else if (a === 'n3') joker('jtime');
+    else if (a === 'left') answer(1);
     else if (a === 'right') answer(-1);
     else if (a === 'duck') answer(0);
   }
@@ -453,9 +531,16 @@ export function create(shell) {
         g.fillStyle = shown ? (won ? 'rgba(216,178,90,.28)' : 'rgba(0,0,0,.22)') : 'rgba(0,0,0,.18)'; g.fill();
         if (shown && G.answer === side) { g.strokeStyle = G.ok ? '#3fae6a' : '#d2453b'; g.lineWidth = 2.5; g.stroke(); }
         for (let k = 0; k < 2; k++) card(g, hand[k], xs[k], l.handY, l.hcw, l.hch, shown && lit.has(hand[k]), shown && !lit.has(hand[k]));
-        if (shown) {
+        // The 50/50 took this hand away.
+        if (!shown && tv() && G.out === side) {
+          rr(g, cx - l.hcw - l.gap - 6, l.handY - l.hch / 2 - 8, 2 * l.hcw + 2 * l.gap + 12, l.hch + 16, 10);
+          g.fillStyle = 'rgba(0,0,0,.6)'; g.fill();
+          g.fillStyle = 'rgba(255,138,128,.9)'; g.font = '700 30px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+          g.fillText('✕', cx, l.handY);
+        }
+        if (shown || (tv() && G.hint)) {
           const label = t(NAME_KEYS[r.cat]);
-          g.fillStyle = won ? '#f5d77a' : 'rgba(245,240,227,.75)'; g.textAlign = 'center'; g.textBaseline = 'top';
+          g.fillStyle = won ? '#f5d77a' : shown ? 'rgba(245,240,227,.75)' : '#9fd8ff'; g.textAlign = 'center'; g.textBaseline = 'top';
           fitFont(g, label, 2 * l.hcw + 30, 12, 700);
           g.fillText(label, cx, l.handY + l.hch / 2 + 11);
         } else if (keyboardFirst()) {
@@ -529,6 +614,7 @@ function ensureCss() {
 
     + '#pth-game .ww-tab:focus-visible{outline:2px solid #f5f0e3;outline-offset:2px}'
     + '#pth-game .ww-box{min-width:min(330px,100%)}#pth-game .ww-box h2{font-size:clamp(18px,3.4vw,24px);white-space:nowrap}'
+    + '#pth-game .pg-panel .ww-won{font:700 26px Cinzel,Georgia,serif;color:#f5d77a;margin:0}#pth-game.pg-light .pg-panel .ww-won{color:#8a6a10}'
     + '#pth-game .ww-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;pointer-events:auto;margin-top:4px}'
     + '@media (max-height:420px){#pth-game .ww-tab b{min-height:0;font-size:13px}#pth-game .ww-tab{padding:5px 6px}#pth-game .ww-pick>p:not(.pg-blink){display:none}}'
     + '#pth-game.pg-light .ww-tab{background:rgba(255,252,246,.96);color:#1d222b;box-shadow:inset 0 0 0 1px rgba(140,105,20,.35)}'
