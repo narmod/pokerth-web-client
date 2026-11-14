@@ -471,6 +471,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'ace-dash');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Dash', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'ace-dash' && document.getElementById('pth-game').classList.contains('pg-lanes')), label + ': Ace Dash opens, a lane game');
+  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 3), label + ': three ways to play: free run, daily, time attack');
   await shot(pg, label + '-dash-title');
   await pg.keyboard.press('Space');
   await pg.waitForFunction(() => window.__pthDash && window.__pthDash.state() === 'run', null, { timeout: 4000 }).catch(() => {});
@@ -509,12 +510,47 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-pad button[data-a="left"]') && getComputedStyle(document.querySelector('#pth-game .pg-pad button[data-a="left"]')).display !== 'none' || !matchMedia('(pointer: coarse)').matches), label + ': ◀ ▶ on the touch pad');
   }
   await shot(pg, label + '-dash-run');
-  // Nobody steers: a row ends the run, then the showdown and the score.
+  // A ramp in his lane: launched into a backflip.
+  await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
+  const rampOk = await pg.evaluate(() => new Promise((res) => {
+    const G = window.__pthDash.run();
+    G.obj = [{ kind: 'ramp', x: G.x, z: 4.8, len: 1.3, h: 0.34, hw: 0.56 }]; G.safeUntil = performance.now() + 1500;
+    setTimeout(() => res({ dbl: G.dbl, y: G.y }), 350);
+  }));
+  ok(rampOk.dbl && rampOk.y > 0.8, label + ': a ramp launches him into a backflip (' + rampOk.y.toFixed(2) + ' m)');
+  // Busted with 25 chips or more: the rebuy, once; Space takes it.
+  await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
+  await pg.evaluate(() => { const G = window.__pthDash.run(); G.chips = 30; G.safeUntil = 0; G.ins = false; G.allInUntil = 0; G.obj = [{ kind: 'wall', x: G.x, z: 4.6, h: 1.6, hw: 0.66, dz: 0.3, tilt: 0 }]; });
+  await pg.waitForFunction(() => window.__pthDash.state() === 'rebuy', null, { timeout: 3000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthDash.state() === 'rebuy' && !!document.querySelector('#pth-game .ad-rebuy')), label + ': busted with 30 chips: the rebuy is offered');
+  await shot(pg, label + '-dash-rebuy');
+  await pg.keyboard.press('Space'); await sleep(150);
+  const rb = await pg.evaluate(() => ({ st: window.__pthDash.state(), chips: window.__pthDash.run().chips, rb: window.__pthDash.run().rebought }));
+  ok(rb.st === 'run' && rb.chips <= 6 && rb.rb, label + ': Space pays 25 chips, back in the race (' + rb.st + ', ' + rb.chips + ')');
+  // Nobody steers: a row ends the run (no second rebuy), then the showdown and the score.
   await pg.waitForSelector('#pth-game .ar-final', { timeout: 30000 }).catch(() => {});
   const dOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_ace-dash'),
     front: !document.querySelector('#pth-game-ace.adash-back') }));
-  ok(/\) × \d+ = /.test(dOver.final) && dOver.best !== null && dOver.front, label + ': busted, he turns round, score saved (' + dOver.final.trim() + ')');
+  ok(/\(\+\d+%\) = /.test(dOver.final) && dOver.best !== null && dOver.front, label + ': busted, he turns round, score saved (' + dOver.final.trim() + ')');
   await shot(pg, label + '-dash-over');
+  // Time attack: the clock in the HUD, a crash costs 5 s and not the run.
+  await pg.evaluate(() => window.__pthDash.start('time'));
+  await sleep(400);
+  const ta0 = await pg.evaluate(() => ({ mode: window.__pthDash.mode(), time: window.__pthDash.run().time, lab: (document.querySelector('#pth-game .ad-lvl-lab') || {}).textContent }));
+  ok(ta0.mode === 'time' && ta0.time < 60 && ta0.time > 58 && ta0.lab === 'Temps', label + ': time attack: 60 s on the clock (' + ta0.time.toFixed(1) + ', ' + ta0.lab + ')');
+  const ta1 = await pg.evaluate(() => new Promise((res) => {
+    const G = window.__pthDash.run(), t0 = G.time;
+    G.obj = [{ kind: 'wall', x: G.x, z: 4.6, h: 1.6, hw: 0.66, dz: 0.3, tilt: 0 }];
+    setTimeout(() => res({ st: window.__pthDash.state(), lost: t0 - G.time }), 300);
+  }));
+  ok(ta1.st === 'run' && ta1.lost > 4.9 && ta1.lost < 5.6, label + ': a crash costs 5 s, the run goes on (−' + ta1.lost.toFixed(1) + ' s)');
+  await pg.evaluate(() => { window.__pthDash.run().time = 0.05; });
+  await pg.waitForSelector('#pth-game .ar-final', { timeout: 6000 }).catch(() => {});
+  ok(await pg.evaluate(() => window.__pthDash.state() === 'over' && /\{|"time"/.test(localStorage.getItem('pth_ad_best') || '')), label + ': time\'s up: the showdown, the time-attack record kept');
+  // The daily challenge: the same cards for everyone today.
+  const dd = await pg.evaluate(() => { window.__pthDash.start('daily'); const a = window.__pthDash.run().deck.join(); window.__pthDash.start('daily'); const b = window.__pthDash.run().deck.join(); window.__pthDash.start('free'); const c = window.__pthDash.run().deck.join(); return { same: a === b, other: a !== c }; });
+  ok(dd.same && dd.other, label + ': daily: the same deck at every try today, a free run shuffles anew');
+  await pg.keyboard.press('Escape'); await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(300);
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && !document.getElementById('pth-game').classList.contains('pg-lanes')), label + ': back on the arcade page, the lanes mode is off');
   // ── Poker Run: the Ace at the wheel, forks that deal the board ──

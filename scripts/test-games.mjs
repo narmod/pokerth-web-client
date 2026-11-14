@@ -81,7 +81,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
-  'adHint', 'adRules',
+  'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
   'prHint', 'prRules', 'prTimeUp',
   'gmTitle'];
 let missing = [], badRecord = [];
@@ -91,14 +91,14 @@ for (const f of files) {
   if (strings.arRecord && strings.arRecord.indexOf('{n}') < 0) badRecord.push(f);
   for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
   if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
-  if (strings.adRules && (strings.adRules.split('\n').length !== 7 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
+  if (strings.adRules && (strings.adRules.split('\n').length !== 8 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
   if (strings.prRules && (strings.prRules.split('\n').length !== 6 || !/22|۲۲/.test(strings.prRules) || strings.prRules.indexOf('◀ ▶') < 0 || !/flop/i.test(strings.prRules))) badRecord.push(f + ':prRules');
   const tr = (k) => strings[k] || k;
   if (gameForNick(strings.gameWordAce, tr) !== 'arcade') missing.push(f + ': own word not recognised');
   if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
-ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules and adRules have 7 lines, prRules 6' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
+ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules 7 lines, adRules 8, prRules 6' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
 ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
 ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');
@@ -350,7 +350,31 @@ console.log('Ace Runner: the climb, the venues, the score');
   mem.set('pth_game_best_ace-runner', '1234');
   const again = reg.resetRunnerRecord();
   ok(first && again === false && mem.get('pth_game_best_ace-runner') === '1234' && mem.get(reg.AR_SCORE_KEY) === '1', 'old Ace Runner record cleared once, the new one is kept');
+  // Ace Dash (web.48): its record restarts too, the game stays open where it was played.
+  mem.delete(reg.AD_SCORE_KEY); mem.set('pth_game_best_ace-dash', '5000');
+  const d1 = reg.resetDashRecord();
+  mem.set('pth_game_best_ace-dash', '321');
+  const d2 = reg.resetDashRecord();
+  ok(d1 && d2 === false && mem.get('pth_game_best_ace-dash') === '321' && mem.get('pth_game_played_ace-dash') === '1', 'old Ace Dash record cleared once, the new one kept, the game marked as played');
+  mem.delete('pth_game_best_ace-dash');
+  ok(reg.playedGames(new Set()).has('ace-dash'), 'playedGames(): Ace Dash still counts as played after the reset');
   delete globalThis.localStorage;
+}
+
+console.log('Ace Dash: the long run, the score, the modes');
+{
+  const D = await import('../public/modules/games/ace-dash.mjs');
+  const lv = [1, 5, 10, 20, 30, 60, 100];
+  const sp = lv.map((l) => D.speedFor(l, 0));
+  ok(sp.every((v, i) => i === 0 || v > sp[i - 1]) && D.speedFor(500, 1e6) <= 27 + 2, 'Ace Dash: the speed keeps climbing, under its cap (' + sp.map((v) => v.toFixed(1)).join(' → ') + ')');
+  const gp = lv.map((l) => D.gapFor(l));
+  ok(gp.every((v, i) => i === 0 || v < gp[i - 1]) && gp[gp.length - 1] >= 0.8, 'Ace Dash: rows come closer at every level, never under 0.8 s (' + gp.map((v) => v.toFixed(2)).join(' → ') + ')');
+  ok(D.VENUE_LV === 5 && D.venueAt(1) === 0 && D.venueAt(5) === 0 && D.venueAt(6) === 1 && D.venueAt(26) === 5 && D.venueAt(400) === 5, 'Ace Dash: a venue every 5 levels, the final table from level 26');
+  ok(D.dashScore(1000.7, 200, { cat: 1 }) === 1440 && D.dashScore(1000, 0, { cat: -1 }) === 1000 && D.dashScore(100, 0, { cat: 9 }) === 400,
+    'Ace Dash: score = (distance + chips) + the hand bonus (+20 % a pair, +300 % a royal flush)');
+  ok(D.timeScore(500, { cat: 2 }) === 700 && D.timeScore(0, { cat: 9 }) === 0, 'Ace Dash: time attack = chip points + the hand bonus');
+  ok(D.streakUp(1) === 2 && D.streakUp(D.STREAK_MAX) === D.STREAK_MAX && D.STREAK_MAX === 5, 'Ace Dash: the streak climbs to ×5 and stays there');
+  ok(D.MODES.map((m) => m.id).join(',') === 'free,daily,time' && D.TIME_S === 60 && D.TIME_HIT === 5 && D.REBUY === 25, 'Ace Dash: three modes, 60 s time attack (−5 s a crash), a rebuy for 25 chips');
 }
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

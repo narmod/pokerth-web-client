@@ -16,6 +16,22 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash — the long run** (`web.49`, narmod: ideas 1–8 « all of them », after Ace Runner) — `games/ace-dash.mjs`:
+  **venues** every `VENUE_LV` 5 levels (`venueAt()`): Ace Runner's `drawScenery()` scaled into the band above the
+  horizon (`BG_GY`), the floor beside the table per venue (`FLOOR`), the haze (`HAZE` / sky dimmed to the floor),
+  the day going by (`dayAt`), a banner with the venue's name. **Difficulty**: `speedFor()` eases towards
+  `SPEED_CAP` 27 m/s, `gapFor()` 1.45 → 0.8 s; venue patterns: low cards (`fly` low, jump), the bouncing button
+  (`cy`, duck under or clear it), tall stacks (15 chips), zigzag pairs (`G.zig`), more blocks at the final
+  table. Collisions by vertical span (`span()`). **Score**: `dashScore()` = (distance + chip points) + Ace
+  Runner's `RUN_BONUS`; old records restart once (`games/index.mjs resetDashRecord`, `pth_ad_score2`), the game
+  stays open where it was played (`pth_game_played_ace-dash`, read by `playedGames`). **Modes** (`MODES`, title
+  tiles): free (`shell.best`), daily (`rng('ad-<day>-<row>')` per row, seeded deck; `pth_ad_daily`), time attack
+  (`TIME_S` 60, `timeHit()` −`TIME_HIT` 5 s, `timeScore()`; `pth_ad_best.time`). **Salto** +25 over a wall /
+  button / card / tall stack in a backflip (`o.flipOver`). **Streak**: chip lines as groups (`G.grps`), a whole
+  line → `streakUp()` to ×5, a started line missed → ×1; chips worth `CHIP_PTS` × streak. **Magnet** chip
+  (`MAGNET_MS` 6 s, purple, a bar over his head). **Rebuy** (`REBUY` 25 chips, once, free and daily; 5 s offer,
+  Space / ↓). **Ramps** (`kind: 'ramp'`, `RAMP_V` 8.2, an arc of chips on the jump's path; the next row waits).
+  i18n: 12 new keys and the 8-line `adRules` in all 83 languages (the venues' names from `arVenue*`).
 - **Ace Dash — running from behind, the backflip** (`web.47`, narmod) — the run cycle seen from behind
   (`.adash-back .run`: `adLeg` lifts each foot with a `scaleY` from the hip, the arms swing short) instead of Ace
   Runner's side-view swing; a second jump in the air (`backflip()`: `JUMP2_V` 7.6, once per jump, buffered as a

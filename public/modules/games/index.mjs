@@ -38,6 +38,21 @@ export function resetRunnerRecord() {
   } catch (e) { return false; }
 }
 resetRunnerRecord();
+// Ace Dash's score changed too (web.48: distance + chips plus the hand's
+// bonus, no more × the hand): its free-run record restarts, once per device.
+// It has no trophy: a device that had played it keeps it open
+// (pth_game_played_ace-dash, read by playedGames).
+export const AD_SCORE_KEY = 'pth_ad_score2';
+export function resetDashRecord() {
+  try {
+    if (localStorage.getItem(AD_SCORE_KEY)) return false;
+    if ((parseInt(localStorage.getItem('pth_game_best_ace-dash') || '0', 10) || 0) > 0) localStorage.setItem('pth_game_played_ace-dash', '1');
+    localStorage.removeItem('pth_game_best_ace-dash');
+    localStorage.setItem(AD_SCORE_KEY, '1');
+    return true;
+  } catch (e) { return false; }
+}
+resetDashRecord();
 
 export const HOME = 'arcade';
 // The « Mini-games » mode (design note claude/CONCEPTION_MODE_ARCADE.md,
@@ -105,7 +120,9 @@ export function playedGames(owned) {
   for (const g of GAMES) {
     if (g.id === HOME) continue;
     if (owned && GAME_TROPHY[g.id] && owned.has(GAME_TROPHY[g.id])) s.add(g.id);
-    try { if ((parseInt(localStorage.getItem('pth_game_best_' + g.id) || '0', 10) || 0) > 0) s.add(g.id); } catch (e) {}
+    try {
+      if ((parseInt(localStorage.getItem('pth_game_best_' + g.id) || '0', 10) || 0) > 0 || localStorage.getItem('pth_game_played_' + g.id)) s.add(g.id);
+    } catch (e) {}
   }
   return s;
 }
