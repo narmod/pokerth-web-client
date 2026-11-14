@@ -85,7 +85,7 @@ const haze = (c, s, k) => mix(c, s.bottom, k);
 // ── The venues ─────────────────────────────────────────────────────
 /** 1. The local club: a wood-panelled room, a few small windows with
  *  curtains (the sky, tinted, through the glass), wall lamps, tables. */
-function club(g, w, gy, sc, s, C) {
+function club(g, w, gy, sc, s, C, seq) {
   const lit = 1 - s.light;
   const wall = shade(s.light, '#6a5444', '#2a2019'), panel = shade(s.light, '#574436', '#221a14');
   g.fillStyle = wall; g.fillRect(0, 0, w, gy);
@@ -114,21 +114,158 @@ function club(g, w, gy, sc, s, C) {
     g.fillStyle = gl2; g.fillRect(lx - 46, ly - 46, 92, 92);
     g.fillStyle = shade(s.light, '#c9a46a', '#8a6a3a'); g.fillRect(lx - 1, ly + 4, 2, 10); g.beginPath(); g.moveTo(lx - 7, ly + 4); g.lineTo(lx + 7, ly + 4); g.lineTo(lx + 4, ly - 5); g.lineTo(lx - 4, ly - 5); g.closePath(); g.fill();
   }
-  tables(g, w, gy, sc, s, C);
+  tables(g, w, gy, sc, s, C, seq);
 }
-function tables(g, w, gy, sc, s, C) {
-  const span = 330, off2 = sc * 0.3, lampA = 0.12 + 0.22 * (1 - s.light);
-  for (let x = -(off2 % span); x < w + span; x += span) {
-    const cx = x + 120, ty = gy - 46;
-    const lamp = g.createRadialGradient(cx, ty - 40, 0, cx, ty - 10, 120);
-    lamp.addColorStop(0, 'rgba(' + C.lamp + ',' + lampA + ')'); lamp.addColorStop(1, 'rgba(' + C.lamp + ',0)');
-    g.fillStyle = lamp; g.fillRect(cx - 130, ty - 120, 260, 170);
-    g.fillStyle = C.rim; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = C.farFelt; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx, ty - 130); g.lineTo(cx, ty - 62); g.stroke();
-    g.fillStyle = C.shade; g.beginPath(); g.moveTo(cx - 18, ty - 50); g.lineTo(cx + 18, ty - 50); g.lineTo(cx + 9, ty - 63); g.lineTo(cx - 9, ty - 63); g.closePath(); g.fill();
+/** The club's furniture going by, one piece every `span` px, in this order
+ *  (web.43, narmod's pick): a table with its players, the bar, the pool
+ *  table, slot machines, the jukebox, a lounge corner, the darts. The final
+ *  table keeps its plain card tables. */
+export const CLUB_PROPS = ['players', 'bar', 'billiard', 'slots', 'jukebox', 'lounge', 'darts'];
+function tables(g, w, gy, sc, s, C, seq) {
+  const list = seq && seq.length ? seq : CLUB_PROPS;
+  const span = 330, off2 = sc * 0.3, i0 = Math.floor(off2 / span);
+  for (let k = -1; k < Math.ceil(w / span) + 2; k++) {
+    const i = i0 + k, x = i * span - off2, kind = list[((i % list.length) + list.length) % list.length];
+    (PROPS[kind] || PROPS.table)(g, x + 120, gy, s, C, i);
   }
 }
+/** A hanging lamp's warm pool of light (more at night). */
+function lampGlow(g, cx, y, s, C, r = 120) {
+  const a = 0.12 + 0.22 * (1 - s.light);
+  const lamp = g.createRadialGradient(cx, y - 40, 0, cx, y - 10, r);
+  lamp.addColorStop(0, 'rgba(' + C.lamp + ',' + a + ')'); lamp.addColorStop(1, 'rgba(' + C.lamp + ',0)');
+  g.fillStyle = lamp; g.fillRect(cx - r - 10, y - r, 2 * r + 20, r + 50);
+}
+function hangLamp(g, cx, ty, C, wide) {
+  g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx, ty - 130); g.lineTo(cx, ty - 62); g.stroke();
+  const h = wide ? 30 : 18;
+  g.fillStyle = C.shade; g.beginPath(); g.moveTo(cx - h, ty - 50); g.lineTo(cx + h, ty - 50); g.lineTo(cx + h / 2, ty - 63); g.lineTo(cx - h / 2, ty - 63); g.closePath(); g.fill();
+}
+const PROPS = {
+  /** A round card table under its lamp (web.39). */
+  table(g, cx, gy, s, C) {
+    const ty = gy - 46;
+    lampGlow(g, cx, ty, s, C);
+    g.fillStyle = C.rim; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = C.farFelt; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
+    hangLamp(g, cx, ty, C);
+  },
+  /** The same table with players seated round it, chips and cards. */
+  players(g, cx, gy, s, C, i) {
+    const ty = gy - 46, body = shade(s.light, '#3e3530', '#15110f');
+    lampGlow(g, cx, ty, s, C);
+    // The players behind the table: heads and shoulders.
+    for (const [dx, hy] of [[-62, 0], [-22, -4], [22, -3], [62, 1]]) {
+      if (rnd(i * 4 + dx, 31) < 0.2) continue;   // an empty seat now and then
+      g.fillStyle = body; g.beginPath(); g.ellipse(cx + dx, ty - 12 + hy, 15, 14, 0, Math.PI, 0); g.fill(); g.fillRect(cx + dx - 15, ty - 12 + hy, 30, 12);
+      g.beginPath(); g.arc(cx + dx, ty - 32 + hy, 8, 0, Math.PI * 2); g.fill();
+    }
+    g.fillStyle = C.rim; g.beginPath(); g.ellipse(cx, ty + 4, 96, 20, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = C.farFelt; g.beginPath(); g.ellipse(cx, ty, 86, 15, 0, 0, Math.PI * 2); g.fill();
+    // Chips and two cards on the felt.
+    const chips = ['#b8463c', '#3d6aa8', '#d9cfb8', '#3c3c3c'];
+    for (let k = 0; k < 4; k++) { const x = cx - 50 + k * 30 + (k > 1 ? 20 : 0), n = 2 + Math.floor(rnd(i + k, 33) * 3); g.fillStyle = chips[k]; for (let h = 0; h < n; h++) { g.beginPath(); g.ellipse(x, ty + 2 - h * 2.2, 5, 2, 0, 0, Math.PI * 2); g.fill(); } }
+    g.fillStyle = 'rgba(240,236,226,.85)'; g.fillRect(cx - 9, ty - 4, 7, 9); g.fillRect(cx + 1, ty - 4, 7, 9);
+    hangLamp(g, cx, ty, C);
+  },
+  /** The bar: a counter, stools, a shelf of bottles on the wall. */
+  bar(g, cx, gy, s, C, i) {
+    const lit = 1 - s.light, wood = shade(s.light, '#7a5440', '#2e1f17'), top = shade(s.light, '#9a7458', '#3e2c20');
+    // Shelf with bottles, a soft strip of light under it.
+    const sy = gy - 132;
+    const strip = g.createLinearGradient(0, sy, 0, sy + 40); strip.addColorStop(0, 'rgba(255,205,140,' + (0.1 + 0.25 * lit) + ')'); strip.addColorStop(1, 'rgba(255,205,140,0)');
+    g.fillStyle = strip; g.fillRect(cx - 100, sy, 200, 40);
+    g.fillStyle = top; g.fillRect(cx - 100, sy - 3, 200, 4);
+    const glass = ['#5d7a5a', '#7a5a3a', '#8a7a4a', '#4a5f78', '#6e4a4a'];
+    for (let k = 0; k < 11; k++) {
+      const bx = cx - 92 + k * 17, bh = 16 + rnd(i * 11 + k, 41) * 10;
+      g.fillStyle = shade(s.light, glass[k % glass.length], '#1e1a18');
+      g.fillRect(bx, sy - 3 - bh, 9, bh); g.fillRect(bx + 3, sy - 3 - bh - 6, 3, 6);
+    }
+    // The counter and its top.
+    g.fillStyle = wood; g.fillRect(cx - 110, gy - 46, 220, 46);
+    g.fillStyle = top; g.fillRect(cx - 116, gy - 50, 232, 6);
+    g.fillStyle = 'rgba(0,0,0,.18)'; for (let k = 1; k < 5; k++) g.fillRect(cx - 110 + k * 44, gy - 42, 2, 38);
+    g.fillStyle = 'rgba(216,178,90,.45)'; g.fillRect(cx - 110, gy - 10, 220, 2);
+    // Stools in front.
+    g.fillStyle = shade(s.light, '#3a2e26', '#120e0b');
+    for (const dx of [-70, 0, 70]) { g.fillRect(cx + dx - 1.5, gy - 30, 3, 30); g.beginPath(); g.ellipse(cx + dx, gy - 31, 11, 4, 0, 0, Math.PI * 2); g.fill(); }
+  },
+  /** A pool table under a long lamp. */
+  billiard(g, cx, gy, s, C, i) {
+    const ty = gy - 44;
+    lampGlow(g, cx, ty, s, C, 140);
+    g.fillStyle = C.rim; g.beginPath(); g.moveTo(cx - 98, ty + 14); g.lineTo(cx + 98, ty + 14); g.lineTo(cx + 84, ty - 12); g.lineTo(cx - 84, ty - 12); g.closePath(); g.fill();
+    g.fillStyle = C.farFelt; g.beginPath(); g.moveTo(cx - 88, ty + 9); g.lineTo(cx + 88, ty + 9); g.lineTo(cx + 77, ty - 8); g.lineTo(cx - 77, ty - 8); g.closePath(); g.fill();
+    g.fillStyle = C.rim; g.fillRect(cx - 90, ty + 14, 8, 30); g.fillRect(cx + 82, ty + 14, 8, 30);
+    const balls = ['#e8e2d2', '#c9a032', '#3d5f9a', '#a84038', '#5a3a6e', '#c46a2e', '#2f6a44', '#7a2a2a', '#222'];
+    for (let k = 0; k < 7; k++) { g.fillStyle = balls[(k + i) % balls.length]; g.beginPath(); g.arc(cx - 50 + rnd(i * 7 + k, 51) * 100, ty - 4 + rnd(i * 7 + k, 52) * 10, 2.6, 0, Math.PI * 2); g.fill(); }
+    g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx - 50, ty - 130); g.lineTo(cx - 50, ty - 66); g.moveTo(cx + 50, ty - 130); g.lineTo(cx + 50, ty - 66); g.stroke();
+    g.fillStyle = C.shade; rrect(g, cx - 66, ty - 68, 132, 10); g.fill();
+  },
+  /** A row of slot machines, their screens softly lit. */
+  slots(g, cx, gy, s, C, i) {
+    const lit = 1 - s.light;
+    for (let k = -1; k <= 1; k++) {
+      const x = cx + k * 52, top = gy - 104;
+      g.fillStyle = shade(s.light, '#6a5a6e', '#221c26'); rrect(g, x - 21, top, 42, 104); g.fill();
+      const sc2 = g.createLinearGradient(0, top + 26, 0, top + 52); sc2.addColorStop(0, 'rgba(255,236,190,' + (0.35 + 0.35 * lit) + ')'); sc2.addColorStop(1, 'rgba(240,200,140,' + (0.25 + 0.3 * lit) + ')');
+      g.fillStyle = sc2; g.fillRect(x - 15, top + 26, 30, 24);
+      g.fillStyle = 'rgba(90,60,40,.75)'; for (let r = 0; r < 3; r++) g.fillRect(x - 12 + r * 9, top + 31, 6, 14);
+      g.fillStyle = 'rgba(' + (k ? '220,120,140' : '120,190,220') + ',' + (0.25 + 0.35 * lit) + ')'; g.fillRect(x - 15, top + 8, 30, 10);
+      g.fillStyle = shade(s.light, '#4a3e4e', '#16121a'); g.fillRect(x - 21, top + 62, 42, 6);
+      g.strokeStyle = shade(s.light, '#8a8a8a', '#3a3a3a'); g.lineWidth = 2; g.beginPath(); g.moveTo(x + 21, top + 46); g.lineTo(x + 27, top + 46); g.lineTo(x + 27, top + 28); g.stroke();
+      g.fillStyle = '#a84038'; g.beginPath(); g.arc(x + 27, top + 26, 3, 0, Math.PI * 2); g.fill();
+    }
+    void i;
+  },
+  /** A jukebox, its arch glowing. */
+  jukebox(g, cx, gy, s, C, i) {
+    const lit = 1 - s.light, x = cx, top = gy - 100;
+    const halo = g.createRadialGradient(x, top + 40, 0, x, top + 40, 80); halo.addColorStop(0, 'rgba(240,170,110,' + (0.06 + 0.16 * lit) + ')'); halo.addColorStop(1, 'rgba(240,170,110,0)');
+    g.fillStyle = halo; g.fillRect(x - 80, top - 40, 160, 160);
+    g.fillStyle = shade(s.light, '#6a4a38', '#241914'); g.beginPath(); g.moveTo(x - 30, gy); g.lineTo(x - 30, top + 30); g.arc(x, top + 30, 30, Math.PI, 0); g.lineTo(x + 30, gy); g.closePath(); g.fill();
+    const arc = ['#c46a5a', '#d9a75a', '#7aa07a', '#6a8ab0'];
+    arc.forEach((c, k) => { g.strokeStyle = c; g.globalAlpha = 0.45 + 0.35 * lit; g.lineWidth = 3; g.beginPath(); g.arc(x, top + 30, 24 - k * 4, Math.PI, 0); g.stroke(); });
+    g.globalAlpha = 1;
+    g.fillStyle = 'rgba(30,20,15,.55)'; g.fillRect(x - 20, top + 46, 40, 22);
+    g.strokeStyle = 'rgba(216,178,90,.35)'; g.lineWidth = 1; for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(x - 18, top + 76 + k * 5); g.lineTo(x + 18, top + 76 + k * 5); g.stroke(); }
+    void i; void C;
+  },
+  /** A lounge corner: an armchair, a little table, a floor lamp. */
+  lounge(g, cx, gy, s, C, i) {
+    const lit = 1 - s.light, leather = shade(s.light, '#7a4a3a', '#2a1812');
+    const lx = cx + 60, ly = gy - 110;
+    const gl = g.createRadialGradient(lx, ly + 10, 0, lx, ly + 10, 90); gl.addColorStop(0, 'rgba(255,205,140,' + (0.1 + 0.28 * lit) + ')'); gl.addColorStop(1, 'rgba(255,205,140,0)');
+    g.fillStyle = gl; g.fillRect(lx - 90, ly - 80, 180, 190);
+    g.strokeStyle = shade(s.light, '#5a4a3a', '#1c1610'); g.lineWidth = 2; g.beginPath(); g.moveTo(lx, gy); g.lineTo(lx, ly + 12); g.stroke();
+    g.fillStyle = shade(s.light, '#d8c8a8', '#6a5a40'); g.beginPath(); g.moveTo(lx - 14, ly + 12); g.lineTo(lx + 14, ly + 12); g.lineTo(lx + 9, ly - 6); g.lineTo(lx - 9, ly - 6); g.closePath(); g.fill();
+    // The armchair: back, seat, arms.
+    g.fillStyle = leather; rrect(g, cx - 64, gy - 70, 70, 50); g.fill();
+    g.fillRect(cx - 70, gy - 30, 82, 24); rrect(g, cx - 76, gy - 46, 16, 40); g.fill(); rrect(g, cx + 2, gy - 46, 16, 40); g.fill();
+    g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(cx - 60, gy - 30, 62, 3);
+    // The little round table with a glass.
+    g.fillStyle = shade(s.light, '#5a4334', '#1f1712'); g.fillRect(cx + 24, gy - 30, 3, 30); g.beginPath(); g.ellipse(cx + 25, gy - 31, 14, 4, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(200,170,110,.6)'; g.fillRect(cx + 21, gy - 41, 6, 9);
+    void i; void C;
+  },
+  /** A dartboard on the wall and a high table. */
+  darts(g, cx, gy, s, C, i) {
+    const bx = cx, by = gy - 130;
+    g.fillStyle = shade(s.light, '#4a3a2e', '#18120d'); g.beginPath(); g.arc(bx, by, 26, 0, Math.PI * 2); g.fill();
+    for (let k = 0; k < 20; k++) { g.fillStyle = k % 2 ? shade(s.light, '#d8ccb0', '#4a4436') : shade(s.light, '#2e2a26', '#0e0c0a'); g.beginPath(); g.moveTo(bx, by); g.arc(bx, by, 21, k * Math.PI / 10, (k + 1) * Math.PI / 10); g.closePath(); g.fill(); }
+    g.strokeStyle = shade(s.light, '#a8463c', '#4a201c'); g.lineWidth = 3; g.beginPath(); g.arc(bx, by, 13, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = shade(s.light, '#3d7a4e', '#183020'); g.beginPath(); g.arc(bx, by, 3, 0, Math.PI * 2); g.fill();
+    // A high table and two stools.
+    const tx = cx + 10, wood = shade(s.light, '#8a6248', '#3a281c');
+    g.fillStyle = wood; g.fillRect(tx - 3, gy - 54, 6, 54); g.fillRect(tx - 14, gy - 3, 28, 3);
+    g.beginPath(); g.ellipse(tx, gy - 55, 26, 6, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(200,170,110,.6)'; g.fillRect(tx - 10, gy - 66, 5, 9); g.fillRect(tx + 6, gy - 65, 5, 8);
+    g.fillStyle = shade(s.light, '#3a2e26', '#120e0b');
+    for (const dx of [-36, 36]) { g.fillRect(tx + dx - 1.5, gy - 36, 3, 36); g.beginPath(); g.ellipse(tx + dx, gy - 37, 10, 3.5, 0, 0, Math.PI * 2); g.fill(); }
+    void i; void C;
+  },
+};
 /** Buildings along a skyline: their windows and neon light up at night. */
 function skyline(g, w, gy, sc, s, o) {
   const span = o.span, off = sc * o.par, n = Math.ceil(w / span) + 2, i0 = Math.floor(off / span);
@@ -257,10 +394,10 @@ function rrect(g, x, y, w, h) { const r = 6; g.beginPath(); g.moveTo(x + r, y); 
  */
 export function drawScenery(g, o) {
   const { w, gy, scroll: sc, p, venue, now, reduced, C } = o;
-  if (venue === 5) { finale(g, w, gy, sc, skyAt(0), now, reduced); tables(g, w, gy, sc, { light: 0 }, C); }
+  if (venue === 5) { finale(g, w, gy, sc, skyAt(0), now, reduced); tables(g, w, gy, sc, { light: 0 }, C, ['table']); }
   else {
     const s = sky(g, w, gy, p, sc, now, reduced);
-    if (venue === 0) club(g, w, gy, sc, s, C);
+    if (venue === 0) club(g, w, gy, sc, s, C, o.clubProps);
     else if (venue === 1) vegas(g, w, gy, sc, s);
     else if (venue === 2) cruise(g, w, gy, sc, s, now, reduced);
     else if (venue === 3) monaco(g, w, gy, sc, s);

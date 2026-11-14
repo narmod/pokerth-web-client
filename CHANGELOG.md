@@ -137,6 +137,11 @@ highlights below.
   and ▲ ▼ on the right in landscape; the other games are unchanged.
 
 ### Changed
+- **Ace Runner — the club's furniture** (`web.43`, narmod's pick 2-3-4-5-6-7-8) — `games/runner-scenery.mjs`:
+  `tables()` draws `PROPS` in the order of `CLUB_PROPS`: `players` (the card table with players' silhouettes,
+  chips, two cards; a seat empty now and then), `bar` (counter, stools, a lit shelf of bottles), `billiard`,
+  `slots`, `jukebox`, `lounge` (armchair, side table, floor lamp), `darts` (board and a high table); the final
+  table keeps its plain `table`. `drawScenery()` takes `clubProps` to try another order.
 - **Ace Runner — softer venues** (`web.42`, narmod: « hard on the eyes, the windows ») — `games/runner-scenery.mjs`:
   muted sky palette (`SKY`), a softer sun and moon, dimmer stars; `haze()` fades far layers into the sky; skyline
   windows 22 % lit at 0.4 alpha (was 45 % at 0.75), thinner neon with less glow; the club's tall windows (bright
