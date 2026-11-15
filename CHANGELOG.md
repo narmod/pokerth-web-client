@@ -30,6 +30,9 @@ highlights below.
   `test-games-browser.mjs` +1 per screen.
 
 ### Changed
+- **Ace Dash's buttons sideways** (`web.81`, narmod: « in landscape the buttons are badly placed », his pick of
+  the layouts) — `ace-dash.mjs`: root class `adash-pad`; on a touch screen in landscape `.pg-play` is a 4-column
+  grid: ◀ | the stage | ▲ over ▼ | ▶ (was ◀ ▶ | stage | ▲ ▼); checked in `test-ace-dash-jet.mjs` (21 checks).
 - **Bands that hid the play** (`web.78`, narmod: « in Ace Dash and Poker Run you can't see anything ») — Ace Dash:
   `drawBanner` at `HOR − 20` (34 px, 17 px type) over the scenery instead of a third of the height, where it covered
   the far felt for 1.6 s. Poker Run: `.prun-prev` is now a flex row, the two choices at the sides

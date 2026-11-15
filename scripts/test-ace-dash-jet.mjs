@@ -120,6 +120,21 @@ ok(!pu.dead && !pu.on && pu.under && pu.hand === pu.hand0, 'missed: he runs unde
 ok(pu.ghost && !pr.onGhost, 'underneath, the table is drawn over him, see-through (on it, it is not)');
 const ph = await poolRun('hit');
 ok(!ph.dead && ph.on && ph.knocked, 'a ball on the table knocks him off, back on the felt, still running');
+// (web.81) Sideways on a touch screen: ◀ on the left, ▲ over ▼ then ▶ on the right.
+{
+  const c2 = await b.newContext({ viewport: { width: 844, height: 390 }, serviceWorkers: 'block', hasTouch: true, isMobile: true });
+  await c2.addInitScript(() => { try { if (sessionStorage.getItem('x')) return; sessionStorage.setItem('x', '1'); localStorage.clear(); for (const [k, v] of [['pth_guide_offered', '1'], ['pth_lang', 'fr'], ['pth_bak_auto', '0'], ['pth_arcade_all', '1'], ['pth_arcade_shown', '1'], ['pth_arcade_seen', '1']]) localStorage.setItem(k, v); } catch (e) {} });
+  const p2 = await c2.newPage();
+  await p2.goto(base); await p2.waitForSelector('.login-card'); await sleep(1500);
+  await p2.evaluate(() => { window.loginOpenArcade(); });
+  await p2.waitForSelector('#pth-game .gm-card', { timeout: 8000 }); await sleep(400);
+  await p2.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[data-art="ace-dash"]').closest('.gm-card'); (c.querySelector('[data-play]') || c).click(); });
+  await sleep(1000);
+  const r = await p2.evaluate(() => { const q = (x) => document.querySelector('#pth-game ' + x).getBoundingClientRect(); return { S: q('.pg-stage'), L: q('[data-a="left"]'), U: q('[data-a="jump"]'), D: q('[data-a="duck"]'), R: q('[data-a="right"]') }; });
+  ok(r.L.right <= r.S.left && r.U.left >= r.S.right && Math.abs(r.U.left - r.D.left) < 1 && r.U.bottom <= r.D.top && r.R.left >= r.U.right && r.L.height > r.U.height * 1.5,
+    'sideways: ◀ on the left, ▲ over ▼ then ▶ on the right');
+  await c2.close();
+}
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
 await b.close(); server.close();
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

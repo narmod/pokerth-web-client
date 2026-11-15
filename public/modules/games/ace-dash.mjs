@@ -146,6 +146,14 @@ export const MODES = [
 ];
 
 const CSS = `
+/* Sideways on a touch screen (web.81, narmod: « in landscape the buttons are badly placed »): ◀ on the left,
+   ▲ over ▼ then ▶ on the right — each thumb its direction. */
+#pth-game.adash-pad.pg-touch .pg-play.pg-land{display:grid;grid-template-columns:repeat(4,auto);grid-template-rows:1fr 1fr;justify-content:center;align-content:center;gap:12px}
+#pth-game.adash-pad .pg-land .pg-stage{grid-column:2;grid-row:1 / span 2}
+#pth-game.adash-pad .pg-land .pg-pad button[data-a="left"]{grid-column:1;grid-row:1 / span 2}
+#pth-game.adash-pad .pg-land .pg-pad button[data-a="jump"]{grid-column:3;grid-row:1}
+#pth-game.adash-pad .pg-land .pg-pad button[data-a="duck"]{grid-column:3;grid-row:2}
+#pth-game.adash-pad .pg-land .pg-pad button[data-a="right"]{grid-column:4;grid-row:1 / span 2}
 #${ACE_ID} .mc-card3d{transition:transform .42s cubic-bezier(.3,1.3,.5,1)}
 #${ACE_ID}.adash-back .mc-card3d{transform:rotateY(180deg)}
 #${ACE_ID}.adash-back .run .mc-lean,#${ACE_ID}.adash-back .air .mc-lean,#${ACE_ID}.adash-back .duck .mc-lean{transform:none}
@@ -219,6 +227,7 @@ export function create(shell) {
   let seenUnder = false;                                   // tests: the last frame showed him under the table
   const gG = /** @type {CanvasRenderingContext2D} */ (ghostCv.getContext('2d'));
   shell.lanes(true);
+  shell.root.classList.add('adash-pad');
   const buzz = (p) => { try { if (typeof window.hapticBuzz === 'function') window.hapticBuzz(p); } catch (e) {} };
 
   let hDist, hLvl, hLvlLab, hChips, hX, hIns, hMag, hSlots, hName;
@@ -1353,6 +1362,7 @@ export function create(shell) {
       try { if (window.__pthDash) delete window.__pthDash; } catch (e) {}
       front.remove();
       ace.remove();
+      shell.root.classList.remove('adash-pad');
     },
   };
 }
