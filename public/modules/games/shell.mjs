@@ -293,6 +293,8 @@ export function run(def, gameMod, opts = {}) {
     function showRules(d, onPlay) {
       if (!d || !d.rulesKey) return;
       const lines = String(tr(d.rulesKey)).split('\n').filter((x) => x.trim());
+      // Rules added later (rulesMore: keys of their own), before the last line — the keys.
+      if (d.rulesMore) lines.splice(Math.max(0, lines.length - 1), 0, ...d.rulesMore.map((k) => String(tr(k))));
       sheet.innerHTML = '<h3>' + esc(d.name || '') + '</h3><ul>' + lines.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul>'
         + '<div class="pg-sheet-btns">' + (onPlay ? '<button type="button" class="pg-btn" data-r="play">' + esc(tr('gmPlay')) + '</button>' : '')
         + '<button type="button" class="pg-btn' + (onPlay ? ' pg-ghost' : '') + '" data-r="close">' + esc(tr('closeTooltip')) + '</button></div>';

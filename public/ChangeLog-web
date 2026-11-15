@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.71 (current series):
+2026-11-15 version 2.1.11-web.72 (current series):
+- new: Ace Dash — the jetpack: a rare pick-up from level 3 (two chip stacks in flames). The Ace flies 6 s over everything, ← → still change lane; a trail of chips waits up there and, half way, three face-up cards, one per lane: the one you fly through joins your hand (better than a pair: fireworks). The felt is cleared before he lands. Time attack: +5 s
+- bugfix: Ace Dash — what has gone past the Ace (and the bonus texts) is drawn in front of him again
+
+2026-11-15 version 2.1.11-web.71:
 - bugfix: Mini-games — on iPhone, the light and the golden egg that reveal the Mini-games card (and a mystery game) played below the card, over « Ace's Help »: they now play on the card itself
 
 2026-11-15 version 2.1.11-web.70:

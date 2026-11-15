@@ -61,7 +61,8 @@ export const HOME = 'arcade';
 // game for fun (kind 'fun'): reading hands → odds → choosing → building →
 // playing an opponent, and one button → timing → light strategy → 3D → the car.
 // page: no stage (the home page); rulesKey: the rules sheet (« ? » in the
-// header, « Rules » on the home page); aspect: the stage's width / height range.
+// header, « Rules » on the home page); rulesMore: keys of rules added later, shown before
+// its last line; aspect: the stage's width / height range.
 // unlock: what opens the game in the Mini-games mode: {} from the start,
 // { trophy: id } once that trophy is won, { trophies: n } with n training
 // trophies won in all — the secret ones included (a mini-game's trophy brings
@@ -79,7 +80,7 @@ export const GAMES = [
   { id: 'videopoker', kind: 'learn', unlock: { trophies: 16 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
   { id: 'pokerdrop', kind: 'fun', unlock: { trophies: 18 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
   { id: 'solitaire', kind: 'learn', unlock: { trophies: 20 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
-  { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
+  { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', rulesMore: ['adJetRule'], aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
   { id: 'bluff', kind: 'learn', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.5, 2.4], load: () => import('./bluff.mjs') },
   { id: 'poker-run', kind: 'fun', unlock: { trophies: 27 }, name: 'Poker Run', icon: '🏎️', rulesKey: 'prRules', aspect: [0.6, 1.9], load: () => import('./poker-run.mjs') },
 ];

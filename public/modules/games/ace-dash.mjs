@@ -47,6 +47,14 @@
 //              a line started and missed sets it back to ×1.
 //   Rebuy      busted with REBUY chips or more (free run, daily), once a run:
 //              pay them and he is back in the race.
+//   Jetpack    (web.72, narmod: « A + C » of the proposals) a rare pick-up
+//              from level JET_LEVEL (two chip stacks with flames): he flies
+//              JET_S seconds at JET_Y over everything, ← → still change lane;
+//              a trail of chips waits up there and, half way, three face-up
+//              cards, one per lane — the one he flies through joins his hand
+//              (better than a pair: fireworks), the others go back under the
+//              deck. The felt is cleared before he lands, then JET_SAFE_MS of
+//              safety. Time attack: +JET_TIME s. Not during All-In.
 // Sounds come from modules/sounds.mjs, the texts from Ace Runner's keys (ar*)
 // plus the ad* keys.
 // ═══════════════════════════════════════════════════════════════════
@@ -77,6 +85,16 @@ const HOR = 96, GROUND_OFF = 46;                    // horizon line; the Ace's f
 const BG_GY = 210;                                  // the panorama is drawn this tall, then fitted above the horizon
 const INS_COL = ['#1f4e9e', '#f5f0e3'], MAG_COL = ['#6a3fb5', '#efe6ff'];
 const DAILY_KEY = 'pth_ad_daily', BEST_KEY = 'pth_ad_best';
+// The jetpack: flight (s), height (m), the climb and the landing (s), the
+// rows between two (about 800 – 1 000 m), safety after landing, time attack's gift.
+export const JET_S = 6, JET_Y = 2.4, JET_LEVEL = 3, JET_TIME = 5;
+const JET_UP = 0.6, JET_DOWN = 0.7, JET_SAFE_MS = 1500, JET_ROWS = 46, JET_ROWS_RND = 12;
+/** The jetpack's height after f seconds of flight (0 … JET_Y … 0). */
+export function jetHeight(f) {
+  if (f <= 0 || f >= JET_S) return 0;
+  const e = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+  return JET_Y * (f < JET_UP ? e(f / JET_UP) : f > JET_S - JET_DOWN ? e((JET_S - f) / JET_DOWN) : 1);
+}
 
 // Speed (m/s): from SPEED0 up towards SPEED_CAP, about half way by level 9,
 // plus a little with the time in the run.
@@ -167,6 +185,8 @@ export function create(shell) {
   const turnBack = (on) => { if (aceRoot) aceRoot.classList.toggle('adash-back', on); };
   // What has passed the Ace is painted over him, on a canvas of its own.
   const front = document.createElement('canvas');
+  // Over the Ace (the actor's root keeps the mascot kit's z-index, 395): what has passed him, his jetpack, the texts.
+  front.style.zIndex = '396';
   shell.layer.appendChild(front);
   const gF = /** @type {CanvasRenderingContext2D} */ (front.getContext('2d'));
   shell.lanes(true);
@@ -212,6 +232,11 @@ export function create(shell) {
   function camera() {
     camH = clamp(1450 / shell.W, 1.9, 5.6);
     F = (shell.H - GROUND_OFF - HOR) * PZ / camH;
+    // In flight the camera rises with him (same lens), just enough to keep his head under the HUD.
+    if (G && state !== 'title' && G.jet && G.y > 0) {
+      const k = F / PZ, room = shell.H - GROUND_OFF - STAND * k - 74;
+      camH += Math.max(0, G.y - Math.max(0, room) / k);
+    }
   }
   /** World (x, y up, z away) → [screen x, screen y, px per metre]. */
   function P(x, y, z) { const s = F / z; return [shell.W / 2 + (x - camX) * s, HOR + (camH - y) * s, s]; }
@@ -229,6 +254,7 @@ export function create(shell) {
       allInUntil: 0, allInWarned: false, magnetUntil: 0, lookAt: 0, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
       obj: [], items: [], fx: [], deck: deckWith(R), hand: [], ev: evalCards([]),
       spawnAt: 6, extra: 0, rows: 0, free: 1, nextCard: 2, nextPower: 14, nextRamp: 6, zig: false, overAt: 0,
+      jet: false, jetT: 0, jetNext: 0, jetLane: 1, jetRun: 0, jetGrp: 0, jetCardAt: -1, jetTrio: 0, nextJet: 18, jetFx: 0, jetR: null,
       venue: 0, prevVenue: 0, venueT: 1, time: TIME_S, rebought: false, mode, day: dayKey() };
     const g = newGroup();
     for (let z = 10; z < 44; z += 2.4) addItem('chip', 1, z, 0.45, { grp: g });
@@ -272,7 +298,7 @@ export function create(shell) {
   newRun();
   titlePanel();
   turnBack(false); ace.pose('wave');
-  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer); clearTimeout(rebuyTimer);
@@ -335,10 +361,16 @@ export function create(shell) {
         addItem('chip', lane, z - 1.7, 0.78, { grp: g }); addItem('chip', lane, z, 1.08, { grp: g }); addItem('chip', lane, z + 1.7, 0.78, { grp: g });
       }
     }
-    if (zig) return;
+    if (zig || G.jet) return;          // in flight: the rows pass below, nothing to pick up there
     if (L >= 4 && R() < (v >= 5 ? 0.45 : 0.3)) addObstacle(R() < 0.5 ? 'stack' : 'fly', free, z);
     if (v >= 4 && R() < 0.4) G.zig = true;                                 // the next row comes sooner, the free lane moves
     const room = gapM - 4.5;
+    // The jetpack: rare, from level JET_LEVEL, never while All-In.
+    if (L >= JET_LEVEL && G.rows >= G.nextJet && room > 3 && !G.zig && performance.now() >= G.allInUntil) {
+      G.nextJet = G.rows + JET_ROWS + Math.floor(R() * JET_ROWS_RND);
+      addItem('jet', free, z + 2.5 + room / 2, 0.6);
+      return;
+    }
     if (G.rows >= G.nextPower && room > 3) {
       G.nextPower = G.rows + 16 + Math.floor(R() * 14);
       addItem(pickR(['allin', 'ins', 'magnet']), free, z + 2.5 + room / 2, 0.6);
@@ -370,7 +402,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   const doJump = () => { G.vy = JUMP_V; G.onGround = false; G.dbl = false; G.duckUntil = 0; ace.fx('jump'); };
   /** He turns to us with a face for a moment (not too often). */
-  const look = (m, ms) => { if (state === 'run' && performance.now() > G.lookAt) { if (ace.look(m, ms || 850)) G.lookAt = performance.now() + (ms || 850) + 900; } };
+  // Not in flight: his back (and the jetpack on it) stays to us.
+  const look = (m, ms) => { if (state === 'run' && !G.jet && performance.now() > G.lookAt) { if (ace.look(m, ms || 850)) G.lookAt = performance.now() + (ms || 850) + 900; } };
   /** Jump again in the air: higher, with a backflip (once per jump). */
   function backflip(v) {
     G.vy = v || JUMP2_V; G.onGround = false; G.dbl = true; G.flipAt = G.t; G.duckUntil = 0;
@@ -403,6 +436,7 @@ export function create(shell) {
     if (state !== 'run' || !down && a !== 'duck') return;
     if (a === 'left') G.lane = Math.max(0, G.lane - 1);
     else if (a === 'right') G.lane = Math.min(2, G.lane + 1);
+    else if (G.jet) return;            // flying: ← → only
     else if (a === 'jump') {
       if (G.onGround) doJump();
       else if (!G.dbl && (G.vy > 0 || G.y > FLIP_LOW)) backflip();
@@ -461,7 +495,8 @@ export function create(shell) {
     const tx = (G.lane - 1) * LANE, dx = tx - G.x, step = LANE_V * dt;
     G.x += Math.abs(dx) <= step ? dx : Math.sign(dx) * step;
     G.lean += (clamp(dx, -1, 1) - G.lean) * Math.min(1, dt * 14);
-    if (!G.onGround) {
+    if (G.jet) jetStep(dt, now);
+    else if (!G.onGround) {
       G.vy -= GRAV * dt; G.y += G.vy * dt;
       if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; ace.fx('land'); if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
       else if (G.flipAt >= 0 && G.t - G.flipAt >= FLIP_S) G.flipAt = -1;
@@ -499,6 +534,7 @@ export function create(shell) {
         continue;
       }
       if (o.z > PZ + reach) continue;
+      if (G.jet) continue;                     // flying (the climb included): nothing touches him
       const adx = Math.abs(G.x - o.x);
       if (adx >= o.hw + 0.26) { if (adx < o.hw + 0.7) o.nearLat = true; continue; }
       o.lat = true;
@@ -534,16 +570,64 @@ export function create(shell) {
     }
     G.obj = G.obj.filter((o) => o.z > ZN - 0.3 - (o.len || 0) && !(o.dead && o.z < PZ));
     G.items = G.items.filter((i) => i.z > ZN - 0.3 && !i.got);
-    if (G.travel >= G.spawnAt) { G.extra = 0; spawnRow(); G.spawnAt += G.speed * (gapTime() * (G.zig ? 0.55 : 1) + G.extra); }
+    if (G.travel >= G.spawnAt) {
+      // Before he lands the felt is cleared: no row that would reach him in the landing.
+      if (G.jet && JET_S - G.jetT < (Z_SPAWN - PZ) / G.speed + JET_DOWN + 0.5) G.spawnAt += G.speed * gapTime();
+      else { G.extra = 0; spawnRow(); G.spawnAt += G.speed * (gapTime() * (G.zig ? 0.55 : 1) + G.extra); }
+    }
 
     ace.pose(!G.onGround ? (G.flipAt >= 0 ? 'flip' : 'air') : G.duck ? 'duck' : 'run');
-    ace.mood(now < G.yayUntil ? 'mc-m-yay' : now < G.coolUntil ? 'mc-m-cool' : !G.onGround ? 'mc-m-jump' : king ? 'mc-m-fierce' : 'mc-m-smile');
+    ace.mood(now < G.yayUntil ? 'mc-m-yay' : now < G.coolUntil ? 'mc-m-cool' : G.jet ? 'mc-m-fierce' : !G.onGround ? 'mc-m-jump' : king ? 'mc-m-fierce' : 'mc-m-smile');
     const ending = king && G.allInUntil - now < ALLIN_WARN_MS;
     if (ending && !G.allInWarned) { G.allInWarned = true; buzz(25); }
     ace.king(king, ending);
     hDist.textContent = String(Math.floor(G.dist + G.bonus)).padStart(4, '0');
     renderStats();
   }
+  // ── The jetpack ───────────────────────────────────────────────────
+  /** The sky's randomness: the day's in the daily challenge (the same sky for everyone). */
+  const RJ = () => (mode === 'daily' ? rng('ad-' + G.day + '-jet-' + G.rows) : Math.random);
+  function jetStart(now) {
+    G.jet = true; G.jetT = 0; G.onGround = false; G.vy = 0; G.dbl = false; G.flipAt = -1; G.duckKey = false; G.duckUntil = 0;
+    G.allInUntil = Math.min(G.allInUntil, now);          // not two invincibilities at once
+    G.jetLane = G.lane; G.jetRun = 0; G.jetGrp = newGroup();
+    const rj = G.jetR = RJ();
+    // Half way: three face-up cards, one per lane (fewer when the deck runs out).
+    const zc = Math.min(Z_SPAWN, PZ + G.speed * 2.6);
+    G.jetCardAt = G.t + (zc - PZ) / G.speed; G.jetTrio = ++G.grp;
+    for (let l = 0; l < 3 && G.deck.length; l++) addItem('card', l, zc, JET_Y + 0.6, { c: G.deck.pop(), trio: G.jetTrio, sky: true });
+    // The trail of chips: from just ahead up to where rows appear, then as he flies.
+    for (let z = PZ + G.speed * 0.9; z < Z_SPAWN; z += 2.2) skyChip(z);
+    G.jetNext = G.travel + 2.2;
+    if (mode === 'time') { G.time += JET_TIME; renderStats(); }
+  }
+  /** A chip of the trail at z (none where the cards are, none after the landing). */
+  function skyChip(z) {
+    const arrive = G.t + (z - PZ) / G.speed;
+    if (arrive > G.t + (JET_S - G.jetT) - JET_DOWN - 0.2) return;
+    if (Math.abs(arrive - G.jetCardAt) < 0.35) return;
+    if (++G.jetRun > 5) {                                  // the trail moves to a lane next to it
+      G.jetRun = 1; G.jetLane = G.jetLane === 1 ? ((G.jetR || Math.random)() < 0.5 ? 0 : 2) : 1; G.jetGrp = newGroup();
+    }
+    addItem('chip', G.jetLane, z, JET_Y + 0.6, { grp: G.jetGrp, sky: true });
+  }
+  function jetStep(dt, now) {
+    G.jetT += dt;
+    G.y = jetHeight(G.jetT); G.vy = 0;
+    if (G.travel >= G.jetNext) { G.jetNext += 2.2; skyChip(Z_SPAWN); }
+    // Sparks from the nozzles.
+    if (!shell.reduced && G.jetT < JET_S - 0.15 && (G.jetFx += dt) > 0.03) {
+      G.jetFx = 0;
+      const p = P(G.x, G.y + STAND * 0.18, PZ);
+      for (const sx of [-1, 1]) G.fx.push({ type: 'p', x: p[0] + sx * 0.2 * p[2], y: p[1], vx: (Math.random() - 0.5) * 60, vy: 60 + Math.random() * 90, c: Math.random() < 0.5 ? '#ffb347' : '#ffe08a', r: 1.5 + Math.random() * 2.2, t: 0, life: 0.35 });
+    }
+    if (G.jetT >= JET_S) {
+      G.jet = false; G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false;
+      G.safeUntil = now + JET_SAFE_MS;
+      ace.fx('land'); buzz(25); sound('notifyCard');
+    }
+  }
+
   function smash(o) {
     o.dead = true; G.bonus += SMASH_BONUS;
     const p = at(o);
@@ -601,6 +685,12 @@ export function create(shell) {
       sound('notifyCard'); buzz(20); ace.fx('hop');
       return;
     }
+    if (it.kind === 'jet') {
+      jetStart(now);
+      textFx('🚀 JETPACK' + (mode === 'time' ? ' +' + JET_TIME + ' s' : ''), p[0], p[1] - 40, true, true); burst(p[0], p[1], 14, ['#ff8a3d', '#ffd27a', '#b3261e']);
+      sound('notifyAllIn'); buzz([20, 20, 40]); ace.fx('cheer'); G.lookAt = 0; look('mc-m-fierce', 900);
+      return;
+    }
     if (it.kind === 'magnet') {
       G.magnetUntil = now + MAGNET_MS; renderStats();
       textFx(t('adMagnet'), p[0], p[1] - 40, true, true); burst(p[0], p[1], 10, MAG_COL);
@@ -608,7 +698,17 @@ export function create(shell) {
       return;
     }
     const prev = G.ev.cat;
+    // A card of the sky: the two others go back under the deck.
+    if (it.trio) for (const o of G.items) if (o.trio === it.trio && o !== it && !o.got) {
+      o.got = true; G.deck.unshift(o.c);
+      const q = P(o.x, o.y, Math.max(o.z, 1.2)); burst(q[0], q[1], 6, ['#f5f0e3', '#9aa3ab']);
+    }
     G.hand.push(it.c); G.ev = evalCards(G.hand); renderHand();
+    // Better than a pair from the sky: fireworks.
+    if (it.sky && G.ev.cat > prev && G.ev.cat >= 2) {
+      for (let k = 0; k < 4; k++) burst(p[0] + (k - 1.5) * 60, p[1] - 40 - (k % 2) * 30, 16, ['#ff5a5f', '#ffe066', '#4cd964', '#3fa9f5', '#a66cff']);
+      sound('notifyBigWin');
+    }
     G.yayUntil = now + 260;
     sound('notifyCard');
     burst(p[0], p[1], 8, ['#d8b25a', '#f5f0e3']);
@@ -849,10 +949,13 @@ export function create(shell) {
     if (it.kind === 'card') {
       shadow(g, it.x, it.z, 0.25, 0.2);
       glow(g, p[0], p[1], 0.75 * s, 0.4, C.lamp);
-      const w = 0.42 * s, h = 0.59 * s, sw = Math.max(0.2, Math.abs(Math.cos(it.spin * 0.4)));
+      // The cards of the sky stay face on (the choice must be readable), with the hand they would make.
+      const w = 0.42 * s, h = 0.59 * s, sw = it.sky ? 1 : Math.max(0.2, Math.abs(Math.cos(it.spin * 0.4)));
       g.save(); g.translate(p[0], p[1]); g.scale(sw, 1); drawFace(g, img, it.c, w, h); g.restore();
+      if (it.sky) skyLabel(g, it);
       return;
     }
+    if (it.kind === 'jet') { drawJetItem(g, it, p, s, now); return; }
     const allin = it.kind === 'allin', mag = it.kind === 'magnet';
     shadow(g, it.x, it.z, 0.24, 0.22);
     glow(g, p[0], p[1], 0.9 * s, 0.55, allin ? '245,197,24' : mag ? '160,110,240' : '90,150,255');
@@ -878,6 +981,40 @@ export function create(shell) {
       g.quadraticCurveTo(-3.5 * k, 5 * k, -5 * k, 1.5 * k); g.lineTo(-5.5 * k, -4 * k); g.closePath(); g.fill();
     }
     g.restore();
+  }
+  /** Two chip stacks, a strap and their flames: the jetpack, at (x, y) for s px per metre. */
+  function jetpack(g, x, y, s, flame, now) {
+    const w = 0.15 * s, h = 0.42 * s, gap = 0.2 * s;
+    for (const sx of [-1, 1]) {
+      const cx = x + sx * gap;
+      if (flame > 0) {
+        const fl = (0.3 + 0.12 * Math.sin(now / 37 + sx)) * s * flame;
+        const fg = g.createLinearGradient(cx, y + h / 2, cx, y + h / 2 + fl);
+        fg.addColorStop(0, 'rgba(255,240,180,.95)'); fg.addColorStop(0.45, 'rgba(255,150,50,.85)'); fg.addColorStop(1, 'rgba(255,80,30,0)');
+        g.fillStyle = fg; g.beginPath(); g.moveTo(cx - w * 0.45, y + h / 2); g.quadraticCurveTo(cx, y + h / 2 + fl * 1.15, cx + w * 0.45, y + h / 2); g.closePath(); g.fill();
+      }
+      rr(g, cx - w / 2, y - h / 2, w, h, w * 0.35); g.fillStyle = '#b3261e'; g.fill();
+      g.fillStyle = '#f5f0e3';
+      for (let k = 1; k < 4; k++) g.fillRect(cx - w / 2, y - h / 2 + h * k / 4 - Math.max(0.6, h * 0.02), w, Math.max(1, h * 0.04));
+      rr(g, cx - w / 2, y - h / 2, w, h, w * 0.35); g.strokeStyle = 'rgba(0,0,0,.5)'; g.lineWidth = Math.max(0.5, w * 0.08); g.stroke();
+      g.fillStyle = '#3a3f47'; g.fillRect(cx - w * 0.32, y + h / 2 - 1, w * 0.64, Math.max(2, h * 0.1));
+    }
+    g.fillStyle = '#d8b25a'; g.fillRect(x - gap, y - h * 0.12, gap * 2, Math.max(1.5, h * 0.1));
+  }
+  function drawJetItem(g, it, p, s, now) {
+    shadow(g, it.x, it.z, 0.3, 0.22);
+    glow(g, p[0], p[1], 0.95 * s, 0.6, '255,140,60');
+    jetpack(g, p[0], p[1], s * 1.15, 0.6, now);
+  }
+  /** Over a card of the sky: the hand it would make, when it is better. */
+  function skyLabel(g, it) {
+    if (!it.trio || it.z > 22) return;
+    const e = evalCards(G.hand.concat([it.c]));
+    if (!(e.cat > G.ev.cat) || !bonusOf(e)) return;
+    const p = P(it.x, it.y + 0.5, it.z);
+    g.font = '800 ' + Math.round(clamp(p[2] * 0.22, 10, 16)) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    const s = '+' + Math.round(bonusOf(e) * 100) + '%';     // the hand's name on the card would not fit three abreast
+    g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.55)'; g.strokeText(s, p[0], p[1]); g.fillStyle = '#ffd27a'; g.fillText(s, p[0], p[1]);
   }
   function drawThing(g, o, now) {
     g.globalAlpha = 1 - fogAt(o.z);
@@ -977,6 +1114,13 @@ export function create(shell) {
     if (left > 0) timerBar(gF, row++, left, ALLIN_MS, left < ALLIN_WARN_MS, '#f5c518');
     const mLeft = run ? G.magnetUntil - now : 0;
     if (mLeft > 0) timerBar(gF, row++, mLeft, MAGNET_MS, mLeft < ALLIN_WARN_MS, '#a06ef0');
+    if (run && G.jet) {
+      const jl = (JET_S - G.jetT) * 1000;
+      timerBar(gF, row++, jl, JET_S * 1000, jl < ALLIN_WARN_MS, '#ff8a3d');
+      // On his back (we see it from behind), flames down.
+      const jp = P(G.x, G.y + STAND * 0.5, PZ);
+      jetpack(gF, jp[0], jp[1], jp[2], G.jetT < JET_S - JET_DOWN ? 1 : 0.5, now);
+    }
     const blink = run && now < G.safeUntil && Math.floor(now / 90) % 2;
     placeAce(G.x, G.y, run ? clamp(G.lean * 9, -12, 12) : 0, blink ? 0.35 : 1, run ? flipAngle() : 0);
   }

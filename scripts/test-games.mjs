@@ -413,6 +413,9 @@ console.log('Ace Dash: the long run, the score, the modes');
   ok(D.timeScore(500, { cat: 2 }) === 700 && D.timeScore(0, { cat: 9 }) === 0, 'Ace Dash: time attack = chip points + the hand bonus');
   ok(D.streakUp(1) === 2 && D.streakUp(D.STREAK_MAX) === D.STREAK_MAX && D.STREAK_MAX === 5, 'Ace Dash: the streak climbs to ×5 and stays there');
   ok(D.MODES.map((m) => m.id).join(',') === 'free,daily,time' && D.TIME_S === 60 && D.TIME_HIT === 5 && D.REBUY === 25, 'Ace Dash: three modes, 60 s time attack (−5 s a crash), a rebuy for 25 chips');
+  ok(D.jetHeight(0) === 0 && Math.abs(D.jetHeight(D.JET_S / 2) - D.JET_Y) < 1e-9 && D.jetHeight(0.3) > 0 && D.jetHeight(0.3) < D.JET_Y && D.jetHeight(D.JET_S - 0.1) < 0.5 && D.jetHeight(D.JET_S) === 0,
+    'Ace Dash: the jetpack climbs, flies ' + D.JET_S + ' s at ' + D.JET_Y + ' m and lands');
+  ok(D.JET_LEVEL === 3 && D.JET_TIME === 5, 'Ace Dash: the jetpack from level 3, +5 s in time attack');
   const HC = await import('../public/modules/games/house.mjs');
   ok(HC.MODES.map((m) => m.id).join(',') === 'free,daily,zen' && HC.ZEN_FLOORS === 10 && HC.WIND_LV < HC.BUMP_LV, 'House of Cards: three modes (free, daily, Zen in 10 floors), the draught before the waiter');
   ok([0, 0.5, 0.99].every((r) => HC.goalFor(1, r) <= 2) && [0, 0.5, 0.99].every((r) => HC.goalFor(9, r) >= 3 && HC.goalFor(9, r) <= 6), 'House of Cards: the hand asked climbs with the blinds (a pair at first, up to a full house)');

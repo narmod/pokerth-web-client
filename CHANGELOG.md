@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash: the jetpack** (`web.72`, narmod's pick « A + C » of the proposals) — `ace-dash.mjs`: a `jet` pick-up
+  every `JET_ROWS`+rnd rows (≈ 800 – 1 000 m) from `JET_LEVEL` 3, never while All-In (taking it ends an All-In).
+  `jetHeight(f)`: a climb, `JET_S` 6 s at `JET_Y` 2.4 m, a landing; no collision in flight, jump and duck off, ← →
+  on; the camera rises just enough to keep his head under the HUD. Up there a trail of chips (a lane change every
+  five) and, ≈ 2.6 s ahead, three face-up cards (`trio`), one per lane, face on with the bonus they would bring;
+  the one he flies through joins the hand, the others go back under the deck; better than a pair: fireworks. No
+  ground pick-ups while flying; rows stop in time for a clear landing, then `JET_SAFE_MS`. Time attack +`JET_TIME`
+  5 s; daily: the same sky (`ad-<day>-jet-<row>`). Drawn: two chip stacks with flames on his back, sparks, a timer
+  bar; `look()` is off in flight (his back stays to us). The front canvas gets z-index 396, over the mascot
+  (things past him and the texts had been drawn under him). Rules: `adJetRule` in 83 languages through a new
+  registry field `rulesMore` (shell: lines added before the keys line). `scripts/test-ace-dash-jet.mjs` (8 checks).
 - **Poker Run: « Défi du jour »** (`web.69`, narmod's pick of the proposed modes, OutRun 2's Time Attack) —
   `poker-run.mjs`: a third title tile (📅, today's score). `S(tag)`: in the daily, each draw comes from its own
   stream of the UTC date (`deal.mjs rng`): the deck, the traffic, each stage's road by (stage, scene, level), its
