@@ -15,7 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Poker Run: « Dame de Cœur » mode** (`web.66`, narmod's pick of the proposed modes, OutRun 2's Heart Attack in a poker
+  key) — `poker-run.mjs`: a second title tile; the Queen of Hearts (Q♥ in the passenger seat, `seatPoint(o, 0.17)`)
+  asks one request per stage (`QUEEN`: drift 2 s, 5 chips, overtake 3, no bumps 10 s, nitro 2 s, flat out 4 s — or,
+  30 % of the time before a fork, take the left / the right); a bubble under the HUD (under the fork preview when it
+  shows) with progress and a draining bar; `queenHearts()`: ♥♥♥ in half the time, ♥♥ in 80 %, ♥ in time, none
+  missed (no bumps and the fork ones: all or nothing); the hearts in the HUD's corner; score × `queenMult(♥)` =
+  1 + ♥ / 10; the result lists the requests; record in `pth_prun_best.queen`. Ten new keys in all 83 languages.
+  New `scripts/test-poker-run-queen.mjs`.
+
 ### Changed
+- **Poker Run: no slowing down at forks, a nitro meter** (`web.66`, narmod) — `GATE_SLOW` removed; the rules lose
+  « the car slows down before each fork » in all 83 languages. `.prun-nitro` on the stage (bottom left) when the touch
+  pad is not shown.
 - **Mini-games with a gamepad or a TV remote** (`web.65`, narmod: « with the pad it doesn't work at all — left/right
   like a real game, nitro on a button; up/down in the menus, the rest on buttons; with a pad or a remote only there
   is no way to quit ») — `games/shell.mjs` `pollPad()` reads the pad three ways: menus (the arcade page, a title

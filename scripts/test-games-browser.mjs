@@ -682,7 +682,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     await sleep(60);
     if ((await pg.evaluate(() => window.__pthRun.view())).hidden > 20) crests++;
   }
-  ok(crests <= 4, label + ': the road is seen to the horizon (' + (24 - crests) + '/24 views without a crest hiding it)');
+  // Real climbs and dives now (Chamonix, web.64): a few crests hide the road ahead, most views do not.
+  ok(crests <= 7, label + ': the road is mostly seen to the horizon (' + (24 - crests) + '/24 views without a crest hiding it)');
   // The clock runs out: the dealer completes the board, the showdown and the score.
   await pg.evaluate(() => window.__pthRun.setTime(0.2));
   await pg.waitForSelector('#pth-game .ar-final', { timeout: 15000 }).catch(() => {});

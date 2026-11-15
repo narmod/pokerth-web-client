@@ -9,8 +9,8 @@
 // like OutRun (web.58, narmod: « two, it's more logical and easier »); the
 // branch the car takes deals that board card (flop ×3, turn, river) and leads
 // to the next scene (Las Vegas, Saint-Tropez, Monument Valley, Chamonix,
-// Monaco). The car slows down before each fork so the two cards can be
-// compared (the preview names the hand each one makes). Every fork adds
+// Monaco). Before each fork a preview shows the two cards (the hand each one
+// makes; the car no longer slows down there, web.66). Every fork adds
 // EXTEND seconds to the clock; when it runs out the dealer completes the
 // board. The result shows the course like OutRun's map: the stages driven,
 // the branch left aside at each fork, where the car stopped and what was
@@ -38,7 +38,7 @@
 import { evalCards, suitOf } from './poker-hand.mjs';
 import { drawCar, seatPoint } from './car3d.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
-import { titleScreen } from './title.mjs';
+import { titleScreen, titleStep } from './title.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -58,11 +58,25 @@ const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3
 const HIT = 0.25;
 const TRAFFIC = 48, CAR_KINDS = ['car', 'van', 'sport'];
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
-const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 1, MERGE = 60;
+const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, SPLIT = 1, MERGE = 60;
 /** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
 export const stageLen = (k) => 740 + k * 40;
 /** The branch (0 left, 1 right) a car in lane l keeps at a fork: the middle lane goes either way. */
 export const branchOfLane = (l, side) => (l === 0 ? 0 : l === 2 ? 1 : side);
+// Dame de Cœur (web.66, narmod: « mode 2 of the proposals », OutRun 2's Heart
+// Attack in a poker key): the Queen of Hearts rides beside the Ace and asks
+// one thing per stage, against the clock. Done in half the time: ♥♥♥, in 80 %:
+// ♥♥, in time: ♥; missed: none. The hearts multiply the score: × (1 + ♥ / 10).
+//   n: the target (seconds or a count), lim: the time allowed (s).
+const QUEEN = {
+  drift: { key: 'prQDrift', n: 2, lim: 14 }, chips: { key: 'prQChips', n: 5, lim: 14 },
+  pass: { key: 'prQPass', n: 3, lim: 14 }, clean: { key: 'prQClean', n: 10, lim: 10 },
+  nitro: { key: 'prQNitro', n: 2, lim: 12 }, fast: { key: 'prQFast', n: 4, lim: 12 },
+  left: { key: 'prQLeft', n: 0, lim: 0 }, right: { key: 'prQRight', n: 0, lim: 0 },
+};
+/** Hearts for a request done in `used` of `lim` seconds (the fork ones: 3 or 0). */
+export const queenHearts = (used, lim, done) => (!done ? 0 : !lim ? 3 : used <= lim * 0.5 ? 3 : used <= lim * 0.8 ? 2 : 1);
+export const queenMult = (h) => Math.round((1 + h / 10) * 10) / 10;
 const GATE_LABELS = ['FLOP 1/3', 'FLOP 2/3', 'FLOP 3/3', 'TURN', 'RIVER'];
 const BOARD_TAGS = ['F', 'F', 'F', 'T', 'R'];
 const SUITS = ['♦', '♥', '♠', '♣'], VS = '︎';
@@ -150,6 +164,29 @@ const CSS = `
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="left"]{order:-3}
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1;width:72px;font-size:12px;letter-spacing:.04em}
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:3}
+#pth-game .prun-q{position:absolute;left:8px;right:8px;z-index:397;display:flex;gap:7px;align-items:flex-start;max-width:420px;margin:0 auto;pointer-events:none;transition:top .2s}
+#pth-game .prun-q[hidden]{display:none}
+#pth-game .prun-q .prun-qc{flex:none;width:34px;height:47px;border-radius:5px;background:#fbf7ee;border:2px solid #c2303a;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c2303a;font:800 16px/1 Georgia,serif;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#pth-game .prun-q .prun-qb{flex:1;min-width:0;background:#fbf7ee;color:#141414;border-radius:12px;padding:5px 9px;box-shadow:0 2px 6px rgba(0,0,0,.35);position:relative}
+#pth-game .prun-q .prun-qb:before{content:'';position:absolute;left:-6px;top:14px;border:6px solid transparent;border-right-color:#fbf7ee;border-left:0}
+#pth-game .prun-q b{display:block;font:800 13px/1.2 'Inter',system-ui,sans-serif}
+#pth-game .prun-q .prun-qr{display:flex;align-items:center;gap:6px;margin-top:3px;font:700 11px 'Inconsolata',monospace;color:#c2303a}
+#pth-game .prun-q .prun-qbar{flex:1;height:5px;border-radius:3px;background:#e5dccb;overflow:hidden}
+#pth-game .prun-q .prun-qbar i{display:block;height:100%;background:linear-gradient(90deg,#e0573f,#e8b84a)}
+#pth-game .prun-hearts{position:absolute;font:700 14px system-ui;color:#e0405a;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap}
+#pth-game .prun-hearts span{color:rgba(255,255,255,.3)}
+#pth-game .prun-qlist{list-style:none;margin:2px 0 4px;padding:6px 12px;width:min(420px,100%);background:rgba(8,12,18,.62);border:1px solid rgba(232,184,74,.25);border-radius:12px;color:#f1e9d4;text-align:left}
+#pth-game .prun-qlist li{display:flex;justify-content:space-between;gap:8px;font:600 12.5px/1.75 'Inter',system-ui,sans-serif}
+#pth-game .prun-qlist li span{color:#e0405a;letter-spacing:1px;white-space:nowrap}
+#pth-game .prun-qlist li span.no{color:rgba(241,233,212,.4)}
+#pth-game .prun-nitro{position:absolute;left:12px;bottom:12px;z-index:397;display:flex;align-items:center;gap:7px;pointer-events:none;font:800 11px 'Inter',system-ui,sans-serif;letter-spacing:.1em;color:#d8b25a;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+#pth-game.pg-touch:not(.pg-nopad) .prun-nitro{display:none}
+#pth-game .prun-nitro[hidden]{display:none}
+#pth-game .prun-nitro i{display:block;width:120px;height:9px;border-radius:5px;background:rgba(13,17,23,.65);border:1px solid rgba(216,178,90,.55);overflow:hidden}
+#pth-game .prun-nitro b{display:block;height:100%;width:0;background:linear-gradient(90deg,#b8862a,#ffd27a);transition:width .15s}
+#pth-game .prun-nitro.prun-ready{color:#ffd27a}
+#pth-game .prun-nitro.prun-burn b{background:linear-gradient(90deg,#ff8a3d,#fff1c4);box-shadow:0 0 10px #ffb347}
+#pth-game .prun-nitro small{font:700 10px 'Inter',system-ui,sans-serif;letter-spacing:0;color:#cfd8d2}
 #pth-game .prun-map{display:block;color:#f1e9d4;width:min(520px,100%);height:auto;margin:2px 0 4px}
 #pth-game .prun-hud .ar-hand{order:3}
 #pth-game .prun-mini{order:2;flex:none;margin-left:auto;width:132px;line-height:0;background:rgba(8,12,18,.55);border:1px solid rgba(232,184,74,.22);border-radius:9px;padding:1px 3px}
@@ -177,6 +214,18 @@ export function create(shell) {
   const prev = document.createElement('div');
   prev.className = 'prun-prev'; prev.hidden = true;
   shell.layer.appendChild(prev);
+  // The nitro meter on the stage, for a screen without the touch pad (web.66,
+  // narmod: « on a standard screen you can't see where the nitro is »).
+  const nitroBox = document.createElement('div');
+  nitroBox.className = 'prun-nitro'; nitroBox.hidden = true;
+  nitroBox.innerHTML = 'NITRO<i><b></b></i><small>↑ / Space · 🎮 A</small>';
+  shell.layer.appendChild(nitroBox);
+  const nitroBar = /** @type {HTMLElement} */ (nitroBox.querySelector('b'));
+  const qBox = document.createElement('div');
+  qBox.className = 'prun-q'; qBox.hidden = true;
+  qBox.innerHTML = '<div class="prun-qc">Q<span>♥︎</span></div><div class="prun-qb"><b></b><div class="prun-qr"><span class="prun-qn"></span><div class="prun-qbar"><i></i></div><span class="prun-qt"></span></div></div>';
+  shell.layer.appendChild(qBox);
+  const qText = qBox.querySelector('b'), qN = qBox.querySelector('.prun-qn'), qBar = /** @type {HTMLElement} */ (qBox.querySelector('.prun-qbar i')), qT = qBox.querySelector('.prun-qt');
   shell.lanes(true);
   // The pad of this game: ◀ NITRO ▶ (the brake stays on ↓), with the nitro gauge; put back as it was on leaving.
   shell.root.classList.add('prun-pad');
@@ -195,10 +244,11 @@ export function create(shell) {
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('blChips')) + '</div><div class="ar-num pr-c">0</div></div>'
     + '<div><div class="ar-lab">' + esc(t('gameTimeLabel')) + '</div><div class="ar-num pr-t">' + TIME0.toFixed(1) + '</div></div>'
     + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num pr-s">1/' + STAGES + '</div></div></div>'
+    + '<div class="prun-hearts" hidden></div>'
     + '<div class="prun-mini" aria-hidden="true" hidden></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
-  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini');
+  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini'), hHearts = q('.prun-hearts');
 
   // ── Track ──────────────────────────────────────────────────────────
   let segs = [], finishSeg = 0, gates = [], cars = [], buildStage = 0;
@@ -225,6 +275,11 @@ export function create(shell) {
   // the fork does not change), and the gate makes it final.
   //   lvl[k]: stage k's difficulty, 0 … 5 — the number of rights taken so far.
   let stageStart = [], tmpl = [], applied = [], lvl = [0];
+  // The mode: 'free' or 'queen'; the Queen's requests of this run.
+  const MODES = ['free', 'queen'];
+  let mode = 'free', modeSel = 0;
+  let quest = null, quests = [], qPool = [], driftRun = 0, fastRun = 0;
+  const qBest = () => { try { return JSON.parse(localStorage.getItem('pth_prun_best') || '{}') || {}; } catch (e) { return {}; } };
   const chipVal = (k) => 10 + 5 * (lvl[k] || 0);
   function buildTrack() {
     segs = []; cars = []; gates = []; buildStage = 0; stageStart = []; tmpl = []; applied = []; lvl = [0];
@@ -396,6 +451,8 @@ export function create(shell) {
   let lastStats = '';
   function renderNitro() {
     gauge.style.width = Math.round(nitro * 100) + '%';
+    nitroBar.style.width = Math.round(nitro * 100) + '%'; nitroBox.hidden = state !== 'run';
+    nitroBox.classList.toggle('prun-ready', nitro > 0.15 && !boost); nitroBox.classList.toggle('prun-burn', boost);
     if (nitroBtn) { nitroBtn.classList.toggle('prun-ready', nitro > 0.15 && !boost); nitroBtn.classList.toggle('prun-burn', boost); }
   }
   function renderStats(force) {
@@ -426,10 +483,11 @@ export function create(shell) {
     prev.hidden = false;
   }
   function titlePanel() {
-    const best = shell.best.get();
-    titleScreen(shell, { id: 'poker-run', live: true, name: 'Poker Run', hint: t('prHint'), sel: 0,
-      modes: [{ icon: '🏎️', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' }],
-      onPick: () => start() });
+    const best = shell.best.get(), qb = qBest().queen || 0;
+    titleScreen(shell, { id: 'poker-run', live: true, name: 'Poker Run', hint: t('prHint'), sel: modeSel,
+      modes: [{ icon: '🏎️', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' },
+        { icon: '♥️', label: t('prQueen'), desc: t('prQueenD'), rec: qb ? t('arRecord', { n: fmt(qb) }) : '' }],
+      onPick: (i) => { modeSel = i; start(); } });
   }
 
   // ── The Ace's reactions ────────────────────────────────────────────
@@ -444,7 +502,9 @@ export function create(shell) {
 
   function start() {
     clearTimeout(revealTimer);
+    mode = MODES[modeSel] || 'free';
     reset(); state = 'run'; shell.panel(null); lastMini = '';
+    quest = null; quests = []; qPool = []; driftRun = 0; fastRun = 0; renderHearts();
     if (aceRoot) aceRoot.classList.remove('prun-spin');
     ace.mood('mc-m-smile');
   }
@@ -452,7 +512,8 @@ export function create(shell) {
   // ── Input ──────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (state === 'title' || state === 'over') {
-      if (a === 'jump' && down && (state === 'title' || performance.now() > overAt + 700)) start();
+      if (state === 'title' && down) { const st = titleStep(a, modeSel, MODES.length); if (st === 'start') start(); else if (st != null) { modeSel = st; titlePanel(); } return; }
+      if (a === 'jump' && down && performance.now() > overAt + 700) start();
       return;
     }
     if (state !== 'run') return;
@@ -489,6 +550,7 @@ export function create(shell) {
     g.picked = lane; board.push(g.cards[lane]);
     const k = g.k;
     stageTheme[k + 1] = branches[k][lane]; curStage = k + 1;
+    if (live && mode === 'queen') questGate(k, lane);
     lvl[k + 1] = Math.min(FORKS, (lvl[k] || 0) + lane);
     if (tmpl[k + 1] && applied[k + 1] !== tmpl[k + 1][lane]) applyStage(k + 1, tmpl[k + 1][lane]);
     if (k + 1 < FORKS) { assignBranches(k + 1); prepareFork(k + 1); }
@@ -581,8 +643,9 @@ export function create(shell) {
     if (time < 8 && !lowSaid) { say('⏱️'); lowSaid = true; }
     if (time > 10) lowSaid = false;
     aceTick(dt);
-    const inZone = ng && ng.seg - ps.i < GATE_ZONE && ng.seg >= ps.i;
-    let cap = off ? OFFROAD : MAXV * (inZone ? GATE_SLOW : (boost ? 1.45 : 1));
+    var inZone = ng && ng.seg - ps.i < GATE_ZONE && ng.seg >= ps.i;
+    // No slowing down before a fork any more (web.66, narmod: « the forks are long enough to look at them »).
+    let cap = off ? OFFROAD : MAXV * (boost ? 1.45 : 1);
     if (mt > 0 && !off) cap = Math.max(cap, MAXV * MT_CAP);
     if (B) cap = Math.min(cap, MAXV * 0.25);
     v = v < cap ? Math.min(cap, v + ACCEL * (boost || mt > 0 ? 2 : 1) * dt) : Math.max(cap, v - ACCEL * (B ? 3 : 2.2) * dt);
@@ -603,6 +666,7 @@ export function create(shell) {
       }
       if (Math.floor(c.z / SEG) >= finishSeg) { c.dead = true; continue; }
       const ci = Math.floor(c.z / SEG);
+      if (c.ahead && ci < ps.i && !c.dead) questCount('pass');
       if (c.ahead && ci < ps.i) { const d = Math.abs(px - carX(c, ps, g)); if (d > HIT && d < 1.1 && Math.random() < 0.45) aceDo('wave', 1, t('mascotHello'), 1); }
       c.ahead = ci >= ps.i;
       // Hit: the car within the stretch the player covered this frame (at a low frame rate he moves more than a segment).
@@ -610,7 +674,7 @@ export function create(shell) {
         if (drift) { drift = false; driftGain = 0; charge = 0; }
         slip = 0;
         mt = 0;
-        aceDo('flail', 0.9, '💥', 5);
+        aceDo('flail', 0.9, '💥', 5); questHit();
         // A bounce (web.63): pushed aside and spun a little, slowed but still rolling.
         const side = Math.sign(px - carX(c, ps, g)) || (Math.random() < 0.5 ? -1 : 1);
         const loss = Math.ceil(stack * 0.2); stack -= loss; v = Math.max(c.v * 0.7, v * 0.55); pv = side * 3; spin = 0.6; inv = 1.1; if (!shell.reduced) shake = 0.35;
@@ -621,6 +685,7 @@ export function create(shell) {
     // Chips
     for (const s of ps.sprites) {
       if (s.t === 'chip' && !s.got && Math.abs(px - g.pcs[s.lane].c) < 0.32) {
+        questCount('chips');
         const cv = chipVal(ps.stage); s.got = true; stack += cv; nitro = Math.min(1, nitro + 0.09); addFx('+' + cv, '#e8b84a'); aceDo('hop', 0.3, null, 1);
         const now = performance.now(); if (now - lastChipSnd > 90) { lastChipSnd = now; sound('notifyAction'); }
       }
@@ -634,12 +699,75 @@ export function create(shell) {
     renderNitro();
     renderPreview();
     renderMini();
+    if (mode === 'queen') queenTick(dt, ps, sp, inZone);
+  }
+  // ── Dame de Cœur ───────────────────────────────────────────────────
+  /** A new request at the start of each stage (once the last one is over). */
+  function queenTick(dt, ps, sp, inZone) {
+    driftRun = drift ? driftRun + dt : 0;
+    fastRun = sp >= 0.97 ? fastRun + dt : 0;
+    const k = ps.stage;
+    if (!quest && quests.length <= k && ps.i >= stageStart[k] + (k ? 20 : 0)) {
+      if (!qPool.length) { qPool = ['drift', 'chips', 'pass', 'clean', 'nitro', 'fast']; for (let i = qPool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = qPool[i]; qPool[i] = qPool[j]; qPool[j] = x; } }
+      // Now and then, at a fork still to come: « take the left / the right ».
+      const id = k < FORKS && Math.random() < 0.3 ? (Math.random() < 0.5 ? 'left' : 'right') : qPool.pop();
+      quest = { id, stage: k, t: 0, c: 0, done: false };
+      quests.push(quest);
+      sound('notifyAction');
+      renderQuest(true);
+    }
+    if (!quest || quest.done) return;
+    const Q = QUEEN[quest.id];
+    quest.t += dt;
+    if (quest.id === 'drift') quest.c = Math.max(quest.c, driftRun);
+    else if (quest.id === 'nitro') { if (boost) quest.c += dt; }
+    else if (quest.id === 'fast') quest.c = Math.max(quest.c, fastRun);
+    else if (quest.id === 'clean') quest.c = quest.t;
+    const hit = quest.id === 'left' || quest.id === 'right' ? false : quest.c >= Q.n;
+    if (hit) return endQuest(true);
+    if (Q.lim && quest.t >= Q.lim) return endQuest(quest.id === 'clean');
+    renderQuest(false);
+  }
+  /** The fork requests are settled at the gate; a hit ends « no scratch ». */
+  function questGate(k, lane) { if (quest && !quest.done && (quest.id === 'left' || quest.id === 'right') && quest.stage === k) endQuest((quest.id === 'right') === (lane === 1)); }
+  function questCount(what) { if (quest && !quest.done && quest.id === what) quest.c++; }
+  function questHit() { if (quest && !quest.done && quest.id === 'clean') endQuest(false); }
+  function endQuest(ok) {
+    const Q = QUEEN[quest.id];
+    quest.done = true; quest.h = quest.id === 'clean' ? (ok ? 3 : 0) : queenHearts(quest.t, Q.lim, ok);   // « no bumps »: all or nothing
+    addFx(quest.h ? '♥'.repeat(quest.h) : '✗', quest.h ? '#ff5d7a' : '#9aa3ab', true, H * 0.42);
+    if (quest.h === 3) { aceDo('jump', 0.8, null, 3); sound('notifyBigWin'); } else if (!quest.h) aceDo('shrug', 0.8, null, 2);
+    quest = null; qBox.hidden = true; renderHearts();
+  }
+  const questText = (q) => t(QUEEN[q.id].key, { n: QUEEN[q.id].n });
+  let lastQ = '';
+  function renderQuest(fresh) {
+    if (!quest) { qBox.hidden = true; return; }
+    const Q = QUEEN[quest.id];
+    if (fresh) { qText.textContent = questText(quest); lastQ = ''; }
+    const prog = quest.id === 'left' || quest.id === 'right' ? '' : quest.id === 'pass' || quest.id === 'chips' ? quest.c + '/' + Q.n : Math.min(Q.n, quest.c).toFixed(1) + '/' + Q.n + ' s';
+    const left = Q.lim ? Math.max(0, Q.lim - quest.t) : 0, key = prog + '|' + Math.ceil(left);
+    qBar.style.width = (Q.lim ? 100 * left / Q.lim : 100) + '%';
+    if (key !== lastQ) { lastQ = key; qN.textContent = prog; qT.textContent = Q.lim ? Math.ceil(left) + ' s' : ''; }
+    // Under the HUD, below the fork's preview when it shows.
+    const top = prev.hidden ? shell.hud.offsetHeight + 4 : prev.offsetTop + prev.offsetHeight + 6;
+    qBox.style.top = Math.round(top) + 'px';
+    qBox.hidden = false;
+  }
+  function renderHearts() {
+    if (mode !== 'queen') { hHearts.hidden = true; return; }
+    const got = quests.reduce((a, q) => a + (q.h || 0), 0), max = STAGES * 3;
+    hHearts.innerHTML = '♥ ' + got + '<span> / ' + max + '</span>';
+    // Under the small course map, in the HUD's top right corner.
+    hHearts.style.top = Math.round(hMini.hidden ? 10 : hMini.offsetTop + hMini.offsetHeight + 4) + 'px';
+    hHearts.style.left = Math.round(hMini.hidden ? 12 : hMini.offsetLeft + 4) + 'px';
+    hHearts.hidden = false;
   }
   // The HUD's map: redrawn at each fork, the car moved along between.
   let lastMini = '';
   function renderMini() {
     const pr = progress(), key = pr.stage + '|' + gates.map((g) => g.picked).join('') + '|' + (branches[pr.stage] || []).join();
-    if (key !== lastMini) { lastMini = key; hMini.innerHTML = courseMap(pr, true); hMini.hidden = false; return; }
+    if (key !== lastMini) { lastMini = key; hMini.innerHTML = courseMap(pr, true); hMini.hidden = false; if (mode === 'queen') renderHearts(); return; }
     const c = mapCar(pr), car = hMini.querySelector('.prun-car');
     if (car) car.setAttribute('transform', 'translate(' + c.x.toFixed(1) + ' ' + (c.y - 6 * 2.6).toFixed(1) + ') scale(2.6)');
   }
@@ -726,21 +854,26 @@ export function create(shell) {
       + '<rect x="2" y="-8" width="516" height="148" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
   }
   function over() {
-    state = 'over'; overAt = performance.now(); hMini.hidden = true;
+    state = 'over'; overAt = performance.now(); hMini.hidden = true; nitroBox.hidden = true;
     const pr = progress();
     for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(Math.random() * 2), false); }
     curStage = Math.min(curStage, pr.stage);   // the auto-dealt cards do not count as stages driven (HUD level)
     renderHand(); renderStats(true);
     shell.ended();
     const all = hole.concat(board), ev = evalCards(all), bonus = Math.ceil(Math.max(0, time)) * 5;
-    const base = stack + bonus, score = base * ev.mult, prevBest = shell.best.get(), record = score > prevBest;
-    if (record) shell.best.set(score);
+    if (quest && !quest.done) endQuest(false);
+    qBox.hidden = true;
+    const hearts = quests.reduce((a, q) => a + (q.h || 0), 0), hm = mode === 'queen' ? queenMult(hearts) : 1;
+    const base = stack + bonus, score = Math.round(base * ev.mult * hm);
+    const qb = qBest(), prevBest = mode === 'queen' ? qb.queen || 0 : shell.best.get(), record = score > prevBest;
+    if (record) { if (mode === 'queen') { qb.queen = score; try { localStorage.setItem('pth_prun_best', JSON.stringify(qb)); } catch (e) {} } else shell.best.set(score); }
     const cards = ev.best;
-    const tail = '<div class="ar-final">(' + fmt(stack) + ' + ' + fmt(bonus) + ') × ' + ev.mult + ' = <em>' + fmt(score) + '</em></div>'
-      + courseMap(pr)
+    const list = '<ul class="prun-qlist">' + quests.map((q) => '<li>' + esc(questText(q).replace(/\s*!$/, '')) + (q.h ? '<span>' + '♥'.repeat(q.h) + '</span>' : '<span class="no">✗</span>') + '</li>').join('') + '</ul>';
+    const tail = '<div class="ar-final">(' + fmt(stack) + ' + ' + fmt(bonus) + ') × ' + ev.mult + (hm !== 1 ? ' × ' + String(hm).replace('.', ',') + ' ♥' : '') + ' = <em>' + fmt(score) + '</em></div>'
+      + (mode === 'queen' ? list : courseMap(pr))
       + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
       + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p>';
-    const title = outroWin ? 'Showdown' : t('prTimeUp');
+    const title = mode === 'queen' ? t('prQueen') + ' · ♥ ' + hearts : outroWin ? 'Showdown' : t('prTimeUp');
     let shown = 0;
     const paint = () => {
       let row = '';
@@ -1095,6 +1228,11 @@ const carW = () => Math.min(W * 0.24, 100);
     const o = carOpts();
     ctx = g; skidMarks(o.w, o.x, o.y);
     drawCar(g, o, 'back');
+    // Dame de Cœur: the Queen of Hearts in the passenger seat.
+    if (mode === 'queen' && state !== 'title') {
+      const sp = seatPoint(o, 0.17), cw = o.w * 0.19;
+      card(sp.x, sp.y - cw * 0.45, cw, 23);     // 23 = Q♥ (suit 1 = ♥ × 13 + rank 10 = Q)
+    }
   }
   function drawCarFront(g) {
     const o = carOpts(), { w, h, x, y } = carFrame();
@@ -1209,7 +1347,7 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal, mode: () => mode, quests: () => quests.map((q) => Object.assign({}, q)), quest: () => quest && Object.assign({}, quest), setMode: (m) => { modeSel = Math.max(0, MODES.indexOf(m)); }, forceQuest: (id) => { if (quest) quests.pop(); quest = { id, stage: findSeg(pos + PLAYER_Z).stage, t: 0, c: 0, done: false }; quests.push(quest); renderQuest(true); } }; } catch (e) {}
 
   return {
     update, draw, input,
@@ -1220,7 +1358,7 @@ const carW = () => Math.min(W * 0.24, 100);
       clearTimeout(revealTimer);
       try { if (window.__pthRun) delete window.__pthRun; } catch (e) {}
       front.remove(); prev.remove(); ace.remove();
-      shell.root.classList.remove('prun-pad'); shell.padMode = null;
+      shell.root.classList.remove('prun-pad'); shell.padMode = null; qBox.remove(); nitroBox.remove();
       if (nitroBtn && nitroWas) { gauge.remove(); nitroBtn.textContent = nitroWas.text; if (nitroWas.label) nitroBtn.setAttribute('aria-label', nitroWas.label); nitroBtn.classList.remove('prun-ready', 'prun-burn'); }
     },
   };

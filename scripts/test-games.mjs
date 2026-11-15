@@ -72,6 +72,8 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
   const L = [0, 1, 2, 3, 4, 5].map(pr.stageLen);
   ok(L.every((x, i) => x > 600 && (!i || x >= L[i - 1])) && L[5] < L[0] * 1.5, 'Poker Run: six stages of like length, the last one too (' + L.join(', ') + ')');
   ok(pr.branchOfLane(0, 1) === 0 && pr.branchOfLane(2, 0) === 1 && pr.branchOfLane(1, 0) === 0 && pr.branchOfLane(1, 1) === 1, 'Poker Run: two roads at a fork, the middle lane takes its side');
+  ok(pr.queenHearts(3, 14, true) === 3 && pr.queenHearts(10, 14, true) === 2 && pr.queenHearts(13, 14, true) === 1 && pr.queenHearts(2, 14, false) === 0 && pr.queenHearts(0, 0, true) === 3 && pr.queenMult(12) === 2.2,
+    'Dame de Cœur: ♥♥♥ in half the time, ♥♥ in 80 %, ♥ in time, none missed; 12 ♥ → × 2.2');
   const c3 = await import('../public/modules/games/car3d.mjs');
   const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });
   let calls = 0; const stub = new Proxy({}, { get: (t, k) => (k in t ? t[k] : () => { calls++; return { addColorStop() {} }; }), set: (t, k, v) => { t[k] = v; return true; } });
@@ -93,7 +95,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
   'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
-  'prHint', 'prRules', 'prTimeUp',
+  'prHint', 'prRules', 'prTimeUp', 'prQueen', 'prQueenD', 'prQDrift', 'prQChips', 'prQPass', 'prQClean', 'prQNitro', 'prQFast', 'prQLeft', 'prQRight',
   'gmTitle'];
 let missing = [], badRecord = [];
 for (const f of files) {

@@ -1,4 +1,9 @@
-2026-11-15 version 2.1.11-web.65 (current series):
+2026-11-15 version 2.1.11-web.66 (current series):
+- new: Poker Run — « Dame de Cœur » mode: the Queen of Hearts rides beside the Ace and asks one thing per stage against the clock (drift, chips, overtakes, no bumps, nitro, flat out, take the left or the right at the next fork). Done fast: ♥♥♥, in time: ♥ or ♥♥; the hearts multiply your score (12 ♥ = × 2.2), with its own record
+- improvement: Poker Run — the car no longer slows down before a fork: the preview shows long enough to compare the two cards at full speed
+- improvement: Poker Run — a nitro meter on the stage when there is no touch pad (keyboard, gamepad)
+
+2026-11-15 version 2.1.11-web.65:
 - improvement: Mini-games — the pause has two buttons, Resume and Quit: with only a gamepad or a TV remote you can now leave a game (Start or ⏯ pauses, then B or Back quits; A or OK resumes)
 - improvement: Mini-games — a TV remote's Back pauses a game, Back again leaves it; its ⏯ key pauses and resumes
 - improvement: Mini-games — on the mini-games page, ↑ and ↓ (keys, D-pad or stick) move between the rows of games; A or Space plays, Y or R shows the rules, B goes back

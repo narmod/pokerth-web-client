@@ -74,7 +74,7 @@ function view(o) {
 const LIGHT = (() => { const l = [-0.35, 0.85, -0.4], n = Math.hypot(...l); return l.map((v) => v / n); })();
 
 /** Screen point of the driver's seat (where the Ace sits) and its depth. */
-export function seatPoint(o) { return view(o).P([-0.17, 0.43, 0.66]); }
+export function seatPoint(o, sx = -0.17) { return view(o).P([sx, 0.43, 0.66]); }
 
 /** The shared face list of one frame, sorted far to near. */
 let memo = null;
