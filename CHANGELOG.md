@@ -15,6 +15,11 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Help: the number of training trophies** (`web.85`, narmod) — the Training mode › Trophies chapter said 28
+  trophies; there are 36 across the six categories (27, plus 9 secret ones: the Konami egg and the mini-games'),
+  fixed in the 56 help catalogues that have the chapter (native digits kept; the others fall back to English).
+
 ### Added
 - **Tapis!: the secret trophy and the full rules** (`web.84`, push 6 — the last — of `claude/CONCEPTION_TAPIS.md`;
   tag `v2.1.11-web.84`) — « Clean slate » (`ach_tapis`, « Table rase », secret, 🕳️; `GAME_TROPHY.tapis`): a round

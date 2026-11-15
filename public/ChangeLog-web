@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.84 (current series):
+2026-11-15 version 2.1.11-web.85 (current series):
+- bugfix: Help — the Trophies page now gives the right number of training trophies (36)
+
+2026-11-15 version 2.1.11-web.84:
 - new: Tapis! — a secret trophy, « Clean slate »: clear a round from level 5 without the dealer topping up (Classic or Daily challenge)
 - improvement: Tapis! — the rules (?) now explain the cards, the Joker chip, the Dealer button, the sealed chips, the rising rows and the five modes
 
