@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: a continuous drift, a car with some play** (`web.63`, narmod: « the rear stays stuck, give it some play;
+  the drift goes in steps, it should be continuous — the more you turn, the more you drift ») — `poker-run.mjs`: the
+  on/off drift (hold 0.3 s, let-go timer, hop) is replaced by `slip` (0 … 1), eased towards a target set by steering
+  into the bend × its tightness × the speed (a hard turn on a straight gives a little); lateral motion blends grip and
+  slide by `slip`, as do the push out of bends, the tyre smoke and the car's turn; past 0.4 it is a drift (chips,
+  charge, sparks), under 0.22 it ends (turbo). The car's yaw is a spring (`yawVel`, ω ≈ 8.4, ζ ≈ 0.6) towards
+  sideways speed + slide; `car3d.mjs` takes `o.pivot` (1.3 car widths from the rear here, was 0.9) so the rear swings
+  out more.
 - **Poker Run: kart-like driving, mini-turbo** (`web.62`, narmod: « closer to Mario Kart, it feels a bit odd »; picked all
   four of: the car pivots, drift + turbo, less drift out of bends, more sense of speed) — `poker-run.mjs`: `CENTRI`
   0.27 → 0.17, `ACCEL` `MAXV / 3.2` (was 4.5); the car's yaw follows its sideways speed (`pv`) and the camera trails it

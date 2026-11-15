@@ -63,9 +63,10 @@ const shade = (c, f) => 'rgb(' + c.map((v) => Math.max(0, Math.min(255, Math.rou
 
 /** A view: o = { x, y (screen point of the rear's bottom centre at yaw 0), w (car width, px), yaw, pitch }. */
 function view(o) {
-  const cy = Math.cos(o.yaw), sy = Math.sin(o.yaw), cp = Math.cos(o.pitch), sp = Math.sin(o.pitch);
+  // o.pivot: where along the car it turns (car widths from the rear); further forward, the rear swings more.
+  const zp = o.pivot == null ? ZP : o.pivot, cy = Math.cos(o.yaw), sy = Math.sin(o.yaw), cp = Math.cos(o.pitch), sp = Math.sin(o.pitch);
   const P = (p) => {
-    const X = p[0] * cy + (p[2] - ZP) * sy, Z = -p[0] * sy + (p[2] - ZP) * cy + ZP;
+    const X = p[0] * cy + (p[2] - zp) * sy, Z = -p[0] * sy + (p[2] - zp) * cy + zp;
     return { x: o.x + X * o.w, y: o.y - (p[1] * cp + Z * sp) * o.w, d: Z * cp - p[1] * sp, X, Y: p[1], Z };
   };
   return { P, cy, sy, cp, sp };
@@ -79,8 +80,8 @@ export function seatPoint(o) { return view(o).P([-0.17, 0.43, 0.66]); }
 let memo = null;
 function faces(o) {
   // The back and the front halves of one frame share the same faces.
-  if (memo && memo.x === o.x && memo.y === o.y && memo.w === o.w && memo.yaw === o.yaw && memo.pitch === o.pitch && memo.color === o.color) return memo.r;
-  const r = faces1(o); memo = { x: o.x, y: o.y, w: o.w, yaw: o.yaw, pitch: o.pitch, color: o.color, r };
+  if (memo && memo.x === o.x && memo.y === o.y && memo.w === o.w && memo.yaw === o.yaw && memo.pitch === o.pitch && memo.color === o.color && memo.pivot === o.pivot) return memo.r;
+  const r = faces1(o); memo = { x: o.x, y: o.y, w: o.w, yaw: o.yaw, pitch: o.pitch, color: o.color, pivot: o.pivot, r };
   return r;
 }
 function faces1(o) {

@@ -19,7 +19,7 @@
 //   Nitro      ↑, Space, ▲ held (a tap: a short burst); refilled by the
 //              chips and the drifts
 //   Brake      ↓, ▼ held (a swipe down: a short brake)
-//   Drift      steer into a tight bend at full speed: +5 chips and some
+//   Drift      steer into a bend at speed, the harder the more: +5 chips and some
 //              nitro every 0.4 s
 //   Traffic    a car hit costs 20 % of the chips
 //   Score      (chips + 5 per second left) × the multiplier of the best
@@ -306,7 +306,7 @@ export function create(shell) {
   let state = 'title', overAt = 0, revealTimer = 0, lastChipSnd = 0;
   let pos = 0, px = 0, v = 0, pv = 0, yaw = 0, turn = 0, slide = 0, bob = 0, camY = CAMH, lastCen = null;
   let stack = 0, time = TIME0, nitro = 0, boost = false, inv = 0, shake = 0, skyOff = 0, curStage = 0, skyFrom = 'vegas', skyGate = -1;
-  let holdT = 0, letGo = 0, charge = 0, mt = 0, hop = 0, spin = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
+  let slip = 0, slipDir = 1, yawVel = 0, charge = 0, mt = 0, spin = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
   let act = { a: '', t: 0, dur: 0, prio: 0 }, bub = { s: '', t: 0, d: 1 }, wasBoost = false, wasOff = false, lowSaid = false, offCd = 0, outroT = 0, outroWin = false;
   const keys = { l: false, r: false, n: false, b: false }, pulse = { l: 0, r: 0, n: 0, b: 0 };
   let W = 640, H = 360, cy = 160, ctx = shell.g;
@@ -315,7 +315,7 @@ export function create(shell) {
   function reset() {
     buildTrack();
     pos = 0; px = 0; v = 0; pv = 0; yaw = 0; turn = 0; slide = 0; lastCen = null; board = []; stack = 0; time = TIME0; nitro = 0.2; boost = false;
-    inv = 0; shake = 0; fx = []; parts = []; drift = false; holdT = 0; charge = 0; mt = 0; hop = 0; spin = 0; curStage = 0; stageTheme = ['vegas']; branches = []; assignBranches(0);
+    inv = 0; shake = 0; fx = []; parts = []; drift = false; slip = 0; yawVel = 0; charge = 0; mt = 0; spin = 0; curStage = 0; stageTheme = ['vegas']; branches = []; assignBranches(0);
     hover = 0; skyFrom = 'vegas'; skyGate = -1; act = { a: '', t: 0, dur: 0, prio: 0 }; bub = { s: '', t: 0, d: 1 };
     wasBoost = false; wasOff = false; lowSaid = false; offCd = 0;
     keys.l = keys.r = keys.n = keys.b = false; pulse.l = pulse.r = pulse.n = pulse.b = 0;
@@ -447,27 +447,28 @@ export function create(shell) {
     const ng = nextGate();
     // The branch the car heads for: the left or the right half of the road.
     if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = px < 0 ? 0 : 1;
-    // Drift: steering into a bend at speed, held a moment (web.59: easier —
-    // a short let-go of the stick, a swipe ending on the phone, no longer
-    // breaks it; steering out does. web.60: a little less eager — narmod
-    // « before too slow to get, now a bit too quick »).
-    const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 1.1 && sp > 0.6;
-    holdT = into ? holdT + dt : Math.max(0, holdT - dt * 2);
-    if (!drift && holdT > 0.3) { drift = true; driftDir = dir; driftTick = 0; driftGain = 0; letGo = 0; charge = 0; hop = 0.3; say('😎'); }
-    if (drift) {
-      // Like a kart: steering into the bend tightens the drift, steering out
-      // widens it (it no longer ends it); letting go a moment, the bend ending
-      // or slowing down does.
-      letGo = dir === 0 ? letGo + dt : 0; charge += dt;
-      if (letGo > 0.4 || Math.abs(ps.curve) < 0.4 || sp < 0.4) endDrift();
-    }
+    // Drift, continuous (web.63, narmod: « no steps — the more you turn, the
+    // more you drift, more arcade »): `slip` (0 … 1) rises with how hard you
+    // steer into a bend, how tight it is and how fast you go, and falls back as
+    // you ease off; the car slides in proportion. Past 0.4 it counts as a drift
+    // (chips, sparks, turbo); under 0.22 the drift is over.
+    const bend = Math.sign(ps.curve), tight = clamp((Math.abs(ps.curve) - 0.5) / 2, 0, 1), fast = clamp((sp - 0.45) / 0.45, 0, 1);
+    let want = 0;
+    if (dir !== 0 && dir === bend) want = (0.3 + 0.7 * tight) * fast;
+    else if (dir !== 0 && Math.abs(ps.curve) < 0.5) want = 0.18 * fast;      // a hard turn on a straight: a little looseness
+    else if (dir !== 0 && slip > 0) want = slip * 0.7;                        // steering out of the bend widens and eases off
+    slip += (want - slip) * Math.min(1, dt * (want > slip ? 1.6 : 2.2));
+    if (dir) slipDir = dir === bend || !drift ? dir : slipDir;
+    if (!drift && slip > 0.4) { drift = true; driftDir = bend || dir; slipDir = driftDir; driftTick = 0; driftGain = 0; charge = 0; say('😎'); }
+    if (drift) { charge += dt * (0.4 + 0.6 * slip); if (slip < 0.22 || sp < 0.4) endDrift(); }
     const rate = 2.5 * Math.max(0.35, sp);
-    // In a drift, holding into the bend keeps the car on its line (a touch
-    // tighter), letting go widens it a little, steering out widens it more.
+    // Gripping, the stick moves the car across; sliding, holding into the bend
+    // keeps its line, letting go widens it a little, steering out more.
     const cf = 2.4 * sp * sp * Math.abs(ps.curve) * CENTRI * 0.4;
-    const target = drift ? driftDir * (cf + (dir === driftDir ? 0.15 : dir === 0 ? -0.2 : -0.8)) : dir * rate;
-    pv += (target - pv) * Math.min(1, dt * (drift ? 6 : 10));
-    px += pv * dt - dt * 2.4 * sp * sp * ps.curve * CENTRI * (drift ? 0.4 : 1);
+    const grip = dir * rate, slideT = slipDir * (cf + (dir === slipDir ? 0.15 : dir === 0 ? -0.2 : -0.8));
+    const target = grip + (slideT - grip) * slip;
+    pv += (target - pv) * Math.min(1, dt * (6 + 4 * (1 - slip)));
+    px += pv * dt - dt * 2.4 * sp * sp * ps.curve * CENTRI * (1 - 0.6 * slip);
     // After a fork the branch taken swings back to the middle: the car goes with it.
     if (ps.m > 0) { const cen = (envL(g) + envR(g)) / 2; if (lastCen != null) px += cen - lastCen; lastCen = cen; } else lastCen = null;
     // Hands off just before a gate: the car settles in the nearest branch.
@@ -482,17 +483,19 @@ export function create(shell) {
         const c = charge >= MT_ORANGE ? '255,166,58' : '110,180,255';
         for (const sx of [-1, 1]) for (let k = 0; k < 2; k++) parts.push({ x: W / 2 + slide + sx * carW() * 0.42, y: H - 12, vx: (Math.random() - 0.5) * 160 - driftDir * 60, vy: -40 - Math.random() * 90, r: 1.6 + Math.random() * 1.4, life: 0.28, c, spark: true });
       }
-      if (!shell.reduced) for (const sx of [-1, 1]) parts.push({ x: W / 2 + slide + sx * carW() * 0.4, y: H - 14, vx: -driftDir * (70 + Math.random() * 70) + sx * 20, vy: -20 - Math.random() * 35, r: sx === -driftDir ? 8 : 5, life: sx === -driftDir ? 0.9 : 0.6, c: '226,229,234' });
     }
+    // Tyre smoke, as much as the car slides.
+    if (!shell.reduced && slip > 0.25) for (const sx of [-1, 1]) if (Math.random() < slip * 1.2) parts.push({ x: W / 2 + slide + sx * carW() * 0.4, y: H - 14, vx: -slipDir * (70 + Math.random() * 70) + sx * 20, vy: -20 - Math.random() * 35, r: sx === -slipDir ? 8 : 5, life: (sx === -slipDir ? 0.9 : 0.6) * slip, c: '226,229,234' });
     if (off && sp > 0.2 && !shell.reduced && Math.random() < 0.6) parts.push({ x: W / 2 + (Math.random() - 0.5) * 70, y: H - 16, vx: (Math.random() - 0.5) * 80, vy: -40, r: 4, life: 0.5, c: '150,140,110' });
     // A drift turns the car into the bend (its side shows, the rear swings
     // out) rather than rocking it: little roll, a slow swing in and out.
-    turn += ((drift ? driftDir : 0) - turn) * Math.min(1, dt * (drift ? 3.2 : 4.5));
-    // The car turns to where it is going (its sideways speed), and the camera
-    // trails it: the car leads a little to the side it steers to.
-    yaw += ((drift ? dir * 0.06 : clamp(pv / 2.5, -1, 1) * 0.11) - yaw) * Math.min(1, dt * 9);
+    turn += (slip * slipDir - turn) * Math.min(1, dt * 6);
+    // The car turns to where it is going (its sideways speed) and to its slide,
+    // on a spring (web.63: « the rear stays stuck — give it some play »): it
+    // swings, overshoots a little and settles. The camera trails it.
+    const yT = clamp(pv / 2.5, -1, 1) * 0.13 + turn * 0.5;
+    yawVel += (70 * (yT - yaw) - 10 * yawVel) * Math.min(dt, 0.05); yaw += yawVel * Math.min(dt, 0.05);
     slide += (clamp(pv / 2.5, -1.2, 1.2) * W * 0.05 - turn * W * 0.035 - slide) * Math.min(1, dt * 5);
-    if (hop > 0) hop = Math.max(0, hop - dt);
     if (spin > 0) spin = Math.max(0, spin - dt);
     if (mt > 0) mt = Math.max(0, mt - dt);
     bob = sp > 0.8 && !shell.reduced ? Math.sin(performance.now() / 38) * sp * 1.1 : 0;
@@ -534,6 +537,7 @@ export function create(shell) {
       // Hit: the car within the stretch the player covered this frame (at a low frame rate he moves more than a segment).
       if (ci >= ps.i && ci <= pNow && inv <= 0 && v > c.v && Math.abs(px - carX(c, ps, g)) < HIT) {
         if (drift) { drift = false; driftGain = 0; charge = 0; }
+        slip = 0;
         mt = 0;
         aceDo('flail', 0.9, '💥', 5);
         // A bounce (web.63): pushed aside and spun a little, slowed but still rolling.
@@ -586,7 +590,7 @@ export function create(shell) {
   }
   function stepOutro(dt) {
     outroT += dt; v = Math.max(0, v - ACCEL * 1.4 * dt); pos += v * dt; aceTick(dt);
-    yaw *= 0.9; turn *= 0.9; slide *= 0.9; pv *= 0.9;
+    yaw *= 0.9; yawVel *= 0.9; turn *= 0.9; slide *= 0.9; pv *= 0.9;
     const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y;
     stepFx(dt); stepParts(dt);
     if (outroT > 1.8) over();
@@ -965,14 +969,12 @@ const carW = () => Math.min(W * 0.24, 100);
   // stage's canvas, the body in front of him on the front one.
   function carFrame() {
     const w = carW(), h = w * 0.42;
-    // A drift starts with a little hop.
-    const lift = hop > 0 ? Math.sin((1 - hop / 0.3) * Math.PI) * w * 0.12 : 0;
-    return { w, h, x: W / 2 + slide, y: H - 10 + bob - lift };
+    return { w, h, x: W / 2 + slide, y: H - 10 + bob };
   }
   // The car in 3D (car3d.mjs): its yaw follows the steering a little and a
   // drift a lot (web.62, narmod: « a car in 3/4, a real rotation »).
-  const carYaw = () => yaw * 1.6 + turn * 0.5 + (spin > 0 ? Math.sin(spin * 26) * 0.3 * spin / 0.6 : 0);
-  const carOpts = () => { const { w, x, y } = carFrame(); return { x, y, w, yaw: carYaw(), pitch: 0.22, color: '#c2303a', boost: boost || mt > 0, plate }; };
+  const carYaw = () => yaw + (spin > 0 ? Math.sin(spin * 26) * 0.3 * spin / 0.6 : 0);
+  const carOpts = () => { const { w, x, y } = carFrame(); return { x, y, w, yaw: carYaw(), pitch: 0.22, pivot: 1.3, color: '#c2303a', boost: boost || mt > 0, plate }; };
   /** The tyre marks a drift leaves behind the rear wheels. */
   function skidMarks(w, x, y) {
     const a = Math.abs(turn); if (a < 0.05) return;
@@ -1102,7 +1104,7 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge }; } catch (e) {}
 
   return {
     update, draw, input,
