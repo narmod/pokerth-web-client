@@ -15,6 +15,21 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Tapis! plays like Monster Madness** (`web.86`, narmod after the Megatouch arcade video, choices « B » and « double
+  touch ») — **columns never move**: an emptied column stays where it is, its friend in his hole (a little grave:
+  a mound and a « RIP » headstone); the dealer's recave and the rising rows come up under every column, the empty
+  ones too (`recaveRow`, `riseRow`). The round is won when every friend is in his hole, chips may be left: « All in
+  their holes! » (`tpAllIn`); with the board empty too, « Table cleared! » and the clean-sweep bonus (it was always
+  paid before). The closing-up of `web.77` is gone. **Double touch** on a touch screen: the first touch lights the
+  group and its hand (« Touch again to take it », `tpTapAgain`), a touch on it takes it (also for an armed Joker or
+  Dealer); the mouse still takes at one click, the keys and pads unchanged. **No more moves!** in the big banner
+  (`tpNoMoves`, the recave line under it) and no time taken any more (it waits for a friend still going into his
+  hole). **Spirits**: the round won, each friend's spirit flies up out of his hole, see-through, `SPIRIT_PAY` × level
+  each (not in the Duel). Rules: the controls line explains the double touch (83 catalogues).
+  `test-games.mjs`: recave and rising rows under every column; `test-games-browser.mjs`: columns stay, double touch,
+  recave without time.
+
 ### Fixed
 - **Help: the number of training trophies** (`web.85`, narmod) — the Training mode › Trophies chapter said 28
   trophies; there are 36 across the six categories (27, plus 9 secret ones: the Konami egg and the mini-games'),

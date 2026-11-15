@@ -21,11 +21,19 @@
 //             Shuffle more every round. Pills at the top: tap, 1 2 3, or the
 //             cursor above the chips
 //   Recave    no pair left (a Joker or Dealer in hand or not): the dealer
-//             pushes a row of pairs in from the felt (−5 s) — never stuck
-//   Columns   never apart (narmod, web.77): when a friend has gone into his
-//             hole, his column and hole go and the others close up in the
-//             middle; the chips keep the round's size
-//   Input     tap a chip; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
+//             pushes a row of pairs in from the felt under every column — never
+//             stuck; « No more moves! » in big, no time taken (web.86)
+//   Spirits   round won: each friend's spirit flies up out of his hole,
+//             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
+//   Columns   as in Monster Madness (narmod web.86, « B », after the arcade
+//             video): they never move; an emptied column stays, its friend in
+//             his hole (a little grave on the felt), and the dealer's or the
+//             felt's rows come up under it too. The round is won when every
+//             friend is in his hole; the board left empty too: « Table
+//             cleared! » and the clean-sweep bonus. (web.77-85 closed them up.)
+//   Input     touch: a first touch lights the group and its hand, a second
+//             touch on it takes it (Monster Madness' « double touch », web.86);
+//             mouse: hover shows it, a click takes it; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
 //             Space / Enter / A takes the lit group
 //   Friends   the cast of cast.mjs (push 2, web.76): the Suits at levels 1-2,
 //             the Figures at 3-4, and so on two by two, all mixed from 21
@@ -58,7 +66,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
-import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, RECAVE_S, blindsAt, groupPay, groupAt, anyMove,
+import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove,
   removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor, castFamily,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
@@ -87,7 +95,8 @@ export const MODES = [
 ];
 export const ZEN_ROUNDS = 5;
 export const DUEL_ROUNDS = 3, TURN_S = 10;
-export const TROPHY_LV = 5;              // « Table rase »: from this level
+export const TROPHY_LV = 5;
+export const SPIRIT_PAY = 100;            // × level: each friend's spirit at the round's end (Monster Madness: 1 000 a monster)              // « Table rase »: from this level
 const HANDOVER_S = 0.9;                     // a move made: the turn passes once its chips and cards have landed
 const P_COLOR = ['#e8b84a', '#7fc8ff'];     // player 1 gold, player 2 blue (as in Poker Drop)
 /** Madness: seconds between two rising rows at level lv. */
@@ -132,7 +141,6 @@ export function create(shell) {
 
   // ── Geometry (world px; the stage is H = 360 high, W wide) ────────
   const colsFor = (W) => (W < H * 0.95 ? 6 : Math.max(6, Math.min(12, Math.round(W / H * 4.6))));
-  // The chips keep the round's size (cols0) when columns go: the others close up in the middle.
   function geom() {
     const W = shell.W, cols = G.cols;
     const cw = Math.min(W * 0.94 / Math.max(1, G.cols0 || cols), 46);
@@ -156,8 +164,7 @@ export function create(shell) {
     G.chars.forEach((ch) => ch.ace.remove());
     G.cols0 = G.cols = colsFor(shell.W);
     const L = geom();
-    G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c));
-    G.closing = [];
+    G.xs = null; G.picked = null;
     G.maxRows = rowsFor(L);
     if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
     // Madness starts lower (room for the rows to come); Zen has no seals.
@@ -206,7 +213,7 @@ export function create(shell) {
     G.turn = i;
     const n = P[i];
     Object.assign(G, { score: n.score, inv: n.inv, hand: n.hand, bestHand: n.bestHand, inTotal: n.inTotal, bestCat: n.bestCat });
-    G.turnT = TURN_S; G.armed = ''; G.handover = 0; G.lastTick = 0;
+    G.turnT = TURN_S; G.armed = ''; G.handover = 0; G.lastTick = 0; G.picked = null;
     renderHud(); say(t('pdTurn', { n: i + 1 })); sound('notifyAction');
   }
   /** A move is made: in the Duel, the turn will pass. */
@@ -288,26 +295,23 @@ export function create(shell) {
     sound('notifyAction');
   }
   /**
-   * After a move: nothing left to take? The dealer tops up (narmod 2026-11-15):
-   * a row of chips comes in under the stacks, in pairs, so there is always
-   * a move again (−5 s). Waits for the columns to close up first; a Joker or
+   * After a move: nothing left to take? « No more moves! » and the dealer tops
+   * up (narmod 2026-11-15; as in Monster Madness since web.86: the big banner,
+   * no time taken): a row of chips comes in under every column, in pairs, so
+   * there is always a move again. Waits for a falling friend first; a Joker or
    * a Dealer button in hand does not stop him (they stay for later).
    */
   function afterMove() {
     clearTimeout(check);
     check = setTimeout(() => {
       if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid)) return;
-      if (G.grid.some((col) => !col.length)) { afterMove(); return; }      // a column is still closing up
+      if (G.chars.some((ch) => ch.st === 'fall' || ch.st === 'sink')) { afterMove(); return; }   // a friend still on his way down
       if (mode === 'folie') { G.riseT = G.kit.rise; return; }              // Madness: the next row comes up at once
       recaveRow(G.grid, colorsAt(G.lv), R);
       G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.5; });
       G.recaved = true;
-      if (timed()) {
-        G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S);
-        const L = geom();
-        G.fx.push({ s: '−' + RECAVE_S + ' s', x: L.W / 2, y: L.base - L.cw * 2.2, t: 0, life: 1.3 });
-      }
-      say(t('tpRecave')); sound('notifyCard');
+      G.banner = { s: t('tpNoMoves'), s2: t('tpRecave'), t: 0, life: 1.8 };
+      sound('notifyCard');
       afterMove();
     }, 650);
   }
@@ -362,10 +366,12 @@ export function create(shell) {
     if (timed() && G.lv >= TROPHY_LV && !G.recaved) { shell.grant('tapis'); G.trophy = true; }
     G.score += bonus + clean;
     G.rounds.push({ lv: G.lv, done: 1 });
+    // Every friend's spirit comes out of his hole and flies up, one after the other, with a bonus (Monster Madness).
+    G.chars.forEach((ch, i) => { ch.st = 'spirit'; ch.spT = -0.15 - i * 0.12; ch.spPaid = false; });
     renderHud(); sound('notifyBigWin');
-    G.banner = { s: t('tpClear'), s2: duel() ? '' : '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
+    G.banner = { s: t(left === 0 ? 'tpClear' : 'tpAllIn'), s2: duel() ? '' : '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
     for (let i = 0; i < 90; i++) G.parts.push({ x: Math.random() * L.W, y: -10 - Math.random() * 120, vx: (Math.random() - 0.5) * 40, vy: 40 + Math.random() * 80, t: 0, life: 2.4, c: ['#f5c518', '#d23a30', '#2f6bd0', '#27a058', '#fbf7ee'][i % 5], r: 3 + Math.random() * 3, rot: Math.random() * 6, conf: true });
-    if ((mode === 'zen' && G.lv >= ZEN_ROUNDS) || (duel() && G.lv >= DUEL_ROUNDS)) { timer = setTimeout(() => gameOver(t('tpClear')), 2000); return; }
+    if ((mode === 'zen' && G.lv >= ZEN_ROUNDS) || (duel() && G.lv >= DUEL_ROUNDS)) { timer = setTimeout(() => gameOver(t('tpAllIn')), 2000); return; }
     timer = setTimeout(() => {
       if (state !== 'clear') return;
       G.lv++;
@@ -474,7 +480,18 @@ export function create(shell) {
       const p = pillAt(L, info.x, info.y);
       if (p >= 0) { power(POWERS[p]); return; }
       const cell = cellAt(L, info.x, info.y);
-      if (cell) act(cell[0], cell[1]);
+      if (!cell) { G.picked = null; return; }
+      if (lastPtr !== 'touch' && lastPtr !== 'pen') { G.picked = null; act(cell[0], cell[1]); return; }
+      // Touch (Monster Madness' double touch): the first touch lights the group, a touch on it again takes it.
+      if (G.picked && G.grid[G.picked[0]] && G.grid[G.picked[0]][G.picked[1]]) {
+        const [pc, pr] = G.picked;
+        const lit = G.armed === 'joker' ? colorCells(G.grid, G.grid[pc][pr].k) : G.armed === 'dealer' ? crossCells(G.grid, pc, pr) : groupAt(G.grid, pc, pr);
+        if (lit.length > 1 && lit.some(([x, y]) => x === cell[0] && y === cell[1])) { G.picked = null; act(pc, pr); return; }
+      }
+      const grp = G.armed ? [cell, cell] : groupAt(G.grid, cell[0], cell[1]);
+      if (grp.length < 2) { G.picked = null; act(cell[0], cell[1]); return; }   // a lone chip: it shakes, as before
+      G.picked = cell; sound('notifyTick');
+      if (!G.say || G.say.s !== t('tpTapAgain')) say(t('tpTapAgain'));
       return;
     }
     const cur = G.cursor;
@@ -503,6 +520,9 @@ export function create(shell) {
     if (hover) G.showCursor = false;
   };
   const onLeave = () => { hover = null; };
+  let lastPtr = 'mouse';
+  const onDown = (e) => { lastPtr = e.pointerType || 'mouse'; };
+  window.addEventListener('pointerdown', onDown, true);
   shell.stage.addEventListener('pointermove', onMove);
   shell.stage.addEventListener('pointerleave', onLeave);
 
@@ -616,19 +636,24 @@ export function create(shell) {
       }
     });
     if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.clapUntil = time + 1.1; });
-    // A friend gone into his hole: his column goes, the hole closes, the others close up (narmod 2026-11-15).
-    for (let c = G.cols - 1; c >= 0; c--) {
-      if (G.grid[c].length || G.chars[c].st !== 'in') continue;
-      G.closing.push({ x: colX(L, c), t: 0 });
-      G.chars[c].ace.remove();
-      G.grid.splice(c, 1); G.chars.splice(c, 1); G.xs.splice(c, 1); G.cols--;
-      if (G.cursor.c > c || G.cursor.c >= G.cols) G.cursor.c = Math.max(0, G.cursor.c - 1);
-      hover = null;
-    }
-    const L2 = geom();
-    for (let c = 0; c < G.cols; c++) { const a = colAim(L2, c); G.xs[c] += (a - G.xs[c]) * Math.min(1, dt * 7); if (Math.abs(a - G.xs[c]) < 0.05) G.xs[c] = a; }
-    for (let i = G.closing.length - 1; i >= 0; i--) { G.closing[i].t += dt; if (G.closing[i].t > 0.4) G.closing.splice(i, 1); }
-    if (state === 'run' && G.cols === 0) roundClear();
+    // The spirits of the round won: up from the holes, see-through, a bonus each (not in the Duel).
+    G.chars.forEach((ch, c) => {
+      if (ch.st !== 'spirit') return;
+      ch.spT += dt;
+      if (ch.spT < 0) return;
+      if (!ch.spPaid) {
+        ch.spPaid = true; ch.ace.show(true); ch.ace.clip(null); ch.ace.pose('air'); ch.ace.mood('yay'); ch.ace.sweat(false);
+        const pay = duel() ? 0 : SPIRIT_PAY * G.lv;
+        if (pay) { G.score += pay; renderHud(); }
+        G.fx.push({ s: pay ? '+' + fmt(pay) : '✦', x: colX(L, c), y: L.base - L.cw * 1.4, t: 0, life: 1.1, green: true });
+        sound('notifyTick');
+      }
+      ch.y = L.base - ch.spT * 150;
+      ch.ace.fade(Math.max(0, 0.75 * (1 - ch.spT / 1.1)));
+      if (ch.spT > 1.1) { ch.st = 'gone'; ch.ace.show(false); }
+    });
+    // Every friend in his hole: the round is won (chips may be left in the emptied columns).
+    if (state === 'run' && G.chars.length && G.chars.every((ch) => ch.st === 'in')) roundClear();
     for (let i = G.parts.length - 1; i >= 0; i--) { const p = G.parts[i]; p.t += dt; if (p.t > p.life) { G.parts.splice(i, 1); continue; } p.vy += (p.conf ? 30 : 420) * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 7; }
     for (let i = G.fx.length - 1; i >= 0; i--) { G.fx[i].t += dt; if (G.fx[i].t > G.fx[i].life) G.fx.splice(i, 1); }
     if (G.say) { G.say.t += dt; if (G.say.t > 2.8) G.say = null; }
@@ -724,15 +749,18 @@ export function create(shell) {
     g.fillStyle = fe; g.fillRect(0, ty, W, H - ty);
     g.fillStyle = '#5a361c'; g.fillRect(0, ty - 5, W, 6); g.fillStyle = '#d8b25a'; g.fillRect(0, ty - 6, W, 1.2);
     for (let c = 0; c < G.cols; c++) {
-      const x = colX(L, c);
+      const x = colX(L, c), ch = G.chars[c], buried = ch && (ch.st === 'in' || ch.st === 'spirit' || ch.st === 'gone');
       g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.12, L.ry * 1.25, 0, 0, 7); g.fill();
-      const hg = g.createRadialGradient(x, L.base + L.ry * 0.3, 1, x, L.base, L.rx); hg.addColorStop(0, '#000'); hg.addColorStop(1, '#1a1208');
+      const hg = g.createRadialGradient(x, L.base + L.ry * 0.3, 1, x, L.base, L.rx); hg.addColorStop(0, buried ? '#3a2614' : '#000'); hg.addColorStop(1, buried ? '#5a3a1c' : '#1a1208');
       g.fillStyle = hg; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.02, L.ry * 1.1, 0, 0, 7); g.fill();
-    }
-    for (const h of G.closing) {          // a hole closing behind its friend
-      const k = 1 - h.t / 0.4;
-      g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * 1.12 * k, L.ry * 1.25 * k, 0, 0, 7); g.fill();
-      g.fillStyle = '#000'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * k, L.ry * 1.1 * k, 0, 0, 7); g.fill();
+      if (buried && !G.grid[c].length) {   // his little grave: a mound and a headstone in the colour of his suit
+        g.fillStyle = '#6b4824'; g.beginPath(); g.ellipse(x, L.base - L.ry * 0.2, L.rx * 0.8, L.ry * 0.75, 0, Math.PI, 0); g.fill();
+        const hw = L.rx * 0.5, hh = L.bh * 1.1, hy = L.base - L.ry * 0.3;
+        g.fillStyle = '#8f98a3'; g.beginPath(); g.moveTo(x - hw / 2, hy); g.lineTo(x - hw / 2, hy - hh + hw / 2); g.arc(x, hy - hh + hw / 2, hw / 2, Math.PI, 0); g.lineTo(x + hw / 2, hy); g.closePath(); g.fill();
+        g.strokeStyle = 'rgba(0,0,0,.4)'; g.lineWidth = 0.8; g.stroke();
+        g.fillStyle = '#3d444c'; g.font = '800 ' + Math.max(4, hw * 0.42).toFixed(1) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillText('RIP', x, hy - hh * 0.5);
+      }
     }
     // Madness: the red line no stack may pass.
     if (mode === 'folie' && state !== 'title' && G.cols) {
@@ -746,6 +774,7 @@ export function create(shell) {
     if (state === 'run') {
       if (G.showCursor && cur.bar < 0 && G.grid[cur.c] && G.grid[cur.c].length) target = [cur.c, Math.min(cur.r, G.grid[cur.c].length - 1)];
       else if (hover && G.grid[hover[0]] && G.grid[hover[0]][hover[1]]) target = hover;
+      else if (G.picked && G.grid[G.picked[0]] && G.grid[G.picked[0]][G.picked[1]]) target = G.picked;
     }
     let preview = null;
     if (target) {
@@ -797,7 +826,7 @@ export function create(shell) {
     // The friends (DOM actors): feet on their stack, falling, or in their hole (what is below the felt hidden).
     const s = L.cw * 0.0125;
     G.chars.forEach((ch, c) => {
-      if (ch.st === 'in') return;
+      if (ch.st === 'in' || ch.st === 'gone' || (ch.st === 'spirit' && ch.spT < 0)) return;
       const y = ch.st === 'top' ? ch.y - L.ry * 0.3 : ch.y;
       ch.ace.place(colX(L, c), y, s, shell.k);
       ch.ace.clip(ch.st === 'sink' ? 116 - (ch.y - L.base) / s : null);
@@ -860,7 +889,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpClear')); } }, turn: () => G.turn, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpAllIn')); } }, turn: () => G.turn, picked: () => G.picked, screenOf: (c, r) => { const L = geom(), rc = shell.stage.getBoundingClientRect(), k = shell.k || 1; return { x: rc.left + colX(L, c) * k, y: rc.top + (chipY(L, c, r) - L.bh / 2) * k }; }, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',
@@ -868,6 +897,7 @@ export function create(shell) {
       clearTimeout(timer); clearTimeout(check);
       shell.stage.removeEventListener('pointermove', onMove);
       shell.stage.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('pointerdown', onDown, true);
       if (G) G.chars.forEach((ch) => ch.ace.remove());
     },
   };

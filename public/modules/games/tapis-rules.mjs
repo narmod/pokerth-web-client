@@ -193,14 +193,16 @@ export function shuffleGrid(grid, rnd = Math.random) {
   grid.forEach((col) => col.forEach((b) => { if (b.k >= 0) b.k = ks[i++]; }));
 }
 /**
- * The dealer's recave: a chip pushed in under every column still standing,
+ * The dealer's recave: a chip pushed in under every column, an empty one too,
  * the chips above rising one row. Neighbouring columns get the same colour
  * two by two, so there is a pair at once; a column left alone gets the colour
- * of the chip above it. Returns the number of chips added.
+ * of the chip above it (two of a colour over a card, a seal or nothing).
+ * Returns the number of chips added.
  */
 export function recaveRow(grid, nColors, rnd = Math.random) {
-  const live = [];
-  grid.forEach((col, c) => { if (col.length) live.push(c); });
+  // Every column, an empty one too: in Monster Madness the row comes up under the
+  // whole table, so an emptied column fills again (narmod web.86, « B »).
+  const live = grid.map((_, c) => c);
   const ks = new Map();
   for (let i = 0; i < live.length;) {
     if (live[i + 1] === live[i] + 1) { const k = Math.floor(rnd() * nColors); ks.set(live[i], k); ks.set(live[i + 1], k); i += 2; }
@@ -218,11 +220,11 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
   }
   return n;
 }
-/** A row of chips of any colour pushed in under every column lower than maxH (the felt rising). Returns the chips added. */
+/** A row of chips of any colour pushed in under every column lower than maxH, an empty one too (the felt rising). Returns the chips added. */
 export function riseRow(grid, nColors, maxH, rnd = Math.random) {
   let n = 0;
   grid.forEach((col) => {
-    if (!col.length || col.length >= maxH) return;
+    if (col.length >= maxH) return;
     col.forEach((b) => { b.off -= 1; });
     col.unshift({ k: Math.floor(rnd() * nColors), off: -1 });
     n++;

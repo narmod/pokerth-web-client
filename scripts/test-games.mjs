@@ -86,7 +86,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'arAgain', 'arPause', 'arDistance', 'arLevel', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'hcModeFreeD', 'hcModeDailyD', 'hcModeZen', 'hcModeZenD', 'hcGlue', 'hcWind', 'hcBump', 'hcGoalMet', 'hcGold', 'hcHold', 'gmPick',
   'tpName', 'tpHint', 'tpRules', 'tpClassic', 'tpClassicD', 'tpAlone', 'tpWon', 'tpJoker', 'tpDealer', 'tpShuffle', 'tpArmed', 'tpRecave', 'tpClear', 'tpClean', 'tpBlinds', 'tpIn', 'gmKindEgg',
-  'tpNewCards', 'tpNewWild', 'tpNewDealer', 'tpNewSeal', 'tpNewRise', 'tpFolie', 'tpFolieD', 'tpZenD', 'tpOver', 'tpDuelD', 'ach_tapis', 'ach_tapis_d',
+  'tpNewCards', 'tpNewWild', 'tpNewDealer', 'tpNewSeal', 'tpNewRise', 'tpFolie', 'tpFolieD', 'tpZenD', 'tpOver', 'tpDuelD', 'ach_tapis', 'ach_tapis_d', 'tpAllIn', 'tpTapAgain', 'tpNoMoves',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'vpVarJacks', 'vpVarBonus', 'vpVarDeuces', 'vpVarJoker', 'vpVarJacksD', 'vpVarBonusD', 'vpVarDeucesD', 'vpVarJokerD', 'vpKings', 'vpFiveKind', 'vpWildRoyal', 'vpFourDeuces', 'vpFourAces', 'vpFour2to4', 'vpFour5toK', 'vpCashOut', 'ach_videopoker', 'ach_videopoker_d',
@@ -447,10 +447,10 @@ console.log('Ace Dash: the long run, the score, the modes');
   TP.removeCells(g2, [[0, 0], [0, 1]]);
   ok(g2[0].length === 2 && g2[0][0].k === 1 && g2[0][0].off === 2 && g2[0][1].off === 2 && g2[1][0].off === 0, 'Tapis!: the chips above a group fall the rows it leaves');
   ok(TP.anyMove(mk([[0, 1], [1, 0]])) === false && TP.anyMove(mk([[0, 1], [0]])) === true && TP.anyMove(mk([[0, 0]])) === true, 'Tapis!: anyMove() sees pairs across and up, none in a chessboard');
-  const g3 = mk([[0, 1], [1, 0], [], [2]]);
-  TP.recaveRow(g3, 3, () => 0.5);
-  ok(g3[0].length === 3 && g3[0][0].k === g3[1][0].k && g3[3][0].k === 2 && g3[2].length === 0 && g3[0][1].off === -1 && TP.anyMove(g3),
-    'Tapis!: the recave pushes in a row of pairs (neighbours share a colour, a lone column its own), never under an empty column');
+  const g3 = mk([[0, 1], [1, 0], [], [2]]), g3b = mk([[0, 1], [1, 0], [2]]);
+  TP.recaveRow(g3, 3, () => 0.5); TP.recaveRow(g3b, 3, () => 0.5);
+  ok(g3[0].length === 3 && g3[0][0].k === g3[1][0].k && g3[2].length === 1 && g3[2][0].k === g3[3][0].k && g3[0][1].off === -1 && TP.anyMove(g3) && g3b[2][0].k === 2,
+    'Tapis!: the recave pushes in a row of pairs under every column, an empty one too (neighbours share a colour, a lone column its own)');
   ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 45 && TP.timeFor(100, 1) === 110 && TP.timeFor(100, 30) === 80,
     'Tapis!: 3 colours, a 4th at level 5, a 5th at 13; 1.1 s a chip down to 0.8 s, 45 s at least');
   const R = (await import('../public/modules/games/deal.mjs')).rng('tapis-test'), d = TP.dealRound(1, 6, 12, R);
@@ -476,7 +476,7 @@ console.log('Ace Dash: the long run, the score, the modes');
     const g2 = [[C(K, { card: 3 })]];
     ok(TP.recaveRow(g2, 3, () => 0.1) === 2 && g2[0].length === 3 && g2[0][0].k === g2[0][1].k && TP.anyMove(g2), 'Tapis!: the recave under a lone card brings a pair');
     const g3 = [[C(0), C(1)], [C(2)], []];
-    ok(TP.riseRow(g3, 3, 2) === 1 && g3[0].length === 2 && g3[1].length === 2 && g3[2].length === 0, 'Tapis!: a rising row, not over the top nor in an empty column');
+    ok(TP.riseRow(g3, 3, 2) === 2 && g3[0].length === 2 && g3[1].length === 2 && g3[2].length === 1, 'Tapis!: a rising row, not over the top, an empty column too');
     let cards = 0, wild = 0, seals = 0, ok10 = true;
     for (let i = 0; i < 20; i++) {
       const gr = TP.dealRound(10, 8, 12);

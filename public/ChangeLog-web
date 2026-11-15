@@ -1,4 +1,9 @@
-2026-11-15 version 2.1.11-web.85 (current series):
+2026-11-15 version 2.1.11-web.86 (current series):
+- improvement: Tapis! — plays like the Megatouch original: the stacks never move, an emptied one keeps its little grave, and the new rows come up under every stack; a round is won when everyone is in his hole, and clearing the whole table too pays a big bonus
+- improvement: Tapis! — on a touch screen, touch a group once to light it (with its poker hand), touch it again to take it
+- improvement: Tapis! — « No more moves! » in big letters, without losing time; at the end of a round, each character's spirit flies out of his hole with a bonus
+
+2026-11-15 version 2.1.11-web.85:
 - bugfix: Help — the Trophies page now gives the right number of training trophies (36)
 
 2026-11-15 version 2.1.11-web.84:
