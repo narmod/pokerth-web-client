@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash: roller skates and the hourglass** (`web.73`, narmod's « skates + a bonus that slows down ») —
+  `ace-dash.mjs`: two more power chips in the rotation (`skates` from level 2, `slow`). Skates `SKATE_MS` 8 s:
+  speed ×`SKATE_SPEED` 1.2, distance ×`SKATE_DIST` 1.5, lane changes ×2.6 faster; lanes −1 and 3 are the rails
+  (`RAIL_X`): grinding there gives `GRIND_PTS` every `GRIND_EVERY` s with sparks (nothing to hit, nothing to pick
+  up); the skates off, back on the edge lane. Hourglass `SLOW_MS` 5 s: the update's `dt` × `SLOW_K` 0.5 (the time
+  attack's clock too), a warm vignette. Timer bars (teal, sand), skates on his feet. Rules `adBonusRule` in 83
+  languages (`rulesMore`); `test-ace-dash-jet.mjs` 13 checks.
 - **Ace Dash: the jetpack** (`web.72`, narmod's pick « A + C » of the proposals) — `ace-dash.mjs`: a `jet` pick-up
   every `JET_ROWS`+rnd rows (≈ 800 – 1 000 m) from `JET_LEVEL` 3, never while All-In (taking it ends an All-In).
   `jetHeight(f)`: a climb, `JET_S` 6 s at `JET_Y` 2.4 m, a landing; no collision in flight, jump and duck off, ← →

@@ -55,6 +55,13 @@
 //              (better than a pair: fireworks), the others go back under the
 //              deck. The felt is cleared before he lands, then JET_SAFE_MS of
 //              safety. Time attack: +JET_TIME s. Not during All-In.
+//   Skates     (web.73) the teal chip: SKATE_MS of roller skates — faster
+//              (×SKATE_SPEED), the distance counts ×SKATE_DIST, lanes change at
+//              once; from an edge lane, on towards the side: he jumps on the
+//              table's rail and grinds along it (+GRIND_PTS every GRIND_EVERY s,
+//              sparks; nothing on the rail, no chips either).
+//   Hourglass  (web.73) the sand chip: SLOW_MS of slow motion — the whole
+//              game at SLOW_K (the time attack's clock too).
 // Sounds come from modules/sounds.mjs, the texts from Ace Runner's keys (ar*)
 // plus the ad* keys.
 // ═══════════════════════════════════════════════════════════════════
@@ -84,6 +91,10 @@ const BOUNCE_H = 1.05;                              // the bouncing button's hop
 const HOR = 96, GROUND_OFF = 46;                    // horizon line; the Ace's feet above the bottom (world px)
 const BG_GY = 210;                                  // the panorama is drawn this tall, then fitted above the horizon
 const INS_COL = ['#1f4e9e', '#f5f0e3'], MAG_COL = ['#6a3fb5', '#efe6ff'];
+const SKATE_COL = ['#178a8a', '#e6fbfb'], SLOW_COL = ['#b98a2e', '#fff3d6'];
+// Roller skates and the hourglass (web.73).
+export const SKATE_MS = 8000, SKATE_SPEED = 1.2, SKATE_DIST = 1.5, GRIND_PTS = 5, GRIND_EVERY = 0.25, SLOW_MS = 5000, SLOW_K = 0.5;
+const RAIL_X = HALF + RAIL / 2, RAIL_Y = 0.11;      // the middle of the rail, its top
 const DAILY_KEY = 'pth_ad_daily', BEST_KEY = 'pth_ad_best';
 // The jetpack: flight (s), height (m), the climb and the landing (s), the
 // rows between two (about 800 – 1 000 m), safety after landing, time attack's gift.
@@ -254,6 +265,7 @@ export function create(shell) {
       allInUntil: 0, allInWarned: false, magnetUntil: 0, lookAt: 0, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
       obj: [], items: [], fx: [], deck: deckWith(R), hand: [], ev: evalCards([]),
       spawnAt: 6, extra: 0, rows: 0, free: 1, nextCard: 2, nextPower: 14, nextRamp: 6, zig: false, overAt: 0,
+      skateUntil: 0, slowUntil: 0, grindT: 0, grinding: false,
       jet: false, jetT: 0, jetNext: 0, jetLane: 1, jetRun: 0, jetGrp: 0, jetCardAt: -1, jetTrio: 0, nextJet: 18, jetFx: 0, jetR: null,
       venue: 0, prevVenue: 0, venueT: 1, time: TIME_S, rebought: false, mode, day: dayKey() };
     const g = newGroup();
@@ -298,7 +310,7 @@ export function create(shell) {
   newRun();
   titlePanel();
   turnBack(false); ace.pose('wave');
-  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer); clearTimeout(rebuyTimer);
@@ -373,7 +385,7 @@ export function create(shell) {
     }
     if (G.rows >= G.nextPower && room > 3) {
       G.nextPower = G.rows + 16 + Math.floor(R() * 14);
-      addItem(pickR(['allin', 'ins', 'magnet']), free, z + 2.5 + room / 2, 0.6);
+      addItem(pickR(L >= 2 ? ['allin', 'ins', 'magnet', 'skates', 'slow'] : ['allin', 'ins', 'magnet', 'slow']), free, z + 2.5 + room / 2, 0.6);
       return;
     }
     // A ramp in the free lane: a backflip and a high arc of chips.
@@ -434,8 +446,10 @@ export function create(shell) {
       return;
     }
     if (state !== 'run' || !down && a !== 'duck') return;
-    if (a === 'left') G.lane = Math.max(0, G.lane - 1);
-    else if (a === 'right') G.lane = Math.min(2, G.lane + 1);
+    // On skates, past an edge lane: the rail (lane -1 or 3), to grind along it.
+    const rail = now < G.skateUntil && !G.jet;
+    if (a === 'left') G.lane = Math.max(rail ? -1 : 0, G.lane - 1);
+    else if (a === 'right') G.lane = Math.min(rail ? 3 : 2, G.lane + 1);
     else if (G.jet) return;            // flying: ← → only
     else if (a === 'jump') {
       if (G.onGround) doJump();
@@ -469,12 +483,16 @@ export function create(shell) {
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.6);
     if (state !== 'run') return;
     const now = performance.now();
+    // The hourglass: the whole game in slow motion for a while.
+    if (now < G.slowUntil) dt *= SLOW_K;
     G.t += dt;
-    const target = speedFor(G.level, G.t);
+    const skate = now < G.skateUntil;
+    if (!skate && (G.lane < 0 || G.lane > 2)) G.lane = clamp(G.lane, 0, 2);   // the skates are off: back on the felt
+    const target = speedFor(G.level, G.t) * (skate ? SKATE_SPEED : 1);
     G.speed += (target - G.speed) * Math.min(1, dt * 1.5);
     const king = now < G.allInUntil, magnet = now < G.magnetUntil;
     const mv = G.speed * dt;
-    G.travel += mv; G.dist += mv * (king ? 2 : 1);
+    G.travel += mv; G.dist += mv * (king ? 2 : 1) * (skate ? SKATE_DIST : 1);
     const lvl = 1 + Math.floor(G.travel / BLIND_EVERY);
     if (lvl > G.level) {
       G.level = lvl;
@@ -492,7 +510,7 @@ export function create(shell) {
     }
 
     // Lane, jump, duck
-    const tx = (G.lane - 1) * LANE, dx = tx - G.x, step = LANE_V * dt;
+    const tx = G.lane < 0 ? -RAIL_X : G.lane > 2 ? RAIL_X : (G.lane - 1) * LANE, dx = tx - G.x, step = LANE_V * (skate ? 2.6 : 1) * dt;
     G.x += Math.abs(dx) <= step ? dx : Math.sign(dx) * step;
     G.lean += (clamp(dx, -1, 1) - G.lean) * Math.min(1, dt * 14);
     if (G.jet) jetStep(dt, now);
@@ -502,6 +520,14 @@ export function create(shell) {
       else if (G.flipAt >= 0 && G.t - G.flipAt >= FLIP_S) G.flipAt = -1;
     }
     G.duck = (G.duckKey || now < G.duckUntil) && G.onGround;
+    // Grinding along the rail: points and sparks.
+    const onRail = skate && G.onGround && Math.abs(G.x) > HALF - 0.05;
+    if (onRail) {
+      if (!G.grinding) { G.grinding = true; G.grindT = 0; const p = P(G.x, STAND + 0.3, PZ); textFx('GRIND!', clamp(p[0], 70, shell.W - 70), p[1], true, true); sound('notifyRaise'); buzz(15); }
+      G.grindT += dt;
+      if (G.grindT >= GRIND_EVERY) { G.grindT -= GRIND_EVERY; G.bonus += GRIND_PTS; }
+      if (!shell.reduced) { const p = P(G.x, RAIL_Y, PZ); for (let k = 0; k < 2; k++) G.fx.push({ type: 'p', x: p[0] + (Math.random() - 0.5) * 10, y: p[1], vx: (Math.random() - 0.5) * 160, vy: -60 - Math.random() * 140, c: Math.random() < 0.5 ? '#ffd27a' : '#fff6cf', r: 1.2 + Math.random() * 1.6, t: 0, life: 0.3 }); }
+    } else G.grinding = false;
     camX += (G.x * 0.55 - camX) * Math.min(1, dt * 7);
 
     const top = G.y + (G.duck ? DUCKH : STAND);
@@ -689,6 +715,18 @@ export function create(shell) {
       jetStart(now);
       textFx('🚀 JETPACK' + (mode === 'time' ? ' +' + JET_TIME + ' s' : ''), p[0], p[1] - 40, true, true); burst(p[0], p[1], 14, ['#ff8a3d', '#ffd27a', '#b3261e']);
       sound('notifyAllIn'); buzz([20, 20, 40]); ace.fx('cheer'); G.lookAt = 0; look('mc-m-fierce', 900);
+      return;
+    }
+    if (it.kind === 'skates') {
+      G.skateUntil = now + SKATE_MS;
+      textFx('🛼 ×' + String(SKATE_DIST).replace('.', ','), p[0], p[1] - 40, true, true); burst(p[0], p[1], 10, SKATE_COL);
+      sound('notifyRaise'); buzz(20); ace.fx('hop'); G.lookAt = 0; look('mc-m-grin', 900);
+      return;
+    }
+    if (it.kind === 'slow') {
+      G.slowUntil = now + SLOW_MS;
+      textFx('⏳', p[0], p[1] - 40, true, true); burst(p[0], p[1], 10, SLOW_COL);
+      sound('notifyCard'); buzz(20); ace.fx('hop');
       return;
     }
     if (it.kind === 'magnet') {
@@ -956,11 +994,11 @@ export function create(shell) {
       return;
     }
     if (it.kind === 'jet') { drawJetItem(g, it, p, s, now); return; }
-    const allin = it.kind === 'allin', mag = it.kind === 'magnet';
+    const allin = it.kind === 'allin', mag = it.kind === 'magnet', sk = it.kind === 'skates', sl = it.kind === 'slow';
     shadow(g, it.x, it.z, 0.24, 0.22);
-    glow(g, p[0], p[1], 0.9 * s, 0.55, allin ? '245,197,24' : mag ? '160,110,240' : '90,150,255');
+    glow(g, p[0], p[1], 0.9 * s, 0.55, allin ? '245,197,24' : mag ? '160,110,240' : sk ? '60,200,200' : sl ? '230,180,90' : '90,150,255');
     const r = 0.3 * s, w = Math.max(0.25, Math.abs(Math.cos(it.spin * 0.6)));
-    const col = allin ? ['#f5c518', '#fff6cf', '#8a6a10'] : mag ? [MAG_COL[0], MAG_COL[1], '#2e1760'] : [INS_COL[0], INS_COL[1], '#0d2350'];
+    const col = allin ? ['#f5c518', '#fff6cf', '#8a6a10'] : mag ? [MAG_COL[0], MAG_COL[1], '#2e1760'] : sk ? [SKATE_COL[0], SKATE_COL[1], '#0b4545'] : sl ? [SLOW_COL[0], SLOW_COL[1], '#5e4410'] : [INS_COL[0], INS_COL[1], '#0d2350'];
     g.save(); g.translate(p[0], p[1]); g.scale(w, 1);
     g.fillStyle = col[0]; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
     g.strokeStyle = col[2]; g.lineWidth = Math.max(0.6, r * 0.1); g.stroke();
@@ -969,6 +1007,19 @@ export function create(shell) {
     if (allin) {
       g.fillStyle = '#8a6a10'; g.font = '700 ' + Math.max(3, r * 0.62) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
       g.fillText('ALL', 0, r * 0.04);
+    } else if (sk) {
+      // A roller skate: the boot, its sole, two wheels.
+      const k = r / 14;
+      g.fillStyle = SKATE_COL[1];
+      g.beginPath(); g.moveTo(-5 * k, -6 * k); g.lineTo(0, -6 * k); g.lineTo(0.5 * k, -1 * k); g.lineTo(6 * k, 0); g.lineTo(6 * k, 2.5 * k); g.lineTo(-5 * k, 2.5 * k); g.closePath(); g.fill();
+      g.fillStyle = '#e8503f'; g.beginPath(); g.arc(-3 * k, 5 * k, 2 * k, 0, Math.PI * 2); g.arc(3.5 * k, 5 * k, 2 * k, 0, Math.PI * 2); g.fill();
+    } else if (sl) {
+      // An hourglass: two glasses, the sand running.
+      const k = r / 14;
+      g.strokeStyle = SLOW_COL[1]; g.lineWidth = 1.6 * k;
+      g.beginPath(); g.moveTo(-4.5 * k, -6.5 * k); g.lineTo(4.5 * k, -6.5 * k); g.moveTo(-4.5 * k, 6.5 * k); g.lineTo(4.5 * k, 6.5 * k); g.stroke();
+      g.fillStyle = SLOW_COL[1]; g.beginPath(); g.moveTo(-3.6 * k, -5.5 * k); g.lineTo(3.6 * k, -5.5 * k); g.lineTo(0.6 * k, 0); g.lineTo(3.6 * k, 5.5 * k); g.lineTo(-3.6 * k, 5.5 * k); g.lineTo(-0.6 * k, 0); g.closePath(); g.fill();
+      g.fillStyle = '#5e4410'; g.beginPath(); g.moveTo(-2 * k, 5.5 * k); g.lineTo(2 * k, 5.5 * k); g.lineTo(0, 2.5 * k); g.closePath(); g.fill();
     } else if (mag) {
       // A horseshoe magnet, red with white tips.
       const k = r / 14;
@@ -1114,6 +1165,28 @@ export function create(shell) {
     if (left > 0) timerBar(gF, row++, left, ALLIN_MS, left < ALLIN_WARN_MS, '#f5c518');
     const mLeft = run ? G.magnetUntil - now : 0;
     if (mLeft > 0) timerBar(gF, row++, mLeft, MAGNET_MS, mLeft < ALLIN_WARN_MS, '#a06ef0');
+    const sLeft = run ? G.skateUntil - now : 0;
+    if (sLeft > 0) {
+      timerBar(gF, row++, sLeft, SKATE_MS, sLeft < ALLIN_WARN_MS, '#3fc1c9');
+      // The skates on his feet (seen from behind), their wheels.
+      const f = P(G.x, G.y + (Math.abs(G.x) > HALF - 0.05 && G.onGround ? RAIL_Y : 0), PZ), k = f[2];
+      for (const sx of [-1, 1]) {
+        const cx = f[0] + sx * 0.13 * k, w = 0.12 * k, h = 0.07 * k;
+        rr(gF, cx - w / 2, f[1] - h, w, h, h * 0.4); gF.fillStyle = SKATE_COL[0]; gF.fill();
+        gF.fillStyle = '#e8503f'; gF.beginPath(); gF.arc(cx, f[1] + h * 0.35, Math.max(1.2, w * 0.28), 0, Math.PI * 2); gF.fill();
+      }
+    }
+    const slLeft = run ? G.slowUntil - now : 0;
+    if (slLeft > 0) {
+      timerBar(gF, row++, slLeft, SLOW_MS, slLeft < ALLIN_WARN_MS, '#e6b85a');
+      // Slow motion: a warm vignette round the stage.
+      if (!shell.reduced) {
+        const W = shell.W, H = shell.H, a = Math.min(1, slLeft / 400, (SLOW_MS - slLeft) / 300 + 0.2) * 0.32;
+        const vg = gF.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
+        vg.addColorStop(0, 'rgba(230,180,90,0)'); vg.addColorStop(1, 'rgba(120,80,20,' + a + ')');
+        gF.fillStyle = vg; gF.fillRect(0, 0, W, H);
+      }
+    }
     if (run && G.jet) {
       const jl = (JET_S - G.jetT) * 1000;
       timerBar(gF, row++, jl, JET_S * 1000, jl < ALLIN_WARN_MS, '#ff8a3d');
@@ -1122,7 +1195,8 @@ export function create(shell) {
       jetpack(gF, jp[0], jp[1], jp[2], G.jetT < JET_S - JET_DOWN ? 1 : 0.5, now);
     }
     const blink = run && now < G.safeUntil && Math.floor(now / 90) % 2;
-    placeAce(G.x, G.y, run ? clamp(G.lean * 9, -12, 12) : 0, blink ? 0.35 : 1, run ? flipAngle() : 0);
+    const railUp = run && G.grinding ? RAIL_Y : 0;
+    placeAce(G.x, G.y + railUp, run ? clamp(G.lean * 9, -12, 12) : 0, blink ? 0.35 : 1, run ? flipAngle() : 0);
   }
 
   return {

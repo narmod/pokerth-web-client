@@ -80,7 +80,7 @@ export const GAMES = [
   { id: 'videopoker', kind: 'learn', unlock: { trophies: 16 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
   { id: 'pokerdrop', kind: 'fun', unlock: { trophies: 18 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
   { id: 'solitaire', kind: 'learn', unlock: { trophies: 20 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
-  { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', rulesMore: ['adJetRule'], aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
+  { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', rulesMore: ['adJetRule', 'adBonusRule'], aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
   { id: 'bluff', kind: 'learn', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.5, 2.4], load: () => import('./bluff.mjs') },
   { id: 'poker-run', kind: 'fun', unlock: { trophies: 27 }, name: 'Poker Run', icon: '🏎️', rulesKey: 'prRules', aspect: [0.6, 1.9], load: () => import('./poker-run.mjs') },
 ];

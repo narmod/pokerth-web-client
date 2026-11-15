@@ -2,7 +2,8 @@
 // Ace Dash's jetpack (web.72, narmod: « A + C »): picked up, the Ace flies over
 // a card wall without a scratch, ← → still change lane; three cards in the sky,
 // the one he flies through joins his hand and the others go; he lands safe;
-// time attack: +5 s; the rules sheet tells it.
+// time attack: +5 s; the rules sheet tells it. Then (web.73) the roller skates
+// (faster, distance ×1.5, the rail to grind along) and the hourglass (slow motion).
 import { chromium } from 'playwright';
 import { startServer } from './lib/mobile-harness.mjs';
 
@@ -23,7 +24,7 @@ await sleep(1000);
 // The rules sheet: the jetpack's line, before the keys.
 await pg.evaluate(() => window.PthGames.rules()); await sleep(300);
 const rules = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .pg-rules li')].map((l) => l.textContent));
-ok(rules.length >= 3 && /Jetpack/.test(rules[rules.length - 2]) && /Espace/.test(rules[rules.length - 1]), 'the rules tell the jetpack, before the keys');
+ok(rules.length >= 4 && /Jetpack/.test(rules[rules.length - 3]) && /Patins/.test(rules[rules.length - 2]) && /Espace/.test(rules[rules.length - 1]), 'the rules tell the jetpack, the skates and the hourglass, before the keys');
 await pg.click('#pth-game .pg-rules [data-r="close"]').catch(() => {}); await sleep(300);
 await pg.evaluate(() => window.__pthDash.start('free')); await sleep(600);
 // A jetpack in his lane.
@@ -52,6 +53,32 @@ const t0 = await pg.evaluate(() => window.__pthDash.run().time);
 await pg.evaluate(() => window.__pthDash.jet()); 
 const t1 = await pg.evaluate(() => window.__pthDash.run().time);
 ok(t1 - t0 > 4.8 && t1 - t0 < 5.2, 'time attack: the jetpack gives 5 s (' + (t1 - t0).toFixed(1) + ')');
+// Roller skates: faster, the distance counts more, past the edge lane the rail.
+await pg.evaluate(() => window.__pthDash.start('free')); await sleep(800);
+const sk0 = await pg.evaluate(() => { const G = window.__pthDash.run(); G.obj = []; G.items = []; G.items.push({ kind: 'skates', x: G.x, z: 4.8, y: 0.6, spin: 0, col: ['#000', '#fff'] }); return G.speed; });
+await sleep(1500);
+const sk1 = await pg.evaluate(() => { const G = window.__pthDash.run(); return { on: G.skateUntil > performance.now(), speed: G.speed }; });
+ok(sk1.on && sk1.speed > sk0 * 1.1, 'skates picked up: faster (' + sk0.toFixed(1) + ' → ' + sk1.speed.toFixed(1) + ' m/s)');
+const d0 = await pg.evaluate(() => { const G = window.__pthDash.run(); G.obj = []; return { d: G.dist, tr: G.travel }; });
+await sleep(500);
+const d1 = await pg.evaluate(() => { const G = window.__pthDash.run(); return { d: G.dist, tr: G.travel }; });
+const k = (d1.d - d0.d) / (d1.tr - d0.tr);
+ok(k > 1.45 && k < 1.55, 'on skates the distance counts ×1.5 (' + k.toFixed(2) + ')');
+await pg.keyboard.press('ArrowLeft'); await sleep(120); await pg.keyboard.press('ArrowLeft'); await sleep(500);
+const g0 = await pg.evaluate(() => { const G = window.__pthDash.run(); G.obj = []; return { lane: G.lane, x: G.x, grind: G.grinding, b: G.bonus }; });
+await sleep(1000);
+const g1 = await pg.evaluate(() => { const G = window.__pthDash.run(); return { grind: G.grinding, b: G.bonus }; });
+ok(g0.lane === -1 && g0.x < -2.4 && g1.grind && g1.b - g0.b >= 15, 'past the edge lane: on the rail, grinding (+' + (g1.b - g0.b) + ' in 1 s)');
+await pg.evaluate(() => { window.__pthDash.run().skateUntil = performance.now() - 1; }); await sleep(400);
+ok(await pg.evaluate(() => { const G = window.__pthDash.run(); return G.lane === 0 && !G.grinding; }), 'the skates off: back on the felt');
+// The hourglass: slow motion.
+await pg.evaluate(() => { const G = window.__pthDash.run(); G.obj = []; G.items = []; G.items.push({ kind: 'slow', x: G.x, z: 4.8, y: 0.6, spin: 0, col: ['#000', '#fff'] }); });
+await sleep(500);
+const s0 = await pg.evaluate(() => ({ on: window.__pthDash.run().slowUntil > performance.now(), t: window.__pthDash.run().t, w: performance.now() }));
+await sleep(1000);
+const s1 = await pg.evaluate(() => ({ t: window.__pthDash.run().t, w: performance.now() }));
+const rate = (s1.t - s0.t) / ((s1.w - s0.w) / 1000);
+ok(s0.on && rate > 0.4 && rate < 0.6, 'the hourglass: the game at half speed (' + rate.toFixed(2) + ')');
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
 await b.close(); server.close();
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
