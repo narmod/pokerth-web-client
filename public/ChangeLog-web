@@ -1,4 +1,9 @@
-2026-11-15 version 2.1.11-web.56 (current series):
+2026-11-15 version 2.1.11-web.57 (current series):
+- improvement: Mini-games — new pictures for nine games, in the style of Ace Dash: a scene in the club at night (the dark room, its lamps, the felt in perspective) with the game's things on the table, and no buttons or pay table any more
+- improvement: Poker Run — its picture shows one straight road to the city, without the three forks
+- improvement: Video Poker — its picture is now a poker machine on the bar, the Ace on his stool beside it
+
+2026-11-15 version 2.1.11-web.56:
 - bugfix: Music player — the 🎵 entry of the mini-games menu now hides too when the music is switched off on this server
 - bugfix: Music player — the 🎵 menu entry lights up while the player is open on every screen, the create-a-table and mini-games screens included
 

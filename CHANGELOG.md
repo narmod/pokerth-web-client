@@ -15,6 +15,15 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **New covers, on the model of Ace Dash** (`web.57`, narmod) — `games/art.mjs`: new `club()` (the dark room and
+  its two lamps) and `table()` (the felt in perspective, its wooden rim; returns `at(f, y)`) and `glow()`; Ace
+  Runner, House of Cards, Poker Solitaire, Who Wins?, Higher or Lower, the Ace's Bluff and Poker Drop redrawn as
+  scenes in the club, without any of the games' screens (buttons, pay table, Tilt gauge, hand slots); Poker Run's
+  road no longer forks (one straight road, a card to pick up, chips on the verge); Video Poker at the bar (narmod's
+  pick C of three: a bar-top machine showing a royal flush, the shelves of bottles, the Ace on his stool). `feltBg()`
+  is gone. The covers are also the dark backdrop of the card games' title screens (`title.mjs`).
+
 ### Added
 - **One title screen for every mini-game** (`web.55`, narmod: « like Ace Dash or Poker Run, a dark picture of the
   game with the choices over it; a common model, easy to reproduce for a new game ») — new `games/title.mjs`:
