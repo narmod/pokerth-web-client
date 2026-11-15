@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.55 (current series):
+2026-11-15 version 2.1.11-web.56 (current series):
+- bugfix: Music player — the 🎵 entry of the mini-games menu now hides too when the music is switched off on this server
+- bugfix: Music player — the 🎵 menu entry lights up while the player is open on every screen, the create-a-table and mini-games screens included
+
+2026-11-15 version 2.1.11-web.55:
 - improvement: Mini-games — every game opens on the same title screen: a dark picture of the game behind, its name, a line of help and one tile per way to play, with your record on each
 - improvement: Mini-games — Ace Runner and Poker Run have their « Free run » tile too; the options (Video Poker's daily challenge, Poker Drop's rule, the Bluff's hourglass) are chips under the tiles
 

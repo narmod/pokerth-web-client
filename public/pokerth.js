@@ -4255,13 +4255,13 @@ document.addEventListener("DOMContentLoaded", function() {
         el.title = 'Serverlist unreachable — using the built-in pokerth.net fallback';
       }
     };
-    // Lecteur MP3 : interrupteur d'instance (admin -> onglet Music). Coupe, les 4
+    // Lecteur MP3 : interrupteur d'instance (admin -> onglet Music). Coupe, les 5
     // entrees 🎵 des menus ••• disparaissent et le panneau se referme s'il etait
     // ouvert. Les menus ••• sont fermes au boot, donc l'arrivee asynchrone de
     // /app-config ne provoque aucun clignotement visible. Cle absente = actif.
     function _applyMusicFlag(on) {
       window._musicOff = !on;
-      ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob']
+      ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-arcade-mob', 'music-toggle-game-mob']
         .forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; });
       if (!on) { var mp = document.getElementById('music-panel'); if (mp) mp.style.display = 'none'; }
     }
@@ -10658,7 +10658,7 @@ var _WIN_BTN = [
   { win: 'forum-modal',           mode: 'display', btns: ['forum-btn-connect', 'forum-btn-lobby', 'forum-btn-create', 'forum-btn-game'] },
   { win: 'pm-modal',              mode: 'display', btns: ['pm-btn-lobby'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
-  { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
+  { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-arcade-mob', 'music-toggle-game-mob'] },
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'adaptive-chat-toggle'] },
   { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn', 'adaptive-info-toggle'] },
   { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn', 'adaptive-reactions-toggle'] },
@@ -11402,7 +11402,7 @@ function toggleMusicPanel() {
     try { if (window.Music && window.Music.mount) window.Music.mount(document.getElementById('music-body')); } catch (e) {}
   }
   // Reflect open/closed state on the entry buttons (active = gold).
-  ['music-btn-connect', 'music-toggle-lobby-mob', 'music-toggle-game-mob', 'music-toggle-connect-mob'].forEach(function (id) {
+  ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-arcade-mob', 'music-toggle-game-mob'].forEach(function (id) {
     var b = document.getElementById(id);
     if (!b) return;
     b.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -12590,7 +12590,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.55'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

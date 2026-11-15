@@ -342,6 +342,10 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Music player entries** (`web.56`, audit `AUDIT_MUSIQUE_2026-11-15`) — the 🎵 entry of the mini-games overflow
+  menu had no id, so `_applyMusicFlag` (admin music kill switch) left it visible as a dead button; it is now
+  `#music-toggle-arcade-mob`. `toggleMusicPanel`'s active-state list targeted a non-existent `music-btn-connect`
+  and missed the create and arcade entries; it and the `_WIN_BTN` registry now list all five entries.
 - **iPad home-screen app — blurred header** (`web.48`, narmod) — iPadOS 26 draws its scroll-edge effect over the
   top of the web view and only replaces the blur by a plain colour when a fixed/sticky element touches the top
   edge (WebKit `fixedContainerEdges`). The headers are in normal flow, so the bar looked fogged. New
