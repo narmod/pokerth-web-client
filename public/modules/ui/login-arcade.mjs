@@ -25,6 +25,14 @@
 // from any mode), the card comes out of a golden egg in a rainbow light, then
 // the Ace congratulates — an easter egg. With every game already open, the
 // Ace only says so, with a smile (secretWord()).
+//
+// Warm-up (web.70, narmod: « on a new computer, unlocking the mode is very
+// slow: the files are not loaded yet and the animation is not smooth »): the
+// mini-games page's modules (menu, shell, the title and end templates, the
+// art, the light), the Ace's own module and the arcade's fonts are loaded
+// ahead — in idle time once the mode is on, at once when the secret word is
+// typed — and the egg, the light and the header's fold wait for them (at
+// most a moment), so nothing is fetched or compiled while they play.
 // ═══════════════════════════════════════════════════════════════════
 
 const SEEN_KEY = 'pth_arcade_seen';
@@ -45,6 +53,31 @@ const tr = (k, p) => { try { return typeof window.t === 'function' ? window.t(k,
 const seen = () => flag(SEEN_KEY);
 
 let last = null;   // the last state shown
+
+// ── Warm-up ──────────────────────────────────────────────────────────
+const WARM_MODS = ['../games/menu.mjs', '../games/shell.mjs', '../games/title.mjs', '../games/end.mjs', './backlight.mjs'];
+const WARM_FONTS = ['700 16px Cinzel', '400 16px Cinzel', '500 16px Inconsolata', '400 16px Inconsolata'];
+let warmP = null, warmIdleSet = false, warmed = false;
+/** Load (once) what the mini-games page and its animations need; never rejects. */
+export function warm() {
+  if (warmP) return warmP;
+  // Offline: no attempt (a failed module stays failed for the page) — it will load when opened.
+  try { if (navigator.onLine === false) return Promise.resolve(false); } catch (e) {}
+  const all = WARM_MODS.map((m) => import(m).catch(() => null));
+  try { if (typeof window._guideWarm === 'function') all.push(Promise.resolve(window._guideWarm()).catch(() => null)); } catch (e) {}
+  try { if (document.fonts && document.fonts.load) for (const f of WARM_FONTS) all.push(document.fonts.load(f).catch(() => null)); } catch (e) {}
+  warmP = Promise.all(all).then(() => { warmed = true; return true; });
+  return warmP;
+}
+/** The warm-up, but never longer than `ms` (a slow network must not hold the player). */
+const warmFor = (ms) => Promise.race([warm(), new Promise((r) => setTimeout(r, ms))]);
+/** Once the mode is on: the warm-up when the page is idle. */
+function warmIdle() {
+  if (warmIdleSet || warmP) return;
+  warmIdleSet = true;
+  const go = () => { warm(); };
+  setTimeout(() => { try { if ('requestIdleCallback' in window) window.requestIdleCallback(go, { timeout: 6000 }); else go(); } catch (e) { go(); } }, 2500);
+}
 
 /** Show or hide the card from the mode's state (games/index.mjs). */
 export async function refresh() {
@@ -83,6 +116,7 @@ async function celebrate(card) {
   stat('celebrated');
   card.classList.add('lc-hide');
   try { card.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+  await warmFor(2500);
   try {
     const { backlight, motionOff } = await import('./backlight.mjs');
     const soft = motionOff();
@@ -99,6 +133,7 @@ async function celebrate(card) {
  */
 export async function secretWord(already) {
   celebrating = true;   // no ordinary light meanwhile
+  warm();               // while the header unfolds
   try {
     // Back on the choice of modes, the header unfolding as from any mode.
     if (typeof window.loginBackToStep1 === 'function') window.loginBackToStep1();
@@ -116,6 +151,7 @@ export async function secretWord(already) {
     stat('celebrated');
     card.classList.add('lc-hide');
     try { card.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+    await warmFor(2500);
     try {
       const { backlight, motionOff } = await import('./backlight.mjs');
       const off = motionOff();
@@ -133,6 +169,7 @@ function render() {
   const on = !!(st && st.mode);
   card.hidden = !on;
   if (!on) return;
+  warmIdle();
   if (!celebrating && !flag(SHOWN_KEY) && loginShown()) celebrate(card);
   const d = document.getElementById('lc-arcade-desc');
   if (d) d.textContent = tr('loginArcadeDesc', { n: st.open, t: st.total });
@@ -170,6 +207,8 @@ export async function openArcade() {
   try {
     const g = await import('../games/index.mjs');
     if (g.isOpen()) return;
+    await warmFor(3000);      // the page's modules ready before the header folds away
+    if (g.isOpen()) return;
     if (loginShown() && typeof window.loginHeaderFold === 'function') {
       window.loginHeaderFold(true);
       if (!soft()) await new Promise((r) => setTimeout(r, FOLD_MS));
@@ -184,6 +223,8 @@ export async function openArcade() {
 if (typeof window !== 'undefined') {
   window.loginOpenArcade = openArcade;
   window.loginSecretWord = secretWord;
+  window.loginArcadeWarm = warm;
+  window.loginArcadeWarmed = () => warmed;   // tests
   // A trophy won: the mode may have just been unlocked. At the table, a toast
   // after the trophy's own (the card waits for the login to appear).
   // A training game ended (offline/server.mjs): with the mode unlocked or not

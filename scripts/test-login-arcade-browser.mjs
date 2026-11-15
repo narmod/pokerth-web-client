@@ -169,6 +169,9 @@ console.log('test-login-arcade-browser');
   await sleep(1400);
   const egg = await pg.evaluate(() => ({ canvas: !!document.querySelector('canvas.pth-backlight'), hide: document.getElementById('login-card-arcade').classList.contains('lc-hide') }));
   ok(egg.canvas && egg.hide, 'Mascotte: the easter egg plays round the empty card');
+  // web.70: the mini-games page's modules and fonts are loaded before the egg plays (nothing fetched during it).
+  const warmed = await pg.evaluate(() => typeof window.loginArcadeWarmed === 'function' && window.loginArcadeWarmed());
+  ok(warmed, 'Mascotte: the page, its light and its fonts loaded ahead of the egg');
   await pg.waitForFunction(() => /🥚/.test((document.querySelector('#ace-dock .ad-bubble') || {}).textContent || ''), null, { timeout: 12000 }).catch(() => {});
   const c = await card(pg);
   const st = await pg.evaluate(() => ({ all: localStorage.getItem('pth_arcade_all'), shown: localStorage.getItem('pth_arcade_shown'), bub: (document.querySelector('#ace-dock .ad-bubble') || {}).textContent || '', cls: document.getElementById('login-card-arcade').className }));

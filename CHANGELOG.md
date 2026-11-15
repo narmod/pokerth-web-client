@@ -46,6 +46,12 @@ highlights below.
   New `scripts/test-poker-run-queen.mjs`.
 
 ### Changed
+- **Mini-games warmed up ahead** (`web.70`, narmod: « on a new computer, unlocking the arcade mode is very slow,
+  the animation is not smooth ») — `ui/login-arcade.mjs warm()`: the page's modules (`games/menu`, `shell`, `title`,
+  `end` and their imports — the art, the mascot engine, `ui/backlight`), the Ace's module (new
+  `window._guideWarm` in `guide/index.mjs`, his own loader with its retries) and the Cinzel / Inconsolata faces.
+  Run in idle time once the mode is on, at once when the secret word is typed; the egg, the trophies' light and
+  the header's fold wait for it (2.5–3 s at most). Not attempted offline (a failed module stays failed).
 - **Poker Run: no slowing down at forks, a nitro meter** (`web.66`, narmod) — `GATE_SLOW` removed; the rules lose
   « the car slows down before each fork » in all 83 languages. `.prun-nitro` on the stage (bottom left) when the touch
   pad is not shown.

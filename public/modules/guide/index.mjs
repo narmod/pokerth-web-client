@@ -1741,6 +1741,8 @@ window._guideRefresh = () => { if (showing && showing.kind === 'ctx' && showing.
 window.guideToggle = toggle;
 window.guideArcadeMode = () => { arcadeMode().catch(() => {}); };
 window.guideArcadeEgg = (again) => { arcadeEgg(!!again).catch(() => {}); };
+// The Ace's module loaded ahead (ui/login-arcade.mjs warm(), web.70): his word after the egg comes at once.
+window._guideWarm = () => mascot().then(() => true, () => false);
 // The mini-games opened another way (the login card): the bubble goes.
 // A mode picked on the login while the Ace's word is up: as « Close ». The
 // Mini-games card itself (played): counted as the funnel's « played after the

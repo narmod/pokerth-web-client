@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.69 (current series):
+2026-11-15 version 2.1.11-web.70 (current series):
+- improvement: Mini-games — the mini-games page and its animations are loaded ahead: on a device that had never opened them, unlocking the mode (the egg, the light) and opening the page no longer stutter while files arrive
+
+2026-11-15 version 2.1.11-web.69:
 - new: Poker Run — « Défi du jour »: the same cards, scenes, road and traffic for everyone today (the same forks give the same road), your best run of the day kept
 - new: Poker Run — in the daily challenge, the ghost of your best run today drives ahead of you (👻 above it, a pale dot on the small map) and the HUD shows how far behind or ahead you are (👻 +1.3 s)
 
