@@ -15,6 +15,14 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Tapis!: columns close up, the dealer always tops up** (`web.77`, narmod) — once a friend is in his hole, his
+  column and hole go and the others slide together in the middle (the chips keep the round's size, `cols0`;
+  `G.xs` eases the drawn columns, hit tests follow them); no column is ever apart. No pair left → the dealer
+  pushes a row of pairs in from the felt at once (−5 s), even with a Joker or a Dealer button in hand (they
+  stay); the free shuffle is gone (the Shuffle stays a power); the check waits for a column to close up. The
+  head-out-of-the-hole wave is shorter (1.1 s). `test-games-browser.mjs` +2 checks per screen.
+
 ### Added
 - **Tapis!: the cast** (`web.76`, push 2 of `claude/CONCEPTION_TAPIS.md`) — `games/cast.mjs`: nine little SVG
   characters on a common rig (100 × 120, feet at 50, 116) — the Suits (Spade black, Heart red, Diamond blue, Club

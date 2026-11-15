@@ -160,6 +160,28 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(tps.state === 'run' && tps.cols >= 6 && tps.actors === tps.cols && tps.n >= 2 && tps.gained > 0, label + ': Tapis!: Space starts, a friend on every column, a group taken pays (' + tps.n + ' chips, +' + tps.gained + ', ' + tps.state + ', ' + tps.actors + '/' + tps.cols + ')');
   await shot(pg, label + '-tapis');
+  // web.77: an emptied column goes once its friend is in his hole, the others close up
+  const tpc = await pg.evaluate(async () => {
+    const T = window.__pthTapis, G = T.run(), n0 = G.cols, keep = G.grid[2];
+    G.grid[1].splice(0); G.grid[3].splice(0);
+    await new Promise((r) => setTimeout(r, 3500));
+    const L = G.xs, step = L.length > 1 ? L[1] - L[0] : 0;
+    return { n0, n: G.cols, same: G.grid[1] === keep, actors: document.querySelectorAll('#pth-game .pg-layer > div[id^="pth-game-tp"]').length,
+      even: L.every((x, i) => i === 0 || Math.abs(x - L[i - 1] - step) < 0.5) };
+  });
+  ok(tpc.n === tpc.n0 - 2 && tpc.same && tpc.actors === tpc.n && tpc.even, label + ': Tapis!: two emptied columns go, the others close up (' + tpc.n0 + ' → ' + tpc.n + ')');
+  // never stuck: no pair left → the dealer tops up with a row of chips
+  const tpr = await pg.evaluate(async () => {
+    const T = window.__pthTapis, G = T.run();
+    G.grid.forEach((col, c) => { col.splice(0); col.push({ k: c % 3, off: 0 }); });
+    G.inv.joker = 1; G.inv.dealer = 1;
+    const t0 = G.timeLeft;
+    T.act(0, 0);                               // a lone chip: nothing, the check runs
+    window.__pthTapis.check && window.__pthTapis.check();
+    await new Promise((r) => setTimeout(r, 1200));
+    return { rows: G.grid.map((col) => col.length), lost: t0 - G.timeLeft };
+  });
+  ok(tpr.rows.every((n) => n === 2) && tpr.lost >= 4.5, label + ': Tapis!: no pair left, a Joker in hand or not: the dealer tops up a row (' + tpr.rows.join(',') + ', −' + Math.round(tpr.lost) + ' s)');
   await pg.evaluate(() => window.__pthTapis.timeUp());
   const tpo = await endInfo(pg, 8000);
   ok(tpo.on && tpo.title === 'Tapis !' && tpo.btns.length === 2, label + ': Tapis!: the clock runs out, the end screen (' + tpo.score + ')');

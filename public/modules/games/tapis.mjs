@@ -20,8 +20,11 @@
 //             or a Shuffle, 9 or more a Joker (every chip of a colour); one
 //             Shuffle more every round. Pills at the top: tap, 1 2 3, or the
 //             cursor above the chips
-//   Recave    no pair left: a free shuffle once a round, then the dealer
+//   Recave    no pair left (a Joker or Dealer in hand or not): the dealer
 //             pushes a row of pairs in from the felt (−5 s) — never stuck
+//   Columns   never apart (narmod, web.77): when a friend has gone into his
+//             hole, his column and hole go and the others close up in the
+//             middle; the chips keep the round's size
 //   Input     tap a chip; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
 //             Space / Enter / A takes the lit group
 //   Friends   the cast of cast.mjs (push 2, web.76): the Suits at levels 1-2,
@@ -42,7 +45,7 @@ import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
-const SINK_S = 0.45, PEEK_S = 1.7;          // into the hole, then his head out to wave
+const SINK_S = 0.45, PEEK_S = 1.1;          // into the hole, then his head out to wave
 /** The characters of the round (cast.mjs): the family of the level, a different one on each column as far as it goes. */
 function castFor(lv, cols) {
   const fam = castFamily(lv);
@@ -85,13 +88,16 @@ export function create(shell) {
 
   // ── Geometry (world px; the stage is H = 360 high, W wide) ────────
   const colsFor = (W) => (W < H * 0.95 ? 6 : Math.max(6, Math.min(12, Math.round(W / H * 4.6))));
+  // The chips keep the round's size (cols0) when columns go: the others close up in the middle.
   function geom() {
     const W = shell.W, cols = G.cols;
-    const cw = Math.min(W * 0.94 / cols, 46);
+    const cw = Math.min(W * 0.94 / Math.max(1, G.cols0 || cols), 46);
     return { W, cw, bh: cw * 0.5, ry: cw * 0.17, rx: cw * 0.43, x0: (W - cw * cols) / 2, base: H - Math.max(14, cw * 0.5) };
   }
   const rowsFor = (L) => Math.max(5, Math.min(14, Math.floor((L.base - TOP - L.cw * 1.9 - L.ry) / L.bh)));
-  const colX = (L, c) => L.x0 + L.cw * (c + 0.5);
+  /** Where column c should stand, and where it is drawn (sliding there). */
+  const colAim = (L, c) => L.x0 + L.cw * (c + 0.5);
+  const colX = (L, c) => (G.xs && G.xs[c] != null ? G.xs[c] : colAim(L, c));
   /** The bottom of chip r's side in column c (with its fall). */
   const chipY = (L, c, r) => L.base - (r + (G.grid[c][r] ? G.grid[c][r].off : 0)) * L.bh;
 
@@ -100,18 +106,20 @@ export function create(shell) {
     if (G) G.chars.forEach((ch) => ch.ace.remove());   // the friends of the title's board
     G = { lv: 1, score: 0, cols: colsFor(shell.W), grid: [], chars: [], inv: { joker: 0, dealer: 0, shuffle: 1 }, armed: '',
       cursor: { c: 0, r: 0, bar: -1 }, showCursor: false, inTotal: 0, bestCat: -1, rounds: [], fx: [], parts: [], say: null, banner: null,
-      timeLeft: 0, timeMax: 1, freeShuffle: true, lastTick: 0 };
+      timeLeft: 0, timeMax: 1, lastTick: 0 };
   }
   function newRound() {
     G.chars.forEach((ch) => ch.ace.remove());
-    G.cols = colsFor(shell.W);
+    G.cols0 = G.cols = colsFor(shell.W);
     const L = geom();
+    G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c));
+    G.closing = [];
     G.maxRows = rowsFor(L);
     G.grid = dealRound(G.lv, G.cols, G.maxRows);
     G.grid.forEach((col, c) => col.forEach((b, r) => { b.off = 6 + r * 0.6 + c * 0.5; }));   // the chips fall into place
     G.total = chipsLeft(G.grid);
     G.timeMax = G.timeLeft = timeFor(G.total, G.lv);
-    G.freeShuffle = true; G.armed = '';
+    G.armed = '';
     G.cursor = { c: Math.floor(G.cols / 2), r: 0, bar: -1 };
     const kinds = castFor(G.lv, G.cols);
     G.chars = G.grid.map((_, c) => {
@@ -194,13 +202,22 @@ export function create(shell) {
     if (G.armed) say(t('tpArmed'));
     sound('notifyAction');
   }
-  /** After a move: nothing left to take? The dealer helps (never stuck). */
+  /**
+   * After a move: nothing left to take? The dealer tops up (narmod 2026-11-15):
+   * a row of chips comes in under the stacks, in pairs, so there is always
+   * a move again (−5 s). Waits for the columns to close up first; a Joker or
+   * a Dealer button in hand does not stop him (they stay for later).
+   */
   function afterMove() {
     clearTimeout(check);
     check = setTimeout(() => {
-      if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid) || G.inv.joker || G.inv.dealer) return;
-      if (G.freeShuffle) { G.freeShuffle = false; shuffleGrid(G.grid); G.grid.forEach((col) => col.forEach((b) => { b.pop = 0.35; })); }
-      else { recaveRow(G.grid, colorsAt(G.lv)); G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S); }
+      if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid)) return;
+      if (G.grid.some((col) => !col.length)) { afterMove(); return; }      // a column is still closing up
+      recaveRow(G.grid, colorsAt(G.lv));
+      G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.5; });
+      G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S);
+      const L = geom();
+      G.fx.push({ s: '−' + RECAVE_S + ' s', x: L.W / 2, y: L.base - L.cw * 2.2, t: 0, life: 1.3 });
       say(t('tpRecave')); sound('notifyCard');
       afterMove();
     }, 650);
@@ -263,8 +280,9 @@ export function create(shell) {
 
   // ── Input ─────────────────────────────────────────────────────────
   function cellAt(L, x, y) {
-    const c = Math.floor((x - L.x0) / L.cw);
-    if (c < 0 || c >= G.cols || !G.grid[c] || !G.grid[c].length) return null;
+    let c = -1;
+    for (let i = 0; i < G.cols; i++) if (Math.abs(x - colX(L, i)) <= L.cw / 2) c = i;
+    if (c < 0 || !G.grid[c] || !G.grid[c].length) return null;
     const n = G.grid[c].length;
     for (let r = n - 1; r >= 0; r--) { const yb = chipY(L, c, r); if (y >= yb - L.bh - L.ry && y <= yb + L.ry) return [c, r]; }
     if (y < chipY(L, c, n - 1) - L.bh) return [c, n - 1];     // on the friend: his top chip
@@ -307,6 +325,7 @@ export function create(shell) {
       else if (a === 'jump' && !up) power(POWERS[cur.bar]);
       return;
     }
+    if (!G.cols) return;
     if (a === 'left' || a === 'right') cur.c = (cur.c + (a === 'left' ? -1 : 1) + G.cols) % G.cols;
     else if (up) { if (cur.r >= n - 1) cur.bar = 1; else cur.r++; }
     else if (a === 'duck') cur.r = Math.max(0, Math.min(cur.r, n - 1) - 1);
@@ -399,7 +418,19 @@ export function create(shell) {
       }
     });
     if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.clapUntil = time + 1.1; });
-    if (state === 'run' && G.chars.length && G.chars.every((ch) => ch.st === 'in')) roundClear();
+    // A friend gone into his hole: his column goes, the hole closes, the others close up (narmod 2026-11-15).
+    for (let c = G.cols - 1; c >= 0; c--) {
+      if (G.grid[c].length || G.chars[c].st !== 'in') continue;
+      G.closing.push({ x: colX(L, c), t: 0 });
+      G.chars[c].ace.remove();
+      G.grid.splice(c, 1); G.chars.splice(c, 1); G.xs.splice(c, 1); G.cols--;
+      if (G.cursor.c > c || G.cursor.c >= G.cols) G.cursor.c = Math.max(0, G.cursor.c - 1);
+      hover = null;
+    }
+    const L2 = geom();
+    for (let c = 0; c < G.cols; c++) { const a = colAim(L2, c); G.xs[c] += (a - G.xs[c]) * Math.min(1, dt * 7); if (Math.abs(a - G.xs[c]) < 0.05) G.xs[c] = a; }
+    for (let i = G.closing.length - 1; i >= 0; i--) { G.closing[i].t += dt; if (G.closing[i].t > 0.4) G.closing.splice(i, 1); }
+    if (state === 'run' && G.cols === 0) roundClear();
     for (let i = G.parts.length - 1; i >= 0; i--) { const p = G.parts[i]; p.t += dt; if (p.t > p.life) { G.parts.splice(i, 1); continue; } p.vy += (p.conf ? 30 : 420) * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 7; }
     for (let i = G.fx.length - 1; i >= 0; i--) { G.fx[i].t += dt; if (G.fx[i].t > G.fx[i].life) G.fx.splice(i, 1); }
     if (G.say) { G.say.t += dt; if (G.say.t > 2.8) G.say = null; }
@@ -460,6 +491,11 @@ export function create(shell) {
       g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.12, L.ry * 1.25, 0, 0, 7); g.fill();
       const hg = g.createRadialGradient(x, L.base + L.ry * 0.3, 1, x, L.base, L.rx); hg.addColorStop(0, '#000'); hg.addColorStop(1, '#1a1208');
       g.fillStyle = hg; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.02, L.ry * 1.1, 0, 0, 7); g.fill();
+    }
+    for (const h of G.closing) {          // a hole closing behind its friend
+      const k = 1 - h.t / 0.4;
+      g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * 1.12 * k, L.ry * 1.25 * k, 0, 0, 7); g.fill();
+      g.fillStyle = '#000'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * k, L.ry * 1.1 * k, 0, 0, 7); g.fill();
     }
     // The group under the cursor or the mouse.
     const cur = G.cursor, hl = new Set();
@@ -562,7 +598,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',

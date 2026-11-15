@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.76 (current series):
+2026-11-15 version 2.1.11-web.77 (current series):
+- improvement: Tapis! — the stacks are never apart: when a character has gone into his hole, the others slide together
+- improvement: Tapis! — no pair left? The dealer gives you a new row of chips right away (−5 s), even with a Joker or a Dealer button in hand
+
+2026-11-15 version 2.1.11-web.76:
 - new: Tapis! — its own characters: the four suits (Spade, Heart, Diamond, Club) at levels 1-2, the King, the Queen, the Jack and the Croupier at levels 3-4, and so on, with the Joker in both; all of them mixed from level 21
 - new: Tapis! — they come alive: their eyes follow the chip you point at, they sweat when their stack is nearly gone or time is short, wobble, clap when a friend falls, jump into their hole and pop their head out to wave goodbye
 
