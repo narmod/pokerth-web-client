@@ -57,6 +57,7 @@ import { drawScenery, skyAt, dayAt, VENUES } from './runner-scenery.mjs';
 import { RUN_BONUS } from './ace-runner.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
+import { titleScreen } from './title.mjs';
 
 // World units are metres; the camera looks down the felt (+z, away from it).
 const PZ = 4;                 // the Ace's depth in front of the camera
@@ -124,7 +125,6 @@ const CSS = `
 #pth-game .ad-x{display:inline-block;margin-left:.3em;padding:0 .3em;border-radius:.5em;font-size:.72em;vertical-align:.15em;background:#d8b25a;color:#1d222b}
 #pth-game .ad-x[hidden]{display:none}
 #pth-game .ar-num.ad-low{color:#ff8a80}
-#pth-game .ad-rec{display:block;opacity:.8;font-size:.82em;margin-top:.2em}
 #pth-game .ad-rebuy .pg-blink{margin-top:.6em}
 @media (prefers-reduced-motion:reduce){#${ACE_ID} .mc-card3d{transition:none}#${ACE_ID}.adash-back .run .mc-card3d,#${ACE_ID}.adash-back .run .mc-breath{animation:none}}
 .reduce-fx #${ACE_ID}.adash-back .run .mc-card3d,.reduce-fx #${ACE_ID}.adash-back .run .mc-breath{animation:none}
@@ -264,14 +264,9 @@ export function create(shell) {
   }
   function titlePanel() {
     const rec = records();
-    const tile = (m, i) => '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
-      + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="ad-rec">'
-      + (rec[m.id] ? esc(t('arRecord', { n: fmt(rec[m.id]) })) : '&nbsp;') + '</small></button>';
-    shell.panel('<h2>Ace Dash</h2><p>' + esc(t('adHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(); });
-    });
+    titleScreen(shell, { id: 'ace-dash', live: true, name: 'Ace Dash', hint: t('adHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      onPick: (i) => { sel = i; start(); } });
   }
   buildHud('free');
   newRun();

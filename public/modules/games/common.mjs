@@ -82,6 +82,25 @@ const CSS = `
 #pth-game.pg-light .gm-tile small{color:#5a6470}
 #pth-game.pg-light .gm-tile.on{box-shadow:inset 0 0 0 2px #a07a12,0 0 14px rgba(160,122,18,.25)}
 @media (max-width:520px){#pth-game .gm-tile{padding:10px 8px;gap:4px}#pth-game .gm-tile i{font-size:24px}#pth-game .gm-tile b{font-size:14px}}
+/* The title screen's template (title.mjs, web.55): the dark picture, the
+   record of each tile, a row of option chips, a footnote */
+#pth-game .pg-panel>.gm-bg{position:absolute;inset:0;z-index:0;display:block;max-width:none;overflow:hidden;pointer-events:none}
+#pth-game .pg-panel>.gm-bg svg{display:block;width:100%;height:100%;filter:brightness(.5) saturate(.9)}
+#pth-game .pg-panel>.gm-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(11,18,16,.3),rgba(11,18,16,.82))}
+#pth-game .pg-panel.gm-title>div:not(.gm-bg){position:relative;z-index:1;gap:10px;max-width:640px}
+#pth-game .pg-panel .gm-hint{max-width:520px;color:#dfe9e3}
+#pth-game .gm-tile .gm-rec{color:#d8b25a}
+#pth-game.pg-light .gm-tile .gm-rec{color:#8a6a10}
+#pth-game .gm-tiles.gm-many{flex-wrap:wrap}#pth-game .gm-tiles.gm-many .gm-tile{flex:1 1 calc(50% - 12px)}
+@media (min-width:700px){#pth-game .gm-tiles.gm-many{flex-wrap:nowrap}#pth-game .gm-tiles.gm-many .gm-tile{flex:1 1 0}}
+#pth-game .gm-opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
+#pth-game .gm-opt{position:relative;appearance:none;cursor:pointer;padding:6px 14px;border-radius:999px;border:1px solid rgba(216,178,90,.5);
+  background:rgba(11,18,16,.6);color:#f5f0e3;font:600 13px/1.2 'Inter',system-ui,sans-serif}
+#pth-game .gm-opt.on{background:#d8b25a;color:#141414;border-color:#d8b25a}
+#pth-game .gm-opt:disabled{opacity:.35;cursor:default}
+#pth-game .gm-opt .gm-k{font:600 .7em/1 'Inconsolata',monospace;font-style:normal;opacity:.6;margin-left:.5em}
+#pth-game.pg-light .gm-opt{background:rgba(255,255,255,.75);color:#1d222b}#pth-game.pg-light .gm-opt.on{background:#d8b25a;color:#141414}
+#pth-game .gm-foot{max-width:560px;line-height:1.45}
 @media (max-width:520px){#pth-game .ar-slot{width:22px;height:32px}#pth-game .ar-slots .pk.sm{width:22px;height:32px;font-size:10px}
   #pth-game .ar-show{min-height:58px;gap:4px}#pth-game .ar-show .pk.lg{width:40px;height:58px;font-size:15px}
   #pth-game .pg-panel>div{gap:4px}#pth-game .pg-panel h2{font-size:20px}#pth-game .ar-stats{gap:10px}}

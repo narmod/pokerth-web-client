@@ -31,6 +31,7 @@ import { dayKey } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
 import { drawBackCard, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { VARIANTS, variantOf, rowOf, payOf, madeBy, deckOf, MAX_BET } from './videopoker-rules.mjs';
+import { titleScreen } from './title.mjs';
 
 export const START = 100, MAX_DOUBLE = 5, TROPHY_DOUBLES = 3;
 export { VARIANTS, MAX_BET };
@@ -78,22 +79,13 @@ export function create(shell) {
     const day = dayKey(), best = load(BEST_KEY), dl = load(DAILY_KEY);
     const rec = (v) => {
       const b = daily ? (dl.d === day && dl.v ? dl.v[v.id] || 0 : 0) : best[v.id] || 0;
-      return b ? esc(t('arRecord', { n: fmt(b) })) : '&nbsp;';
+      return b ? t('arRecord', { n: fmt(b) }) : '';
     };
-    const tile = (v, i) => '<button type="button" class="gm-tile' + (i === vi ? ' on' : '') + '" data-i="' + i + '"><i>' + ['🃏', '💰', '2️⃣', '🤡'][i] + '</i><b>'
-      + esc(t(v.key)) + '</b><small>' + esc(t(v.desc)) + '</small><small class="vp-rec">' + rec(v) + '</small></button>';
-    const chip = (d, icon, name) => '<button type="button" class="vp-chip' + (daily === d ? ' on' : '') + '" data-d="' + (d ? 1 : 0) + '">' + icon + ' ' + esc(name) + '</button>';
-    shell.panel('<h2>' + esc(t('vpName')) + '</h2><p>' + esc(t('vpHint')) + '</p>'
-      + '<div class="vp-chips">' + chip(true, '📅', t('psDaily') + ' · ' + day) + chip(false, '🎰', t('psFree')) + '</div>'
-      + '<div class="gm-tiles vp-tiles">' + VARIANTS.map(tile).join('') + '</div>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { vi = +(b.getAttribute('data-i') || 0); start(); });
-    });
-    shell.root.querySelectorAll('.pg-panel .vp-chip').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { daily = b.getAttribute('data-d') === '1'; titlePanel(); });
-    });
+    // The machines are the tiles; daily challenge or free game, the options (↓ switches).
+    titleScreen(shell, { id: 'videopoker', name: t('vpName'), hint: t('vpHint'), sel: vi,
+      modes: VARIANTS.map((v, i) => ({ icon: ['🃏', '💰', '2️⃣', '🤡'][i], label: t(v.key), desc: t(v.desc), rec: rec(v) })),
+      options: [{ id: 'daily', label: '📅 ' + t('psDaily') + ' · ' + day, on: daily, key: '↓' }, { id: 'free', label: '🎰 ' + t('psFree'), on: !daily }],
+      onPick: (i) => { vi = i; start(); }, onOption: (id) => { daily = id === 'daily'; titlePanel(); } });
   }
   newGame();
   titlePanel();
@@ -607,13 +599,6 @@ function ensureBoxCss() {
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .vp-box .ar-show{flex-wrap:nowrap}#pth-game .vp-box h2{color:#f5d77a}'
     + '#pth-game.pg-light .vp-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
-    + '#pth-game.pg-light .vp-box h2{color:#8a6510}'
-    + '#pth-game .vp-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:2px 0 6px;pointer-events:auto}'
-    + '#pth-game .vp-chip{font:600 12px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:999px;border:1px solid rgba(216,178,90,.45);background:rgba(11,18,16,.6);color:#f5f0e3;cursor:pointer}'
-    + '#pth-game .vp-chip.on{background:#d8b25a;color:#141414;border-color:#d8b25a}'
-    + '#pth-game.pg-light .vp-chip{background:rgba(255,255,255,.7);color:#1d222b}#pth-game.pg-light .vp-chip.on{background:#d8b25a;color:#141414}'
-    + '#pth-game .gm-tile .vp-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .vp-rec{color:#8a6a10}'
-    + '#pth-game .vp-tiles{flex-wrap:wrap}#pth-game .vp-tiles .gm-tile{flex:1 1 calc(50% - 12px)}'
-    + '@media (min-width:700px){#pth-game .vp-tiles{flex-wrap:nowrap}#pth-game .vp-tiles .gm-tile{flex:1 1 0}}';
+    + '#pth-game.pg-light .vp-box h2{color:#8a6510}';
   document.head.appendChild(st);
 }

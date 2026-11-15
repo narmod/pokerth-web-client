@@ -57,6 +57,7 @@ import { shuffled, rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
+import { titleScreen } from './title.mjs';
 
 export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, FEVER_STREAK = 5, LEVEL_EVERY = 5;
 // The board turned over (s after the deal): the three flop cards, the turn,
@@ -240,31 +241,28 @@ export function create(shell) {
   const levelName = (lv) => t('wwLevel', { n: lv + 1 }) + ' · ' + t(LEVELS[lv].key);
 
   /** The Daily challenge on its tile: today's score, the streak. */
-  function dailyLine() {
+  /** Today's score and the streak, as plain text (the title escapes it). */
+  function dailyLineText() {
     const d = loadDaily(), day = dayKey();
     if (!d) return '';
     const alive = d.day === day || d.day === dayBefore(day);
     const parts = [];
-    if (d.day === day) parts.push(esc(t('wwDailyToday', { n: fmt(d.score) })));
-    if (alive && d.streak > 1) parts.push('🔥 ' + esc(t('wwDailyStreak', { n: d.streak })));
+    if (d.day === day) parts.push(t('wwDailyToday', { n: fmt(d.score) }));
+    if (alive && d.streak > 1) parts.push('🔥 ' + t('wwDailyStreak', { n: d.streak }));
     return parts.join(' · ');
   }
   /** The title: the ways to play, their records — the arcade's tiles (as Video Poker). */
   function titlePanel() {
     const best = loadBest();
-    const tile = (m, i) => {
+    const rec = (m) => {
       const b = best[m.id] || {};
-      const rec = m.id === 'endless' ? (shell.best.get() ? esc(t('arRecord', { n: fmt(shell.best.get()) })) + (b.level ? ' · ' + esc(t('wwLevel', { n: b.level })) : '') : '')
-        : m.id === 'tv' ? (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '')
-        : m.id === 'daily' ? dailyLine() : '';
-      return '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
-        + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="ww-rec">' + (rec || '&nbsp;') + '</small></button>';
+      return m.id === 'endless' ? (shell.best.get() ? t('arRecord', { n: fmt(shell.best.get()) }) + (b.level ? ' · ' + t('wwLevel', { n: b.level }) : '') : '')
+        : m.id === 'tv' ? (b.best ? t('arRecord', { n: fmt(b.best) }) : '')
+        : m.id === 'daily' ? dailyLineText() : '';
     };
-    shell.panel('<h2>' + esc(t('wwName')) + '</h2><p>' + esc(t('wwHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(MODES[sel].id); });
-    });
+    titleScreen(shell, { id: 'whowins', name: t('wwName'), hint: t('wwHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec(m) })),
+      onPick: (i) => { sel = i; start(MODES[sel].id); } });
   }
   newGame();
   titlePanel();
@@ -718,7 +716,6 @@ function ensureCss() {
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .ww-box h2{color:#f5d77a}#pth-game .ww-lives{color:#ff8a80;letter-spacing:2px}'
     // The result; the modes use the arcade's tiles (.gm-tile), their record in gold.
-    + '#pth-game .gm-tile .ww-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .ww-rec{color:#8a6a10}'
     + '#pth-game .ww-box{min-width:min(330px,100%)}#pth-game .ww-box h2{font-size:clamp(18px,3.4vw,24px);white-space:nowrap}'
     + '#pth-game .pg-panel .ww-won{font:700 26px Cinzel,Georgia,serif;color:#f5d77a;margin:0}#pth-game.pg-light .pg-panel .ww-won{color:#8a6a10}'
     + '#pth-game .pg-panel .ww-streakd{color:#ffb84d;font-weight:700;margin:0}#pth-game.pg-light .pg-panel .ww-streakd{color:#b5521b}'

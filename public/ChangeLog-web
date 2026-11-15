@@ -1,4 +1,8 @@
-2026-11-14 version 2.1.11-web.54 (current series):
+2026-11-15 version 2.1.11-web.55 (current series):
+- improvement: Mini-games — every game opens on the same title screen: a dark picture of the game behind, its name, a line of help and one tile per way to play, with your record on each
+- improvement: Mini-games — Ace Runner and Poker Run have their « Free run » tile too; the options (Video Poker's daily challenge, Poker Drop's rule, the Bluff's hourglass) are chips under the tiles
+
+2026-11-14 version 2.1.11-web.54:
 - improvement: The Ace's Bluff — a new layout on a phone: the Ace smaller on the left with his two cards beside him, smaller cards, and the table centred on the screen
 - improvement: The Ace's Bluff — the community cards are laid out 3 + 1 + 1 (flop, turn, river) like at the table
 - improvement: The Ace's Bluff — the notebook opens from a « 📓 Notebook » pill at the top, with the number of tells noted

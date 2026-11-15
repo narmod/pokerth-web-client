@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **One title screen for every mini-game** (`web.55`, narmod: « like Ace Dash or Poker Run, a dark picture of the
+  game with the choices over it; a common model, easy to reproduce for a new game ») — new `games/title.mjs`:
+  `titleScreen(shell, { id, live, name, hint, modes: [{ icon, label, desc, rec }], sel, options, foot, onPick,
+  onOption })` and `titleStep()`. A game with its own scene (Ace Runner, Ace Dash, Poker Run, House of Cards) passes
+  `live`; the card games get their cover (`art.mjs`) as a dark backdrop (`.gm-bg`, `preserveAspectRatio slice`).
+  Shared CSS in `common.mjs` (`.gm-rec`, `.gm-opts` / `.gm-opt` chips, `.gm-foot`, `.gm-many` for four tiles);
+  `shell.panel()` drops the backdrop on every other panel. All ten games use it: Ace Runner and Poker Run get a
+  single « Free run » tile; Video Poker's daily / free, Poker Drop's points / sudden death and the Bluff's hourglass
+  become option chips; Poker Solitaire's tiles get descriptions. The per-game `*-rec`, `.vp-chip(s)`, `.vp-tiles`,
+  `.pd-rule` and `.bl-timer` styles are gone.
 - **The Ace's Bluff — the phone layout narmod picked** (`web.54`, mockups A + B, size 1) — `games/bluff.mjs` `L()`:
   on a narrow stage the Ace at `s` 0.26 on the left (0.32 on medium widths, at most 0.4 on wide ones), his two cards
   beside him with the bubble above, the table block (board, pot, your cards, your hand) centred between him and the

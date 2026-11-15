@@ -33,6 +33,7 @@
 
 import { evalCards } from './poker-hand.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID } from './common.mjs';
+import { titleScreen } from './title.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -310,9 +311,9 @@ export function create(shell) {
   }
   function titlePanel() {
     const best = shell.best.get();
-    shell.panel('<h2>Poker Run</h2><p>' + esc(t('prHint')) + '</p>'
-      + (best ? '<p class="pg-dim">' + esc(t('arRecord', { n: fmt(best) })) + '</p>' : '')
-      + '<p class="pg-blink">' + esc(t('arTapStart')) + '</p>');
+    titleScreen(shell, { id: 'poker-run', live: true, name: 'Poker Run', hint: t('prHint'), sel: 0,
+      modes: [{ icon: '🏎️', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' }],
+      onPick: () => start() });
   }
 
   // ── The Ace's reactions ────────────────────────────────────────────

@@ -42,6 +42,7 @@ import { rankOf, evalCards, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { titleScreen } from './title.mjs';
 
 export const POT0 = 10, LIVES = 3, RESHUFFLE = 8, TROPHY_STREAK = 10, EDGE = 0.95;
 export const HAND_SIZE = 5;
@@ -137,18 +138,14 @@ export function create(shell) {
   /** The title: the ways to play, their records — the arcade's tiles. */
   function titlePanel() {
     const best = loadBest();
-    const tile = (m, i) => {
+    const rec = (m) => {
       const b = best[m.id] || {};
-      const rec = m.id === 'hand' ? (shell.best.get() ? esc(t('arRecord', { n: fmt(shell.best.get()) })) : '')
-        : (b.best ? esc(t('arRecord', { n: fmt(b.best) })) : '') + (b.level ? (b.best ? ' · ' : '') + esc(t('wwLevel', { n: b.level })) : '');
-      return '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
-        + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="hl-rec">' + (rec || '&nbsp;') + '</small></button>';
+      return m.id === 'hand' ? (shell.best.get() ? t('arRecord', { n: fmt(shell.best.get()) }) : '')
+        : (b.best ? t('arRecord', { n: fmt(b.best) }) : '') + (b.level ? (b.best ? ' · ' : '') + t('wwLevel', { n: b.level }) : '');
     };
-    shell.panel('<h2>' + esc(t('hlName')) + '</h2><p>' + esc(t('hlHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(MODES[sel].id); });
-    });
+    titleScreen(shell, { id: 'hilo', name: t('hlName'), hint: t('hlHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec(m) })),
+      onPick: (i) => { sel = i; start(MODES[sel].id); } });
   }
   newGame();
   titlePanel();
@@ -661,7 +658,6 @@ function ensureCss() {
   st.textContent = '#pth-game .hl-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 18px;border-radius:12px;'
     + 'background:rgba(11,18,16,.9);box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
     + '#pth-game .hl-box h2{color:#f5d77a}#pth-game .hl-lives{color:#ff8a80;letter-spacing:2px}'
-    + '#pth-game .gm-tile .hl-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .hl-rec{color:#8a6a10}'
     + '#pth-game.pg-light .hl-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
     + '#pth-game.pg-light .hl-box h2{color:#8a6510}#pth-game.pg-light .hl-box .ar-final{color:#1d222b}'
     // The buttons (web.51): the table's, positioned over the felt.

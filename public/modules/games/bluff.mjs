@@ -33,6 +33,7 @@
 import { rankHand, compareHands, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled, rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
+import { titleScreen } from './title.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 
@@ -176,17 +177,10 @@ export function create(shell) {
   }
   function titlePanel() {
     const rec = records();
-    const tile = (m, i) => '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
-      + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="bl-rec">'
-      + (rec[m.id] ? esc(t('arRecord', { n: fmt(rec[m.id]) })) : '&nbsp;') + '</small></button>';
-    shell.panel('<h2>' + esc(t('blName')) + '</h2><p>' + esc(t('blHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>'
-      + '<button type="button" class="bl-timer' + (timerOn ? ' on' : '') + '">⏳ ' + esc(t('blTimer')) + ' ' + (timerOn ? '✓' : '✗') + '<i class="bl-k">4</i></button>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(); });
-    });
-    const tb = shell.root.querySelector('.pg-panel .bl-timer');
-    if (tb) { tb.addEventListener('pointerdown', (e) => e.stopPropagation()); tb.addEventListener('click', (e) => { e.stopPropagation(); toggleTimer(); }); }
+    titleScreen(shell, { id: 'bluff', name: t('blName'), hint: t('blHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      options: [{ id: 'timer', label: '⏳ ' + t('blTimer') + ' ' + (timerOn ? '✓' : '✗'), on: timerOn, key: '4' }],
+      onPick: (i) => { sel = i; start(); }, onOption: () => toggleTimer() });
   }
   function toggleTimer() {
     timerOn = !timerOn;
@@ -731,11 +725,6 @@ function ensureCss() {
     + '#pth-game .bl-box h2{color:#f5d77a}'
     + '#pth-game.pg-light .bl-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
     + '#pth-game.pg-light .bl-box h2{color:#8a6510}#pth-game.pg-light .bl-box .ar-final{color:#1d222b}'
-    + '#pth-game .gm-tile .bl-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .bl-rec{color:#8a6a10}'
-    + '#pth-game .bl-timer{position:relative;pointer-events:auto;margin-top:10px;appearance:none;border:1px solid rgba(216,178,90,.5);border-radius:999px;padding:6px 26px 6px 14px;'
-    + 'background:rgba(0,0,0,.25);color:#f5f0e3;font:600 13px Inter,system-ui,sans-serif;cursor:pointer}'
-    + '#pth-game .bl-timer.on{background:rgba(216,178,90,.25);border-color:#d8b25a}'
-    + '#pth-game.pg-light .bl-timer{color:#1d222b;background:rgba(255,255,255,.7)}'
     // The buttons: the table's, positioned over the felt.
     + '#pth-game .bl-ui{position:absolute;inset:0;pointer-events:none;z-index:400}'
     + '#pth-game .bl-his .ar-lab{max-width:7em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
@@ -744,7 +733,7 @@ function ensureCss() {
     + '#pth-game .bl-ui .btn-action{padding:0 .4em;letter-spacing:.03em}'
     + ':root[data-btn-img] #pth-game .bl-ui .btn-action{padding:0 2px !important;border-width:6px;border-image-width:6px}'
     + '#pth-game .bl-ui button b{font-weight:800}#pth-game .bl-ui button small{font:700 .8em/1 Inconsolata,monospace}'
-    + '#pth-game .bl-ui .bl-k,#pth-game .bl-timer .bl-k{position:absolute;right:.45em;top:.3em;font:600 .55em/1 Inconsolata,monospace;font-style:normal;opacity:.6}'
+    + '#pth-game .bl-ui .bl-k{position:absolute;right:.45em;top:.3em;font:600 .55em/1 Inconsolata,monospace;font-style:normal;opacity:.6}'
     + '#pth-game .bl-ui button:disabled{opacity:.45;cursor:default}#pth-game .bl-ui button:active:not(:disabled){transform:scale(.97)}'
     + '#pth-game .bl-ui .bl-focus{outline:2px solid #fff;outline-offset:2px}'
     + '#pth-game .bl-pill{pointer-events:auto;display:inline-flex;align-items:center;gap:.35em;padding:.4em .8em;border-radius:999px;cursor:pointer;'

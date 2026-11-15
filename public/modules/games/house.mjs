@@ -51,6 +51,7 @@ import { CHIP, fmt, backUrl, cardHtml, imageCache, rr, drawFace, aceActor, ink }
 import { drawScenery } from './runner-scenery.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
+import { titleScreen } from './title.mjs';
 
 const CW = 30, CH = 42;          // a leaning card
 const LEAN = 18 * Math.PI / 180;
@@ -126,7 +127,6 @@ export function create(shell) {
       + '#pth-game .hc-tilt.glued i{background:#e0a33a !important;box-shadow:0 0 6px #f5c518}'
       + '#pth-game .hc-burn{margin-top:5px;font:700 12px/1 Inconsolata,monospace;color:#f5f0e3}'
       + '#pth-game .hc-goal{opacity:.95}#pth-game .hc-goal.met{color:#7ee2a0}'
-      + '#pth-game .gm-tile .hc-rec{color:#d8b25a}#pth-game.pg-light .gm-tile .hc-rec{color:#8a6a10}'
       + '@media (max-width:520px){#pth-game .hc-tilt{width:44px}}';
     document.head.appendChild(st);
   }
@@ -213,14 +213,9 @@ export function create(shell) {
   }
   function titlePanel() {
     const rec = records();
-    const tile = (m, i) => '<button type="button" class="gm-tile' + (i === sel ? ' on' : '') + '" data-m="' + i + '"><i>' + m.icon + '</i><b>'
-      + esc(t(m.key)) + '</b><small>' + esc(t(m.desc)) + '</small><small class="hc-rec">'
-      + (rec[m.id] ? esc(t('arRecord', { n: fmt(rec[m.id]) })) : '&nbsp;') + '</small></button>';
-    shell.panel('<h2>' + esc(t('hcName')) + '</h2><p>' + esc(t('hcHint')) + '</p><div class="gm-tiles">' + MODES.map(tile).join('') + '</div>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { sel = +(b.getAttribute('data-m') || 0); start(); });
-    });
+    titleScreen(shell, { id: 'house', live: true, name: t('hcName'), hint: t('hcHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      onPick: (i) => { sel = i; start(); } });
   }
   newRun();
   titlePanel();

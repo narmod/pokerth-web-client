@@ -34,6 +34,7 @@
 import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
 import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
 import { drawScenery, venueOf, dayAt, VENUES } from './runner-scenery.mjs';
+import { titleScreen } from './title.mjs';
 
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
 const ACE_X = 120;            // the Ace's feet, from the left
@@ -129,9 +130,9 @@ export function create(shell) {
 
   function titlePanel() {
     const best = shell.best.get();
-    shell.panel('<h2>Ace Runner</h2><p>' + esc(t('arHint')) + '</p>'
-      + (best ? '<p class="pg-dim">' + esc(t('arRecord', { n: fmt(best) })) + '</p>' : '')
-      + '<p class="pg-blink">' + esc(t('arTapStart')) + '</p>');
+    titleScreen(shell, { id: 'ace-runner', live: true, name: 'Ace Runner', hint: t('arHint'), sel: 0,
+      modes: [{ icon: '🏃', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' }],
+      onPick: () => start() });
   }
   newRun();
   titlePanel();

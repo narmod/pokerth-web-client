@@ -93,6 +93,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'ace-runner');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Runner', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'ace-runner'), label + ': Space opens Ace Runner');
+  ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.classList.contains('gm-title') && p.querySelectorAll('.gm-tile').length === 1 && !p.querySelector('.gm-bg'); }),
+    label + ': the common title: one tile for Ace Runner, its own scene behind (no picture)');
   await shot(pg, label + '-title');
   await pg.keyboard.press('Space');
   await sleep(1200);
@@ -205,7 +207,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'videopoker');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Vidéo Poker', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'videopoker' && document.getElementById('ar-title').textContent === 'Vidéo Poker'), label + ': its card then Space opens Video Poker');
-  const vpt = await pg.evaluate(() => ({ chips: document.querySelectorAll('#pth-game .vp-chip').length, tiles: document.querySelectorAll('#pth-game .vp-tiles > *').length }));
+  const vpt = await pg.evaluate(() => ({ chips: document.querySelectorAll('#pth-game .pg-panel .gm-opt').length, tiles: document.querySelectorAll('#pth-game .pg-panel .gm-tile').length }));
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-panel.gm-title > .gm-bg svg')), label + ': Video Poker: its cover, dark, behind the title');
   ok(vpt.chips === 2 && vpt.tiles === 4, label + ': the title offers daily / free and the four machines (' + vpt.chips + ', ' + vpt.tiles + ')');
   await shot(pg, label + '-vp-title');
   await pg.keyboard.press('Space');
@@ -466,7 +469,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'bluff');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Le Bluff de l\'As', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'bluff'), label + ": its card then Space opens the Ace's Bluff");
-  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 3 && !!document.querySelector('#pth-game .pg-panel .bl-timer')),
+  ok(await pg.evaluate(() => document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 3 && !!document.querySelector('#pth-game .pg-panel .gm-opt[data-o="timer"]')),
     label + ": the Ace's Bluff: three modes and the hourglass on its title");
   await pg.keyboard.press('Space');
   const toDecide = async () => {
@@ -657,10 +660,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await pick(pg, 'pokerdrop');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Puissance Poker', null, { timeout: 8000 }).catch(() => {});
-  const pdTiles = await pg.evaluate(() => ({ tiles: document.querySelectorAll('#pth-game .pg-panel .gm-tile').length, rules: document.querySelectorAll('#pth-game .pg-panel [data-rule]').length }));
+  const pdTiles = await pg.evaluate(() => ({ tiles: document.querySelectorAll('#pth-game .pg-panel .gm-tile').length, rules: document.querySelectorAll('#pth-game .pg-panel .gm-opt').length }));
   ok(pdTiles.tiles === 3 && pdTiles.rules === 2, label + ': Poker Drop offers three opponents and two rules');
   await pg.keyboard.press('ArrowDown'); await sleep(100);
-  ok(await pg.evaluate(() => document.querySelector('#pth-game [data-rule="sudden"]').className.indexOf('pg-ghost') < 0), label + ': ↓ switches to sudden death');
+  ok(await pg.evaluate(() => document.querySelector('#pth-game .gm-opt[data-o="sudden"]').classList.contains('on')), label + ': ↓ switches to sudden death');
   await pg.keyboard.press('ArrowDown'); await sleep(100);
   await pg.keyboard.press('Space');
   await pg.waitForFunction(() => window.__pthPD && window.__pthPD.state() === 'run', null, { timeout: 4000 }).catch(() => {});

@@ -210,6 +210,9 @@ export function run(def, gameMod, opts = {}) {
       t: tr, esc,
       /** Show `html` in the panel slot (null hides it); clear = no dimming behind. */
       panel(html, clear) {
+        // The title template (title.mjs) adds its dark picture after this call.
+        panel.classList.remove('gm-title');
+        const bg = panel.querySelector(':scope > .gm-bg'); if (bg) bg.remove();
         if (html == null) { panel.hidden = true; return; }
         panel.firstElementChild.innerHTML = html; panel.hidden = false;
         panel.classList.toggle('pg-clear', !!clear);

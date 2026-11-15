@@ -22,6 +22,7 @@ import { dayKey } from './solitaire-rules.mjs';
 import { deckFor } from './deal.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
 import { felt, drawBackCard, drawFloaters, stepFloaters, bubble, fitFont } from './ui.mjs';
+import { titleScreen } from './title.mjs';
 
 export const TROPHY_SCORE = 40;
 const SHORT = ['oddsHigh', 'oddsPair', 'oddsTwoPair', 'oddsTrips', 'oddsStraight', 'oddsFlush', 'oddsFull', 'oddsQuads', 'oddsSF', 'oddsRoyal'];
@@ -30,10 +31,7 @@ const P_COL = ['#d8b25a', '#7fc8ff'];          // the two players' marks (gold, 
 // Modes of the title page: against the Ace, two players, daily challenge.
 const MODES = ['ace', 'two', 'daily'];
 
-const CSS = '#pth-game .pd-rule{display:flex;gap:8px;justify-content:center;pointer-events:auto;flex-wrap:wrap}'
-  + '#pth-game .pd-rule .pg-btn{padding:6px 14px;font-size:13px}'
-  + '#pth-game .pd-rule .pg-btn[disabled]{opacity:.35;cursor:default}'
-  + '#pth-game .pd-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;border-radius:12px;background:rgba(11,18,16,.9);'
+const CSS = '#pth-game .pd-box{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;border-radius:12px;background:rgba(11,18,16,.9);'
   + 'box-shadow:0 0 0 1px rgba(216,178,90,.35),0 10px 30px rgba(0,0,0,.45);max-width:calc(100% - 16px)}'
   + '#pth-game .pd-box .ar-show{flex-wrap:nowrap}'
   + '#pth-game.pg-light .pd-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
@@ -93,25 +91,16 @@ export function create(shell) {
   // ── Title: opponent and rule ──────────────────────────────────────
   function titlePanel() {
     const day = dayKey(), db = dailyBest(day), fb = shell.best.get();
-    const tile = (i, icon, name, sub) => '<button type="button" class="gm-tile' + (i === mode ? ' on' : '') + '" data-i="' + i + '"><i>' + icon + '</i><b>'
-      + esc(name) + '</b><small>' + sub + '</small></button>';
     const daily = MODES[mode] === 'daily';
-    const pill = (on, key, v) => '<button type="button" class="pg-btn' + (on ? '' : ' pg-ghost') + '" data-rule="' + v + '"' + (daily ? ' disabled' : '') + '>' + esc(t(key)) + '</button>';
     const scale = [9, 8, 7, 6, 5, 4, 3, 2, 1].map((c) => esc(t(SHORT[c])) + ' ' + SCORE[c]).join(' · ');
-    shell.panel('<h2>' + esc(t('pdName')) + '</h2><p>' + esc(t('pdHint')) + '</p><div class="gm-tiles">'
-      + tile(0, '🂡', t('pdVsAce'), fb ? esc(t('arRecord', { n: fmt(fb) })) : '&nbsp;')
-      + tile(1, '👥', t('pdTwo'), '&nbsp;')
-      + tile(2, '📅', t('psDaily'), esc(day) + (db ? ' · ' + esc(fmt(db)) : ''))
-      + '</div><div class="pd-rule">' + pill(!sudden, 'pdPoints', 'points') + pill(sudden, 'pdSudden', 'sudden') + '</div>'
-      + '<p class="pg-dim">' + (sudden && !daily ? esc(t('pdSuddenGoal')) + '<br>' : '') + scale + '</p>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { mode = +(b.getAttribute('data-i') || 0); start(); });
-    });
-    shell.root.querySelectorAll('.pg-panel [data-rule]').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => setRule(b.getAttribute('data-rule') === 'sudden'));
-    });
+    // The opponents are the tiles; the rule (points or sudden death), the options (↓ switches).
+    titleScreen(shell, { id: 'pokerdrop', name: t('pdName'), hint: t('pdHint'), sel: mode,
+      modes: [{ icon: '🂡', label: t('pdVsAce'), desc: '', rec: fb ? t('arRecord', { n: fmt(fb) }) : '' },
+        { icon: '👥', label: t('pdTwo'), desc: '', rec: '' },
+        { icon: '📅', label: t('psDaily'), desc: day, rec: db ? t('arRecord', { n: fmt(db) }) : '' }],
+      options: [{ id: 'points', label: t('pdPoints'), on: !sudden, off: daily, key: '↓' }, { id: 'sudden', label: t('pdSudden'), on: sudden, off: daily }],
+      foot: (sudden && !daily ? esc(t('pdSuddenGoal')) + '<br>' : '') + scale,
+      onPick: (i) => { mode = i; start(); }, onOption: (id) => setRule(id === 'sudden') });
   }
   function setRule(on) {
     if (MODES[mode] === 'daily') return;

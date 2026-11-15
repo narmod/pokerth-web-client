@@ -21,6 +21,7 @@
 import { evalCards, rankOf, suitOf } from './poker-hand.mjs';
 import { SCORE, N, LINES, dayKey, dealFor } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
+import { titleScreen } from './title.mjs';
 
 // Short hand names of the odds panel (the full ones are h1n…h10n).
 const SHORT = ['oddsHigh', 'oddsPair', 'oddsTwoPair', 'oddsTrips', 'oddsStraight', 'oddsFlush', 'oddsFull', 'oddsQuads', 'oddsSF', 'oddsRoyal'];
@@ -83,17 +84,11 @@ export function create(shell) {
   // ── Title: daily challenge or free game ───────────────────────────
   function titlePanel() {
     const day = dayKey(), db = dailyBest(day), fb = shell.best.get();
-    const tile = (i, icon, name, sub) => '<button type="button" class="gm-tile' + (i === mode ? ' on' : '') + '" data-i="' + i + '"><i>' + icon + '</i><b>'
-      + esc(name) + '</b><small>' + sub + '</small></button>';
     const table = [9, 8, 7, 6, 5, 4, 3, 2, 1].map((c) => esc(t(SHORT[c])) + ' ' + SCORE[c]).join(' · ');
-    shell.panel('<h2>' + esc(t('psName')) + '</h2><p>' + esc(t('psHint')) + '</p><div class="gm-tiles">'
-      + tile(0, '📅', t('psDaily'), esc(day) + (db ? ' · ' + esc(fmt(db)) : ''))
-      + tile(1, '🃏', t('psFree'), fb ? esc(t('arRecord', { n: fmt(fb) })) : '&nbsp;')
-      + '</div><p class="pg-dim">' + table + '</p>');
-    shell.root.querySelectorAll('.pg-panel .gm-tile').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => { mode = +(b.getAttribute('data-i') || 0); start(); });
-    });
+    titleScreen(shell, { id: 'solitaire', name: t('psName'), hint: t('psHint'), sel: mode,
+      modes: [{ icon: '📅', label: t('psDaily'), desc: t('hcModeDailyD'), rec: db ? t('arRecord', { n: fmt(db) }) : '' },
+        { icon: '🃏', label: t('psFree'), desc: t('hcModeFreeD'), rec: fb ? t('arRecord', { n: fmt(fb) }) : '' }],
+      foot: table, onPick: (i) => { mode = i; start(); } });
   }
   newGame(true);
   titlePanel();
