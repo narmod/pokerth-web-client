@@ -165,6 +165,12 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
   if (!anyMove(grid)) recaveRow(grid, n, rnd);
   return grid;
 }
+/**
+ * The family of characters at blind level `lv` (claude/CONCEPTION_TAPIS.md § 5):
+ * the Suits at levels 1-2, the Figures at 3-4, and so on two by two; every
+ * one of them mixed from level 21 (the final table).
+ */
+export const castFamily = (lv) => (lv >= 21 ? 'mixed' : (Math.floor((Math.max(1, lv) - 1) / 2) % 2 ? 'figures' : 'suits'));
 /** Chips left on the board. */
 export const chipsLeft = (grid) => grid.reduce((a, col) => a + col.length, 0);
 /** The power a big group wins (n ≥ 6), or '' : a Joker from 9, else a Dealer or a Shuffle. */

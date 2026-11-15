@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.75 (current series):
+2026-11-15 version 2.1.11-web.76 (current series):
+- new: Tapis! — its own characters: the four suits (Spade, Heart, Diamond, Club) at levels 1-2, the King, the Queen, the Jack and the Croupier at levels 3-4, and so on, with the Joker in both; all of them mixed from level 21
+- new: Tapis! — they come alive: their eyes follow the chip you point at, they sweat when their stack is nearly gone or time is short, wobble, clap when a friend falls, jump into their hole and pop their head out to wave goodbye
+
+2026-11-15 version 2.1.11-web.75:
 - new: Mini-games — « Tapis! » takes the 4th place of the path: tap 2 or more touching chips of one colour to take them away, empty a stack and the Ace's friend on top drops into his hole; drop them all before the clock runs out to climb a blind level. Each group is named after a poker hand by its size and pays its chips' values × that hand; big groups win a Dealer button, a Shuffle or the Joker, and the dealer tops up when no pair is left
 - improvement: Mini-games — the House of Cards becomes a hidden easter egg: it appears after the 10 games once the secret word has opened them (its trophy is gone)
 

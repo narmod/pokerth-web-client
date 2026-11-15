@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: the cast** (`web.76`, push 2 of `claude/CONCEPTION_TAPIS.md`) — `games/cast.mjs`: nine little SVG
+  characters on a common rig (100 × 120, feet at 50, 116) — the Suits (Spade black, Heart red, Diamond blue, Club
+  green, the colours of the chips), the Figures (King, Queen, Jack, Croupier) and the Joker in both — with poses
+  (idle, balance, air, clap, wave, ko), moods (smile, jump, yay, wink, grin, dizzy, scared, ko, love), blinking,
+  sweat, eyes that follow a point (`look`) and `clip()` to hide a body in a hole; `castActor()` has the interface of
+  `aceActor`. In Tapis!: `castFamily(lv)` — Suits at levels 1-2, Figures at 3-4, two by two, all mixed from 21; the
+  eyes follow the lit chip, sweat on a low stack or a short clock, a squash when the stack drops, the others clap
+  when one falls, he jumps in, then pops his head out of the hole to wave; dizzy at a Shuffle, KO at the end.
+  `test-games.mjs` +2 checks.
 - **Tapis! replaces the House of Cards as mini-game n° 4** (`web.75`, narmod 2026-11-15, design note
   `claude/CONCEPTION_TAPIS.md`, in the spirit of Megatouch's Monster Madness) — `games/tapis.mjs` + pure rules
   `games/tapis-rules.mjs`: columns of chips on the felt, one of the Ace's friends on each (the mascot with a hat,

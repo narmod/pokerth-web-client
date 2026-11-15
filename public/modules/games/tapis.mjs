@@ -24,19 +24,33 @@
 //             pushes a row of pairs in from the felt (−5 s) — never stuck
 //   Input     tap a chip; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
 //             Space / Enter / A takes the lit group
-// Push 1 of the design note: the Classic mode; the friends are the Ace with
-// a hat each. The Suits and Figures, the venues, the other modes and the
-// Duel come in the next pushes.
+//   Friends   the cast of cast.mjs (push 2, web.76): the Suits at levels 1-2,
+//             the Figures at 3-4, and so on two by two, all mixed from 21
+//             (castFamily). Their eyes follow the lit chip; they sweat when
+//             their stack is nearly gone or the clock nearly out, wobble on
+//             a low stack, squash when it drops under them, clap when a
+//             neighbour falls, jump in with joy, then pop their head out of
+//             the hole to wave before they go; dizzy at a Shuffle, KO at the end.
+// The venues, the other modes and the Duel come in the next pushes.
 // ═══════════════════════════════════════════════════════════════════
 
 import { NAME_KEYS } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, RECAVE_S, blindsAt, groupPay, groupAt, anyMove,
-  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor } from './tapis-rules.mjs';
-import { fmt, rr, aceActor } from './common.mjs';
+  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor, castFamily } from './tapis-rules.mjs';
+import { fmt, rr } from './common.mjs';
+import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
-const HATS = ['tophat', 'cowboy', 'wizard', 'crown', 'fedora', 'jester', 'beanie', 'santa', 'pumpkin', 'nightcap', 'helmet'];
+const SINK_S = 0.45, PEEK_S = 1.7;          // into the hole, then his head out to wave
+/** The characters of the round (cast.mjs): the family of the level, a different one on each column as far as it goes. */
+function castFor(lv, cols) {
+  const fam = castFamily(lv);
+  if (fam === 'mixed') return Array.from({ length: cols }, () => KINDS[Math.floor(Math.random() * KINDS.length)]);
+  const set = (fam === 'figures' ? FIGURES : SUITS).concat(['joker']);
+  for (let j = set.length - 1; j > 0; j--) { const x = Math.floor(Math.random() * (j + 1)); const t = set[j]; set[j] = set[x]; set[x] = t; }
+  return Array.from({ length: cols }, (_, c) => set[c % set.length]);
+}
 const POWERS = ['joker', 'dealer', 'shuffle'];
 const P_ICON = { joker: '🃏', dealer: 'D', shuffle: '🔀' };
 const P_KEY = { joker: 'tpJoker', dealer: 'tpDealer', shuffle: 'tpShuffle' };
@@ -99,10 +113,10 @@ export function create(shell) {
     G.timeMax = G.timeLeft = timeFor(G.total, G.lv);
     G.freeShuffle = true; G.armed = '';
     G.cursor = { c: Math.floor(G.cols / 2), r: 0, bar: -1 };
+    const kinds = castFor(G.lv, G.cols);
     G.chars = G.grid.map((_, c) => {
-      const ace = aceActor(shell.layer, 'pth-game-tp' + c);
-      ace.hat(HATS[(c + G.lv * 3) % HATS.length]);
-      return { ace, st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '' };
+      const ace = castActor(shell.layer, kinds[c], 'pth-game-tp' + c);
+      return { ace, kind: kinds[c], st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', lastY: -60, moving: false, sweat: false };
     });
     renderHud();
   }
@@ -172,7 +186,7 @@ export function create(shell) {
     if (p === 'shuffle') {
       G.inv.shuffle--; shuffleGrid(G.grid); G.armed = '';
       G.grid.forEach((col) => col.forEach((b) => { b.pop = 0.35; }));
-      G.chars.forEach((ch) => ch.look = time + 1.2);
+      G.chars.forEach((ch) => { ch.look = time + 1.2; });
       sound('notifyCard'); say(t('tpShuffle') + ' 🔀'); afterMove();
       return;
     }
@@ -220,7 +234,7 @@ export function create(shell) {
     state = 'over'; clearTimeout(check);
     const total = G.total || 1;
     G.rounds.push({ lv: G.lv, done: 1 - chipsLeft(G.grid) / total });
-    G.chars.forEach((ch) => { if (ch.st === 'top') { ch.ace.pose('ko'); ch.ace.mood('mc-m-ko'); } });
+    G.chars.forEach((ch) => { if (ch.st === 'top') { ch.pose = 'ko'; ch.mood = 'ko'; ch.ace.pose('ko'); ch.ace.mood('ko'); ch.ace.sweat(false); } });
     sound('notifyFold');
     G.banner = { s: t('prTimeUp'), s2: '', t: 0, life: 1.4 };
     shell.ended();
@@ -327,27 +341,44 @@ export function create(shell) {
     }
     hTime.style.width = (100 * Math.max(0, G.timeLeft) / G.timeMax) + '%';
     hTimeBox.classList.toggle('low', state === 'run' && G.timeLeft < 10);
-    // The friends.
+    // The friends: their face and pose from the game, their eyes on the lit chip.
     let fell = false;
+    const tgt = state === 'run' ? (G.showCursor && G.cursor.bar < 0 && G.grid[G.cursor.c] && G.grid[G.cursor.c].length
+      ? [G.cursor.c, Math.min(G.cursor.r, G.grid[G.cursor.c].length - 1)] : hover) : null;
+    const sc = L.cw * 0.0125;
+    const setMood = (ch, m) => { if (m !== ch.mood) { ch.mood = m; ch.ace.mood(m); } };
+    const setPose = (ch, p) => { if (p !== ch.pose) { ch.pose = p; ch.ace.pose(p); } };
     G.chars.forEach((ch, c) => {
       const col = G.grid[c];
       if (ch.st === 'top') {
         if (!col.length) {
-          ch.st = 'fall'; ch.vy = -140; ch.ace.pose('air'); ch.ace.mood('mc-m-yay'); fell = true;
+          ch.st = 'fall'; ch.vy = -140; setPose(ch, 'air'); setMood(ch, 'yay'); ch.ace.sweat(false); fell = true;
         } else {
           ch.y = chipY(L, c, col.length - 1) - L.bh;
+          // his stack has just come down under him: a little squash
+          const moving = ch.y - ch.lastY > 0.5;
+          if (ch.moving && !moving && state === 'run') ch.ace.fx('land');
+          ch.moving = moving; ch.lastY = ch.y;
           if (state === 'run' || state === 'title') {
-            const low = col.length <= 2;
-            const m = state === 'run' && G.timeLeft < 12 ? 'mc-m-scared' : ch.look > time ? 'mc-m-dizzy' : low ? 'mc-m-jump' : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'mc-m-wink' : 'mc-m-smile');
-            if (m !== ch.mood) { ch.mood = m; ch.ace.mood(m); }
-            const p = low ? 'balance' : 'idle';
-            if (p !== ch.pose) { ch.pose = p; ch.ace.pose(p); }
+            const low = col.length <= 2, hurry = state === 'run' && G.timeLeft < 12;
+            const m = ch.clapUntil > time ? 'yay' : hurry ? 'scared' : ch.look > time ? 'dizzy' : low ? 'jump'
+              : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'wink' : Math.sin(time * 0.37 + c * 2.3) > 0.985 ? 'grin' : 'smile');
+            setMood(ch, m);
+            setPose(ch, ch.clapUntil > time ? 'clap' : low ? 'balance' : 'idle');
+            const sw = low || hurry;
+            if (sw !== ch.sweat) { ch.sweat = sw; ch.ace.sweat(sw); }
           }
+          // the eyes: on the lit chip, else a slow look around
+          let dx, dy;
+          if (tgt && G.grid[tgt[0]]) { dx = (colX(L, tgt[0]) - colX(L, c)) / (L.cw * 2); dy = (chipY(L, tgt[0], tgt[1]) - (ch.y - 70 * sc)) / (L.cw * 2); }
+          else { dx = Math.sin(time * 0.5 + c * 1.3); dy = 0.3 * Math.sin(time * 0.35 + c); }
+          const e = dx.toFixed(1) + ',' + dy.toFixed(1);
+          if (e !== ch.eye) { ch.eye = e; ch.ace.look(dx, dy); }
         }
       } else if (ch.st === 'fall') {
         ch.vy += 1300 * dt; ch.y += ch.vy * dt;
         if (ch.y >= L.base) {
-          ch.y = L.base; ch.st = 'sink'; ch.sink = 0;
+          ch.y = L.base; ch.st = 'sink'; ch.sink = 0; setPose(ch, 'idle');
           sound('notifyCard');
           if (state === 'run') {
             const pay = inPay(G.lv);
@@ -357,11 +388,17 @@ export function create(shell) {
           for (let i = 0; i < 14; i++) { const a = -Math.PI * Math.random(); G.parts.push({ x: colX(L, c), y: L.base, vx: Math.cos(a) * 60, vy: Math.sin(a) * 90, t: 0, life: 0.7, c: i % 2 ? '#f5c518' : '#fbf7ee', r: 2, rot: 0 }); }
         }
       } else if (ch.st === 'sink') {
-        ch.sink += dt / 0.45;
-        if (ch.sink >= 1) { ch.st = 'in'; ch.ace.show(false); }
+        // down into his hole, then his head comes out to wave, then he is gone
+        ch.sink += dt;
+        const k = ch.sink, deep = L.base + 118 * sc, peek = L.base + 46 * sc;
+        if (k < SINK_S) ch.y = L.base + (deep - L.base) * (k / SINK_S);
+        else if (k < SINK_S + 0.3) { ch.y = deep + (peek - deep) * ((k - SINK_S) / 0.3); setPose(ch, 'wave'); setMood(ch, 'love'); }
+        else if (k < SINK_S + PEEK_S) ch.y = peek;
+        else if (k < SINK_S + PEEK_S + 0.3) ch.y = peek + (deep - peek) * ((k - SINK_S - PEEK_S) / 0.3);
+        else { ch.st = 'in'; ch.ace.show(false); }
       }
     });
-    if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.ace.fx('cheer'); });
+    if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.clapUntil = time + 1.1; });
     if (state === 'run' && G.chars.length && G.chars.every((ch) => ch.st === 'in')) roundClear();
     for (let i = G.parts.length - 1; i >= 0; i--) { const p = G.parts[i]; p.t += dt; if (p.t > p.life) { G.parts.splice(i, 1); continue; } p.vy += (p.conf ? 30 : 420) * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 7; }
     for (let i = G.fx.length - 1; i >= 0; i--) { G.fx[i].t += dt; if (G.fx[i].t > G.fx[i].life) G.fx.splice(i, 1); }
@@ -459,13 +496,13 @@ export function create(shell) {
       rr(g, x - tw / 2, yb - 9, tw, 18, 9); g.fillStyle = 'rgba(8,14,22,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.7)'; g.lineWidth = 1; g.stroke();
       g.fillStyle = '#f5d77a'; g.fillText(preview.s, x, yb, tw - 10);
     }
-    // The friends (DOM actors): feet on their stack, or falling into the hole.
-    const s = L.cw / 120;
+    // The friends (DOM actors): feet on their stack, falling, or in their hole (what is below the felt hidden).
+    const s = L.cw * 0.0125;
     G.chars.forEach((ch, c) => {
       if (ch.st === 'in') return;
-      const sk = ch.st === 'sink' ? 1 - Math.min(1, ch.sink) : 1;
-      ch.ace.place(colX(L, c), ch.y - L.ry * 0.3 + (1 - sk) * 10, s * sk, shell.k);
-      if (sk < 1) ch.ace.fade(sk);
+      const y = ch.st === 'top' ? ch.y - L.ry * 0.3 : ch.y;
+      ch.ace.place(colX(L, c), y, s, shell.k);
+      ch.ace.clip(ch.st === 'sink' ? 116 - (ch.y - L.base) / s : null);
     });
     // The powers' pills.
     if (state !== 'title') {
