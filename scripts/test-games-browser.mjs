@@ -654,15 +654,23 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }), x));
   ok(!prGap[0] && prGap[1], label + ': the car slips between two cars side by side, and crashes into one (' + prGap.join(', ') + ')');
   // Drift: into a bend at speed, it starts; a short let-go does not break it.
-  const prBend = await pg.evaluate(() => { const R = window.__pthRun; for (let i = 100; i < 2000; i++) { let ok = true; for (let j = 0; j < 30; j++) if (Math.abs(R.curve(i + j)) < 1.2 || Math.sign(R.curve(i + j)) !== Math.sign(R.curve(i))) ok = false; if (ok) return { i, d: Math.sign(R.curve(i)) }; } return null; });
+  const prBend = await pg.evaluate(() => { const R = window.__pthRun; for (let i = 100; i < 6000; i++) { let ok = true; for (let j = 0; j < 60; j++) if (Math.abs(R.curve(i + j)) < 1.2 || Math.sign(R.curve(i + j)) !== Math.sign(R.curve(i))) ok = false; if (ok) return { i, d: Math.sign(R.curve(i)) }; } return null; });
   if (prBend) {
-    await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i - 8); R.setPx(0); R.setV(0.9); }, prBend);
+    await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i - 4); R.setPx(0); R.setV(0.9); }, prBend);
     const k = prBend.d > 0 ? 'ArrowRight' : 'ArrowLeft';
     await pg.keyboard.down(k); await sleep(550);
     const dr1 = await pg.evaluate(() => window.__pthRun.drift());
     await pg.keyboard.up(k); await sleep(150);
     const dr2 = await pg.evaluate(() => window.__pthRun.drift());
     ok(dr1 && dr2, label + ': steering into a bend at speed starts a drift, a short let-go keeps it (' + dr1 + ', ' + dr2 + ')');
+    // Mini-turbo: a drift held past the blue sparks gives a turbo when it ends.
+    await pg.evaluate((b) => { const R = window.__pthRun; R.setPos(b.i - 4); R.setPx(0); R.setV(0.9); }, prBend);
+    await pg.keyboard.down(k);
+    for (let t = 0; t < 14; t++) { await pg.evaluate((b) => { window.__pthRun.setPos(b.i + 2); window.__pthRun.setTime(99); }, prBend); await sleep(100); }
+    const ch = await pg.evaluate(() => window.__pthRun.charge());
+    await pg.keyboard.up(k);
+    let mt = 0; for (let t = 0; t < 10 && !mt; t++) { await pg.evaluate((b) => { window.__pthRun.setPos(b.i + 2); }, prBend); await sleep(80); mt = await pg.evaluate(() => window.__pthRun.mt()); }
+    ok(ch > 0.9 && mt > 0, label + ': a drift held past the blue sparks ends in a turbo (charge ' + ch.toFixed(2) + ', turbo ' + mt.toFixed(2) + ' s)');
   } else ok(false, label + ': a long bend to drift in');
   // Gentle hills: along the course the road stays in sight up to the horizon.
   let crests = 0;

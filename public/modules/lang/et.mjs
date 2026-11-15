@@ -886,7 +886,7 @@ export const strings = {
     "adRebuyQ": "Maksad {n} žetooni, et võistlusse naasta?",
     "adRebuyKeys": "Tühik: rebuy · ↓: ei, aitäh",
     "prHint": "◀ ▶ või ← →: juhi · ↑ või tühik: nitro · ↓: pidurda · vali oma kaart igal teeharul",
-    "prRules": "Äss sõidab oma kabrioletiga Las Vegasest välja, kaks kaarti käes.\nTee hargneb viis korda kaheks haruks, vasakule või paremale: haru, mille valid, annab lauakaardi (flop, turn, river) ja viib uude paika. Auto aeglustab enne iga teeharu: võrdle kahte kaarti.\nIga teeharu lisab kellale 22 s. Kui aeg saab otsa, täidab diiler laua.\nKorja žetoone; kokkupõrge maksab neist 20%. Pööra täiskiirusel järsku kurvi, et triivida: žetoonid ja nitro.\nPunktid: (žetoonid + 5 iga allesjäänud sekundi eest) × sinu parim viiekaardiline käsi.\n◀ ▶ või ← →: juhi · ↑ või tühik: nitro · ↓: pidurda · P: paus",
+    "prRules": "Äss sõidab oma kabrioletiga Las Vegasest välja, kaks kaarti käes.\nTee hargneb viis korda kaheks haruks, vasakule või paremale: haru, mille valid, annab lauakaardi (flop, turn, river) ja viib uude paika. Auto aeglustab enne iga teeharu: võrdle kahte kaarti.\nIga teeharu lisab kellale 22 s. Kui aeg saab otsa, täidab diiler laua.\nKorja žetoone; kokkupõrge maksab neist 20%. Pööra täiskiirusel järsku kurvi, et triivida: žetoonid ja nitro. Hoia triivi: sinised sädemed, siis oranžid, ja lõpus turbo.\nPunktid: (žetoonid + 5 iga allesjäänud sekundi eest) × sinu parim viiekaardiline käsi.\n◀ ▶ või ← →: juhi · ↑ või tühik: nitro · ↓: pidurda · P: paus",
     "prTimeUp": "Aeg sai otsa!",
     "ach_pdrop": "Pokkerikukkumine",
     "ach_pdrop_d": "Võida ässa Pokkerikukkumises 40 või enama punktiga",

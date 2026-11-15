@@ -1268,7 +1268,7 @@ export const strings = {
     "adRebuyQ": "Zaplatit {n} žetonů a vrátit se do závodu?",
     "adRebuyKeys": "Mezerník: rebuy · ↓: ne, díky",
     "prHint": "◀ ▶ nebo ← →: řízení · ↑ nebo mezerník: nitro · ↓: brzda · na každé křižovatce si vyber kartu",
-    "prRules": "Eso vyráží z Las Vegas ve svém kabrioletu se dvěma kartami v ruce.\nSilnice se pětkrát rozdělí na dvě větve, doleva nebo doprava: větev, kterou zvolíš, vyloží kartu na stůl (flop, turn, river) a zavede tě do nové kulisy. Před každou křižovatkou auto zpomalí: porovnej obě karty.\nKaždá křižovatka přidá na hodiny 22 s. Když čas vyprší, krupiér doplní stůl.\nSbírej žetony; srážka stojí 20 % z nich. V ostré zatáčce v plné rychlosti zatoč a driftuj: žetony a nitro.\nSkóre: (žetony + 5 za každou zbývající sekundu) × tvoje nejlepší pětikaretní kombinace.\n◀ ▶ nebo ← →: řízení · ↑ nebo mezerník: nitro · ↓: brzda · P: pauza",
+    "prRules": "Eso vyráží z Las Vegas ve svém kabrioletu se dvěma kartami v ruce.\nSilnice se pětkrát rozdělí na dvě větve, doleva nebo doprava: větev, kterou zvolíš, vyloží kartu na stůl (flop, turn, river) a zavede tě do nové kulisy. Před každou křižovatkou auto zpomalí: porovnej obě karty.\nKaždá křižovatka přidá na hodiny 22 s. Když čas vyprší, krupiér doplní stůl.\nSbírej žetony; srážka stojí 20 % z nich. V ostré zatáčce v plné rychlosti zatoč a driftuj: žetony a nitro. Drž drift: modré jiskry, pak oranžové, a na konci turbo.\nSkóre: (žetony + 5 za každou zbývající sekundu) × tvoje nejlepší pětikaretní kombinace.\n◀ ▶ nebo ← →: řízení · ↑ nebo mezerník: nitro · ↓: brzda · P: pauza",
     "prTimeUp": "Čas vypršel!",
     "ach_pdrop": "Pokerový pád",
     "ach_pdrop_d": "Poraz eso v Pokerovém pádu se 40 a více body",

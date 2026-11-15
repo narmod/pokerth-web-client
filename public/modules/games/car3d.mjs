@@ -163,12 +163,18 @@ export function drawCar(ctx, o, part) {
         if (sx > 0) { ctx.fillStyle = '#3a1c1e'; rrect(ctx, 0.25, 0.68, 0.5, 0.3, 0.12); ctx.fill(); }
       });
     }
-    const wsBot = (x) => [x, deckY(x, CK.z1 + 0.04) - 0.01, CK.z1 + 0.04], wsTop = (x) => [x * 0.86, 0.82, CK.z1 - 0.08];
-    const glass = [wsBot(-0.34), wsBot(0.34), wsTop(0.34), wsTop(-0.34)].map(V.P);
+    // The windscreen (web.62, narmod: « a bit too big, rounded corners »): lower
+    // and narrower, its top corners rounded, mapped bilinearly onto its slope.
+    const HB = 0.31, HT = 0.27, ZB = CK.z1 + 0.04, ZT = CK.z1 - 0.04, YT = 0.7;
+    const ws = (u, v) => { const hw = HB + (HT - HB) * v, x = -hw + 2 * hw * u, yb = deckY(x, ZB) - 0.01; return [x, yb + (YT - yb) * v, ZB + (ZT - ZB) * v]; };
+    const ru = 0.16, rv = 0.32, outline = [[0, 0]];
+    for (let i = 0; i <= 6; i++) { const a = Math.PI - (i / 6) * (Math.PI / 2); outline.push([ru + Math.cos(a) * ru, 1 - rv + Math.sin(a) * rv]); }
+    for (let i = 0; i <= 6; i++) { const a = Math.PI / 2 - (i / 6) * (Math.PI / 2); outline.push([1 - ru + Math.cos(a) * ru, 1 - rv + Math.sin(a) * rv]); }
+    outline.push([1, 0]);
+    const glass = outline.map(([u, v]) => V.P(ws(u, v)));
     ctx.fillStyle = 'rgba(160,200,230,.24)'; poly(ctx, glass); ctx.fill();
-    ctx.strokeStyle = '#d7dce2'; ctx.lineWidth = Math.max(1.2, w * 0.022); ctx.lineJoin = 'round';
-    ctx.beginPath(); const p0 = glass[0], p1 = glass[3], p2 = glass[2], p3 = glass[1];
-    ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+    ctx.strokeStyle = '#d7dce2'; ctx.lineWidth = Math.max(1.2, w * 0.022); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(glass[0].x, glass[0].y); for (let i = 1; i < glass.length; i++) ctx.lineTo(glass[i].x, glass[i].y); ctx.stroke(); ctx.lineCap = 'butt';
   }
   if (front) {
     // The tail, on the rear face's plane (z = 0), seen as the face turns.

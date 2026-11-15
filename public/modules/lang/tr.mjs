@@ -1268,7 +1268,7 @@ export const strings = {
     "adRebuyQ": "Yarışa dönmek için {n} fiş öder misin?",
     "adRebuyKeys": "Boşluk: rebuy · ↓: hayır, sağ ol",
     "prHint": "◀ ▶ veya ← →: direksiyon · ↑ veya Boşluk: nitro · ↓: fren · her ayrımda kartını seç",
-    "prRules": "As, üstü açık arabasıyla elinde iki kartla Las Vegas'tan yola çıkar.\nYol beş kez iki kola ayrılır, sola ya da sağa: seçtiğin kol masaya bir kart açar (flop, turn, river) ve seni yeni bir manzaraya götürür. Araba her ayrımdan önce yavaşlar: iki kartı karşılaştır.\nHer ayrım saate 22 sn ekler. Süre biterse krupiye masayı tamamlar.\nFiş topla; bir çarpışma fişlerinin %20'sine mal olur. Drift için keskin bir virajda tam hızda direksiyonu kır: fiş ve nitro.\nPuan: (fişler + kalan her saniye için 5) × en iyi beş kartlık elin.\n◀ ▶ veya ← →: direksiyon · ↑ veya Boşluk: nitro · ↓: fren · P: duraklat",
+    "prRules": "As, üstü açık arabasıyla elinde iki kartla Las Vegas'tan yola çıkar.\nYol beş kez iki kola ayrılır, sola ya da sağa: seçtiğin kol masaya bir kart açar (flop, turn, river) ve seni yeni bir manzaraya götürür. Araba her ayrımdan önce yavaşlar: iki kartı karşılaştır.\nHer ayrım saate 22 sn ekler. Süre biterse krupiye masayı tamamlar.\nFiş topla; bir çarpışma fişlerinin %20'sine mal olur. Drift için keskin bir virajda tam hızda direksiyonu kır: fiş ve nitro. Drifti sürdür: mavi kıvılcımlar, sonra turuncu, çıkışta da turbo.\nPuan: (fişler + kalan her saniye için 5) × en iyi beş kartlık elin.\n◀ ▶ veya ← →: direksiyon · ↑ veya Boşluk: nitro · ↓: fren · P: duraklat",
     "prTimeUp": "Süre doldu!",
     "ach_pdrop": "Poker Drop",
     "ach_pdrop_d": "Poker Drop'ta As'ı 40 veya daha fazla puanla yen",

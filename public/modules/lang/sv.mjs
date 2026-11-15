@@ -1266,7 +1266,7 @@ export const strings = {
     "adRebuyQ": "Betala {n} marker för att komma tillbaka i loppet?",
     "adRebuyKeys": "Mellanslag: rebuy · ↓: nej tack",
     "prHint": "◀ ▶ eller ← →: styr · ↑ eller Mellanslag: nitro · ↓: bromsa · välj ditt kort vid varje vägskäl",
-    "prRules": "Esset kör från Las Vegas i sin cabriolet med två kort på hand.\nVägen delar sig fem gånger i två grenar, till vänster eller höger: grenen du tar lägger ett bordkort (flop, turn, river) och leder till en ny miljö. Bilen saktar in före varje vägskäl: jämför de två korten.\nVarje vägskäl ger 22 s extra på klockan. Tar tiden slut fyller dealern i bordet.\nPlocka marker; en krock kostar 20 % av dem. Styr in i en snäv kurva i full fart för att drifta: marker och nitro.\nPoäng: (marker + 5 per återstående sekund) × din bästa hand med fem kort.\n◀ ▶ eller ← →: styr · ↑ eller Mellanslag: nitro · ↓: bromsa · P: paus",
+    "prRules": "Esset kör från Las Vegas i sin cabriolet med två kort på hand.\nVägen delar sig fem gånger i två grenar, till vänster eller höger: grenen du tar lägger ett bordkort (flop, turn, river) och leder till en ny miljö. Bilen saktar in före varje vägskäl: jämför de två korten.\nVarje vägskäl ger 22 s extra på klockan. Tar tiden slut fyller dealern i bordet.\nPlocka marker; en krock kostar 20 % av dem. Styr in i en snäv kurva i full fart för att drifta: marker och nitro. Håll driften: blå gnistor, sedan orange, och en turbo när den tar slut.\nPoäng: (marker + 5 per återstående sekund) × din bästa hand med fem kort.\n◀ ▶ eller ← →: styr · ↑ eller Mellanslag: nitro · ↓: bromsa · P: paus",
     "prTimeUp": "Tiden är ute!",
     "ach_pdrop": "Poker Drop",
     "ach_pdrop_d": "Besegra esset i Poker Drop med 40 poäng eller mer",

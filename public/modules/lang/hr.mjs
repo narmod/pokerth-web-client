@@ -1161,7 +1161,7 @@ export const strings = {
     "adRebuyQ": "Platiti {n} žetona za povratak u utrku?",
     "adRebuyKeys": "Razmaknica: rebuy · ↓: ne, hvala",
     "prHint": "◀ ▶ ili ← →: upravljanje · ↑ ili razmaknica: nitro · ↓: kočenje · na svakom račvanju odaberi svoju kartu",
-    "prRules": "As kreće iz Las Vegasa u svom kabrioletu s dvije karte u ruci.\nCesta se pet puta račva na dva kraka, lijevo ili desno: krak kojim kreneš dijeli kartu na stol (flop, turn, river) i vodi u novi krajolik. Prije svakog račvanja auto uspori: usporedi dvije karte.\nSvako račvanje dodaje 22 s na sat. Ako vrijeme istekne, djelitelj dopunjava stol.\nSkupljaj žetone; sudar košta 20 % njih. Skreni u oštrom zavoju punom brzinom da driftaš: žetoni i nitro.\nBodovi: (žetoni + 5 za svaku preostalu sekundu) × tvoja najbolja ruka od pet karata.\n◀ ▶ ili ← →: upravljanje · ↑ ili razmaknica: nitro · ↓: kočenje · P: pauza",
+    "prRules": "As kreće iz Las Vegasa u svom kabrioletu s dvije karte u ruci.\nCesta se pet puta račva na dva kraka, lijevo ili desno: krak kojim kreneš dijeli kartu na stol (flop, turn, river) i vodi u novi krajolik. Prije svakog račvanja auto uspori: usporedi dvije karte.\nSvako račvanje dodaje 22 s na sat. Ako vrijeme istekne, djelitelj dopunjava stol.\nSkupljaj žetone; sudar košta 20 % njih. Skreni u oštrom zavoju punom brzinom da driftaš: žetoni i nitro. Drži drift: plave iskre, pa narančaste, i turbo na izlazu.\nBodovi: (žetoni + 5 za svaku preostalu sekundu) × tvoja najbolja ruka od pet karata.\n◀ ▶ ili ← →: upravljanje · ↑ ili razmaknica: nitro · ↓: kočenje · P: pauza",
     "prTimeUp": "Vrijeme je isteklo!",
     "ach_pdrop": "Padajući poker",
     "ach_pdrop_d": "Pobijedi asa u Padajućem pokeru s 40 bodova ili više",

@@ -896,7 +896,7 @@ export const strings = {
     "adRebuyQ": "Pay {n} chips to get back in the race?",
     "adRebuyKeys": "Space: rebuy · ↓: no thanks",
     "prHint": "◀ ▶ or ← →: steer · ↑ or Space: nitro · ↓: brake · pick your card at each fork",
-    "prRules": "The Ace drives his convertible from Las Vegas with two cards in hand.\nThe road forks five times into two branches, left or right: the one you take deals a board card (flop, turn, river) and leads to a new scene. The car slows down before each fork: compare the two cards.\nEach fork adds 22 s to the clock. If it runs out, the dealer completes the board.\nPick up chips; hitting a car costs 20% of them. Steer into a tight bend at full speed to drift: chips and nitro.\nScore: (chips + 5 per second left) × your best five-card hand.\n◀ ▶ or ← →: steer · ↑ or Space: nitro · ↓: brake · P: pause",
+    "prRules": "The Ace drives his convertible from Las Vegas with two cards in hand.\nThe road forks five times into two branches, left or right: the one you take deals a board card (flop, turn, river) and leads to a new scene. The car slows down before each fork: compare the two cards.\nEach fork adds 22 s to the clock. If it runs out, the dealer completes the board.\nPick up chips; hitting a car costs 20% of them. Steer into a tight bend at full speed to drift: chips and nitro. Hold the drift: blue sparks, then orange, and a turbo when it ends.\nScore: (chips + 5 per second left) × your best five-card hand.\n◀ ▶ or ← →: steer · ↑ or Space: nitro · ↓: brake · P: pause",
     "prTimeUp": "Time's up!",
     "ach_pdrop": "Poker Drop",
     "ach_pdrop_d": "Beat the Ace at Poker Drop with 40 points or more",

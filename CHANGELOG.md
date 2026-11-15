@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: kart-like driving, mini-turbo** (`web.62`, narmod: « closer to Mario Kart, it feels a bit odd »; picked all
+  four of: the car pivots, drift + turbo, less drift out of bends, more sense of speed) — `poker-run.mjs`: `CENTRI`
+  0.27 → 0.17, `ACCEL` `MAXV / 3.2` (was 4.5); the car's yaw follows its sideways speed (`pv`) and the camera trails it
+  (`slide`). Drift: holding into the bend now cancels the push out (`cf`) plus a touch, letting go widens it, steering
+  out widens it more instead of ending it; a hop on the way in (`hop`, in `carFrame()`); `charge` grows while drifting,
+  blue sparks past `MT_BLUE` (0.9 s), orange past `MT_ORANGE` (1.8 s); `endDrift()` grants `mt` (0.6 / 1.15 s at
+  `MT_CAP` 1.32 × top speed, flames on the exhausts), none after a crash. A hit now bounces: pushed aside (`pv`), a
+  short spin (`spin`), speed kept to 55–70 %. Speed lines from 78 % of top speed and with the turbo. `prRules` gains a
+  sentence on the sparks and the turbo in all 83 languages. `car3d.mjs`: the windscreen lower and narrower, its top
+  corners rounded, mapped bilinearly; `drawFinish()` loses the posts' flags.
 - **Poker Run: a finish gantry** (`web.61`, narmod: « two posts either side of the road with a flag on top; now it's
   very bland ») — `poker-run.mjs`: `drawFinish()` at `finishSeg`: striped posts outside the verges, a two-row
   checkered banner, a waving chequered flag on each post; the finish line on the road is now a checkerboard (it was

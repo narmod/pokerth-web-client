@@ -896,7 +896,7 @@ export const strings = {
     "adRebuyQ": "Ýaryşa dolanmak üçin {n} fişka tölejekmi?",
     "adRebuyKeys": "Boşluk: rebaý · ↓: ýok, sag bol",
     "prHint": "◀ ▶ ýa-da ← →: rul · ↑ ýa-da Boşluk: nitro · ↓: tormoz · her aýrylyşykda kartyňy saýla",
-    "prRules": "Tuz kabrioletinde elinde iki kart bilen Las-Wegasdan ýola çykýar.\nÝol bäş gezek iki şaha bölünýär, çepe ýa-da saga: saýlan şahaň stola kart açýar (flop, turn, river) we täze görnüşe alyp barýar. Her aýrylyşykdan öň ulag haýallaýar: iki karty deňeşdir.\nHer aýrylyşyk sagada 22 s goşýar. Wagt gutarsa, diler stoly doldurýar.\nFişkalary ýygna; çaknyşyk olaryň 20 %-ine düşýär. Typmak üçin dar öwrümde doly tizlikde rul öwür: fişkalar we nitro.\nBal: (fişkalar + galan her sekunt üçin 5) × iň gowy bäş kartly eliň.\n◀ ▶ ýa-da ← →: rul · ↑ ýa-da Boşluk: nitro · ↓: tormoz · P: arakesme",
+    "prRules": "Tuz kabrioletinde elinde iki kart bilen Las-Wegasdan ýola çykýar.\nÝol bäş gezek iki şaha bölünýär, çepe ýa-da saga: saýlan şahaň stola kart açýar (flop, turn, river) we täze görnüşe alyp barýar. Her aýrylyşykdan öň ulag haýallaýar: iki karty deňeşdir.\nHer aýrylyşyk sagada 22 s goşýar. Wagt gutarsa, diler stoly doldurýar.\nFişkalary ýygna; çaknyşyk olaryň 20 %-ine düşýär. Typmak üçin dar öwrümde doly tizlikde rul öwür: fişkalar we nitro. Typmagy sakla: gök uçgunlar, soňra mämişi, ahyrynda turbo.\nBal: (fişkalar + galan her sekunt üçin 5) × iň gowy bäş kartly eliň.\n◀ ▶ ýa-da ← →: rul · ↑ ýa-da Boşluk: nitro · ↓: tormoz · P: arakesme",
     "prTimeUp": "Wagt gutardy!",
     "ach_pdrop": "Poker Drop",
     "ach_pdrop_d": "Poker Drop-da Tuzy 40 bal ýa-da köp bilen ýeň",
