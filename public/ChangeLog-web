@@ -1,4 +1,10 @@
-2026-11-15 version 2.1.11-web.59 (current series):
+2026-11-15 version 2.1.11-web.60 (current series):
+- improvement: Poker Run — a drift now looks like one: the car turns into the bend, its side and front wheel show, the rear swings out with tyre smoke and marks, instead of rocking from side to side
+- improvement: Poker Run — the drift starts a little later than in the last version: a bend taken fast, the stick held a moment
+- improvement: Poker Run — more traffic, about twice as many cars, with vans and sports cars, now and then two side by side; a car leaving for the other branch comes back as a different car
+- new: Poker Run — a small course map in the top right corner while you drive: the route so far, the next fork's two scenes and where you are
+
+2026-11-15 version 2.1.11-web.59:
 - improvement: Poker Run — the other cars are easier to see: bright colours, a dark outline, and their tail lights glow at night (Las Vegas, Monaco)
 - bugfix: Poker Run — you can slip between two cars side by side again: the crash zone was wider than the gap between two lanes
 - improvement: Poker Run — your car is a little narrower on a phone, so it fits between two cars there too

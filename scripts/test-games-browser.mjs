@@ -638,6 +638,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(prT.two && prT.len.length === 6 && prT.len.every((x) => x > prM * 0.75 && x < prM * 1.25), label + ': two roads at each fork, six stages of like length (' + prT.len.join(', ') + ')');
   await pg.keyboard.press('Space');   // let go of the nitro the start may have left down
   await sleep(1500);
+  const prMini = await pg.evaluate(() => { const m = document.querySelector('#pth-game .prun-mini'); return !!m && !m.hidden && !!m.querySelector('svg .prun-car') && m.querySelectorAll('svg circle').length >= 11; });
+  ok(prMini, label + ': the course map in a corner of the HUD while driving, the car on it');
   await pg.keyboard.down('ArrowLeft'); await sleep(450); await pg.keyboard.up('ArrowLeft');
   ok(await pg.evaluate(() => window.__pthRun.game().px < -0.15), label + ': ← held steers to the left (x ' + (await pg.evaluate(() => window.__pthRun.game().px.toFixed(2))) + ')');
   await shot(pg, label + '-prun-run');
@@ -656,7 +658,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   if (prBend) {
     await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i - 8); R.setPx(0); R.setV(0.9); }, prBend);
     const k = prBend.d > 0 ? 'ArrowRight' : 'ArrowLeft';
-    await pg.keyboard.down(k); await sleep(350);
+    await pg.keyboard.down(k); await sleep(550);
     const dr1 = await pg.evaluate(() => window.__pthRun.drift());
     await pg.keyboard.up(k); await sleep(150);
     const dr2 = await pg.evaluate(() => window.__pthRun.drift());
@@ -677,9 +679,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const prOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_poker-run'),
     board: window.__pthRun.game().board.length, map: !!document.querySelector('#pth-game svg.prun-map'),
     nodes: document.querySelectorAll('#pth-game .prun-map > g > circle').length, car: !!document.querySelector('#pth-game .prun-map g g rect'),
-    flag: /🏁/.test((document.querySelector('#pth-game .prun-map') || {}).textContent || '') }));
+    flag: /🏁/.test((document.querySelector('#pth-game .prun-map') || {}).textContent || ''), mini: document.querySelector('#pth-game .prun-mini').hidden }));
   ok(/\) × \d+ = /.test(prOver.final) && (prOver.best !== null || / = 0$/.test(prOver.final.trim())) && prOver.board === 5,
     label + ': time out, the board is completed, score saved (' + prOver.final.trim() + ')');
+  ok(prOver.mini, label + ': the HUD\'s small map gone with the showdown');
   ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');
   await pg.keyboard.press('Escape'); await sleep(300);

@@ -51,6 +51,7 @@ const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3
 // (half-road units). Lanes are 0.66 apart: at 0.36 two cars side by side left
 // no way through; at 0.25 there is a window between them.
 const HIT = 0.25;
+const TRAFFIC = 64, CAR_KINDS = ['car', 'van', 'sport'];
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 1, MERGE = 60;
 /** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
@@ -136,6 +137,11 @@ const CSS = `
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1;width:72px;font-size:12px;letter-spacing:.04em}
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:3}
 #pth-game .prun-map{display:block;color:#f1e9d4;width:min(520px,100%);height:auto;margin:2px 0 4px}
+#pth-game .prun-hud .ar-hand{order:3}
+#pth-game .prun-mini{order:2;flex:none;margin-left:auto;width:132px;line-height:0;background:rgba(8,12,18,.55);border:1px solid rgba(232,184,74,.22);border-radius:9px;padding:1px 3px}
+#pth-game .prun-mini[hidden]{display:none}
+#pth-game .prun-mini svg{display:block;width:100%;height:auto}
+@media (min-width:760px){#pth-game .prun-mini{width:176px}}
 @media (prefers-reduced-motion:reduce){#${ACE_ID}.prun-back.prun-spin .mc-card3d,#pth-game .prun-hud .ar-num.prun-ext{animation:none}}
 `;
 
@@ -173,9 +179,10 @@ export function create(shell) {
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('blChips')) + '</div><div class="ar-num pr-c">0</div></div>'
     + '<div><div class="ar-lab">' + esc(t('gameTimeLabel')) + '</div><div class="ar-num pr-t">' + TIME0.toFixed(1) + '</div></div>'
     + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num pr-s">1/' + STAGES + '</div></div></div>'
+    + '<div class="prun-mini" aria-hidden="true" hidden></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
-  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name');
+  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini');
 
   // ── Track ──────────────────────────────────────────────────────────
   let segs = [], finishSeg = 0, gates = [], cars = [], buildStage = 0;
@@ -233,11 +240,21 @@ export function create(shell) {
       for (let j = 0; j < 4; j++) if (free(s + j * 4)) segs[s + j * 4].sprites.push({ t: 'chip', lane });
     }
     for (let s = 10; s < segs.length; s += 16) segs[s].sprites.push({ t: 'side', side: Math.floor(s / 16) % 2 ? -1 : 1, v: Math.floor(s / 16) % 4 });
-    for (let k = 0; k < 34; k++) {
-      let z = Math.floor(150 + k * (finishSeg - 250) / 34 + Math.random() * 40);
+    // Traffic (web.60, narmod: « more people »): twice as many cars as
+    // before, of three kinds, now and then two side by side — a gap to thread.
+    for (let k = 0; k < TRAFFIC; k++) {
+      let z = Math.floor(120 + k * (finishSeg - 220) / TRAFFIC + Math.random() * 30);
       while (!free(z) && z < finishSeg) z++;
-      cars.push({ z: z * SEG, lane: Math.floor(Math.random() * 3), side: k % 2, v: MAXV * (0.32 + Math.random() * 0.2), col: CAR_COLS[k % CAR_COLS.length], dead: false, ahead: true });
+      const c = newCar(z, k % 2);
+      cars.push(c);
+      if (k % 6 === 3) { const c2 = newCar(z, 1 - k % 2); c2.lane = (c.lane + 1 + (c.lane === 1 ? Math.floor(Math.random() * 2) : 0)) % 3; c2.v = c.v; cars.push(c2); }
     }
+  }
+  let carSeq = 0;
+  function newCar(z, side) {
+    const n = carSeq++;
+    return { z: z * SEG, lane: Math.floor(Math.random() * 3), side, v: MAXV * (0.3 + Math.random() * 0.24),
+      col: CAR_COLS[(n * 3 + Math.floor(Math.random() * 2)) % CAR_COLS.length], kind: CAR_KINDS[Math.floor(Math.random() * 10) < 6 ? 0 : Math.random() < 0.5 ? 1 : 2], dead: false, ahead: true };
   }
   const findSeg = (z) => segs[clamp(Math.floor(z / SEG), 0, segs.length - 1)];
   const nextGate = () => gates.find((g) => g.picked < 0);
@@ -282,7 +299,7 @@ export function create(shell) {
 
   // ── State ──────────────────────────────────────────────────────────
   let state = 'title', overAt = 0, revealTimer = 0, lastChipSnd = 0;
-  let pos = 0, px = 0, v = 0, pv = 0, yaw = 0, slide = 0, bob = 0, camY = CAMH, lastCen = null;
+  let pos = 0, px = 0, v = 0, pv = 0, yaw = 0, turn = 0, slide = 0, bob = 0, camY = CAMH, lastCen = null;
   let stack = 0, time = TIME0, nitro = 0, boost = false, inv = 0, shake = 0, skyOff = 0, curStage = 0, skyFrom = 'vegas', skyGate = -1;
   let holdT = 0, letGo = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
   let act = { a: '', t: 0, dur: 0, prio: 0 }, bub = { s: '', t: 0, d: 1 }, wasBoost = false, wasOff = false, lowSaid = false, offCd = 0, outroT = 0, outroWin = false;
@@ -292,7 +309,7 @@ export function create(shell) {
 
   function reset() {
     buildTrack();
-    pos = 0; px = 0; v = 0; pv = 0; yaw = 0; slide = 0; lastCen = null; board = []; stack = 0; time = TIME0; nitro = 0.2; boost = false;
+    pos = 0; px = 0; v = 0; pv = 0; yaw = 0; turn = 0; slide = 0; lastCen = null; board = []; stack = 0; time = TIME0; nitro = 0.2; boost = false;
     inv = 0; shake = 0; fx = []; parts = []; drift = false; holdT = 0; curStage = 0; stageTheme = ['vegas']; branches = []; assignBranches(0);
     hover = 0; skyFrom = 'vegas'; skyGate = -1; act = { a: '', t: 0, dur: 0, prio: 0 }; bub = { s: '', t: 0, d: 1 };
     wasBoost = false; wasOff = false; lowSaid = false; offCd = 0;
@@ -357,7 +374,7 @@ export function create(shell) {
 
   function start() {
     clearTimeout(revealTimer);
-    reset(); state = 'run'; shell.panel(null);
+    reset(); state = 'run'; shell.panel(null); lastMini = '';
     if (aceRoot) aceRoot.classList.remove('prun-spin');
     ace.mood('mc-m-smile');
   }
@@ -387,7 +404,8 @@ export function create(shell) {
     let z = pi + DRAW + 10 + Math.floor(Math.random() * 120);
     while (segs[z] && (segs[z].f > 0 || segs[z].m > 0)) z++;
     if (z >= finishSeg) { c.dead = true; return; }
-    c.z = z * SEG; c.lane = Math.floor(Math.random() * 3); c.v = MAXV * (0.32 + Math.random() * 0.2);
+    // A new car, not the one just seen coming back.
+    Object.assign(c, newCar(z, c.side));
   }
   function takeGate(g, lane, live) {
     const before = evalCards(hole.concat(board)).cat;
@@ -418,17 +436,18 @@ export function create(shell) {
     // The branch the car heads for: the left or the right half of the road.
     if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = px < 0 ? 0 : 1;
     // Drift: steering into a bend at speed, held a moment (web.59: easier —
-    // any real bend, not only the tightest; a short let-go of the stick, a
-    // swipe ending on the phone, no longer breaks it; steering out does).
-    const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 0.9 && sp > 0.55;
+    // a short let-go of the stick, a swipe ending on the phone, no longer
+    // breaks it; steering out does. web.60: a little less eager — narmod
+    // « before too slow to get, now a bit too quick »).
+    const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 1.1 && sp > 0.6;
     holdT = into ? holdT + dt : Math.max(0, holdT - dt * 2);
-    if (!drift && holdT > 0.14) { drift = true; driftDir = dir; driftTick = 0; driftGain = 0; letGo = 0; say('😎'); }
+    if (!drift && holdT > 0.3) { drift = true; driftDir = dir; driftTick = 0; driftGain = 0; letGo = 0; say('😎'); }
     if (drift) {
       letGo = dir === driftDir ? 0 : letGo + dt;
       if (dir === -driftDir || letGo > 0.4 || Math.abs(ps.curve) < 0.4 || sp < 0.4) endDrift();
     }
     const rate = (drift ? 3.4 : 2.5) * Math.max(0.35, sp);
-    pv += ((drift && dir === 0 ? driftDir * 0.6 : dir) * rate - pv) * Math.min(1, dt * (drift ? 5 : 11));
+    pv += (dir * rate - pv) * Math.min(1, dt * (drift ? 5 : 11));
     px += pv * dt - dt * 2.4 * sp * sp * ps.curve * CENTRI * (drift ? 0.3 : 1);
     // After a fork the branch taken swings back to the middle: the car goes with it.
     if (ps.m > 0) { const cen = (envL(g) + envR(g)) / 2; if (lastCen != null) px += cen - lastCen; lastCen = cen; } else lastCen = null;
@@ -440,11 +459,14 @@ export function create(shell) {
     if (drift) {
       driftTick += dt; v *= 1 - 0.06 * dt;
       if (driftTick >= 0.4) { driftTick = 0; stack += 5; driftGain += 5; nitro = Math.min(1, nitro + 0.05); }
-      if (!shell.reduced) for (const sx of [-1, 1]) parts.push({ x: W / 2 + slide + sx * carW() * 0.38, y: H - 18, vx: -driftDir * (60 + Math.random() * 60) + sx * 20, vy: -30 - Math.random() * 40, r: 5, life: 0.7, c: '220,224,230' });
+      if (!shell.reduced) for (const sx of [-1, 1]) parts.push({ x: W / 2 + slide + sx * carW() * 0.4, y: H - 14, vx: -driftDir * (70 + Math.random() * 70) + sx * 20, vy: -20 - Math.random() * 35, r: sx === -driftDir ? 8 : 5, life: sx === -driftDir ? 0.9 : 0.6, c: '226,229,234' });
     }
     if (off && sp > 0.2 && !shell.reduced && Math.random() < 0.6) parts.push({ x: W / 2 + (Math.random() - 0.5) * 70, y: H - 16, vx: (Math.random() - 0.5) * 80, vy: -40, r: 4, life: 0.5, c: '150,140,110' });
-    yaw += ((drift ? driftDir * 0.2 : dir * 0.05) - yaw) * Math.min(1, dt * 8);
-    slide += ((drift ? -driftDir * W * 0.035 : 0) - slide) * Math.min(1, dt * 6);
+    // A drift turns the car into the bend (its side shows, the rear swings
+    // out) rather than rocking it: little roll, a slow swing in and out.
+    turn += ((drift ? driftDir : 0) - turn) * Math.min(1, dt * (drift ? 3.2 : 4.5));
+    yaw += ((drift ? driftDir * 0.035 : dir * 0.05) - yaw) * Math.min(1, dt * 8);
+    slide += (-turn * W * 0.05 - slide) * Math.min(1, dt * 6);
     bob = sp > 0.8 && !shell.reduced ? Math.sin(performance.now() / 38) * sp * 1.1 : 0;
     camY = CAMH + ps.p1.w.y + (ps.p2.w.y - ps.p1.w.y) * (((pos + PLAYER_Z) % SEG) / SEG);
     stepParts(dt);
@@ -502,6 +524,15 @@ export function create(shell) {
     renderStats(false);
     renderNitro();
     renderPreview();
+    renderMini();
+  }
+  // The HUD's map: redrawn at each fork, the car moved along between.
+  let lastMini = '';
+  function renderMini() {
+    const pr = progress(), key = pr.stage + '|' + gates.map((g) => g.picked).join('') + '|' + (branches[pr.stage] || []).join();
+    if (key !== lastMini) { lastMini = key; hMini.innerHTML = courseMap(pr, true); hMini.hidden = false; return; }
+    const c = mapCar(pr), car = hMini.querySelector('.prun-car');
+    if (car) car.setAttribute('transform', 'translate(' + c.x.toFixed(1) + ' ' + (c.y - 6 * 2.6).toFixed(1) + ') scale(2.6)');
   }
   function stepParts(dt) {
     for (const p of parts) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += 26 * dt; }
@@ -521,7 +552,7 @@ export function create(shell) {
   }
   function stepOutro(dt) {
     outroT += dt; v = Math.max(0, v - ACCEL * 1.4 * dt); pos += v * dt; aceTick(dt);
-    yaw *= 0.9; slide *= 0.9; pv *= 0.9;
+    yaw *= 0.9; turn *= 0.9; slide *= 0.9; pv *= 0.9;
     const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y;
     stepFx(dt); stepParts(dt);
     if (outroT > 1.8) over();
@@ -535,8 +566,19 @@ export function create(shell) {
   /** The course like OutRun's map: Las Vegas, then at each fork its two
    *  scenes (left above, right below), the branch taken in gold with the card
    *  it dealt, the road not driven in grey, the car where it stopped, 🏁. */
-  function courseMap(pr) {
-    const X = (k) => 34 + k * 82, Y = (k, b) => (k === 0 ? 70 : b === 0 ? 38 : 102), FX = X(STAGES - 1) + 70;
+  const MX = (k) => 34 + k * 82, MY = (k, b) => (k === 0 ? 70 : b === 0 ? 38 : 102), MFX = MX(STAGES - 1) + 70;
+  /** Where the car is on the map: between its scene and the next fork (or the finish). */
+  function mapCar(pr) {
+    if (pr.stage >= STAGES) return { x: MFX - 16, y: 70 };
+    const k = pr.stage, x0 = MX(k), y0 = MY(k, k ? gates[k - 1].picked : 0), x1 = k === STAGES - 1 ? MFX : MX(k + 1);
+    return { x: x0 + (x1 - x0) * pr.p, y: y0 + (70 - y0) * pr.p };
+  }
+  const carSvg = (c, sc) => '<g class="prun-car" transform="translate(' + c.x.toFixed(1) + ' ' + (c.y - 6 * sc).toFixed(1) + ') scale(' + sc + ')"><rect x="-7" y="-4" width="14" height="8" rx="3" fill="#c2303a" stroke="#fff" stroke-width="1"/>'
+    + '<circle cx="-4" cy="4.5" r="1.8" fill="#141414"/><circle cx="4" cy="4.5" r="1.8" fill="#141414"/></g>';
+  /** mini: the small map of the HUD while driving — no names, no cards, the
+   *  scenes of forks not reached yet unknown (grey), bolder strokes. */
+  function courseMap(pr, mini) {
+    const X = MX, Y = MY, FX = MFX, M = mini ? 2.4 : 1;
     const gold = '#e8b84a', grey = 'rgba(160,170,165,.45)';
     let lines = '', nodes = '';
     // Long scene names wrap on two lines so neighbouring columns never collide.
@@ -547,12 +589,13 @@ export function create(shell) {
     };
     const node = (k, b, key, on, card) => {
       const th = TH[key], x = X(k), y = Y(k, b);
-      nodes += '<circle cx="' + x + '" cy="' + y + '" r="' + (on ? 12 : 8) + '" fill="' + th.sky[on ? 2 : 1] + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 2.5 : 1.2) + '"' + (on ? '' : ' opacity=".55"') + '/>'
-        + '<text x="' + x + '" font-size="' + (on ? 12 : 10) + '" text-anchor="middle" fill="currentColor" opacity="' + (on ? 0.95 : 0.45) + '" font-family="Inter,system-ui,sans-serif" font-weight="' + (on ? 700 : 500) + '">' + label(th.name, x, y, b === 0 && k) + '</text>';
+      nodes += '<circle cx="' + x + '" cy="' + y + '" r="' + (mini ? (on ? 16 : 12) : (on ? 12 : 8)) + '" fill="' + (th ? th.sky[on ? 2 : 1] : '#3a4150') + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 2.5 : 1.2) * M + '"' + (on ? '' : ' opacity="' + (mini ? 0.8 : 0.55) + '"') + '/>';
+      if (mini) return;
+      nodes += '<text x="' + x + '" font-size="' + (on ? 12 : 10) + '" text-anchor="middle" fill="currentColor" opacity="' + (on ? 0.95 : 0.45) + '" font-family="Inter,system-ui,sans-serif" font-weight="' + (on ? 700 : 500) + '">' + label(th.name, x, y, b === 0 && k) + '</text>';
       if (card != null) nodes += '<text x="' + x + '" y="' + (y + 3.5) + '" font-size="10" text-anchor="middle" font-weight="800" font-family="Inter,system-ui,sans-serif" fill="' + (isRed(card) ? '#c62828' : '#141414') + '" paint-order="stroke" stroke="#fffdf8" stroke-width="2.5">'
         + RANKS[card % 13] + SUITS[suitOf(card)] + VS + '</text>';
     };
-    const seg = (x1, y1, x2, y2, on) => { lines += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 3 : 1.5) + '"' + (on ? '' : ' stroke-dasharray="3 4"') + ' stroke-linecap="round"/>'; };
+    const seg = (x1, y1, x2, y2, on) => { lines += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 3 : 1.5) * M + '"' + (on ? '' : ' stroke-dasharray="' + 3 * M + ' ' + 4 * M + '"') + ' stroke-linecap="round"/>'; };
     // Driven stages follow the route taken; beyond where the car stopped every
     // scene still links to both scenes of the next fork (the road merges between forks).
     const from = (k) => (k === 0 ? [70] : k <= pr.stage ? [Y(k, gates[k - 1].picked)] : [38, 102]);
@@ -562,22 +605,19 @@ export function create(shell) {
       for (let b = 0; b < 2; b++) {
         const taken = g.picked === b && !g.auto && driven;
         for (const fy of from(k - 1)) seg(X(k - 1), fy, X(k), Y(k, b), taken);
-        node(k, b, branches[k - 1][b], taken, taken ? g.cards[b] : null);
+        node(k, b, branches[k - 1] && branches[k - 1][b], taken, taken ? g.cards[b] : null);
       }
     }
     for (const fy of from(STAGES - 1)) seg(X(STAGES - 1), fy, FX, 70, pr.stage >= STAGES);
-    nodes += '<text x="' + FX + '" y="77" font-size="18" text-anchor="middle">🏁</text>';
-    // The car where it stopped.
-    const k = Math.min(pr.stage, STAGES - 1), x0 = X(k), y0 = Y(k, k ? gates[k - 1].picked : 0);
-    const x1 = k === STAGES - 1 ? FX : X(k + 1), y1 = 70;   // towards the next fork (its two scenes either side) or the finish
-    const cx = pr.stage >= STAGES ? FX - 16 : x0 + (x1 - x0) * pr.p, cyy = pr.stage >= STAGES ? 70 : y0 + (y1 - y0) * pr.p;
-    const car = '<g transform="translate(' + cx.toFixed(1) + ' ' + (cyy - 6).toFixed(1) + ')"><rect x="-7" y="-4" width="14" height="8" rx="3" fill="#c2303a" stroke="#fff" stroke-width="1"/>'
-      + '<circle cx="-4" cy="4.5" r="1.8" fill="#141414"/><circle cx="4" cy="4.5" r="1.8" fill="#141414"/></g>';
+    nodes += '<text x="' + FX + '" y="' + (mini ? 84 : 77) + '" font-size="' + (mini ? 38 : 18) + '" text-anchor="middle">🏁</text>';
+    // The car where it stopped (or where it is, on the HUD's map).
+    const car = carSvg(mapCar(pr), mini ? 2.6 : 1);
+    if (mini) return '<svg viewBox="0 0 540 140">' + lines + nodes + car + '</svg>';
     return '<svg class="prun-map" viewBox="0 0 520 152" role="img" aria-label="' + esc(stageTheme.slice(0, pr.stage + 1).map((x) => TH[x].name).join(' → ')) + '"><g transform="translate(0 10)">'
       + '<rect x="2" y="-8" width="516" height="148" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
   }
   function over() {
-    state = 'over'; overAt = performance.now();
+    state = 'over'; overAt = performance.now(); hMini.hidden = true;
     const pr = progress();
     for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(Math.random() * 2), false); }
     curStage = Math.min(curStage, pr.stage);   // the auto-dealt cards do not count as stages driven (HUD level)
@@ -742,7 +782,7 @@ const carW = () => Math.min(W * 0.24, 100);
       }
       if (s.gate) drawGate(s, sc, sx, sy, g);
       const cs = bySeg.get(s.i);
-      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night); }
+      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind); }
       ctx.restore();
     }
     const spd = v / MAXV;
@@ -819,9 +859,10 @@ const carW = () => Math.min(W * 0.24, 100);
       ctx.fillStyle = '#ffe6b0'; ctx.beginPath(); ctx.arc(lx, ly, u * 0.7, 0, 7); ctx.fill();
     }
   }
-  function drawCarRear(X, by, w, col, night) {
+  function drawCarRear(X, by, w, col, night, kind) {
     if (w < 2.5) return;
-    const h = w * 0.62, x = X - w / 2, y = by - h, lx = [x + w * 0.15, x + w * 0.85], ly = y + h * 0.52;
+    if (kind === 'van') { drawVan(X, by, w, col, night); return; }
+    const sport = kind === 'sport', h = w * (sport ? 0.5 : 0.62), x = X - w / 2, y = by - h, lx = [x + w * 0.15, x + w * 0.85], ly = y + h * 0.52;
     // At night the tail lights glow: a car is seen from afar before its shape.
     if (night) for (const cx of lx) {
       const r = Math.max(w * 0.32, 4), gl = ctx.createRadialGradient(cx, ly, 0, cx, ly, r);
@@ -837,6 +878,25 @@ const carW = () => Math.min(W * 0.24, 100);
     ctx.fillStyle = '#1b2533'; rr(x + w * 0.22, y + h * 0.06, w * 0.56, h * 0.26, w * 0.08); ctx.fill();
     ctx.fillStyle = '#f4eedf'; rr(X - w * 0.12, y + h * 0.6, w * 0.24, h * 0.13, h * 0.03); ctx.fill();
     ctx.fillStyle = night ? '#ff6a6a' : '#ff3b40'; ctx.beginPath(); ctx.arc(lx[0], ly, w * 0.08, 0, 7); ctx.arc(lx[1], ly, w * 0.08, 0, 7); ctx.fill();
+    if (sport) { ctx.fillStyle = '#14171c'; rr(x - w * 0.02, y + h * 0.1, w * 1.04, h * 0.1, h * 0.04); ctx.fill(); ctx.fillRect(x + w * 0.12, y + h * 0.18, w * 0.05, h * 0.12); ctx.fillRect(x + w * 0.83, y + h * 0.18, w * 0.05, h * 0.12); }
+  }
+  /** A van from behind: a tall box, two rear doors, lights up the sides. */
+  function drawVan(X, by, w, col, night) {
+    const h = w * 0.95, x = X - w / 2, y = by - h, ly = by - h * 0.42;
+    if (night) for (const cx of [x + w * 0.07, x + w * 0.93]) {
+      const r = Math.max(w * 0.32, 4), gl = ctx.createRadialGradient(cx, ly, 0, cx, ly, r);
+      gl.addColorStop(0, 'rgba(255,70,70,.55)'); gl.addColorStop(1, 'rgba(255,70,70,0)'); ctx.fillStyle = gl; ctx.fillRect(cx - r, ly - r, r * 2, r * 2);
+    }
+    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(X, by, w * 0.55, w * 0.07, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#0d1117'; rr(x + w * 0.04, by - h * 0.2, w * 0.18, h * 0.2, w * 0.05); ctx.fill(); rr(x + w * 0.78, by - h * 0.2, w * 0.18, h * 0.2, w * 0.05); ctx.fill();
+    ctx.strokeStyle = 'rgba(8,10,14,.75)'; ctx.lineWidth = Math.max(1, w * 0.035); ctx.fillStyle = col;
+    rr(x, y, w, h * 0.9, w * 0.1); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(8,10,14,.45)'; ctx.lineWidth = Math.max(1, w * 0.02);
+    ctx.beginPath(); ctx.moveTo(X, y + h * 0.06); ctx.lineTo(X, y + h * 0.84); ctx.stroke();
+    ctx.fillStyle = '#1b2533'; rr(x + w * 0.12, y + h * 0.1, w * 0.34, h * 0.22, w * 0.04); ctx.fill(); rr(x + w * 0.54, y + h * 0.1, w * 0.34, h * 0.22, w * 0.04); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; rr(x + w * 0.05, y + h * 0.03, w * 0.9, h * 0.035, h * 0.02); ctx.fill();
+    ctx.fillStyle = '#f4eedf'; rr(X - w * 0.12, y + h * 0.68, w * 0.24, h * 0.09, h * 0.02); ctx.fill();
+    ctx.fillStyle = night ? '#ff6a6a' : '#ff3b40'; rr(x + w * 0.02, ly - h * 0.1, w * 0.09, h * 0.2, w * 0.03); ctx.fill(); rr(x + w * 0.89, ly - h * 0.1, w * 0.09, h * 0.2, w * 0.03); ctx.fill();
   }
 
   // The player's car, in two halves around the Ace: what is behind him on the
@@ -852,11 +912,36 @@ const carW = () => Math.min(W * 0.24, 100);
     ctx.fillStyle = 'rgba(255,255,255,.08)'; rr(sx - w * 0.1, -h * 1.18, w * 0.2, h * 0.06, h * 0.03); ctx.fill();
     if (head) { ctx.fillStyle = '#3a1c1e'; rr(sx - w * 0.07, -h * 1.45, w * 0.14, h * 0.26, w * 0.05); ctx.fill(); }
   }
+  // The car turned by `turn` (−1 … 1): seen a little from the side, its rear
+  // face narrower and pushed out of the bend.
+  const turnTf = (w) => { const a = Math.abs(turn); ctx.translate(-turn * w * 0.04, 0); ctx.scale(1 - 0.1 * a, 1); };
+  /** The side of the car that shows in a drift, its front wheel, and the
+   *  tyre marks it leaves on the tarmac. */
+  function drawTurnSide(w, h) {
+    const a = Math.abs(turn); if (a < 0.03) return;
+    const sd = Math.sign(turn), x0 = sd * w * 0.47, x1 = sd * w * (0.47 + 0.3 * a);
+    ctx.strokeStyle = 'rgba(12,12,14,' + (0.4 * a).toFixed(2) + ')'; ctx.lineWidth = w * 0.07; ctx.lineCap = 'round';
+    for (const wx of [-0.38, 0.38]) { ctx.beginPath(); ctx.moveTo(w * wx, -h * 0.05); ctx.quadraticCurveTo(w * wx - sd * w * 0.05, h * 0.5, w * wx - sd * w * 0.22 * a, h * 1.4); ctx.stroke(); }
+    ctx.lineCap = 'butt';
+    // The side: the door line dropping to the front wing, the wheel under it.
+    const yb = (t) => -h * (0.08 + (0.2 + 0.2 * a) * t);
+    ctx.beginPath(); ctx.moveTo(x0, -h * 1.02);
+    ctx.quadraticCurveTo(x0 + (x1 - x0) * 0.5, -h * (1.0 + 0.08 * a), x1, -h * (0.8 + 0.12 * a));
+    ctx.quadraticCurveTo(x1 + sd * w * 0.02, -h * (0.55 + 0.18 * a), x1, yb(1)); ctx.lineTo(x0, yb(0)); ctx.closePath();
+    const sg = ctx.createLinearGradient(x0, 0, x1, 0); sg.addColorStop(0, '#b52630'); sg.addColorStop(1, '#6a1219');
+    ctx.fillStyle = sg; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = Math.max(1, w * 0.012);
+    ctx.beginPath(); ctx.moveTo(x0, -h * 0.84); ctx.lineTo(x0 + (x1 - x0) * 0.9, -h * (0.74 + 0.12 * a)); ctx.stroke();
+    const wx = x0 + (x1 - x0) * 0.66, wy = yb(0.66) + h * 0.04, rx = w * (0.03 + 0.04 * a), ry = h * 0.24;
+    ctx.fillStyle = '#0b0e12'; ctx.beginPath(); ctx.ellipse(wx, wy, rx, ry, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#8a929c'; ctx.beginPath(); ctx.ellipse(wx, wy, rx * 0.45, ry * 0.45, 0, 0, 7); ctx.fill();
+  }
   function drawCarBack(g) {
     const { w, h, x, y } = carFrame();
-    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw);
-    ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.beginPath(); ctx.ellipse(0, 1, w * 0.54, w * 0.075, 0, 0, 7); ctx.fill();
+    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw); turnTf(w);
+    ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.beginPath(); ctx.ellipse(-turn * w * 0.1, 1, w * (0.54 + 0.12 * Math.abs(turn)), w * 0.075, 0, 0, 7); ctx.fill();
     ctx.fillStyle = '#0b0e12'; rr(-w * 0.48, -h * 0.6, w * 0.18, h * 0.62, w * 0.08); ctx.fill(); rr(w * 0.30, -h * 0.6, w * 0.18, h * 0.62, w * 0.08); ctx.fill();
+    drawTurnSide(w, h);
     ctx.beginPath(); ctx.moveTo(-w * 0.31, -h); ctx.lineTo(-w * 0.27, -h * 1.55); ctx.quadraticCurveTo(-w * 0.25, -h * 1.82, -w * 0.12, -h * 1.84);
     ctx.lineTo(w * 0.12, -h * 1.84); ctx.quadraticCurveTo(w * 0.25, -h * 1.82, w * 0.27, -h * 1.55); ctx.lineTo(w * 0.31, -h); ctx.closePath();
     ctx.fillStyle = 'rgba(160,200,230,.24)'; ctx.fill(); ctx.strokeStyle = '#d7dce2'; ctx.lineWidth = Math.max(1.2, w * 0.022); ctx.lineJoin = 'round'; ctx.stroke();
@@ -865,7 +950,7 @@ const carW = () => Math.min(W * 0.24, 100);
   }
   function drawCarFront(g) {
     const { w, h, x, y } = carFrame();
-    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw);
+    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw); turnTf(w);
     seatShape(g, -w * 0.17, false);
     ctx.beginPath();
     ctx.moveTo(-w * 0.5, -h * 0.28);
@@ -898,7 +983,7 @@ const carW = () => Math.min(W * 0.24, 100);
       ctx.fillStyle = '#ff8a3d'; ctx.beginPath(); ctx.ellipse(w * ex, -h * 0.16 + fl * 0.3, w * 0.02, fl * 0.3, 0, 0, 7); ctx.fill();
     }
     if (drift) {
-      ctx.rotate(-yaw); ctx.font = '700 ' + Math.round(Math.max(12, w * 0.14)) + 'px Inter, system-ui, sans-serif';
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(shell.dpr * shell.k, shell.dpr * shell.k); ctx.translate(x, y); ctx.font = '700 ' + Math.round(Math.max(12, w * 0.14)) + 'px Inter, system-ui, sans-serif';
       ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.6)';
       const s = 'DRIFT' + (driftGain ? ' +' + driftGain : ''); ctx.strokeText(s, 0, -h * 2.5); ctx.fillStyle = '#ffd27a'; ctx.fillText(s, 0, -h * 2.5);
     }
@@ -945,13 +1030,13 @@ const carW = () => Math.min(W * 0.24, 100);
     }
     if (state === 'title') pose = 'prun-wave';
     if (state === 'over') pose = outroWin ? 'prun-up' : 'prun-slump';
-    if (drift) rot += driftDir * 0.28;
+    rot += turn * 0.08;
     if (state === 'run' && wasOff && !shell.reduced) dy += (Math.random() - 0.5) * h * 0.08;
     if (state === 'run' && time < 8 && !shell.reduced) rot += Math.sin(performance.now() / 20) * 0.04;
     ace.pose(pose);
     ace.mood(act.a === 'spin' || (state === 'over' && outroWin) ? 'mc-m-yay' : 'mc-m-smile');
     // The card (84 sprite px wide) as wide as the seat; its bottom below the seat's top.
-    const s = (w * 0.26) / 84, lx = -w * 0.17, ly = -h * 0.94 + dy + 56 * s;
+    const s = (w * 0.26) / 84, lx = -w * 0.17 * (1 - 0.1 * Math.abs(turn)) - turn * w * 0.04, ly = -h * 0.94 + dy + 56 * s;
     const c = Math.cos(yaw), sn = Math.sin(yaw);
     const tilt = yaw * 0.2 + (keys.l ? -0.08 : keys.r ? 0.08 : 0) + rot;
     ace.place(x + c * lx - sn * ly, y + sn * lx + c * ly, s, shell.k, tilt * 180 / Math.PI);

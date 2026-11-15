@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: a drift that looks like one, more traffic, the map while driving** (`web.60`, narmod: « the drift feels
+  like the car rocking left and right, not a slide; a bit too quick now; more people; see where you are on the map
+  while playing, top right ») — `poker-run.mjs`: new `turn` (−1 … 1, eased in over ~0.3 s): `turnTf()` narrows the
+  rear face and pushes it out of the bend, `drawTurnSide()` draws the side that shows (door line, front wing and
+  wheel) and the tyre marks; the roll in a drift drops from 0.2 to 0.035 rad. Drift threshold: bend over 1.1, 60 %
+  speed, 0.3 s (web.59: 0.9, 55 %, 0.14 s). Traffic: `TRAFFIC = 64` (was 34) built by `newCar()`, three kinds
+  (`car`, `van` via `drawVan()`, `sport` with a spoiler), every sixth one doubled side by side; `respawn()` deals a
+  new car. HUD: `.prun-mini`, `courseMap(pr, true)` without names or cards, redrawn at each fork, its car moved
+  along by `mapCar()`; hidden at the showdown.
 - **Poker Run: traffic you can see and get through, easier drifts** (`web.59`, narmod: « I don't see the other cars very
   well; my car has trouble passing between two cars, I crash very often; drifting isn't obvious ») — `poker-run.mjs`:
   the hit distance was 0.36 half-road with lanes 0.66 apart, so two cars side by side left no way through; it is now
