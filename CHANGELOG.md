@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: the Duel** (`web.83`, push 5 of `claude/CONCEPTION_TAPIS.md`, narmod's form A) — a fifth tile, « Two
+  players » (`pdTwo`): two players on one screen, each in turn on the same table, `DUEL_ROUNDS` = 3 rounds (each
+  started by the other player). Each player has his own score, bonuses and hand of 5: `turnTo(i)` puts the
+  current one's away and takes the other's out of `G` (score, inv, hand, bestHand, inTotal, bestCat). A move (a
+  group or a power, not the Shuffle) passes the turn once its chips, cards and falling friend have landed
+  (`HANDOVER_S`); `TURN_S` = 10 s a move, the HUD bar in the player's colour (gold, blue), the last 3 s ticking;
+  too slow, the turn passes. Who empties a stack wins its friend; the dealer recaves free; no clean bonus. The HUD
+  shows both scores (« ▶ Player 2 »); the end screen names the winner (`pdWins` / `pdTie`), both scores, the best
+  hand of the two. Key `tpDuelD` (83 catalogues). `test-games-browser.mjs`: five tiles, +1 check per screen.
+
+### Added
 - **Tapis!: the modes** (`web.82`, push 4 of `claude/CONCEPTION_TAPIS.md`) — four tiles on the title (←/→ on the
   title, records per mode): Classic; **Madness** (no clock: a row rises under every column every
   `folieEvery(lv)` s — 6.5 s down to 2.5 s — and at once when no pair is left; the deal starts at 60 % of the

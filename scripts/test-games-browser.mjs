@@ -142,7 +142,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   // ── Tapis! (web.75): the 4th game of the path ──
   await pick(pg, 'tapis');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Tapis !', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'tapis' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 4), label + ': Tapis!: its card opens it, four modes on its title (Classic, Madness, Daily, Zen)');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'tapis' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 5), label + ': Tapis!: its card opens it, five modes on its title (Classic, Madness, Daily, Zen, Duel)');
   await pg.keyboard.press('Space');
   await sleep(1500);
   const tps = await pg.evaluate(() => {
@@ -224,6 +224,27 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(tpm.same && tpm.zen.mode === 'zen' && tpm.zen.hidden && tpm.zen.still && tpm.risen && tpm.over === 'over',
     label + ': Tapis!: Daily deals the same board, Zen has no clock, in Madness the rows rise and a stack over the red line ends it (' + JSON.stringify(tpm) + ')');
   await sleep(1600);
+  // web.83: the Duel — a move passes the turn, each his own score; too slow, the turn passes; 3 rounds, a winner
+  const tpd = await pg.evaluate(async () => {
+    const T = window.__pthTapis; T.start('duel');
+    const G = T.run(), out = { t0: T.turn() };
+    let mv = null;
+    for (let c = 0; c < G.grid.length && !mv; c++) for (let r = 0; r < G.grid[c].length; r++) {
+      const k = G.grid[c][r].k;
+      if (k >= 0 && !G.grid[c][r].seal && ((G.grid[c][r + 1] && G.grid[c][r + 1].k === k) || (G.grid[c + 1] && G.grid[c + 1][r] && G.grid[c + 1][r].k === k))) { mv = [c, r]; break; }
+    }
+    T.act(mv[0], mv[1]); out.s1 = G.score;
+    await new Promise((r) => setTimeout(r, 1800));
+    out.t1 = T.turn(); out.s2now = G.score; out.p1 = G.players[0].score;
+    out.hud = document.querySelector('#pth-game .ar-stats .ar-lab').textContent;
+    G.turnT = 0.05; await new Promise((r) => setTimeout(r, 300));
+    out.t2 = T.turn();
+    T.timeUp(); await new Promise((r) => setTimeout(r, 1700));
+    out.end = (document.querySelector('#pth-game .pg-panel h2') || {}).textContent || '';
+    return out;
+  });
+  ok(tpd.t0 === 0 && tpd.s1 > 0 && tpd.t1 === 1 && tpd.s2now === 0 && tpd.p1 === tpd.s1 && /1/.test(tpd.hud) && tpd.t2 === 0 && /1|2|!/.test(tpd.end),
+    label + ': Tapis!: Duel — a move passes the turn to player 2 (player 1 keeps his ' + tpd.s1 + '), a slow turn passes back, the end names the winner (' + JSON.stringify(tpd) + ')');
   await pg.evaluate(() => window.__pthTapis.start('classic'));
   await pg.evaluate(() => window.__pthTapis.timeUp());
   const tpo = await endInfo(pg, 8000);

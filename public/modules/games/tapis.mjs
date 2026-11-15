@@ -48,7 +48,11 @@
 //             Daily (the Classic, every deal seeded by the day — pth_tp_daily);
 //             Zen (no clock, no rising rows, no seals, free recaves, 5 rounds).
 //             Records: Classic shell.best, Madness and Zen pth_tp_best.
-// The Duel comes in the next push.
+//   Duel      (push 5, web.83) two players on one screen, each in turn on the
+//             same table (narmod: form A): TURN_S seconds a move (out: the
+//             turn passes), DUEL_ROUNDS rounds, each player his own score,
+//             bonuses and hand of 5 (swapped in and out of G at each turn);
+//             who empties a stack wins its friend; the dealer recaves free.
 // ═══════════════════════════════════════════════════════════════════
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
@@ -61,7 +65,7 @@ import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
-import { endScreen, barsHtml } from './end.mjs';
+import { endScreen, barsHtml, listHtml } from './end.mjs';
 
 const SINK_S = 0.45, PEEK_S = 1.1;          // into the hole, then his head out to wave
 /** The characters of the round (cast.mjs): the family of the level, a different one on each column as far as it goes. */
@@ -77,8 +81,12 @@ export const MODES = [
   { id: 'folie', icon: '🌀', key: 'tpFolie', desc: 'tpFolieD' },
   { id: 'daily', icon: '📅', key: 'psDaily', desc: 'hcModeDailyD' },
   { id: 'zen', icon: '🧘', key: 'hcModeZen', desc: 'tpZenD' },
+  { id: 'duel', icon: '🆚', key: 'pdTwo', desc: 'tpDuelD' },
 ];
 export const ZEN_ROUNDS = 5;
+export const DUEL_ROUNDS = 3, TURN_S = 10;
+const HANDOVER_S = 0.9;                     // a move made: the turn passes once its chips and cards have landed
+const P_COLOR = ['#e8b84a', '#7fc8ff'];     // player 1 gold, player 2 blue (as in Poker Drop)
 /** Madness: seconds between two rising rows at level lv. */
 export const folieEvery = (lv) => Math.max(2.5, 6.5 - 0.35 * (Math.max(1, lv) - 1));
 const DAILY_KEY = 'pth_tp_daily', BEST_KEY = 'pth_tp_best';
@@ -110,9 +118,11 @@ export function create(shell) {
     + '<div class="ar-hand"><div class="ar-lab tp-blinds"></div><div class="tp-time"><i></i></div></div>';
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
   const hScore = q('.tp-score'), hLv = q('.tp-lv'), hBlinds = q('.tp-blinds'), hTimeBox = q('.tp-time'), hTime = q('.tp-time i');
+  const hLabs = /** @type {HTMLElement[]} */ (Array.from(shell.hud.querySelectorAll('.ar-stats .ar-lab')));
 
   let state = 'title', time = 0, timer = 0, check = 0, sel = 0, mode = 'classic', R = Math.random;
   const timed = () => mode === 'classic' || mode === 'daily';
+  const duel = () => mode === 'duel';
   /** @type {any} */
   let G = null;
   let hover = null;
@@ -171,10 +181,33 @@ export function create(shell) {
     renderHud();
   }
   function renderHud() {
+    hBlinds.textContent = blindsAt(G.lv);
+    if (duel() && G.players) {             // Duel: the two scores, the player to play lit
+      const sc = (i) => (i === G.turn ? G.score : G.players[i].score);
+      hLabs[0].textContent = (G.turn === 0 ? '▶ ' : '') + t('pdPlayer', { n: 1 }); hLabs[1].textContent = (G.turn === 1 ? '▶ ' : '') + t('pdPlayer', { n: 2 });
+      hScore.textContent = fmt(sc(0)); hLv.textContent = fmt(sc(1));
+      hLabs[0].style.color = hScore.style.color = G.turn === 0 ? P_COLOR[0] : '';
+      hLabs[1].style.color = hLv.style.color = G.turn === 1 ? P_COLOR[1] : '';
+      hTime.style.background = P_COLOR[G.turn];
+      return;
+    }
+    hLabs[0].textContent = t('hcScore'); hLabs[1].textContent = t('arLevel');
+    hLabs[0].style.color = hLabs[1].style.color = hScore.style.color = hLv.style.color = hTime.style.background = '';
     hScore.textContent = fmt(G.score);
     hLv.textContent = String(G.lv);
-    hBlinds.textContent = blindsAt(G.lv);
   }
+  /** Duel: the turn goes to player i — the current one's score, bonuses and hand put away, i's taken out. */
+  function turnTo(i) {
+    const P = G.players, cur = P[G.turn];
+    Object.assign(cur, { score: G.score, inv: G.inv, hand: G.hand, bestHand: G.bestHand, inTotal: G.inTotal, bestCat: G.bestCat });
+    G.turn = i;
+    const n = P[i];
+    Object.assign(G, { score: n.score, inv: n.inv, hand: n.hand, bestHand: n.bestHand, inTotal: n.inTotal, bestCat: n.bestCat });
+    G.turnT = TURN_S; G.armed = ''; G.handover = 0; G.lastTick = 0;
+    renderHud(); say(t('pdTurn', { n: i + 1 })); sound('notifyAction');
+  }
+  /** A move is made: in the Duel, the turn will pass. */
+  const moved = () => { if (duel()) G.handover = HANDOVER_S; };
 
   // ── Title ─────────────────────────────────────────────────────────
   function records() {
@@ -193,16 +226,21 @@ export function create(shell) {
   function start() {
     clearTimeout(timer); clearTimeout(check);
     mode = MODES[sel].id; R = Math.random;
-    newGame(); newRound();
+    newGame();
+    if (duel()) {
+      const p = () => ({ score: 0, inv: { joker: 0, dealer: 0, shuffle: 1 }, hand: [], bestHand: null, inTotal: 0, bestCat: -1 });
+      G.players = [p(), p()]; G.turn = 0; G.inv = G.players[0].inv; G.hand = G.players[0].hand; G.turnT = TURN_S; G.handover = 0;
+    }
+    newRound();
     state = 'run'; shell.panel(null);
-    say(t('tpHint'));
+    say(duel() ? t('pdTurn', { n: 1 }) : t('tpHint'));
     G.banner = { s: t('arLevel') + ' 1', s2: t('tpBlinds', { b: blindsAt(1) }), t: 0, life: 1.6 };
   }
   function say(s) { if (G) G.say = { s, t: 0 }; }
 
   // ── Playing ───────────────────────────────────────────────────────
   function act(c, r) {
-    if (state !== 'run' || !G.grid[c] || !G.grid[c][r]) return;
+    if (state !== 'run' || !G.grid[c] || !G.grid[c][r] || G.handover > 0) return;
     if (G.armed) { usePower(G.armed, c, r); return; }
     const grp = groupAt(G.grid, c, r);
     if (grp.length < 2) {
@@ -219,7 +257,7 @@ export function create(shell) {
     sound(grp.length >= 5 ? 'notifyRaise' : 'notifyAction');
     const p = powerFor(grp.length);
     if (p) { G.inv[p]++; say(t('tpWon', { b: t(P_KEY[p]) })); sound('notifyAllIn'); }
-    renderHud(); afterMove();
+    moved(); renderHud(); afterMove();
   }
   function usePower(p, c, r) {
     let cells = [];
@@ -231,10 +269,10 @@ export function create(shell) {
     const L = geom();
     G.score += takeCells(L, cells) * 30 * G.lv;
     sound('notifyAllIn');
-    renderHud(); afterMove();
+    moved(); renderHud(); afterMove();
   }
   function power(p) {
-    if (state !== 'run' || G.inv[p] <= 0) { sound('notifyFold'); return; }
+    if (state !== 'run' || G.inv[p] <= 0 || G.handover > 0) { sound('notifyFold'); return; }
     if (p === 'shuffle') {
       G.inv.shuffle--; shuffleGrid(G.grid); G.armed = '';
       G.grid.forEach((col) => col.forEach((b) => { b.pop = 0.35; }));
@@ -316,17 +354,20 @@ export function create(shell) {
   function roundClear() {
     state = 'clear';
     const L = geom(), left = chipsLeft(G.grid), secs = timed() ? Math.ceil(G.timeLeft) : 0;
-    const bonus = secs * TIME_PAY * G.lv, clean = left === 0 ? cleanPay(G.lv) : 0;
+    const bonus = secs * TIME_PAY * G.lv, clean = left === 0 && !duel() ? cleanPay(G.lv) : 0;
     G.score += bonus + clean;
     G.rounds.push({ lv: G.lv, done: 1 });
     renderHud(); sound('notifyBigWin');
-    G.banner = { s: t('tpClear'), s2: '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
+    G.banner = { s: t('tpClear'), s2: duel() ? '' : '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
     for (let i = 0; i < 90; i++) G.parts.push({ x: Math.random() * L.W, y: -10 - Math.random() * 120, vx: (Math.random() - 0.5) * 40, vy: 40 + Math.random() * 80, t: 0, life: 2.4, c: ['#f5c518', '#d23a30', '#2f6bd0', '#27a058', '#fbf7ee'][i % 5], r: 3 + Math.random() * 3, rot: Math.random() * 6, conf: true });
-    if (mode === 'zen' && G.lv >= ZEN_ROUNDS) { timer = setTimeout(() => gameOver(t('tpClear')), 2000); return; }
+    if ((mode === 'zen' && G.lv >= ZEN_ROUNDS) || (duel() && G.lv >= DUEL_ROUNDS)) { timer = setTimeout(() => gameOver(t('tpClear')), 2000); return; }
     timer = setTimeout(() => {
       if (state !== 'clear') return;
-      G.lv++; G.inv.shuffle++;
+      G.lv++;
+      if (duel()) { G.players.forEach((p) => { p.inv.shuffle++; }); if (G.inv !== G.players[G.turn].inv) G.inv.shuffle++; }
+      else G.inv.shuffle++;
       newRound(); state = 'run'; sound('notifyBlindsUp');
+      if (duel()) turnTo((G.lv - 1) % 2);        // each round, the other one starts
       const lvLine = t('arLevel') + ' ' + G.lv + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : '');
       G.banner = G.venueT < 1 ? { s: t(VENUES[G.venue]), s2: lvLine, t: 0, life: 2.4 }
         : { s: t('arLevel') + ' ' + G.lv, s2: t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : ''), t: 0, life: 1.8 };
@@ -345,6 +386,14 @@ export function create(shell) {
     if (!done) sound('notifyFold');
     G.banner = { s: title, s2: '', t: 0, life: 1.4 };
     shell.ended();
+    if (duel()) {                       // put the last player's things away; who has more wins
+      const P = G.players;
+      Object.assign(P[G.turn], { score: G.score, inv: G.inv, hand: G.hand, bestHand: G.bestHand, inTotal: G.inTotal, bestCat: G.bestCat });
+      G.winner = P[0].score === P[1].score ? 2 : P[0].score > P[1].score ? 0 : 1;
+      G.res = { score: Math.max(P[0].score, P[1].score), prev: null, shown: false };
+      timer = setTimeout(renderResult, 1300);
+      return;
+    }
     let prev = 0;
     if (mode === 'classic') { prev = shell.best.get(); if (G.score > prev) shell.best.set(G.score); }
     else if (mode === 'daily') { const d = loadJ(DAILY_KEY), day = dayKey(); prev = d.d === day ? d.s || 0 : 0; if (G.score > prev) saveJ(DAILY_KEY, { d: day, s: G.score }); }
@@ -357,6 +406,22 @@ export function create(shell) {
     if (state !== 'over' || !G.res || G.res.shown) return;
     G.res.shown = true;
     const { score, prev } = G.res;
+    if (duel()) {
+      const P = G.players, w = G.winner;
+      const bh = (P[0].bestHand && (!P[1].bestHand || P[0].bestHand.cat >= P[1].bestHand.cat)) ? P[0].bestHand : P[1].bestHand;
+      sound('notifyWinner', true);
+      endScreen(shell, {
+        title: w === 2 ? t('pdTie') : t('pdWins', { n: w + 1 }), sub: t('pdTwo') + ' · ' + t('tpName'),
+        hero: '<div style="font-size:40px;line-height:1">🆚</div>', score, prev: null,
+        cards: bh ? bh.cards : [], dim: bh ? bh.cards.filter((c) => bh.best.indexOf(c) < 0) : [], hand: bh ? t(NAME_KEYS[bh.cat]) : '',
+        levels: { title: t('hcScore'), right: P.map((p) => fmt(p.score)).join(' – '),
+          html: listHtml(esc, P.map((p, i) => [t('pdPlayer', { n: i + 1 }) + ' · ' + p.inTotal + ' 🕳️', fmt(p.score) + (w === i ? ' 🏆' : ''), w === i || w === 2 ? 'gold' : false])) },
+        stats: [[fmt(P[0].score), t('pdPlayer', { n: 1 })], [fmt(P[1].score), t('pdPlayer', { n: 2 })], [G.lv, t('arLevel')]],
+        onAgain: () => start(),
+        onMenu: toTitle,
+      });
+      return;
+    }
     if (score > prev && prev > 0) sound('notifyBigWin');
     const best = G.bestCat >= 0 ? t(NAME_KEYS[G.bestCat]) : '—';
     endScreen(shell, {
@@ -447,6 +512,17 @@ export function create(shell) {
       if (b.shake > 0) b.shake -= dt;
       if (b.pop > 0) b.pop -= dt;
     }
+    if (state === 'run' && duel()) {
+      if (G.handover > 0) {
+        if (!G.flying.length && !G.chars.some((ch) => ch.st === 'fall')) { G.handover -= dt; if (G.handover <= 0) turnTo(1 - G.turn); }
+      } else {
+        G.turnT -= dt;
+        const s = Math.ceil(G.turnT);
+        if (G.turnT < 3.5 && s !== G.lastTick) { G.lastTick = s; sound(s <= 1 ? 'notifyTickFinal' : 'notifyTick'); }
+        if (G.turnT <= 0) turnTo(1 - G.turn);          // too slow: the turn passes
+      }
+      G.timeMax = TURN_S; G.timeLeft = Math.max(0, G.turnT);
+    }
     if (state === 'run' && timed()) {
       G.timeLeft -= dt;
       const s = Math.ceil(G.timeLeft);
@@ -471,7 +547,7 @@ export function create(shell) {
     if (G.handFull) { G.handFull.t += dt; if (G.handFull.t > 1.8) G.handFull = null; }
     hTime.style.width = (100 * Math.max(0, G.timeLeft) / G.timeMax) + '%';
     const danger = mode === 'folie' && G.grid.some((col) => col.length >= G.maxRows - 1);
-    hTimeBox.classList.toggle('low', state === 'run' && (timed() ? G.timeLeft < 10 : danger));
+    hTimeBox.classList.toggle('low', state === 'run' && (timed() ? G.timeLeft < 10 : duel() ? G.turnT < 3.5 : danger));
     // The friends: their face and pose from the game, their eyes on the lit chip.
     let fell = false;
     const tgt = state === 'run' ? (G.showCursor && G.cursor.bar < 0 && G.grid[G.cursor.c] && G.grid[G.cursor.c].length
@@ -518,7 +594,7 @@ export function create(shell) {
           if (state === 'run') {
             const pay = inPay(G.lv) * (ch.double ? 2 : 1);
             G.score += pay; G.inTotal++; renderHud();
-            G.fx.push({ s: (ch.double ? 'Dealer ×2  ' : t('tpIn') + ' ') + '+' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true, big: ch.double });
+            G.fx.push({ s: (ch.double ? 'Dealer ×2  ' : duel() ? t('pdPlayer', { n: G.turn + 1 }) + ' ' : t('tpIn') + ' ') + '+' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true, big: ch.double });
             if (ch.double) { ch.dealer = false; ch.ace.badge(false); sound('notifyAllIn'); }
           }
           for (let i = 0; i < 14; i++) { const a = -Math.PI * Math.random(); G.parts.push({ x: colX(L, c), y: L.base, vx: Math.cos(a) * 60, vy: Math.sin(a) * 90, t: 0, life: 0.7, c: i % 2 ? '#f5c518' : '#fbf7ee', r: 2, rot: 0 }); }
@@ -779,7 +855,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t('tpOver')); } }, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpClear')); } }, turn: () => G.turn, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',

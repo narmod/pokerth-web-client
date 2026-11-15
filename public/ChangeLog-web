@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.82 (current series):
+2026-11-15 version 2.1.11-web.83 (current series):
+- new: Tapis! — Two players: one table, each in turn (10 seconds a move), 3 rounds; each has his own score, bonuses and hand of cards, and whoever empties a stack wins its character
+
+2026-11-15 version 2.1.11-web.82:
 - new: Tapis! — three more modes: Madness (no clock, but rows keep rising: keep the stacks under the red line), Daily challenge (the same deals for everyone today) and Zen (no clock, 5 relaxed rounds)
 
 2026-11-15 version 2.1.11-web.81:
