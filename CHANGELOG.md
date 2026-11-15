@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: the modes** (`web.82`, push 4 of `claude/CONCEPTION_TAPIS.md`) — four tiles on the title (←/→ on the
+  title, records per mode): Classic; **Madness** (no clock: a row rises under every column every
+  `folieEvery(lv)` s — 6.5 s down to 2.5 s — and at once when no pair is left; the deal starts at 60 % of the
+  height; a dashed red line at `maxRows`, flashing when a stack nears it; a stack over it ends the game, « Too
+  high! »; the time bar counts down to the next row); **Daily** (the Classic, every level dealt by
+  `rng('tp-' + dayKey() + '-' + level)`, recaves and rising rows too; `pth_tp_daily`); **Zen** (no clock, no
+  rising rows, no seals, free recaves, 5 rounds then the end screen). Records: Classic `shell.best`, Madness and
+  Zen `pth_tp_best`. `G.recaved` kept per round for the « Table rase » trophy (narmod: a round finished without a
+  recave). Keys `tpFolie`, `tpFolieD`, `tpZenD`, `tpOver` (83 catalogues; Daily and Zen reuse `psDaily`,
+  `hcModeDailyD`, `hcModeZen`). `test-games-browser.mjs`: four tiles, +1 check per screen.
+
+### Added
 - **Tapis!: the levels** (`web.80`, push 3 of `claude/CONCEPTION_TAPIS.md`) — Ace Runner's venues behind the board
   (`drawScenery`, a veil over it), a new one every 4 levels with its name in the banner and a fade, from day to
   night along its levels (`venueAt`, `dayOfLevel`). What each level brings (`levelKit`, `tapis-rules.mjs`): cards

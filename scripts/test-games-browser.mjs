@@ -142,7 +142,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   // ── Tapis! (web.75): the 4th game of the path ──
   await pick(pg, 'tapis');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Tapis !', null, { timeout: 8000 }).catch(() => {});
-  ok(await pg.evaluate(() => window._pthPadOwner === 'tapis' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 1), label + ': Tapis!: its card opens it, one mode (Classic) on its title');
+  ok(await pg.evaluate(() => window._pthPadOwner === 'tapis' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 4), label + ': Tapis!: its card opens it, four modes on its title (Classic, Madness, Daily, Zen)');
   await pg.keyboard.press('Space');
   await sleep(1500);
   const tps = await pg.evaluate(() => {
@@ -206,6 +206,25 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(tpl.venue === 2 && tpl.cards === 4 && tpl.wild === 2 && tpl.seals === 2 && tpl.dealer === 1 && (!tpl.freed || tpl.hand >= 1),
     label + ': Tapis!: level 10 — the cruise, 4 cards, 2 Joker chips, 2 seals, the Dealer button; a freed card goes to the hand (' + JSON.stringify(tpl) + ')');
+  // web.81: the modes — Daily deals the same board twice, Zen has no clock, Madness ends over the red line
+  const tpm = await pg.evaluate(async () => {
+    const T = window.__pthTapis, sig = () => T.run().grid.map((col) => col.map((b) => b.k).join('')).join('|');
+    T.start('daily'); const d1 = sig(); T.start('daily'); const d2 = sig();
+    T.start('zen'); await new Promise((r) => setTimeout(r, 300));
+    const zen = { mode: T.mode(), hidden: document.querySelector('#pth-game .tp-time').style.visibility === 'hidden', t: T.run().timeLeft };
+    await new Promise((r) => setTimeout(r, 600));
+    zen.still = T.run().timeLeft === zen.t;
+    T.start('folie'); const G = T.run(), h0 = G.grid.map((col) => col.length);
+    G.riseT = G.kit.rise - 0.05; await new Promise((r) => setTimeout(r, 400));
+    const risen = G.grid.every((col, c) => col.length === h0[c] + 1);
+    G.grid.forEach((col) => { while (col.length < G.maxRows) col.push({ k: 0, off: 0 }); });
+    G.riseT = G.kit.rise - 0.05; await new Promise((r) => setTimeout(r, 400));
+    return { same: d1 === d2, zen, risen, over: T.state() };
+  });
+  ok(tpm.same && tpm.zen.mode === 'zen' && tpm.zen.hidden && tpm.zen.still && tpm.risen && tpm.over === 'over',
+    label + ': Tapis!: Daily deals the same board, Zen has no clock, in Madness the rows rise and a stack over the red line ends it (' + JSON.stringify(tpm) + ')');
+  await sleep(1600);
+  await pg.evaluate(() => window.__pthTapis.start('classic'));
   await pg.evaluate(() => window.__pthTapis.timeUp());
   const tpo = await endInfo(pg, 8000);
   ok(tpo.on && tpo.title === 'Tapis !' && tpo.btns.length === 2, label + ': Tapis!: the clock runs out, the end screen (' + tpo.score + ')');

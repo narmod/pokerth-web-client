@@ -42,7 +42,13 @@
 //             colour), the Dealer button in a friend's hand (first in his hole:
 //             ×2), sealed chips (a group next to one breaks the seal), rows
 //             rising from the felt. Each new thing has its word the first time.
-// The other modes and the Duel come in the next pushes.
+//   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
+//             (no clock: a row rises every few seconds, sooner each level, at
+//             once when no pair is left; a stack over the red line ends it);
+//             Daily (the Classic, every deal seeded by the day — pth_tp_daily);
+//             Zen (no clock, no rising rows, no seals, free recaves, 5 rounds).
+//             Records: Classic shell.best, Madness and Zen pth_tp_best.
+// The Duel comes in the next push.
 // ═══════════════════════════════════════════════════════════════════
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
@@ -53,17 +59,31 @@ import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed }
 import { drawScenery, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
+import { rng } from './deal.mjs';
+import { dayKey } from './solitaire-rules.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
 const SINK_S = 0.45, PEEK_S = 1.1;          // into the hole, then his head out to wave
 /** The characters of the round (cast.mjs): the family of the level, a different one on each column as far as it goes. */
-function castFor(lv, cols) {
+function castFor(lv, cols, R = Math.random) {
   const fam = castFamily(lv);
-  if (fam === 'mixed') return Array.from({ length: cols }, () => KINDS[Math.floor(Math.random() * KINDS.length)]);
+  if (fam === 'mixed') return Array.from({ length: cols }, () => KINDS[Math.floor(R() * KINDS.length)]);
   const set = (fam === 'figures' ? FIGURES : SUITS).concat(['joker']);
-  for (let j = set.length - 1; j > 0; j--) { const x = Math.floor(Math.random() * (j + 1)); const t = set[j]; set[j] = set[x]; set[x] = t; }
+  for (let j = set.length - 1; j > 0; j--) { const x = Math.floor(R() * (j + 1)); const t = set[j]; set[j] = set[x]; set[x] = t; }
   return Array.from({ length: cols }, (_, c) => set[c % set.length]);
 }
+export const MODES = [
+  { id: 'classic', icon: '⏱️', key: 'tpClassic', desc: 'tpClassicD' },
+  { id: 'folie', icon: '🌀', key: 'tpFolie', desc: 'tpFolieD' },
+  { id: 'daily', icon: '📅', key: 'psDaily', desc: 'hcModeDailyD' },
+  { id: 'zen', icon: '🧘', key: 'hcModeZen', desc: 'tpZenD' },
+];
+export const ZEN_ROUNDS = 5;
+/** Madness: seconds between two rising rows at level lv. */
+export const folieEvery = (lv) => Math.max(2.5, 6.5 - 0.35 * (Math.max(1, lv) - 1));
+const DAILY_KEY = 'pth_tp_daily', BEST_KEY = 'pth_tp_best';
+function loadJ(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
+function saveJ(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 const POWERS = ['joker', 'dealer', 'shuffle'];
 const P_ICON = { joker: '🃏', dealer: 'D', shuffle: '🔀' };
 const P_KEY = { joker: 'tpJoker', dealer: 'tpDealer', shuffle: 'tpShuffle' };
@@ -91,7 +111,8 @@ export function create(shell) {
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
   const hScore = q('.tp-score'), hLv = q('.tp-lv'), hBlinds = q('.tp-blinds'), hTimeBox = q('.tp-time'), hTime = q('.tp-time i');
 
-  let state = 'title', time = 0, timer = 0, check = 0;
+  let state = 'title', time = 0, timer = 0, check = 0, sel = 0, mode = 'classic', R = Math.random;
+  const timed = () => mode === 'classic' || mode === 'daily';
   /** @type {any} */
   let G = null;
   let hover = null;
@@ -125,20 +146,26 @@ export function create(shell) {
     G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c));
     G.closing = [];
     G.maxRows = rowsFor(L);
-    G.grid = dealRound(G.lv, G.cols, G.maxRows);
+    if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
+    // Madness starts lower (room for the rows to come); Zen has no seals.
+    G.grid = dealRound(G.lv, G.cols, mode === 'folie' ? Math.max(5, Math.round(G.maxRows * 0.6)) : G.maxRows, R);
+    if (mode === 'zen') G.grid.forEach((col) => col.forEach((b) => { b.seal = false; }));
     G.grid.forEach((col, c) => col.forEach((b, r) => { b.off = 6 + r * 0.6 + c * 0.5; }));   // the chips fall into place
     G.total = chipsLeft(G.grid);
-    G.timeMax = G.timeLeft = timeFor(G.total, G.lv);
+    G.timeMax = G.timeLeft = timed() ? timeFor(G.total, G.lv) : 1;
+    hTimeBox.style.visibility = mode === 'zen' ? 'hidden' : '';
     G.armed = '';
     G.cursor = { c: Math.floor(G.cols / 2), r: 0, bar: -1 };
-    const kinds = castFor(G.lv, G.cols);
+    const kinds = castFor(G.lv, G.cols, R);
     G.chars = G.grid.map((_, c) => {
       const ace = castActor(shell.layer, kinds[c], 'pth-game-tp' + c);
       return { ace, kind: kinds[c], st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', lastY: -60, moving: false, sweat: false, dealer: false, double: false };
     });
     // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
-    G.kit = levelKit(G.lv); G.riseT = 0; G.firstIn = false;
-    if (G.kit.dealer) { const d = G.chars[Math.floor(Math.random() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
+    G.kit = levelKit(G.lv); G.riseT = 0; G.firstIn = false; G.recaved = false;
+    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; }
+    if (mode === 'folie') G.kit.rise = folieEvery(G.lv);
+    if (G.kit.dealer) { const d = G.chars[Math.floor(R() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
     const v = venueAt(G.lv);
     if (v !== G.venue) { G.prevVenue = G.venue; G.venue = v; G.venueT = 0; }
     renderHud();
@@ -150,17 +177,22 @@ export function create(shell) {
   }
 
   // ── Title ─────────────────────────────────────────────────────────
+  function records() {
+    const d = loadJ(DAILY_KEY), b = loadJ(BEST_KEY);
+    return { classic: shell.best.get(), folie: b.folie || 0, daily: d.d === dayKey() ? d.s || 0 : 0, zen: b.zen || 0 };
+  }
   function titlePanel() {
-    const b = shell.best.get();
-    titleScreen(shell, { id: 'tapis', live: true, name: t('tpName'), hint: t('tpHint'), sel: 0,
-      modes: [{ icon: '⏱️', label: t('tpClassic'), desc: t('tpClassicD'), rec: b ? t('arRecord', { n: fmt(b) }) : '' }],
-      onPick: () => start() });
+    const rec = records();
+    titleScreen(shell, { id: 'tapis', live: true, name: t('tpName'), hint: t('tpHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      onPick: (i) => { sel = i; start(); } });
   }
   newGame(); newRound();
   titlePanel();
 
   function start() {
     clearTimeout(timer); clearTimeout(check);
+    mode = MODES[sel].id; R = Math.random;
     newGame(); newRound();
     state = 'run'; shell.panel(null);
     say(t('tpHint'));
@@ -225,11 +257,15 @@ export function create(shell) {
     check = setTimeout(() => {
       if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid)) return;
       if (G.grid.some((col) => !col.length)) { afterMove(); return; }      // a column is still closing up
-      recaveRow(G.grid, colorsAt(G.lv));
+      if (mode === 'folie') { G.riseT = G.kit.rise; return; }              // Madness: the next row comes up at once
+      recaveRow(G.grid, colorsAt(G.lv), R);
       G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.5; });
-      G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S);
-      const L = geom();
-      G.fx.push({ s: '−' + RECAVE_S + ' s', x: L.W / 2, y: L.base - L.cw * 2.2, t: 0, life: 1.3 });
+      G.recaved = true;
+      if (timed()) {
+        G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S);
+        const L = geom();
+        G.fx.push({ s: '−' + RECAVE_S + ' s', x: L.W / 2, y: L.base - L.cw * 2.2, t: 0, life: 1.3 });
+      }
       say(t('tpRecave')); sound('notifyCard');
       afterMove();
     }, 650);
@@ -279,13 +315,14 @@ export function create(shell) {
   }
   function roundClear() {
     state = 'clear';
-    const L = geom(), left = chipsLeft(G.grid), secs = Math.ceil(G.timeLeft);
+    const L = geom(), left = chipsLeft(G.grid), secs = timed() ? Math.ceil(G.timeLeft) : 0;
     const bonus = secs * TIME_PAY * G.lv, clean = left === 0 ? cleanPay(G.lv) : 0;
     G.score += bonus + clean;
     G.rounds.push({ lv: G.lv, done: 1 });
     renderHud(); sound('notifyBigWin');
     G.banner = { s: t('tpClear'), s2: '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
     for (let i = 0; i < 90; i++) G.parts.push({ x: Math.random() * L.W, y: -10 - Math.random() * 120, vx: (Math.random() - 0.5) * 40, vy: 40 + Math.random() * 80, t: 0, life: 2.4, c: ['#f5c518', '#d23a30', '#2f6bd0', '#27a058', '#fbf7ee'][i % 5], r: 3 + Math.random() * 3, rot: Math.random() * 6, conf: true });
+    if (mode === 'zen' && G.lv >= ZEN_ROUNDS) { timer = setTimeout(() => gameOver(t('tpClear')), 2000); return; }
     timer = setTimeout(() => {
       if (state !== 'clear') return;
       G.lv++; G.inv.shuffle++;
@@ -297,16 +334,21 @@ export function create(shell) {
       if (news) say(t(news[2]));
     }, 2400);
   }
-  function timeUp() {
+  function timeUp() { gameOver(t('prTimeUp')); }
+  /** The end: the clock is out (Classic, Daily), a stack too high (Madness), the 5 rounds done (Zen). */
+  function gameOver(title) {
+    const done = state === 'clear';
     state = 'over'; clearTimeout(check);
     const total = G.total || 1;
-    G.rounds.push({ lv: G.lv, done: 1 - chipsLeft(G.grid) / total });
+    if (!done) G.rounds.push({ lv: G.lv, done: Math.max(0, 1 - chipsLeft(G.grid) / total) });
     G.chars.forEach((ch) => { if (ch.st === 'top') { ch.pose = 'ko'; ch.mood = 'ko'; ch.ace.pose('ko'); ch.ace.mood('ko'); ch.ace.sweat(false); } });
-    sound('notifyFold');
-    G.banner = { s: t('prTimeUp'), s2: '', t: 0, life: 1.4 };
+    if (!done) sound('notifyFold');
+    G.banner = { s: title, s2: '', t: 0, life: 1.4 };
     shell.ended();
-    const prev = shell.best.get();
-    if (G.score > prev) shell.best.set(G.score);
+    let prev = 0;
+    if (mode === 'classic') { prev = shell.best.get(); if (G.score > prev) shell.best.set(G.score); }
+    else if (mode === 'daily') { const d = loadJ(DAILY_KEY), day = dayKey(); prev = d.d === day ? d.s || 0 : 0; if (G.score > prev) saveJ(DAILY_KEY, { d: day, s: G.score }); }
+    else { const b = loadJ(BEST_KEY); prev = b[mode] || 0; if (G.score > prev) { b[mode] = G.score; saveJ(BEST_KEY, b); } }
     G.res = { score: G.score, prev, shown: false };
     timer = setTimeout(renderResult, 1300);
   }
@@ -318,7 +360,7 @@ export function create(shell) {
     if (score > prev && prev > 0) sound('notifyBigWin');
     const best = G.bestCat >= 0 ? t(NAME_KEYS[G.bestCat]) : '—';
     endScreen(shell, {
-      title: t('tpName'), sub: t('tpClassic') + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }),
+      title: t('tpName'), sub: t(MODES[sel].key) + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }),
       hero: '<div style="font-size:40px;line-height:1">🕳️</div>', score, prev,
       cards: G.bestHand ? G.bestHand.cards : [], dim: G.bestHand ? G.bestHand.cards.filter((c) => G.bestHand.best.indexOf(c) < 0) : [],
       hand: G.bestHand ? t(NAME_KEYS[G.bestHand.cat]) : '',
@@ -349,8 +391,9 @@ export function create(shell) {
   function input(a, down, info) {
     if (!down) return;
     if (state === 'title') {
-      const s = titleStep(a, 0, 1);
-      if (s === 'start' && info.x == null) start();
+      const st = titleStep(a, sel, MODES.length);
+      if (st === 'start') { if (info.x == null) start(); }
+      else if (st != null) { sel = st; titlePanel(); }
       return;
     }
     if (state !== 'run') return;
@@ -404,7 +447,7 @@ export function create(shell) {
       if (b.shake > 0) b.shake -= dt;
       if (b.pop > 0) b.pop -= dt;
     }
-    if (state === 'run') {
+    if (state === 'run' && timed()) {
       G.timeLeft -= dt;
       const s = Math.ceil(G.timeLeft);
       if (G.timeLeft < 10 && s !== G.lastTick) { G.lastTick = s; sound(s <= 3 ? 'notifyTickFinal' : 'notifyTick'); }
@@ -414,14 +457,21 @@ export function create(shell) {
       G.riseT += dt;
       if (G.riseT >= G.kit.rise) {
         G.riseT = 0;
-        if (riseRow(G.grid, colorsAt(G.lv), G.maxRows + 1)) { sound('notifyCard'); G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.4; }); }
+        // Madness: every column, no ceiling — over the red line, it's over.
+        if (riseRow(G.grid, colorsAt(G.lv), mode === 'folie' ? 99 : G.maxRows + 1, R)) { sound('notifyCard'); G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.4; }); }
+        if (mode === 'folie') {
+          if (G.grid.some((col) => col.length > G.maxRows)) gameOver(t('tpOver'));
+          else afterMove();
+        }
       }
+      if (mode === 'folie' && state === 'run') { G.timeMax = G.kit.rise; G.timeLeft = G.kit.rise - G.riseT; }
     }
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.2);
     for (let i = G.flying.length - 1; i >= 0; i--) { const f = G.flying[i]; f.t += dt; if (f.t >= 0.6) { G.flying.splice(i, 1); addCard(f.n); } }
     if (G.handFull) { G.handFull.t += dt; if (G.handFull.t > 1.8) G.handFull = null; }
     hTime.style.width = (100 * Math.max(0, G.timeLeft) / G.timeMax) + '%';
-    hTimeBox.classList.toggle('low', state === 'run' && G.timeLeft < 10);
+    const danger = mode === 'folie' && G.grid.some((col) => col.length >= G.maxRows - 1);
+    hTimeBox.classList.toggle('low', state === 'run' && (timed() ? G.timeLeft < 10 : danger));
     // The friends: their face and pose from the game, their eyes on the lit chip.
     let fell = false;
     const tgt = state === 'run' ? (G.showCursor && G.cursor.bar < 0 && G.grid[G.cursor.c] && G.grid[G.cursor.c].length
@@ -445,7 +495,7 @@ export function create(shell) {
           if (ch.moving && !moving && state === 'run') ch.ace.fx('land');
           ch.moving = moving; ch.lastY = ch.y;
           if (state === 'run' || state === 'title') {
-            const low = col.length <= 2, hurry = state === 'run' && G.timeLeft < 12;
+            const low = col.length <= 2, hurry = state === 'run' && (timed() ? G.timeLeft < 12 : mode === 'folie' && col.length >= G.maxRows - 1);
             const m = ch.clapUntil > time ? 'yay' : hurry ? 'scared' : ch.look > time ? 'dizzy' : low ? 'jump'
               : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'wink' : Math.sin(time * 0.37 + c * 2.3) > 0.985 ? 'grin' : 'smile');
             setMood(ch, m);
@@ -603,6 +653,12 @@ export function create(shell) {
       g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * 1.12 * k, L.ry * 1.25 * k, 0, 0, 7); g.fill();
       g.fillStyle = '#000'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * k, L.ry * 1.1 * k, 0, 0, 7); g.fill();
     }
+    // Madness: the red line no stack may pass.
+    if (mode === 'folie' && state !== 'title' && G.cols) {
+      const ly = L.base - G.maxRows * L.bh - L.ry, near = G.grid.some((col) => col.length >= G.maxRows - 1);
+      g.save(); g.strokeStyle = near ? 'rgba(255,74,58,' + (0.55 + 0.4 * Math.sin(time * 9)).toFixed(2) + ')' : 'rgba(255,90,70,.45)';
+      g.lineWidth = near ? 2 : 1.2; g.setLineDash([6, 5]); g.beginPath(); g.moveTo(8, ly); g.lineTo(W - 8, ly); g.stroke(); g.restore();
+    }
     // The group under the cursor or the mouse.
     const cur = G.cursor, hl = new Set();
     let target = null;
@@ -723,7 +779,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t('tpOver')); } }, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',
