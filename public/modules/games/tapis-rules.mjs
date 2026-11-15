@@ -220,6 +220,40 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
   }
   return n;
 }
+/**
+ * « No more moves! » as in Monster Madness (narmod web.87, after the arcade
+ * video): 2 or 3 rows come up under every column, the empty ones too, in the
+ * colours still on the table (the video: two colours left, two colours come).
+ * So the help is never undone (one row under a lone stack used to be eaten by
+ * the very pair it made): under a stack, the new chip touching it takes the
+ * colour of its bottom chip — the group reaches into the old stack; an empty
+ * column copies its neighbour's new chips row by row — pairs side by side.
+ * Returns the rows added.
+ */
+export function refillRows(grid, nColors, rnd = Math.random) {
+  const pal = [...new Set([].concat(...grid).filter((b) => b.k >= 0 && b.k !== WILD).map((b) => b.k))];
+  const P = pal.length ? pal : Array.from({ length: Math.max(2, nColors) }, (_, i) => i);
+  const n = 2 + (rnd() < 0.5 ? 1 : 0);
+  const had = grid.map((col) => col.length > 0);
+  const add = grid.map(() => Array.from({ length: n }, () => P[Math.floor(rnd() * P.length)]));
+  grid.forEach((col, c) => { if (had[c] && free(col[0]) && col[0].k !== WILD) add[c][n - 1] = col[0].k; });
+  for (let pass = 0; pass < grid.length; pass++) {
+    let done = true;
+    grid.forEach((_, c) => {
+      if (had[c] || add[c].copied) return;
+      const nb = [c - 1, c + 1].find((x) => grid[x] && (had[x] || add[x].copied));
+      if (nb == null) { done = false; return; }
+      add[c] = add[nb].slice(); add[c].copied = true;
+    });
+    if (done) break;
+  }
+  grid.forEach((col, c) => {
+    col.forEach((b) => { b.off -= n; });
+    for (let j = n - 1; j >= 0; j--) col.unshift({ k: add[c][j], off: -n });
+  });
+  if (!anyMove(grid) && grid[0] && grid[0].length > 1) grid[0][0].k = grid[0][1].k;   // never stuck
+  return n;
+}
 /** A row of chips of any colour pushed in under every column lower than maxH, an empty one too (the felt rising). Returns the chips added. */
 export function riseRow(grid, nColors, maxH, rnd = Math.random) {
   let n = 0;

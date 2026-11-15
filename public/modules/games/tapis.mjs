@@ -21,7 +21,8 @@
 //             Shuffle more every round. Pills at the top: tap, 1 2 3, or the
 //             cursor above the chips
 //   Recave    no pair left (a Joker or Dealer in hand or not): the dealer
-//             pushes a row of pairs in from the felt under every column — never
+//             pushes 2-3 rows in from the felt under every column, in the
+//             table's colours, joined to the old stacks (refillRows, web.87) — never
 //             stuck; « No more moves! » in big, no time taken (web.86)
 //   Spirits   round won: each friend's spirit flies up out of his hole,
 //             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
@@ -67,8 +68,8 @@
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove,
-  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor, castFamily,
-  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow } from './tapis-rules.mjs';
+  removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, castFamily,
+  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -297,8 +298,9 @@ export function create(shell) {
   /**
    * After a move: nothing left to take? « No more moves! » and the dealer tops
    * up (narmod 2026-11-15; as in Monster Madness since web.86: the big banner,
-   * no time taken): a row of chips comes in under every column, in pairs, so
-   * there is always a move again. Waits for a falling friend first; a Joker or
+   * no time taken): 2 or 3 rows come up under every column (refillRows, web.87),
+   * in the table's colours and joined to the old stacks, so there is always a
+   * move again and the help is never undone. Waits for a falling friend first; a Joker or
    * a Dealer button in hand does not stop him (they stay for later).
    */
   function afterMove() {
@@ -307,8 +309,8 @@ export function create(shell) {
       if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid)) return;
       if (G.chars.some((ch) => ch.st === 'fall' || ch.st === 'sink')) { afterMove(); return; }   // a friend still on his way down
       if (mode === 'folie') { G.riseT = G.kit.rise; return; }              // Madness: the next row comes up at once
-      recaveRow(G.grid, colorsAt(G.lv), R);
-      G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.5; });
+      const n = refillRows(G.grid, colorsAt(G.lv), R);
+      G.grid.forEach((col) => col.slice(0, n).forEach((b) => { b.pop = 0.5; }));
       G.recaved = true;
       G.banner = { s: t('tpNoMoves'), s2: t('tpRecave'), t: 0, life: 1.8 };
       sound('notifyCard');

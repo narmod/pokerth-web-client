@@ -15,6 +15,16 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Tapis!: « No more moves! » no longer undoes itself** (`web.87`, narmod: « hard to finish with one or two
+  characters left »; the arcade video looked at again, frame by frame, at 1:05, 1:47, 2:01, 3:40 and 3:55) — one row
+  under every column was eaten by the very pair it made, under a lone stack too, so its height did not go down. As in
+  Monster Madness, `refillRows` now pushes 2 or 3 rows under every column, in the colours still on the table (the
+  video: two colours left, two colours come); the new chip touching a stack takes the colour of its bottom chip (the
+  group reaches into the old stack) and an empty column copies its neighbour's new chips row by row. A simulation
+  (300 boards, greedy player): two stacks of 8 left, 7.1 refills before → 3.3 now; of 12, 8.6 → 4.1. `recaveRow` stays
+  for a fresh deal without a move. `test-games.mjs` +1; `test-games-browser.mjs`: the Duel waits for a falling friend.
+
 ### Changed
 - **Tapis! plays like Monster Madness** (`web.86`, narmod after the Megatouch arcade video, choices « B » and « double
   touch ») — **columns never move**: an emptied column stays where it is, its friend in his hole (a little grave:

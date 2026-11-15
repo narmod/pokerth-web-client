@@ -485,6 +485,22 @@ console.log('Ace Dash: the long run, the score, the modes');
     }
     ok(ok10 && cards === 80 && wild === 40 && seals === 40, 'Tapis!: level 10 deals 4 cards, 2 Joker chips, 2 seals, never on top, always a move (' + cards + '/' + wild + '/' + seals + ')');
   }
+  {
+    // web.87: « No more moves! » — 2-3 rows under every column, the table's colours, joined to the stacks, never undone
+    const C = (k) => ({ k, off: 0 });
+    let okAll = true, eaten = true;
+    for (let i = 0; i < 40; i++) {
+      const g = [[], [], [C(1), C(0), C(1), C(0)], [], [C(0)]];
+      const n = TP.refillRows(g, 4);
+      const pal = new Set([].concat(...g).map((b) => b.k));
+      if (!(n >= 2 && n <= 3 && g.every((col, c) => col.length === n + [0, 0, 4, 0, 1][c]) && g[2][n - 1].k === 1 && g[4][n - 1].k === 0
+        && g[1].slice(0, n).every((b, j) => b.k === g[2][j].k) && [...pal].every((k) => k === 0 || k === 1) && TP.anyMove(g))) okAll = false;
+      // the group under the lone stack reaches into it: taking it lowers the stack below its old height + n
+      const grp = TP.groupAt(g, 2, n - 1);
+      if (!grp.some(([c, r]) => c === 2 && r === n)) eaten = false;
+    }
+    ok(okAll && eaten, 'Tapis!: no more moves — 2-3 rows under every column, in the colours left, the one under a stack its bottom colour, an empty column a copy of its neighbour\'s');
+  }
   const CS = await import('../public/modules/games/cast.mjs');
   const svgs = CS.KINDS.map((k) => CS.castSvg(k));
   ok(CS.KINDS.length === 9 && CS.SUITS.length === 4 && CS.FIGURES.length === 4 && svgs.every((x) => /^<svg viewBox="0 0 100 120"/.test(x) && /cs-armL/.test(x) && /e-open/.test(x) && /m-smile/.test(x) && /fx-sweat/.test(x))
