@@ -15,6 +15,14 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Tapis!: big groups pay more, the friends drop after their stack** (`web.88`, the two details of the arcade
+  video narmod asked for) — in a group the 5th to 8th chips count ×2 and from the 9th ×5 (`tierOf`, Monster Madness'
+  100 / 250 / 500 a block), before the hand's multiplier; each chip's points are written on it as it goes, in gold
+  for the bigger tiers (`groupPay` returns `each`). When his stack comes down, a friend no longer rides it: he drops
+  after it a moment later, the Joker floating down slowly like the arcade's ghost, and lands with a squash; a stack
+  going up (a refill) still lifts him at once. Rules, line 4: the tiers (83 catalogues). `test-games.mjs` +1.
+
 ### Fixed
 - **Tapis!: « No more moves! » no longer undoes itself** (`web.87`, narmod: « hard to finish with one or two
   characters left »; the arcade video looked at again, frame by frame, at 1:05, 1:47, 2:01, 3:40 and 3:55) — one row

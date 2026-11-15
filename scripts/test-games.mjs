@@ -471,6 +471,9 @@ console.log('Ace Dash: the long run, the score, the modes');
     ok(grp.length === 4 && TP.anyMove(g1), 'Tapis!: a Joker chip goes with the colour around it (0,0 + 2 Joker chips + 0,2: ' + grp.length + ')');
     ok(TP.groupAt(g1, 2, 1).length === 1 && TP.groupAt(g1, 2, 0).length === 1, 'Tapis!: a card or a sealed chip never joins a group');
     ok(TP.groupPay(g1, grp).pts === (5 + 50 + 50 + 5) * MULT_[TP.handOf(4)], 'Tapis!: a Joker chip pays 50 in its group');
+    const g9 = [Array.from({ length: 9 }, () => C(0))], p9 = TP.groupPay(g9, TP.groupAt(g9, 0, 0));
+    ok(p9.pts === (4 * 5 + 4 * 5 * 2 + 5 * 5) * MULT_[TP.handOf(9)] && p9.each.length === 9 && p9.each[8] === 25 * MULT_[TP.handOf(9)] && TP.tierOf(3) === 1 && TP.tierOf(4) === 2 && TP.tierOf(8) === 5,
+      'Tapis!: in a big group the 5th to 8th chips count ×2, from the 9th ×5 (Monster Madness\' 100 / 250 / 500)');
     const fr = TP.freedBy(g1, TP.groupAt(g1, 1, 0));
     ok(fr.cards.length === 1 && fr.seals.length === 1 && TP.freedBy(g1, [[0, 0]]).cards.length === 0, 'Tapis!: a group frees the card and breaks the seal next to it');
     const g2 = [[C(K, { card: 3 })]];

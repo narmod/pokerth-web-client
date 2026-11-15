@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.87 (current series):
+2026-11-15 version 2.1.11-web.88 (current series):
+- improvement: Tapis! — as on the arcade machine, the bigger the group the more each chip pays (×2 from the 5th, ×5 from the 9th), and each chip shows its points as it goes
+- improvement: Tapis! — the characters drop after their stack instead of riding it down; the Joker floats down gently, like the arcade's ghost
+
+2026-11-15 version 2.1.11-web.87:
 - bugfix: Tapis! — « No more moves! » now brings 2 or 3 rows under every stack, in the colours left on the table and joined to the stacks, as on the arcade machine: the last characters are much easier to bring down
 
 2026-11-15 version 2.1.11-web.86:

@@ -24,6 +24,10 @@
 //             pushes 2-3 rows in from the felt under every column, in the
 //             table's colours, joined to the old stacks (refillRows, web.87) — never
 //             stuck; « No more moves! » in big, no time taken (web.86)
+//   Drops     (web.88) his stack comes down: he drops after it a moment
+//             later, the Joker floating down like the arcade's ghost; a group
+//             pays more for its 5th to 8th chips (×2) and from its 9th (×5),
+//             each chip's points written on it as it goes (tierOf)
 //   Spirits   round won: each friend's spirit flies up out of his hole,
 //             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
 //   Columns   as in Monster Madness (narmod web.86, « B », after the arcade
@@ -68,7 +72,7 @@
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove,
-  removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, castFamily,
+  removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, VENUES } from './runner-scenery.mjs';
@@ -261,6 +265,10 @@ export function create(shell) {
     }
     const pay = groupPay(G.grid, grp), L = geom();
     const top = grp.reduce((m, [x, y]) => (y > m[1] ? [x, y] : m), grp[0]);
+    // what each chip brings, written on it as it goes (Monster Madness' « 100 / 250 / 500 »: more in a big group)
+    grp.filter(([c, r]) => G.grid[c][r].k >= 0).forEach(([c, r], i) => {
+      if (pay.each[i]) G.fx.push({ s: fmt(pay.each[i]), x: colX(L, c), y: chipY(L, c, r) - L.bh * 0.5, t: -0.04 * Math.min(i, 12), life: 0.9, small: true, tier: tierOf(i) });
+    });
     takeCells(L, grp);
     G.score += pay.pts;
     if (pay.cat > G.bestCat) G.bestCat = pay.cat;
@@ -592,12 +600,22 @@ export function create(shell) {
             G.chars.forEach((o) => { if (o !== ch && o.dealer) { o.dealer = false; o.ace.badge(false); } });
           }
         } else {
-          ch.y = chipY(L, c, col.length - 1) - L.bh;
-          // his stack has just come down under him: a little squash
-          const moving = ch.y - ch.lastY > 0.5;
-          if (ch.moving && !moving && state === 'run') ch.ace.fx('land');
-          ch.moving = moving; ch.lastY = ch.y;
-          if (state === 'run' || state === 'title') {
+          // His stack came down: he drops after it, a moment later (the Joker floats down, as the arcade's ghost);
+          // it goes up (a refill): he goes up with it.
+          const target = chipY(L, c, col.length - 1) - L.bh;
+          let dropping = false;
+          if (ch.y < target - 0.5) {
+            if (!ch.dropAt) ch.dropAt = time + (ch.kind === 'joker' ? 0.2 : 0.12);
+            if (time >= ch.dropAt) {
+              const float = ch.kind === 'joker';
+              ch.dvy = Math.min((ch.dvy || 0) + (float ? 260 : 1300) * dt, float ? 130 : 900);
+              ch.y = Math.min(target, ch.y + ch.dvy * dt);
+              dropping = ch.y < target;
+              if (!dropping) { ch.dvy = 0; ch.dropAt = 0; if (state === 'run') ch.ace.fx('land'); }
+            }
+          } else { ch.y = target; ch.dvy = 0; ch.dropAt = 0; }
+          if (dropping && target - ch.y > L.bh * 0.6) { setPose(ch, 'air'); setMood(ch, ch.kind === 'joker' ? 'wink' : 'jump'); }
+          else if (state === 'run' || state === 'title') {
             const low = col.length <= 2, hurry = state === 'run' && (timed() ? G.timeLeft < 12 : mode === 'folie' && col.length >= G.maxRows - 1);
             const m = ch.clapUntil > time ? 'yay' : hurry ? 'scared' : ch.look > time ? 'dizzy' : low ? 'jump'
               : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'wink' : Math.sin(time * 0.37 + c * 2.3) > 0.985 ? 'grin' : 'smile');
@@ -861,11 +879,12 @@ export function create(shell) {
     for (const f of G.fx) {
       const p = f.t / f.life, sc = 1 + 0.3 * Math.max(0, 1 - p * 6);
       g.globalAlpha = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
-      g.font = '800 ' + (f.big ? 15 : 11) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      if (f.t < 0) continue;
+      g.font = '800 ' + (f.big ? 15 : f.small ? 8 : 11) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
       const fw = g.measureText(f.s).width, fit = Math.min(1, (W - 8) / Math.max(1, fw));
       g.save(); g.translate(Math.max(fw * fit / 2 + 4, Math.min(W - fw * fit / 2 - 4, f.x)), f.y - p * 26); g.scale(sc * fit, sc * fit);
       g.lineWidth = 3.5; g.strokeStyle = '#141414'; g.strokeText(f.s, 0, 0);
-      g.fillStyle = f.green ? '#7ee2a0' : f.big ? '#f5d77a' : '#fbf7ee'; g.fillText(f.s, 0, 0);
+      g.fillStyle = f.green ? '#7ee2a0' : f.big || f.tier >= 5 ? '#f5d77a' : f.tier === 2 ? '#ffd9a0' : '#fbf7ee'; g.fillText(f.s, 0, 0);
       g.restore();
     }
     g.globalAlpha = 1;

@@ -13,7 +13,8 @@
 //             below — rows are counted from the felt) leave together; a lone
 //             chip cannot.
 //   Hand      a group is named after a poker hand by its size (handOf) and
-//             pays the sum of its chips' values × that hand's multiplier.
+//             pays the sum of its chips' values × that hand's multiplier,
+//             its 5th to 8th chips counting ×2, from its 9th ×5 (tierOf, web.88).
 //   Recave    no group left: the dealer pushes a row in from the felt, made
 //             of pairs (recaveRow) — the player is never stuck.
 //   Levels    (push 3, web.78, levelKit) cards in the stacks from level 2
@@ -93,12 +94,16 @@ export function handOf(n) {
 }
 /** What a group pays: the sum of its values × its hand's multiplier. */
 export function groupPay(grid, cells) {
-  let sum = 0;
   cells = cells.filter(([c, r]) => grid[c][r].k >= 0);
-  for (const [c, r] of cells) sum += CHIPS[grid[c][r].k].v;
   const cat = handOf(cells.length);
-  return { cat, pts: cat < 0 ? 0 : sum * MULT[cat] };
+  if (cat < 0) return { cat, pts: 0, each: [] };
+  // each chip: its value × its rank's tier (the 5th to 8th count ×2, from the 9th ×5 — Monster Madness'
+  // 100 / 250 / 500 a block in a big group, web.88) × the group's hand
+  const each = cells.map(([c, r], i) => CHIPS[grid[c][r].k].v * tierOf(i) * MULT[cat]);
+  return { cat, pts: each.reduce((a, b) => a + b, 0), each };
 }
+/** A chip's tier by its rank in its group (0 the touched one): ×1 up to the 4th, ×2 to the 8th, ×5 beyond. */
+export const tierOf = (i) => (i < 4 ? 1 : i < 8 ? 2 : 5);
 
 const NB = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 /** Can this cell join a group (a chip, not sealed)? */
