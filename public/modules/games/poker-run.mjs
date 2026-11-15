@@ -36,6 +36,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { evalCards, suitOf } from './poker-hand.mjs';
+import { drawCar, seatPoint } from './car3d.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
 import { titleScreen } from './title.mjs';
 
@@ -487,6 +488,7 @@ export function create(shell) {
     skyOff += ps.curve * sp * dt * 90;
 
     // Traffic
+    const pNow = findSeg(pos + PLAYER_Z).i;
     for (const c of cars) {
       if (c.dead) continue;
       const old = Math.floor(c.z / SEG), cs = segs[old];
@@ -501,7 +503,8 @@ export function create(shell) {
       const ci = Math.floor(c.z / SEG);
       if (c.ahead && ci < ps.i) { const d = Math.abs(px - carX(c, ps, g)); if (d > HIT && d < 1.1 && Math.random() < 0.45) aceDo('wave', 1, t('mascotHello'), 1); }
       c.ahead = ci >= ps.i;
-      if (ci === ps.i && inv <= 0 && v > c.v && Math.abs(px - carX(c, ps, g)) < HIT) {
+      // Hit: the car within the stretch the player covered this frame (at a low frame rate he moves more than a segment).
+      if (ci >= ps.i && ci <= pNow && inv <= 0 && v > c.v && Math.abs(px - carX(c, ps, g)) < HIT) {
         if (drift) { drift = false; driftGain = 0; }
         aceDo('flail', 0.9, '💥', 5);
         const loss = Math.ceil(stack * 0.2); stack -= loss; v = c.v * 0.45; inv = 1.1; if (!shell.reduced) shake = 0.35;
@@ -741,7 +744,7 @@ const carW = () => Math.min(W * 0.24, 100);
       const bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
       const col = (k) => bl < 1 ? rgb(mixA(s.Tp[k][alt], T[k][alt], bl)) : rgb(T[k][alt]);
       const U = (p, u) => p.x + p.w * u;
-      const road = fin ? (s.i % 2 ? '#f4eedf' : '#0d1117') : col('D');
+      const road = fin ? '#f4eedf' : col('D');
       const piece = (c1, h1, c2, h2, rw) => {
         band(a.y, U(a, c1 - h1 - rw), U(a, c1 + h1 + rw), b.y, U(b, c2 - h2 - rw), U(b, c2 + h2 + rw), col('R'));
         band(a.y, U(a, c1 - h1), U(a, c1 + h1), b.y, U(b, c2 - h2), U(b, c2 + h2), road);
@@ -755,6 +758,11 @@ const carW = () => Math.min(W * 0.24, 100);
         const L1 = envL(g1), R1 = envR(g1), L2 = envL(g2), R2 = envR(g2), rw = 0.12 * (R1 - L1) / 2;
         band(a.y, U(a, L1 - rw), U(a, R1 + rw), b.y, U(b, L2 - rw), U(b, R2 + rw), col('R'));
         band(a.y, U(a, L1), U(a, R1), b.y, U(b, L2), U(b, R2), road);
+        // The finish line: a checkerboard across the road.
+        if (fin) for (let c = (s.i % 2); c < 10; c += 2) {
+          const f0 = c / 10, f1 = (c + 1) / 10;
+          band(a.y, U(a, L1 + (R1 - L1) * f0), U(a, L1 + (R1 - L1) * f1), b.y, U(b, L2 + (R2 - L2) * f0), U(b, L2 + (R2 - L2) * f1), '#0d1117');
+        }
         if (alt && !fin && g1.pcs.length === g2.pcs.length) for (let l = 0; l < g1.pcs.length - 1; l++) {
           if (g1.pcs[l + 1].c - g1.pcs[l].c <= 0.4) continue;
           const m1 = (g1.pcs[l].c + g1.pcs[l + 1].c) / 2, m2 = (g2.pcs[l].c + g2.pcs[l + 1].c) / 2, lw = 0.022 * (R1 - L1) / 2;
@@ -781,6 +789,7 @@ const carW = () => Math.min(W * 0.24, 100);
         else if (sp.t === 'chip') drawChip(sx + sc * g.pcs[sp.lane].c * ROAD, sy, sc);
       }
       if (s.gate) drawGate(s, sc, sx, sy, g);
+      if (s.i === finishSeg) drawFinish(sc, sx, sy, g);
       const cs = bySeg.get(s.i);
       if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind); }
       ctx.restore();
@@ -817,6 +826,39 @@ const carW = () => Math.min(W * 0.24, 100);
       const cw = sc * 340;
       if (cw > 2) { ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(X - cw * 0.04, sy - sc * 120, cw * 0.08, sc * 120); card(X, sy - sc * 120 - cw * 0.7, cw, gate.cards[l]); }
       ctx.globalAlpha = 1;
+    }
+  }
+  /** The finish (web.61, narmod: « two posts either side of the road, a flag on
+   *  top »): striped posts, a checkered banner across, a flag waving on each post. */
+  function drawFinish(sc, sx, sy, g) {
+    const L = sx + sc * (envL(g) - 0.1) * ROAD, Rr = sx + sc * (envR(g) + 0.1) * ROAD, h = sc * 2700, pw = Math.max(2, sc * 120);
+    if (pw < 1) return;
+    const top = sy - h, bh = Math.max(3, sc * 460), now = performance.now() / 1000;
+    // Posts, red and white.
+    for (const X of [L, Rr]) {
+      ctx.fillStyle = '#f4eedf'; ctx.fillRect(X - pw / 2, top, pw, h);
+      ctx.fillStyle = '#c2303a'; const st = Math.max(2, sc * 260);
+      for (let y = top + bh; y < sy; y += st * 2) ctx.fillRect(X - pw / 2, y, pw, Math.min(st, sy - y));
+      ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(X, sy, pw * 1.4, pw * 0.35, 0, 0, 7); ctx.fill();
+    }
+    // The banner: a checkerboard, two rows, framed.
+    const bw = Rr - L, n = Math.max(4, Math.round(bw / (bh / 2) / 2) * 2), cw = bw / n;
+    ctx.fillStyle = '#f4eedf'; ctx.fillRect(L, top, bw, bh);
+    ctx.fillStyle = '#0d1117';
+    for (let r = 0; r < 2; r++) for (let c = r % 2; c < n; c += 2) ctx.fillRect(L + c * cw, top + r * bh / 2, cw + 0.5, bh / 2 + 0.5);
+    ctx.strokeStyle = '#0d1117'; ctx.lineWidth = Math.max(1, bh * 0.08); ctx.strokeRect(L, top, bw, bh);
+    // A checkered flag on top of each post, waving inwards.
+    for (const [X, d] of [[L, 1], [Rr, -1]]) {
+      const mh = bh * 1.6, fw = bh * 1.9, fh = bh * 1.15, mx = X, my = top - mh;
+      ctx.fillStyle = '#0d1117'; ctx.fillRect(mx - pw * 0.2, my, pw * 0.4, mh);
+      ctx.beginPath(); ctx.arc(mx, my, pw * 0.35, 0, 7); ctx.fill();
+      const cols = 4, rows = 3;
+      const wave = (u) => Math.sin(now * 6 + u * 4) * fh * 0.12 * u;
+      for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+        const u0 = i / cols, u1 = (i + 1) / cols, x0 = mx + d * fw * u0, x1 = mx + d * fw * u1, y0 = my + fh * j / rows, y1 = my + fh * (j + 1) / rows;
+        ctx.fillStyle = (i + j) % 2 ? '#0d1117' : '#f4eedf';
+        ctx.beginPath(); ctx.moveTo(x0, y0 + wave(u0)); ctx.lineTo(x1, y0 + wave(u1)); ctx.lineTo(x1, y1 + wave(u1)); ctx.lineTo(x0, y1 + wave(u0)); ctx.closePath(); ctx.fill();
+      }
     }
   }
   function drawChip(X, y, sc) {
@@ -900,94 +942,40 @@ const carW = () => Math.min(W * 0.24, 100);
   }
 
   // The player's car, in two halves around the Ace: what is behind him on the
-  // stage's canvas, his seat and the body on the front one.
+  // stage's canvas, the body in front of him on the front one.
   function carFrame() {
     const w = carW(), h = w * 0.42;
     return { w, h, x: W / 2 + slide, y: H - 10 + bob };
   }
-  function seatShape(c, sx, head) {
-    const { w, h } = carFrame();
-    ctx = c;
-    ctx.fillStyle = '#3a1c1e'; rr(sx - w * 0.135, -h * 1.22, w * 0.27, h * 0.4, w * 0.06); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.08)'; rr(sx - w * 0.1, -h * 1.18, w * 0.2, h * 0.06, h * 0.03); ctx.fill();
-    if (head) { ctx.fillStyle = '#3a1c1e'; rr(sx - w * 0.07, -h * 1.45, w * 0.14, h * 0.26, w * 0.05); ctx.fill(); }
-  }
-  // The car turned by `turn` (−1 … 1): seen a little from the side, its rear
-  // face narrower and pushed out of the bend.
-  const turnTf = (w) => { const a = Math.abs(turn); ctx.translate(-turn * w * 0.04, 0); ctx.scale(1 - 0.1 * a, 1); };
-  /** The side of the car that shows in a drift, its front wheel, and the
-   *  tyre marks it leaves on the tarmac. */
-  function drawTurnSide(w, h) {
-    const a = Math.abs(turn); if (a < 0.03) return;
-    const sd = Math.sign(turn), x0 = sd * w * 0.47, x1 = sd * w * (0.47 + 0.3 * a);
-    ctx.strokeStyle = 'rgba(12,12,14,' + (0.4 * a).toFixed(2) + ')'; ctx.lineWidth = w * 0.07; ctx.lineCap = 'round';
-    for (const wx of [-0.38, 0.38]) { ctx.beginPath(); ctx.moveTo(w * wx, -h * 0.05); ctx.quadraticCurveTo(w * wx - sd * w * 0.05, h * 0.5, w * wx - sd * w * 0.22 * a, h * 1.4); ctx.stroke(); }
+  // The car in 3D (car3d.mjs): its yaw follows the steering a little and a
+  // drift a lot (web.62, narmod: « a car in 3/4, a real rotation »).
+  const carYaw = () => yaw * 1.6 + turn * 0.5;
+  const carOpts = () => { const { w, x, y } = carFrame(); return { x, y, w, yaw: carYaw(), pitch: 0.22, color: '#c2303a', boost, plate }; };
+  /** The tyre marks a drift leaves behind the rear wheels. */
+  function skidMarks(w, x, y) {
+    const a = Math.abs(turn); if (a < 0.05) return;
+    const sd = Math.sign(turn);
+    ctx.strokeStyle = 'rgba(12,12,14,' + (0.4 * a).toFixed(2) + ')'; ctx.lineWidth = w * 0.08; ctx.lineCap = 'round';
+    for (const wx of [-0.4, 0.4]) {
+      const x0 = x + w * wx - sd * w * 0.12 * a;
+      ctx.beginPath(); ctx.moveTo(x0, y - w * 0.02); ctx.quadraticCurveTo(x0 - sd * w * 0.05, y + w * 0.2, x0 - sd * w * 0.22 * a, y + w * 0.6); ctx.stroke();
+    }
     ctx.lineCap = 'butt';
-    // The side: the door line dropping to the front wing, the wheel under it.
-    const yb = (t) => -h * (0.08 + (0.2 + 0.2 * a) * t);
-    ctx.beginPath(); ctx.moveTo(x0, -h * 1.02);
-    ctx.quadraticCurveTo(x0 + (x1 - x0) * 0.5, -h * (1.0 + 0.08 * a), x1, -h * (0.8 + 0.12 * a));
-    ctx.quadraticCurveTo(x1 + sd * w * 0.02, -h * (0.55 + 0.18 * a), x1, yb(1)); ctx.lineTo(x0, yb(0)); ctx.closePath();
-    const sg = ctx.createLinearGradient(x0, 0, x1, 0); sg.addColorStop(0, '#b52630'); sg.addColorStop(1, '#6a1219');
-    ctx.fillStyle = sg; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = Math.max(1, w * 0.012);
-    ctx.beginPath(); ctx.moveTo(x0, -h * 0.84); ctx.lineTo(x0 + (x1 - x0) * 0.9, -h * (0.74 + 0.12 * a)); ctx.stroke();
-    const wx = x0 + (x1 - x0) * 0.66, wy = yb(0.66) + h * 0.04, rx = w * (0.03 + 0.04 * a), ry = h * 0.24;
-    ctx.fillStyle = '#0b0e12'; ctx.beginPath(); ctx.ellipse(wx, wy, rx, ry, 0, 0, 7); ctx.fill();
-    ctx.fillStyle = '#8a929c'; ctx.beginPath(); ctx.ellipse(wx, wy, rx * 0.45, ry * 0.45, 0, 0, 7); ctx.fill();
   }
   function drawCarBack(g) {
-    const { w, h, x, y } = carFrame();
-    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw); turnTf(w);
-    ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.beginPath(); ctx.ellipse(-turn * w * 0.1, 1, w * (0.54 + 0.12 * Math.abs(turn)), w * 0.075, 0, 0, 7); ctx.fill();
-    ctx.fillStyle = '#0b0e12'; rr(-w * 0.48, -h * 0.6, w * 0.18, h * 0.62, w * 0.08); ctx.fill(); rr(w * 0.30, -h * 0.6, w * 0.18, h * 0.62, w * 0.08); ctx.fill();
-    drawTurnSide(w, h);
-    ctx.beginPath(); ctx.moveTo(-w * 0.31, -h); ctx.lineTo(-w * 0.27, -h * 1.55); ctx.quadraticCurveTo(-w * 0.25, -h * 1.82, -w * 0.12, -h * 1.84);
-    ctx.lineTo(w * 0.12, -h * 1.84); ctx.quadraticCurveTo(w * 0.25, -h * 1.82, w * 0.27, -h * 1.55); ctx.lineTo(w * 0.31, -h); ctx.closePath();
-    ctx.fillStyle = 'rgba(160,200,230,.24)'; ctx.fill(); ctx.strokeStyle = '#d7dce2'; ctx.lineWidth = Math.max(1.2, w * 0.022); ctx.lineJoin = 'round'; ctx.stroke();
-    seatShape(g, w * 0.17, true);
-    ctx.restore();
+    const o = carOpts();
+    ctx = g; skidMarks(o.w, o.x, o.y);
+    drawCar(g, o, 'back');
   }
   function drawCarFront(g) {
-    const { w, h, x, y } = carFrame();
-    ctx = g; ctx.save(); ctx.translate(x, y); ctx.rotate(yaw); turnTf(w);
-    seatShape(g, -w * 0.17, false);
-    ctx.beginPath();
-    ctx.moveTo(-w * 0.5, -h * 0.28);
-    ctx.bezierCurveTo(-w * 0.55, -h * 0.78, -w * 0.5, -h * 1.14, -w * 0.34, -h * 1.14);
-    ctx.quadraticCurveTo(-w * 0.18, -h * 1.02, 0, -h * 1.04);
-    ctx.quadraticCurveTo(w * 0.18, -h * 1.02, w * 0.34, -h * 1.14);
-    ctx.bezierCurveTo(w * 0.5, -h * 1.14, w * 0.55, -h * 0.78, w * 0.5, -h * 0.28);
-    ctx.quadraticCurveTo(w * 0.48, -h * 0.06, w * 0.3, -h * 0.06);
-    ctx.lineTo(-w * 0.3, -h * 0.06);
-    ctx.quadraticCurveTo(-w * 0.48, -h * 0.06, -w * 0.5, -h * 0.28); ctx.closePath();
-    const bg = ctx.createLinearGradient(0, -h * 1.15, 0, 0);
-    bg.addColorStop(0, '#e8505a'); bg.addColorStop(0.45, '#c2303a'); bg.addColorStop(1, '#861820');
-    ctx.fillStyle = bg; ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.beginPath(); ctx.ellipse(-w * 0.32, -h * 0.98, w * 0.1, h * 0.07, -0.3, 0, 7); ctx.ellipse(w * 0.32, -h * 0.98, w * 0.1, h * 0.07, 0.3, 0, 7); ctx.fill();
-    for (const sx of [-1, 1]) {
-      const lx = sx * w * 0.32, ly = -h * 0.64, r = w * 0.075;
-      ctx.fillStyle = '#3a0d10'; ctx.beginPath(); ctx.arc(lx, ly, r * 1.18, 0, 7); ctx.fill();
-      ctx.fillStyle = boost ? '#ffb347' : '#ff3b3f'; ctx.beginPath(); ctx.arc(lx, ly, r, 0, 7); ctx.fill();
-      ctx.fillStyle = 'rgba(255,230,200,.55)'; ctx.beginPath(); ctx.arc(lx - r * 0.3, ly - r * 0.3, r * 0.35, 0, 7); ctx.fill();
-    }
-    ctx.fillStyle = '#5e1117'; rr(-w * 0.14, -h * 0.66, w * 0.28, h * 0.3, h * 0.14); ctx.fill();
-    ctx.fillStyle = '#f4eedf'; rr(-w * 0.11, -h * 0.62, w * 0.22, h * 0.22, h * 0.1); ctx.fill();
-    plate(ctx, 0, -h * 0.51, h * 0.2);
-    ctx.fillStyle = '#262b32'; rr(-w * 0.42, -h * 0.3, w * 0.84, h * 0.17, h * 0.085); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,.18)'; rr(-w * 0.38, -h * 0.28, w * 0.76, h * 0.04, h * 0.02); ctx.fill();
-    for (const ex of [-0.2, 0.2]) { ctx.fillStyle = '#b9c0c8'; ctx.beginPath(); ctx.arc(w * ex, -h * 0.16, w * 0.035, 0, 7); ctx.fill(); ctx.fillStyle = '#1a1e24'; ctx.beginPath(); ctx.arc(w * ex, -h * 0.16, w * 0.018, 0, 7); ctx.fill(); }
-    if (boost) for (const ex of [-0.2, 0.2]) {
-      const fl = (0.6 + Math.random() * 0.6) * w * 0.16;
-      ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.ellipse(w * ex, -h * 0.16 + fl * 0.45, w * 0.035, fl * 0.5, 0, 0, 7); ctx.fill();
-      ctx.fillStyle = '#ff8a3d'; ctx.beginPath(); ctx.ellipse(w * ex, -h * 0.16 + fl * 0.3, w * 0.02, fl * 0.3, 0, 0, 7); ctx.fill();
-    }
+    const o = carOpts(), { w, h, x, y } = carFrame();
+    ctx = g; drawCar(g, o, 'front');
     if (drift) {
-      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(shell.dpr * shell.k, shell.dpr * shell.k); ctx.translate(x, y); ctx.font = '700 ' + Math.round(Math.max(12, w * 0.14)) + 'px Inter, system-ui, sans-serif';
-      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.6)';
-      const s = 'DRIFT' + (driftGain ? ' +' + driftGain : ''); ctx.strokeText(s, 0, -h * 2.5); ctx.fillStyle = '#ffd27a'; ctx.fillText(s, 0, -h * 2.5);
+      g.save(); g.translate(x, y); g.font = '700 ' + Math.round(Math.max(12, w * 0.14)) + 'px Inter, system-ui, sans-serif';
+      g.textAlign = 'center'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.6)';
+      const s = 'DRIFT' + (driftGain ? ' +' + driftGain : ''); g.strokeText(s, 0, -h * 2.5); g.fillStyle = '#ffd27a'; g.fillText(s, 0, -h * 2.5);
+      g.restore();
     }
-    ctx.restore();
   }
   /** The plate « A♠ », centred on (x, y): the A in the font, the spade drawn —
    *  iOS Safari sometimes measured the « ♠ » with one font and drew it with
@@ -1036,10 +1024,10 @@ const carW = () => Math.min(W * 0.24, 100);
     ace.pose(pose);
     ace.mood(act.a === 'spin' || (state === 'over' && outroWin) ? 'mc-m-yay' : 'mc-m-smile');
     // The card (84 sprite px wide) as wide as the seat; its bottom below the seat's top.
-    const s = (w * 0.26) / 84, lx = -w * 0.17 * (1 - 0.1 * Math.abs(turn)) - turn * w * 0.04, ly = -h * 0.94 + dy + 56 * s;
-    const c = Math.cos(yaw), sn = Math.sin(yaw);
-    const tilt = yaw * 0.2 + (keys.l ? -0.08 : keys.r ? 0.08 : 0) + rot;
-    ace.place(x + c * lx - sn * ly, y + sn * lx + c * ly, s, shell.k, tilt * 180 / Math.PI);
+    // In the driver's seat of the 3D car (car3d.mjs), wherever it is turned.
+    const s = (w * 0.26) / 84, sp = seatPoint(carOpts());
+    const tilt = (keys.l ? -0.08 : keys.r ? 0.08 : 0) + rot;
+    ace.place(sp.x, sp.y + w * 0.08 + dy + 56 * s, s, shell.k, tilt * 180 / Math.PI);
     ace.fade(inv > 0 && Math.floor(inv * 12) % 2 ? 0.4 : 1);
   }
   function drawBubble(g) {

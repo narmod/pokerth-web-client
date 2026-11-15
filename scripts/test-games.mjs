@@ -72,6 +72,11 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
   const L = [0, 1, 2, 3, 4, 5].map(pr.stageLen);
   ok(L.every((x, i) => x > 600 && (!i || x >= L[i - 1])) && L[5] < L[0] * 1.5, 'Poker Run: six stages of like length, the last one too (' + L.join(', ') + ')');
   ok(pr.branchOfLane(0, 1) === 0 && pr.branchOfLane(2, 0) === 1 && pr.branchOfLane(1, 0) === 0 && pr.branchOfLane(1, 1) === 1, 'Poker Run: two roads at a fork, the middle lane takes its side');
+  const c3 = await import('../public/modules/games/car3d.mjs');
+  const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });
+  let calls = 0; const stub = new Proxy({}, { get: (t, k) => (k in t ? t[k] : () => { calls++; return { addColorStop() {} }; }), set: (t, k, v) => { t[k] = v; return true; } });
+  for (const yaw of [-0.5, 0, 0.5]) for (const part of ['back', 'front']) c3.drawCar(stub, { ...o, yaw, plate: () => {} }, part);
+  ok(s0.x < o.x && s0.y < o.y && sR.x < s0.x && sL.x > s0.x && calls > 500, 'Poker Run: the 3D car draws at any yaw, the seat (behind the pivot) swings out of the turn (' + [sL.x, s0.x, sR.x].map((v) => v.toFixed(1)).join(', ') + ')');
 }
 const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));

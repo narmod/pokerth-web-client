@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: a finish gantry** (`web.61`, narmod: « two posts either side of the road with a flag on top; now it's
+  very bland ») — `poker-run.mjs`: `drawFinish()` at `finishSeg`: striped posts outside the verges, a two-row
+  checkered banner, a waving chequered flag on each post; the finish line on the road is now a checkerboard (it was
+  four black and white stripes).
+- **Poker Run: the Ace's car in 3D** (`web.61`, narmod: « in a drift it's ugly; a car in 3/4 in the same style, a real
+  rotation, not just the front appearing ») — new `games/car3d.mjs`: the convertible lofted from rounded cross-sections
+  (`ST`, doubled to 22 sections × 32 points), the cockpit an opening in the deck, four wheels as cylinders, turned by
+  a yaw about its middle, seen from a 0.22 rad pitch, projected orthographically, back-face culled, flat shaded and
+  painted far to near; the tail (lights, plate, bumper, exhausts) is drawn on the rear plane by an affine map.
+  `drawCar(ctx, o, 'back'|'front')` splits the faces at the driver's depth so the Ace (DOM actor) sits between the two
+  canvases; `seatPoint()` places him. In `poker-run.mjs` the car's yaw is `yaw × 1.6 + turn × 0.5`; the hand-drawn
+  rear view, `seatShape()`, `turnTf()` and `drawTurnSide()` are gone (tyre marks kept as `skidMarks()`). Fixed: a hit was only checked on the player's segment, so at a low frame
+  rate a car could be driven through; it is now checked over the stretch covered in the frame.
 - **Poker Run: a drift that looks like one, more traffic, the map while driving** (`web.60`, narmod: « the drift feels
   like the car rocking left and right, not a slide; a bit too quick now; more people; see where you are on the map
   while playing, top right ») — `poker-run.mjs`: new `turn` (−1 … 1, eased in over ~0.3 s): `turnTf()` narrows the

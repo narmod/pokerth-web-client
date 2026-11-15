@@ -1,4 +1,9 @@
-2026-11-15 version 2.1.11-web.60 (current series):
+2026-11-15 version 2.1.11-web.61 (current series):
+- improvement: Poker Run — a real finish: two red-and-white posts either side of the road, a checkered banner across, a chequered flag waving on top of each post, and a checkerboard line on the road
+- improvement: Poker Run — the Ace's convertible is now a small 3D car in the same style: it really turns, so in a drift you see it in three-quarter view, its side, wheels and bonnet, the rear swinging out
+- bugfix: Poker Run — on a slow device the car could drive through another without a crash (it moved more than one stretch of road per frame)
+
+2026-11-15 version 2.1.11-web.60:
 - improvement: Poker Run — a drift now looks like one: the car turns into the bend, its side and front wheel show, the rear swings out with tyre smoke and marks, instead of rocking from side to side
 - improvement: Poker Run — the drift starts a little later than in the last version: a bend taken fast, the stick held a moment
 - improvement: Poker Run — more traffic, about twice as many cars, with vans and sports cars, now and then two side by side; a car leaving for the other branch comes back as a different car
