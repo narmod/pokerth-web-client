@@ -810,6 +810,7 @@ export const strings = {
     "gmGameMenu": "Oʻyin menyusi",
     "gmCourse": "Yoʻnalish",
     "gmBestHand": "Eng yaxshi qoʻl",
+    "tpName": "Tapis!", "tpHint": "Tuzning do'stlarini chuqurlariga tushir", "tpRules": "Har bir fishka to'dasining ustida Tuzning bir do'sti turibdi, matodagi chuquri ustida.\nBir rangdagi bir-biriga tegib turgan 2 yoki undan ko'p fishkaga bos: ular ketadi va to'da pasayadi. Yolg'iz fishka qoladi.\nBo'sh to'da: uning do'sti chuqurga tushadi. Daraja ko'tarilish uchun vaqt tugamasdan hammasini tushir.\nGuruh hajmiga ko'ra qo'l nomini oladi (juft, uchlik, strit…) va fishkalarini × shu qo'lni to'laydi: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nBir yo'la 6+ fishka bonus beradi: Diler (bir qator va bir ustun), Aralashtir; 9+ — Joker (butun bir rang). Juft qolmadimi? Diler qo'shadi.\nFishkaga bos, yoki ← → ↑ ↓ va Probel / A (klaviatura, geympad, televizor pulti); bonuslar uchun 1 2 3.", "tpClassic": "Klassik", "tpClassicD": "Vaqtga qarshi raundlar, blaindlar oshadi", "tpAlone": "Yolg'iz fishka qoladi: tegib turgan 2 tasi kerak", "tpWon": "Bonus: {b}!", "tpJoker": "Joker", "tpDealer": "Diler", "tpShuffle": "Aralashtir", "tpArmed": "Fishkaga bos", "tpRecave": "Juft yo'q: diler qo'shmoqda!", "tpClear": "Stol bo'shadi!", "tpClean": "To'liq tozalik", "tpBlinds": "Blaindlar {b}", "tpIn": "Chuqurga!", "gmKindEgg": "Yashirin sovg'a",
     "prDrifts": "Sirpanishlar",
     "prPasses": "Oʻzishlar",
     "prHits": "Toʻqnashuvlar",

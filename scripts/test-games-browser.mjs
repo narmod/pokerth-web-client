@@ -96,7 +96,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(st.open && st.ace && st.page && st.title === 'Mini-jeux', label + ': the mini-games page opens with the Ace');
   ok(st.back && st.menu, label + ': with the header of the other pages (back, ⚙ menu)');
-  const ALL = ['Ace Runner', 'Château de cartes', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As', 'Puissance Poker', 'Ace Dash', 'Poker Run'];
+  const ALL = ['Ace Runner', 'Château de cartes', 'Tapis !', 'Poker Solitaire', 'Vidéo Poker', 'Qui gagne ?', 'Plus haut / Plus bas', 'Le Bluff de l\'As', 'Puissance Poker', 'Ace Dash', 'Poker Run'];
   ok(ALL.every((n) => st.tiles.indexOf(n) >= 0) && st.shelves === 0 && st.tiles.length === ALL.length, label + ': it lists the games, no category (' + st.tiles.join(', ') + ')');
   ok(st.arts === st.tiles.length, label + ': every game has its picture (' + st.arts + ')');
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
@@ -139,7 +139,38 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && document.getElementById('ar-title').textContent === 'Mini-jeux'), label + ': Esc again goes back to the mini-games page');
-  // ── House of Cards ──
+  // ── Tapis! (web.75): the 4th game of the path ──
+  await pick(pg, 'tapis');
+  await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Tapis !', null, { timeout: 8000 }).catch(() => {});
+  ok(await pg.evaluate(() => window._pthPadOwner === 'tapis' && document.querySelectorAll('#pth-game .pg-panel .gm-tile').length === 1), label + ': Tapis!: its card opens it, one mode (Classic) on its title');
+  await pg.keyboard.press('Space');
+  await sleep(1500);
+  const tps = await pg.evaluate(() => {
+    const T = window.__pthTapis, G = T.run();
+    let c0 = -1, r0 = -1, n = 0;
+    // the first group of 2 or more on the board
+    for (let c = 0; c < G.grid.length && c0 < 0; c++) for (let r = 0; r < G.grid[c].length; r++) {
+      const k = G.grid[c][r].k;
+      if ((G.grid[c][r + 1] && G.grid[c][r + 1].k === k) || (G.grid[c + 1] && G.grid[c + 1][r] && G.grid[c + 1][r].k === k)) { c0 = c; r0 = r; break; }
+    }
+    const before = G.grid.reduce((a, col) => a + col.length, 0), s0 = G.score;
+    T.act(c0, r0);
+    n = before - G.grid.reduce((a, col) => a + col.length, 0);
+    return { state: T.state(), cols: G.grid.length, actors: document.querySelectorAll('#pth-game .pg-layer > div[id^="pth-game-tp"]').length, n, gained: G.score - s0 };
+  });
+  ok(tps.state === 'run' && tps.cols >= 6 && tps.actors === tps.cols && tps.n >= 2 && tps.gained > 0, label + ': Tapis!: Space starts, a friend on every column, a group taken pays (' + tps.n + ' chips, +' + tps.gained + ', ' + tps.state + ', ' + tps.actors + '/' + tps.cols + ')');
+  await shot(pg, label + '-tapis');
+  await pg.evaluate(() => window.__pthTapis.timeUp());
+  const tpo = await endInfo(pg, 8000);
+  ok(tpo.on && tpo.title === 'Tapis !' && tpo.btns.length === 2, label + ': Tapis!: the clock runs out, the end screen (' + tpo.score + ')');
+  await shot(pg, label + '-tapis-over');
+  await pg.keyboard.press('Escape');
+  await sleep(300);
+  await pg.keyboard.press('Escape');
+  await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+  // ── House of Cards (the easter-egg bonus since web.75) ──
+  ok(await pg.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[data-art="house"]').closest('.gm-card'); return /🥚/.test(c.querySelector('.gm-step').textContent) && !!c.querySelector('.gm-kind.egg'); }),
+    label + ': the House of Cards is the easter-egg bonus card (🥚, no number)');
   await pick(pg, 'house');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Château de cartes', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'house'), label + ': its card then Space opens the House of Cards');

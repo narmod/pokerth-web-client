@@ -1182,6 +1182,7 @@ export const strings = {
     "gmGameMenu": "Oyun menüsü",
     "gmCourse": "Parkur",
     "gmBestHand": "En iyi el",
+    "tpName": "Tapis!", "tpHint": "As'ın arkadaşlarını deliklerine düşür", "tpRules": "Her fiş yığınının üstünde As'ın bir arkadaşı durur, çuhadaki deliğinin üzerinde.\nAynı renkte birbirine değen 2 veya daha fazla fişe dokun: giderler ve yığın alçalır. Tek kalan fiş durur.\nBoş yığın: arkadaşı deliğine düşer. Seviye atlamak için süre bitmeden hepsini düşür.\nBir grup büyüklüğüne göre bir elin adını alır (per, üçlü, kent…) ve fişlerini × o eli öder: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nTek seferde 6+ fiş bonus kazandırır: Krupiye (bir satır ve bir sütun), Karıştır; 9+ Joker (koca bir renk). Per kalmadı mı? Krupiye ekler.\nBir fişe dokun ya da ← → ↑ ↓ ve Boşluk / A (klavye, oyun kolu, TV kumandası); bonuslar için 1 2 3.", "tpClassic": "Klasik", "tpClassicD": "Saate karşı turlar, blind'lar yükselir", "tpAlone": "Tek fiş durur: birbirine değen 2 fiş gerekir", "tpWon": "Bonus: {b}!", "tpJoker": "Joker", "tpDealer": "Krupiye", "tpShuffle": "Karıştır", "tpArmed": "Bir fişe dokun", "tpRecave": "Per yok: krupiye ekliyor!", "tpClear": "Masa temiz!", "tpClean": "Sıfır fiş", "tpBlinds": "Blind {b}", "tpIn": "Deliğe!", "gmKindEgg": "Sürpriz yumurta",
     "prDrifts": "Driftler",
     "prPasses": "Sollamalar",
     "prHits": "Çarpmalar",

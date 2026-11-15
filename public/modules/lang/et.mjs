@@ -800,6 +800,7 @@ export const strings = {
     "gmGameMenu": "Mängu menüü",
     "gmCourse": "Rada",
     "gmBestHand": "Parim käsi",
+    "tpName": "Tapis!", "tpHint": "Kukuta Ässa sõbrad nende aukudesse", "tpRules": "Igal žetoonivirnal seisab Ässa sõber, oma augu kohal laudlinal.\nPuuduta 2 või enamat kokku puutuvat sama värvi žetooni: need kaovad ja virn vajub. Üksik žetoon jääb.\nTühi virn: selle sõber kukub auku. Kukuta kõik enne aja lõppu, et tõusta tase kõrgemale.\nGrupp kannab oma suuruse järgi käe nime (paar, kolmik, rida…) ja maksab oma žetoonid × see käsi: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ žetooni korraga annab boonuse: Diiler (rida ja veerg), Sega; 9+ Jokker (terve värv). Paare pole? Diiler lisab.\nPuuduta žetooni või ← → ↑ ↓ ja Tühik / A (klaviatuur, mängupult, teleri pult); 1 2 3 boonuste jaoks.", "tpClassic": "Klassika", "tpClassicD": "Voorud vastu kella, blindid tõusevad", "tpAlone": "Üksik žetoon jääb: vaja on 2 kokku puutuvat", "tpWon": "Boonus: {b}!", "tpJoker": "Jokker", "tpDealer": "Diiler", "tpShuffle": "Sega", "tpArmed": "Puuduta žetooni", "tpRecave": "Paare pole: diiler lisab!", "tpClear": "Laud tühi!", "tpClean": "Puhas laud", "tpBlinds": "Blindid {b}", "tpIn": "Auku!", "gmKindEgg": "Lihavõttemuna",
     "prDrifts": "Triivid",
     "prPasses": "Möödumised",
     "prHits": "Kokkupõrked",

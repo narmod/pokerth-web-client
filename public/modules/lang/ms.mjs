@@ -808,6 +808,7 @@ export const strings = {
     "gmGameMenu": "Menu permainan",
     "gmCourse": "Laluan",
     "gmBestHand": "Tangan terbaik",
+    "tpName": "Tapis!", "tpHint": "Jatuhkan kawan-kawan Sat ke dalam lubang mereka", "tpRules": "Di atas setiap timbunan cip berdiri seorang kawan Sat, di atas lubangnya pada kain meja.\nKetik 2 atau lebih cip sewarna yang bersentuhan: ia hilang dan timbunan turun. Cip yang bersendirian kekal.\nTimbunan kosong: kawannya jatuh ke dalam lubang. Jatuhkan semuanya sebelum masa tamat untuk naik tahap.\nKumpulan dinamakan sempena tangan mengikut saiznya (pasangan, tiga sama, berturut…) dan membayar cipnya × tangan itu: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ cip sekali gus memberi bonus: Peniaga (satu baris dan satu lajur), Kocok; 9+ Joker (satu warna penuh). Tiada pasangan? Peniaga menambah.\nKetik cip, atau ← → ↑ ↓ dan Ruang / A (papan kekunci, alat kawalan permainan, alat kawalan TV); 1 2 3 untuk bonus.", "tpClassic": "Klasik", "tpClassicD": "Pusingan melawan masa, blind naik", "tpAlone": "Cip bersendirian kekal: perlu 2 yang bersentuhan", "tpWon": "Bonus: {b}!", "tpJoker": "Joker", "tpDealer": "Peniaga", "tpShuffle": "Kocok", "tpArmed": "Ketik cip", "tpRecave": "Tiada pasangan: peniaga menambah!", "tpClear": "Meja kosong!", "tpClean": "Bersih habis", "tpBlinds": "Blind {b}", "tpIn": "Masuk lubang!", "gmKindEgg": "Kejutan tersembunyi",
     "prDrifts": "Drift",
     "prPasses": "Potongan",
     "prHits": "Perlanggaran",

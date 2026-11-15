@@ -809,6 +809,7 @@ export const strings = {
     "gmGameMenu": "Menuja e lojës",
     "gmCourse": "Itinerari",
     "gmBestHand": "Dora më e mirë",
+    "tpName": "Tapis!", "tpHint": "Rrëzoji miqtë e Asit në gropat e tyre", "tpRules": "Mbi çdo pirg fishash qëndron një mik i Asit, mbi gropën e tij në cohë.\nPrek 2 ose më shumë fisha të së njëjtës ngjyrë që prekin njëra-tjetrën: ikin dhe pirgu ulet. Një fishë e vetme mbetet.\nPirg bosh: miku i tij bie në gropë. Rrëzoji të gjithë para se të mbarojë koha për të ngjitur një nivel.\nNjë grup merr emrin e një dore sipas madhësisë (çift, treshe, rresht…) dhe paguan fishat e tij × atë dorë: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ fisha njëherësh japin një bonus: Ndarësi (një rresht dhe një kolonë), Përzierja; 9+ Xhokeri (një ngjyrë e tërë). S'ka më çifte? Ndarësi plotëson.\nPrek një fishë, ose ← → ↑ ↓ dhe Hapësirë / A (tastierë, levë, telekomandë TV); 1 2 3 për bonuset.", "tpClassic": "Klasik", "tpClassicD": "Raunde kundër orës, blindet rriten", "tpAlone": "Një fishë e vetme mbetet: duhen 2 që preken", "tpWon": "Bonus: {b}!", "tpJoker": "Xhoker", "tpDealer": "Ndarësi", "tpShuffle": "Përzierja", "tpArmed": "Prek një fishë", "tpRecave": "S'ka çifte: ndarësi plotëson!", "tpClear": "Tavolina bosh!", "tpClean": "Pastrim i plotë", "tpBlinds": "Blindet {b}", "tpIn": "Në gropë!", "gmKindEgg": "Vezë Pashke",
     "prDrifts": "Rrëshqitje",
     "prPasses": "Parakalime",
     "prHits": "Përplasje",

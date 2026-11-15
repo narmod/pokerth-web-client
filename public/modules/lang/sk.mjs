@@ -1182,6 +1182,7 @@ export const strings = {
     "gmGameMenu": "Menu hry",
     "gmCourse": "Trasa",
     "gmBestHand": "Najlepšia kombinácia",
+    "tpName": "Tapis!", "tpHint": "Zhoď kamarátov Esa do ich jamiek", "tpRules": "Na každom stĺpci žetónov stojí kamarát Esa, nad svojou jamkou v súkne.\nŤukni na 2 a viac dotýkajúcich sa žetónov jednej farby: zmiznú a stĺpec klesne. Osamelý žetón zostane.\nPrázdny stĺpec: jeho kamarát spadne do jamky. Zhoď všetkých, kým nevyprší čas, a postúpiš o úroveň.\nSkupina nesie meno kombinácie podľa veľkosti (pár, trojica, postupka…) a vypláca svoje žetóny × tú kombináciu: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ žetónov naraz prinesie bonus: Díler (rad a stĺpec), Zamiešať; 9+ Žolík (celá farba). Žiadny pár? Krupiér doplní.\nŤukni na žetón alebo ← → ↑ ↓ a Medzerník / A (klávesnica, gamepad, ovládač TV); 1 2 3 pre bonusy.", "tpClassic": "Klasika", "tpClassicD": "Kolá na čas, blindy rastú", "tpAlone": "Osamelý žetón zostane: treba 2 dotýkajúce sa", "tpWon": "Bonus: {b}!", "tpJoker": "Žolík", "tpDealer": "Díler", "tpShuffle": "Zamiešať", "tpArmed": "Ťukni na žetón", "tpRecave": "Žiadny pár: krupiér dopĺňa!", "tpClear": "Stôl je prázdny!", "tpClean": "Čistý stôl", "tpBlinds": "Blindy {b}", "tpIn": "Do jamky!", "gmKindEgg": "Veľkonočné vajíčko",
     "prDrifts": "Drifty",
     "prPasses": "Predbehnutia",
     "prHits": "Nárazy",

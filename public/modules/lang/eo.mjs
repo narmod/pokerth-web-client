@@ -810,6 +810,7 @@ export const strings = {
     "gmGameMenu": "Ludmenuo",
     "gmCourse": "Itinero",
     "gmBestHand": "Plej bona mano",
+    "tpName": "Tapis!", "tpHint": "Faligu la amikojn de la Aso en iliajn truojn", "tpRules": "Sur ĉiu stako da ĵetonoj staras amiko de la Aso, super sia truo en la tolo.\nTuŝu 2 aŭ pli tuŝiĝantajn ĵetonojn de unu koloro: ili foriras kaj la stako malleviĝas. Sola ĵetono restas.\nMalplena stako: ĝia amiko falas en sian truon. Faligu ĉiujn antaŭ ol la tempo finiĝas por altiĝi nivelon.\nGrupo nomiĝas laŭ mano laŭ sia grandeco (paro, triopo, sekvenco…) kaj pagas siajn ĵetonojn × tiu mano: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ ĵetonoj samtempe gajnas premion: Disdonanto (vico kaj kolono), Miksi; 9+ la Ĵokero (tuta koloro). Neniu paro? La disdonanto replenigas.\nTuŝu ĵetonon, aŭ ← → ↑ ↓ kaj Spaco / A (klavaro, ludregilo, televida teleregilo); 1 2 3 por la premioj.", "tpClassic": "Klasika", "tpClassicD": "Raŭndoj kontraŭ la horloĝo, la blindoj kreskas", "tpAlone": "Sola ĵetono restas: necesas 2 tuŝiĝantaj", "tpWon": "Premio: {b}!", "tpJoker": "Ĵokero", "tpDealer": "Disdonanto", "tpShuffle": "Miksi", "tpArmed": "Tuŝu ĵetonon", "tpRecave": "Neniu paro: la disdonanto replenigas!", "tpClear": "Tablo malplena!", "tpClean": "Pura tablo", "tpBlinds": "Blindoj {b}", "tpIn": "En la truon!", "gmKindEgg": "Kaŝita surprizo",
     "prDrifts": "Driftoj",
     "prPasses": "Preterpasoj",
     "prHits": "Kolizioj",

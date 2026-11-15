@@ -1190,6 +1190,7 @@ export const strings = {
     "gmGameMenu": "Menú del juego",
     "gmCourse": "Recorrido",
     "gmBestHand": "Mejor mano",
+    "tpName": "Tapis!", "tpHint": "Haz caer a los amigos del As en sus agujeros", "tpRules": "Sobre cada pila de fichas hay un amigo del As, encima de su agujero en el tapete.\nToca 2 o más fichas juntas del mismo color: se van y la pila baja. Una ficha sola se queda.\nPila vacía: su amigo cae en su agujero. Hazlos caer a todos antes de que acabe el tiempo para subir de nivel.\nUn grupo lleva el nombre de una mano según su tamaño (pareja, trío, escalera…) y paga sus fichas × esa mano: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6 fichas o más de golpe ganan un bonus: Dealer (una fila y una columna), Barajar; con 9 o más, el Joker (todo un color). ¿Sin parejas? El crupier repone.\nToca una ficha, o ← → ↑ ↓ y Espacio / A (teclado, mando, mando de TV); 1 2 3 para los bonus.", "tpClassic": "Clásico", "tpClassicD": "Rondas contra el reloj, las ciegas suben", "tpAlone": "Una ficha sola se queda: hacen falta 2 juntas", "tpWon": "Bonus: ¡{b}!", "tpJoker": "Joker", "tpDealer": "Dealer", "tpShuffle": "Barajar", "tpArmed": "Toca una ficha", "tpRecave": "Sin parejas: ¡el crupier repone!", "tpClear": "¡Mesa vacía!", "tpClean": "Tabla rasa", "tpBlinds": "Ciegas {b}", "tpIn": "¡Al agujero!", "gmKindEgg": "Huevo de Pascua",
     "prDrifts": "Derrapes",
     "prPasses": "Rebases",
     "prHits": "Choques",

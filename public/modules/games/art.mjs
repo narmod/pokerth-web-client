@@ -328,7 +328,24 @@ function run(c) {
   return s;
 }
 
-const SCENES = { 'ace-runner': runner, 'ace-dash': dash, 'poker-run': run, house, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
+function tapis(c) {
+  // Tapis!: stacks of chips on the felt, one of the Ace's friends on each and a
+  // hole in the felt under each; one friend jumps into his hole.
+  const T = table(c, 92, 120, 200), base = 124, pal = ['#c62828', '#2b6cb0', '#2f9a55', '#2a2d33'];
+  let s = club(c, 'tp' + (c.light ? 'l' : 'd')) + T.svg;
+  const hole = (x) => '<ellipse cx="' + x + '" cy="' + (base + 1) + '" rx="11" ry="4" fill="#d8b25a"/><ellipse cx="' + x + '" cy="' + (base + 1) + '" rx="9.5" ry="3.2" fill="#120c06"/>';
+  const cols = [[84, [0, 0, 1, 2, 2, 1]], [118, [1, 1, 3, 3, 0, 0, 2, 1]], [152, [2, 0, 0, 1]], [220, [3, 2, 2, 0, 1, 1, 3]], [254, [1, 0, 0, 2, 2]]];
+  for (const [x, ks] of cols) {
+    s += hole(x);
+    ks.forEach((k, i) => { s += stack(x - 9, base - i * 4.2, 18, 1, pal[k]); });
+    s += ace(x, base - ks.length * 4.2, 11, x === 152 ? 'wave' : 'idle', limbOf(c));
+  }
+  s += hole(186) + ace(186, base - 18, 11, 'jump', limbOf(c), base)
+    + '<path d="M178 ' + (base - 44) + ' q8 -6 16 0" stroke="' + c.gold + '" stroke-width="1.4" fill="none" opacity=".7" stroke-linecap="round"/>';
+  return s;
+}
+
+const SCENES = { 'ace-runner': runner, 'ace-dash': dash, 'poker-run': run, house, tapis, solitaire, videopoker, whowins, hilo, bluff, pokerdrop };
 
 /** The cover picture of game `id` for the light or dark theme. */
 export function art(id, light) {

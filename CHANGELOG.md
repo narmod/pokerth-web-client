@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis! replaces the House of Cards as mini-game n° 4** (`web.75`, narmod 2026-11-15, design note
+  `claude/CONCEPTION_TAPIS.md`, in the spirit of Megatouch's Monster Madness) — `games/tapis.mjs` + pure rules
+  `games/tapis-rules.mjs`: columns of chips on the felt, one of the Ace's friends on each (the mascot with a hat,
+  several actors at once: `aceActor(layer, id)`), a hole under each. 2+ touching chips of one colour leave
+  (`groupAt`, the column falls: `removeCells`); an empty column drops its friend into his hole; all in before the
+  clock (`timeFor`: 1.1 → 0.8 s a chip) → next blind level. Chips with suit and value (5 ♥, 10 ♦, 25 ♣, 100 ♠,
+  500 ★; 4th colour at level 5, 5th at 13); a group is named after a hand by its size (`handOf`) and pays its
+  values × that hand; preview of the lit group (cursor or mouse). Powers won by big groups: Dealer (row + column),
+  Shuffle, Joker from 9 (a colour); never stuck: a free shuffle then a recave row of pairs (−5 s). Classic mode,
+  title / end screens of the arcade, cover in `art.mjs`, 17 keys in 80 languages; `test-games.mjs` 10 checks.
+  **The House of Cards becomes the easter-egg bonus**: out of the path (`bonus: true`, `pathGames()`), shown after
+  the secret word only (« Bonus 🥚 » card, rainbow « Easter egg » badge); its secret trophy is removed (narmod's
+  choice). Server stats: `tapis` in the path, `house` as `BONUS` (open / end only); admin labels.
 - **Ace Dash: the pool table in the air** (`web.74`, narmod's idea « a pool table in the air, climb on it for a super
   bonus ») — `ace-dash.mjs`: every `POOL_ROWS`+rnd rows from `POOL_LEVEL` 4 (never with the jetpack), a gold ramp in
   the free lane (nothing before it in that lane), then `G.pool` {z0, z1} at `POOL_Y` 1.35 m over the three lanes,

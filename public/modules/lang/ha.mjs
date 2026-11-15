@@ -810,6 +810,7 @@ export const strings = {
     "gmGameMenu": "Menu na wasa",
     "gmCourse": "Hanya",
     "gmBestHand": "Hannu mafi kyau",
+    "tpName": "Tapis!", "tpHint": "Jefa abokan Ace cikin ramukansu", "tpRules": "A kan kowane tarin kwabo aboki ɗaya na Ace yana tsaye, sama da ramin sa a cikin shimfiɗa.\nTaɓa kwabo 2 ko fiye masu launi ɗaya da suka haɗu: sukan tafi kuma tarin ya sauka. Kwabo ɗaya tilo yana zama.\nTarin da babu komai: abokinsa yana faɗawa cikin rami. Jefa su duka kafin lokaci ya ƙare don hawa mataki.\nƘungiya tana ɗaukar sunan hannu bisa girmanta (biyu, uku, jere…) kuma tana biyan kwabonta × wannan hannun: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nKwabo 6+ a lokaci ɗaya suna samun kyauta: Dila (layi ɗaya da shafi ɗaya), Gauraya; 9+ Joker (launi gaba ɗaya). Babu biyu? Dila yana ƙara.\nTaɓa kwabo, ko ← → ↑ ↓ da Space / A (madannai, abin sarrafa wasa, rimot na TV); 1 2 3 don kyaututtuka.", "tpClassic": "Na gargajiya", "tpClassicD": "Zagaye da agogo, blinds suna ƙaruwa", "tpAlone": "Kwabo ɗaya tilo yana zama: ana bukatar 2 da suka haɗu", "tpWon": "Kyauta: {b}!", "tpJoker": "Joker", "tpDealer": "Dila", "tpShuffle": "Gauraya", "tpArmed": "Taɓa kwabo", "tpRecave": "Babu biyu: dila yana ƙarawa!", "tpClear": "An share tebur!", "tpClean": "Tsabtacewa gaba ɗaya", "tpBlinds": "Blinds {b}", "tpIn": "Cikin rami!", "gmKindEgg": "Abin mamaki na ɓoye",
     "prDrifts": "Zamewa",
     "prPasses": "Wucewa",
     "prHits": "Karo",

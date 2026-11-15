@@ -9,7 +9,7 @@
 // The Ace waves from the top of the page.
 // ═══════════════════════════════════════════════════════════════════
 
-import { GAMES, HOME, gameName, arcadeState, allUnlocked, playedGames } from './index.mjs';
+import { GAMES, gameName, arcadeState, allUnlocked, playedGames, pathGames } from './index.mjs';
 import { createAchievements } from '../achievements/index.mjs';
 import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
@@ -60,6 +60,8 @@ const CSS = `
 #pth-game .gm-kind.fun{background:rgba(216,178,90,.16);color:#f5d77a;box-shadow:inset 0 0 0 1px rgba(216,178,90,.45)}
 #pth-game.pg-light .gm-kind.learn{background:rgba(46,125,78,.12);color:#1f6b3e;box-shadow:inset 0 0 0 1px rgba(46,125,78,.4)}
 #pth-game.pg-light .gm-kind.fun{background:rgba(160,110,10,.12);color:#7a5408;box-shadow:inset 0 0 0 1px rgba(160,110,10,.4)}
+#pth-game .gm-kind.egg{background:linear-gradient(90deg,rgba(255,94,94,.18),rgba(255,214,90,.2),rgba(94,220,140,.18),rgba(110,160,255,.2));color:#f5d77a;box-shadow:inset 0 0 0 1px rgba(245,215,122,.6)}
+#pth-game.pg-light .gm-kind.egg{color:#7a5408;box-shadow:inset 0 0 0 1px rgba(160,110,10,.45)}
 #pth-game .gm-card.lock{cursor:default}
 #pth-game .gm-card.lock h3{color:var(--text)}
 #pth-game .gm-myst{position:relative;background:#06080b}
@@ -104,10 +106,14 @@ export function create(shell) {
     const owned = new Set(createAchievements({}).snapshot().filter((a) => a.unlocked).map((a) => a.id));
     st = arcadeState({ count: owned.size, owned, played: playedGames(owned) }, allUnlocked());
   } catch (e) { st = null; }
-  const games = GAMES.filter((g) => g.id !== HOME).map((g) => {
+  const games = pathGames().map((g) => {
     const s = st ? st.games.find((x) => x.id === g.id) : null;
     return Object.assign({}, g, { name: gameName(g, t), locked: !!(s && !s.open), played: !!(s && s.played), need: s ? s.need : 0 });
   });
+  const nPath = games.length;
+  // The easter-egg bonus (the House of Cards, web.75): after the path, once
+  // the secret word has opened everything — no number, a gold « Easter egg » badge.
+  if (allUnlocked()) GAMES.filter((g) => g.bonus).forEach((g) => games.push(Object.assign({}, g, { name: gameName(g, t), locked: false, played: true, need: 0 })));
   const count = st ? st.count : 0;
   // Newly opened games are first shown as mystery games, then revealed one
   // after the other (web.24). The secret word opens everything at once.
@@ -118,16 +124,16 @@ export function create(shell) {
   // A device that cannot keep what was revealed: the games are simply open,
   // with no light, rather than the same reveals at every visit.
   if (pending.length && !saveRevealed(revealed)) { pending.forEach((i) => revealed.add(games[i].id)); saveRevealed(revealed); pending = []; }
-  const nOpen = games.filter((g) => !g.locked).length, nMyst = games.length - nOpen;
+  const nOpen = games.slice(0, nPath).filter((g) => !g.locked).length, nMyst = nPath - nOpen;
   let sel = 0;
   const best = (id) => { try { return parseInt(localStorage.getItem('pth_game_best_' + id) || '0', 10) || 0; } catch (e) { return 0; } };
-  const KIND = { learn: '🎓 ' + t('gmKindLearn'), fun: '🎉 ' + t('gmKindFun') };
-  const countLine = '🕹️ ' + (nMyst ? t(nMyst === 1 ? 'gmCountOne' : 'gmCount', { o: nOpen, all: games.length, m: nMyst }) : t('gmCountAll', { all: games.length }));
+  const KIND = { learn: '🎓 ' + t('gmKindLearn'), fun: '🎉 ' + t('gmKindFun'), egg: '🥚 ' + t('gmKindEgg') };
+  const countLine = '🕹️ ' + (nMyst ? t(nMyst === 1 ? 'gmCountOne' : 'gmCount', { o: nOpen, all: nPath, m: nMyst }) : t('gmCountAll', { all: nPath }));
   function openCard(g, i) {
     return '<article class="gm-card" data-i="' + i + '">'
       + '<div class="gm-art" data-art="' + esc(g.id) + '">' + art(g.id, shell.theme.light) + '</div>'
-      + '<h3><span class="gm-step">' + (i + 1) + '</span><span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
-      + (g.kind ? '<span class="gm-kind ' + g.kind + '">' + esc(KIND[g.kind]) + '</span>' : '')
+      + '<h3><span class="gm-step">' + (g.bonus ? '🥚' : i + 1) + '</span><span class="gm-ico" aria-hidden="true">' + g.icon + '</span>' + esc(g.name) + '</h3>'
+      + (g.bonus ? '<span class="gm-kind egg">' + esc(KIND.egg) + '</span>' : g.kind ? '<span class="gm-kind ' + g.kind + '">' + esc(KIND[g.kind]) + '</span>' : '')
       + '<p class="gm-rec">' + (best(g.id) ? esc(t('arRecord', { n: fmt(best(g.id)) })) : '&nbsp;') + '</p>'
       + '<div class="gm-btns"><button type="button" class="pg-btn" data-play="' + i + '">' + esc(t('gmPlay')) + '</button>'
       + '<button type="button" class="pg-btn pg-ghost" data-rules="' + i + '">' + esc(t('gmRules')) + '</button></div></article>';

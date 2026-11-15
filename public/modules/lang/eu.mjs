@@ -810,6 +810,7 @@ export const strings = {
     "gmGameMenu": "Jokoaren menua",
     "gmCourse": "Ibilbidea",
     "gmBestHand": "Esku onena",
+    "tpName": "Tapis!", "tpHint": "Bota Batekoaren lagunak beren zuloetara", "tpRules": "Fitxa-pila bakoitzaren gainean Batekoaren lagun bat dago, oihaleko bere zuloaren gainean.\nUkitu kolore bereko eta elkar ukitzen duten 2 fitxa edo gehiago: joan egiten dira eta pila jaisten da. Fitxa bakarra geratu egiten da.\nPila hutsa: bere laguna zulora erortzen da. Bota denak denbora amaitu aurretik maila igotzeko.\nTalde batek esku baten izena du bere tamainaren arabera (bikotea, hirukoa, eskailera…) eta bere fitxak × esku hori ordaintzen ditu: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6 fitxa edo gehiago batera: bonus bat. Dealer (errenkada bat eta zutabe bat), Nahastu; 9tik aurrera Jokerra (kolore oso bat). Bikoterik ez? Krupierrak birjartzen du.\nUkitu fitxa bat, edo ← → ↑ ↓ eta Zuriunea / A (teklatua, kontrolagailua, telebistako urrunekoa); 1 2 3 bonusetarako.", "tpClassic": "Klasikoa", "tpClassicD": "Erlojuaren aurkako txandak, itsuak igotzen dira", "tpAlone": "Fitxa bakarra geratu egiten da: elkar ukitzen duten 2 behar dira", "tpWon": "Bonusa: {b}!", "tpJoker": "Jokerra", "tpDealer": "Dealer", "tpShuffle": "Nahastu", "tpArmed": "Ukitu fitxa bat", "tpRecave": "Bikoterik ez: krupierrak birjartzen du!", "tpClear": "Mahaia hutsik!", "tpClean": "Garbiketa osoa", "tpBlinds": "Itsuak {b}", "tpIn": "Zulora!", "gmKindEgg": "Pazko arrautza",
     "prDrifts": "Irristadak",
     "prPasses": "Aurreratzeak",
     "prHits": "Talkak",

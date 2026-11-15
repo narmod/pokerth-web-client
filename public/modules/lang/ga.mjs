@@ -810,6 +810,7 @@ export const strings = {
     "gmGameMenu": "Roghchlár an chluiche",
     "gmCourse": "Cúrsa",
     "gmBestHand": "Lámh is fearr",
+    "tpName": "Tapis!", "tpHint": "Lig do chairde an Aon titim isteach ina bpoill", "tpRules": "Ar gach carn sliseanna seasann cara leis an Aon, os cionn a phoill san éadach.\nTapáil 2 shlisín nó níos mó den dath céanna atá i dteagmháil: imíonn siad agus titeann an carn. Fanann slisín aonair.\nCarn folamh: titeann a chara isteach ina pholl. Lig dóibh go léir titim sula mbíonn an t-am istigh chun leibhéal a ardú.\nGlaoitear ainm láimhe ar ghrúpa de réir a mhéide (péire, trí cinn, sraith…) agus íocann sé a shliseanna × an lámh sin: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nTugann 6+ slisín le chéile bónas: Déileálaí (ró agus colún), Suaitheadh; 9+ an Fuirseoir (dath iomlán). Gan péire fágtha? Líonann an déileálaí.\nTapáil slisín, nó ← → ↑ ↓ agus Spás / A (méarchlár, rialtán, cianrialtán teilifíse); 1 2 3 do na bónais.", "tpClassic": "Clasaiceach", "tpClassicD": "Babhtaí in aghaidh an chloig, ardaíonn na dalla", "tpAlone": "Fanann slisín aonair: teastaíonn 2 i dteagmháil", "tpWon": "Bónas: {b}!", "tpJoker": "Fuirseoir", "tpDealer": "Déileálaí", "tpShuffle": "Suaitheadh", "tpArmed": "Tapáil slisín", "tpRecave": "Gan péire: líonann an déileálaí!", "tpClear": "Bord glanta!", "tpClean": "Scuabadh glan", "tpBlinds": "Dalla {b}", "tpIn": "Isteach sa pholl!", "gmKindEgg": "Ubh Cásca",
     "prDrifts": "Sleamhnuithe",
     "prPasses": "Scoitheadh",
     "prHits": "Buillí",

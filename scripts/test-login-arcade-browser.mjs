@@ -195,7 +195,7 @@ console.log('test-login-arcade-browser');
   await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   const op = await pg.evaluate(() => ({ n: document.querySelectorAll('#pth-game .gm-card').length, bub: (document.querySelector('#ace-dock .ad-bubble.ad-open') || {}).textContent || '' }));
-  ok(op.n === 10 && !/😄/.test(op.bub), 'Mascotte again: the card opens the page with every game, the Ace\'s word closed (' + op.n + ')');
+  ok(op.n === 11 && !/😄/.test(op.bub), 'Mascotte again: the card opens the page with every game and the easter-egg bonus, the Ace\'s word closed (' + op.n + ')');
   await ctx.close();
 }
 {
@@ -246,7 +246,7 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   // web.28: a player who played games before the mode (the secret word kept
   // nothing then) keeps them open — a game's trophy or its best score — even
   // below 8 trophies, without the light; the others are mystery games.
-  const { ctx, pg } = await open(393, 852, 0, { pth_ach_unlocked: JSON.stringify({ [normal[0]]: 1, [normal[1]]: 1, runner: 1 }), pth_game_best_house: '5', pth_arcade_seen: '1', pth_arcade_shown: '1' });
+  const { ctx, pg } = await open(393, 852, 0, { pth_ach_unlocked: JSON.stringify({ [normal[0]]: 1, [normal[1]]: 1, runner: 1 }), pth_game_best_videopoker: '5', pth_arcade_seen: '1', pth_arcade_shown: '1' });
   const c = await card(pg);
   await pg.click('#login-card-arcade');
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});

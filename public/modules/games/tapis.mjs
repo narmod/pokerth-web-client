@@ -1,0 +1,539 @@
+// @ts-check
+// ═══════════════════════════════════════════════════════════════════
+// Tapis! — mini-game n° 4 of the arcade (narmod 2026-11-15, in the spirit of
+// Megatouch's Monster Madness; design note claude/CONCEPTION_TAPIS.md). It
+// takes the House of Cards' place in the path; the House stays as an easter
+// egg bonus (games/index.mjs).
+//
+// Columns of chips stand on the felt, one of the Ace's friends on top of each
+// and a hole in the felt under each. A tap on 2 or more chips of one colour
+// that touch takes them away (tapis-rules.mjs: the group is named after a
+// poker hand by its size, and pays its chips' values × that hand); the
+// column falls. An empty column: its friend jumps into his hole. Every friend
+// in his hole before the clock runs out: the next round, one blind level up.
+//   Chips     thick, each with its suit and value: 5 ♥ red, 10 ♦ blue,
+//             25 ♣ green, 100 ♠ black, 500 ★ purple (a 4th colour from
+//             level 5, a 5th from 13)
+//   Preview   the group under the cursor or the mouse lights up, with its
+//             hand and what it pays
+//   Powers    a group of 6 or more wins a Dealer button (a row and a column)
+//             or a Shuffle, 9 or more a Joker (every chip of a colour); one
+//             Shuffle more every round. Pills at the top: tap, 1 2 3, or the
+//             cursor above the chips
+//   Recave    no pair left: a free shuffle once a round, then the dealer
+//             pushes a row of pairs in from the felt (−5 s) — never stuck
+//   Input     tap a chip; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
+//             Space / Enter / A takes the lit group
+// Push 1 of the design note: the Classic mode; the friends are the Ace with
+// a hat each. The Suits and Figures, the venues, the other modes and the
+// Duel come in the next pushes.
+// ═══════════════════════════════════════════════════════════════════
+
+import { NAME_KEYS } from './poker-hand.mjs';
+import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, RECAVE_S, blindsAt, groupPay, groupAt, anyMove,
+  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor } from './tapis-rules.mjs';
+import { fmt, rr, aceActor } from './common.mjs';
+import { titleScreen, titleStep } from './title.mjs';
+import { endScreen, barsHtml } from './end.mjs';
+
+const HATS = ['tophat', 'cowboy', 'wizard', 'crown', 'fedora', 'jester', 'beanie', 'santa', 'pumpkin', 'nightcap', 'helmet'];
+const POWERS = ['joker', 'dealer', 'shuffle'];
+const P_ICON = { joker: '🃏', dealer: 'D', shuffle: '🔀' };
+const P_KEY = { joker: 'tpJoker', dealer: 'tpDealer', shuffle: 'tpShuffle' };
+const TOP = 66;                 // the HUD and the powers' pills above the board
+const PILL_Y = 52, PILL_H = 22;
+/** A power's pill: 58 wide, less on a narrow (portrait) stage. */
+const pillW = (W) => Math.max(40, Math.min(58, (W - 20) / 3 - 6));
+
+export function create(shell) {
+  const { t, esc, sound } = shell;
+  const H = shell.H;
+  shell.touchPad(false);
+  shell.hud.classList.add('on-felt');
+  if (!document.getElementById('pth-game-tp-css')) {
+    const st = document.createElement('style'); st.id = 'pth-game-tp-css';
+    st.textContent = '#pth-game .tp-time{width:96px;height:9px;margin-top:5px;border-radius:5px;background:rgba(245,240,227,.14);overflow:hidden}'
+      + '#pth-game .tp-time i{display:block;height:100%;width:100%;border-radius:5px;background:linear-gradient(90deg,#d23c2a,#e8b23a 35%,#3fae6a 70%,#53d17f);background-size:96px 100%;transition:width .25s linear}'
+      + '#pth-game .tp-time.low{box-shadow:0 0 10px rgba(255,74,58,.8)}'
+      + '@media (max-width:520px){#pth-game .tp-time{width:64px}#pth-game .tp-time i{background-size:64px 100%}}';
+    document.head.appendChild(st);
+  }
+  shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('hcScore')) + '</div><div class="ar-num tp-score">0</div></div>'
+    + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num tp-lv">1</div></div></div>'
+    + '<div class="ar-hand"><div class="ar-lab tp-blinds"></div><div class="tp-time"><i></i></div></div>';
+  const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
+  const hScore = q('.tp-score'), hLv = q('.tp-lv'), hBlinds = q('.tp-blinds'), hTimeBox = q('.tp-time'), hTime = q('.tp-time i');
+
+  let state = 'title', time = 0, timer = 0, check = 0;
+  /** @type {any} */
+  let G = null;
+  let hover = null;
+
+  // ── Geometry (world px; the stage is H = 360 high, W wide) ────────
+  const colsFor = (W) => (W < H * 0.95 ? 6 : Math.max(6, Math.min(12, Math.round(W / H * 4.6))));
+  function geom() {
+    const W = shell.W, cols = G.cols;
+    const cw = Math.min(W * 0.94 / cols, 46);
+    return { W, cw, bh: cw * 0.5, ry: cw * 0.17, rx: cw * 0.43, x0: (W - cw * cols) / 2, base: H - Math.max(14, cw * 0.5) };
+  }
+  const rowsFor = (L) => Math.max(5, Math.min(14, Math.floor((L.base - TOP - L.cw * 1.9 - L.ry) / L.bh)));
+  const colX = (L, c) => L.x0 + L.cw * (c + 0.5);
+  /** The bottom of chip r's side in column c (with its fall). */
+  const chipY = (L, c, r) => L.base - (r + (G.grid[c][r] ? G.grid[c][r].off : 0)) * L.bh;
+
+  // ── A round ───────────────────────────────────────────────────────
+  function newGame() {
+    if (G) G.chars.forEach((ch) => ch.ace.remove());   // the friends of the title's board
+    G = { lv: 1, score: 0, cols: colsFor(shell.W), grid: [], chars: [], inv: { joker: 0, dealer: 0, shuffle: 1 }, armed: '',
+      cursor: { c: 0, r: 0, bar: -1 }, showCursor: false, inTotal: 0, bestCat: -1, rounds: [], fx: [], parts: [], say: null, banner: null,
+      timeLeft: 0, timeMax: 1, freeShuffle: true, lastTick: 0 };
+  }
+  function newRound() {
+    G.chars.forEach((ch) => ch.ace.remove());
+    G.cols = colsFor(shell.W);
+    const L = geom();
+    G.maxRows = rowsFor(L);
+    G.grid = dealRound(G.lv, G.cols, G.maxRows);
+    G.grid.forEach((col, c) => col.forEach((b, r) => { b.off = 6 + r * 0.6 + c * 0.5; }));   // the chips fall into place
+    G.total = chipsLeft(G.grid);
+    G.timeMax = G.timeLeft = timeFor(G.total, G.lv);
+    G.freeShuffle = true; G.armed = '';
+    G.cursor = { c: Math.floor(G.cols / 2), r: 0, bar: -1 };
+    G.chars = G.grid.map((_, c) => {
+      const ace = aceActor(shell.layer, 'pth-game-tp' + c);
+      ace.hat(HATS[(c + G.lv * 3) % HATS.length]);
+      return { ace, st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '' };
+    });
+    renderHud();
+  }
+  function renderHud() {
+    hScore.textContent = fmt(G.score);
+    hLv.textContent = String(G.lv);
+    hBlinds.textContent = blindsAt(G.lv);
+  }
+
+  // ── Title ─────────────────────────────────────────────────────────
+  function titlePanel() {
+    const b = shell.best.get();
+    titleScreen(shell, { id: 'tapis', live: true, name: t('tpName'), hint: t('tpHint'), sel: 0,
+      modes: [{ icon: '⏱️', label: t('tpClassic'), desc: t('tpClassicD'), rec: b ? t('arRecord', { n: fmt(b) }) : '' }],
+      onPick: () => start() });
+  }
+  newGame(); newRound();
+  titlePanel();
+
+  function start() {
+    clearTimeout(timer); clearTimeout(check);
+    newGame(); newRound();
+    state = 'run'; shell.panel(null);
+    say(t('tpHint'));
+    G.banner = { s: t('arLevel') + ' 1', s2: t('tpBlinds', { b: blindsAt(1) }), t: 0, life: 1.6 };
+  }
+  function say(s) { if (G) G.say = { s, t: 0 }; }
+
+  // ── Playing ───────────────────────────────────────────────────────
+  function act(c, r) {
+    if (state !== 'run' || !G.grid[c] || !G.grid[c][r]) return;
+    if (G.armed) { usePower(G.armed, c, r); return; }
+    const grp = groupAt(G.grid, c, r);
+    if (grp.length < 2) {
+      sound('notifyFold'); G.grid[c][r].shake = 0.3;
+      if (!G.say || G.say.s !== t('tpAlone')) say(t('tpAlone'));
+      return;
+    }
+    const pay = groupPay(G.grid, grp), L = geom();
+    const top = grp.reduce((m, [x, y]) => (y > m[1] ? [x, y] : m), grp[0]);
+    burstCells(L, grp);
+    removeCells(G.grid, grp);
+    G.score += pay.pts;
+    if (pay.cat > G.bestCat) G.bestCat = pay.cat;
+    G.fx.push({ s: t(NAME_KEYS[pay.cat]) + '  +' + fmt(pay.pts), x: colX(L, top[0]), y: chipY(L, top[0], Math.min(top[1], G.grid[top[0]].length)) - L.bh * 2, t: 0, life: 1.2, big: grp.length >= 5 });
+    sound(grp.length >= 5 ? 'notifyRaise' : 'notifyAction');
+    const p = powerFor(grp.length);
+    if (p) { G.inv[p]++; say(t('tpWon', { b: t(P_KEY[p]) })); sound('notifyAllIn'); }
+    renderHud(); afterMove();
+  }
+  function usePower(p, c, r) {
+    let cells = [];
+    if (p === 'joker') cells = colorCells(G.grid, G.grid[c][r].k);
+    else if (p === 'dealer') cells = crossCells(G.grid, c, r);
+    G.armed = '';
+    if (!cells.length || G.inv[p] <= 0) return;
+    G.inv[p]--;
+    const L = geom();
+    burstCells(L, cells);
+    removeCells(G.grid, cells);
+    G.score += cells.length * 30 * G.lv;
+    sound('notifyAllIn');
+    renderHud(); afterMove();
+  }
+  function power(p) {
+    if (state !== 'run' || G.inv[p] <= 0) { sound('notifyFold'); return; }
+    if (p === 'shuffle') {
+      G.inv.shuffle--; shuffleGrid(G.grid); G.armed = '';
+      G.grid.forEach((col) => col.forEach((b) => { b.pop = 0.35; }));
+      G.chars.forEach((ch) => ch.look = time + 1.2);
+      sound('notifyCard'); say(t('tpShuffle') + ' 🔀'); afterMove();
+      return;
+    }
+    G.armed = G.armed === p ? '' : p;
+    if (G.armed) say(t('tpArmed'));
+    sound('notifyAction');
+  }
+  /** After a move: nothing left to take? The dealer helps (never stuck). */
+  function afterMove() {
+    clearTimeout(check);
+    check = setTimeout(() => {
+      if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid) || G.inv.joker || G.inv.dealer) return;
+      if (G.freeShuffle) { G.freeShuffle = false; shuffleGrid(G.grid); G.grid.forEach((col) => col.forEach((b) => { b.pop = 0.35; })); }
+      else { recaveRow(G.grid, colorsAt(G.lv)); G.timeLeft = Math.max(1, G.timeLeft - RECAVE_S); }
+      say(t('tpRecave')); sound('notifyCard');
+      afterMove();
+    }, 650);
+  }
+  function burstCells(L, cells) {
+    for (const [c, r] of cells) {
+      const b = G.grid[c][r], ch = CHIPS[b.k], x = colX(L, c), y = chipY(L, c, r) - L.bh / 2;
+      for (let i = 0; i < 6; i++) {
+        const a = Math.random() * Math.PI * 2, v = L.cw * (1.5 + Math.random() * 3);
+        G.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - L.cw * 2, t: 0, life: 0.6 + Math.random() * 0.4, c: i % 3 ? ch.top : ch.mark, r: 1.5 + Math.random() * 2.5, rot: Math.random() * 6 });
+      }
+    }
+  }
+  function roundClear() {
+    state = 'clear';
+    const L = geom(), left = chipsLeft(G.grid), secs = Math.ceil(G.timeLeft);
+    const bonus = secs * TIME_PAY * G.lv, clean = left === 0 ? cleanPay(G.lv) : 0;
+    G.score += bonus + clean;
+    G.rounds.push({ lv: G.lv, done: 1 });
+    renderHud(); sound('notifyBigWin');
+    G.banner = { s: t('tpClear'), s2: '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
+    for (let i = 0; i < 90; i++) G.parts.push({ x: Math.random() * L.W, y: -10 - Math.random() * 120, vx: (Math.random() - 0.5) * 40, vy: 40 + Math.random() * 80, t: 0, life: 2.4, c: ['#f5c518', '#d23a30', '#2f6bd0', '#27a058', '#fbf7ee'][i % 5], r: 3 + Math.random() * 3, rot: Math.random() * 6, conf: true });
+    timer = setTimeout(() => {
+      if (state !== 'clear') return;
+      G.lv++; G.inv.shuffle++;
+      newRound(); state = 'run'; sound('notifyBlindsUp');
+      G.banner = { s: t('arLevel') + ' ' + G.lv, s2: t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : ''), t: 0, life: 1.8 };
+    }, 2400);
+  }
+  function timeUp() {
+    state = 'over'; clearTimeout(check);
+    const total = G.total || 1;
+    G.rounds.push({ lv: G.lv, done: 1 - chipsLeft(G.grid) / total });
+    G.chars.forEach((ch) => { if (ch.st === 'top') { ch.ace.pose('ko'); ch.ace.mood('mc-m-ko'); } });
+    sound('notifyFold');
+    G.banner = { s: t('prTimeUp'), s2: '', t: 0, life: 1.4 };
+    shell.ended();
+    const prev = shell.best.get();
+    if (G.score > prev) shell.best.set(G.score);
+    G.res = { score: G.score, prev, shown: false };
+    timer = setTimeout(renderResult, 1300);
+  }
+  function toTitle() { state = 'title'; newGame(); newRound(); titlePanel(); }
+  function renderResult() {
+    if (state !== 'over' || !G.res || G.res.shown) return;
+    G.res.shown = true;
+    const { score, prev } = G.res;
+    if (score > prev && prev > 0) sound('notifyBigWin');
+    const best = G.bestCat >= 0 ? t(NAME_KEYS[G.bestCat]) : '—';
+    endScreen(shell, {
+      title: t('tpName'), sub: t('tpClassic') + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }),
+      hero: '<div style="font-size:40px;line-height:1">🕳️</div>', score, prev,
+      calc: [[t('arLevel'), G.lv], [t('tpIn'), G.inTotal], [t('gmBestHand'), best]],
+      levels: { title: t('arLevel'), right: String(G.lv), html: barsHtml(G.rounds.map((r) => ({ h: 0.12 + 0.88 * r.done, cls: r.done >= 1 ? 'gold' : r.done < 0.2 ? 'no' : '' }))) },
+      stats: [[fmt(score), t('hcScore')], [G.lv, t('arLevel')], [G.inTotal, '🕳️']],
+      onAgain: () => start(),
+      onMenu: toTitle,
+    });
+  }
+
+  // ── Input ─────────────────────────────────────────────────────────
+  function cellAt(L, x, y) {
+    const c = Math.floor((x - L.x0) / L.cw);
+    if (c < 0 || c >= G.cols || !G.grid[c] || !G.grid[c].length) return null;
+    const n = G.grid[c].length;
+    for (let r = n - 1; r >= 0; r--) { const yb = chipY(L, c, r); if (y >= yb - L.bh - L.ry && y <= yb + L.ry) return [c, r]; }
+    if (y < chipY(L, c, n - 1) - L.bh) return [c, n - 1];     // on the friend: his top chip
+    return null;
+  }
+  const pillX = (L, i) => L.W / 2 + (i - 1) * (pillW(L.W) + 6);
+  function pillAt(L, x, y) {
+    if (Math.abs(y - PILL_Y) > PILL_H / 2 + 3) return -1;
+    for (let i = 0; i < 3; i++) if (Math.abs(x - pillX(L, i)) <= pillW(L.W) / 2) return i;
+    return -1;
+  }
+  function input(a, down, info) {
+    if (!down) return;
+    if (state === 'title') {
+      const s = titleStep(a, 0, 1);
+      if (s === 'start' && info.x == null) start();
+      return;
+    }
+    if (state !== 'run') return;
+    if (a === 'n1' || a === 'n2' || a === 'n3') { power(POWERS[+a.slice(1) - 1]); return; }
+    const L = geom();
+    if (a === 'jump' && info.x != null) {
+      G.showCursor = false;
+      const p = pillAt(L, info.x, info.y);
+      if (p >= 0) { power(POWERS[p]); return; }
+      const cell = cellAt(L, info.x, info.y);
+      if (cell) act(cell[0], cell[1]);
+      return;
+    }
+    const cur = G.cursor;
+    const up = a === 'jump' && (info.code === 'ArrowUp' || info.code === 'KeyW' || info.pad === 'up');
+    const wake = !G.showCursor;
+    G.showCursor = true;
+    if (wake && a === 'jump' && !up) return;          // the first press shows the cursor
+    const n = (G.grid[cur.c] || []).length;
+    if (cur.bar >= 0) {
+      if (a === 'left') cur.bar = (cur.bar + 2) % 3;
+      else if (a === 'right') cur.bar = (cur.bar + 1) % 3;
+      else if (a === 'duck') { cur.bar = -1; cur.r = Math.max(0, n - 1); }
+      else if (a === 'jump' && !up) power(POWERS[cur.bar]);
+      return;
+    }
+    if (a === 'left' || a === 'right') cur.c = (cur.c + (a === 'left' ? -1 : 1) + G.cols) % G.cols;
+    else if (up) { if (cur.r >= n - 1) cur.bar = 1; else cur.r++; }
+    else if (a === 'duck') cur.r = Math.max(0, Math.min(cur.r, n - 1) - 1);
+    else if (a === 'jump' && n) act(cur.c, Math.min(cur.r, n - 1));
+  }
+  const onMove = (e) => {
+    if (e.pointerType !== 'mouse' || !G || state !== 'run') { hover = null; return; }
+    const r = shell.stage.getBoundingClientRect(), k = shell.k || 1;
+    hover = cellAt(geom(), (e.clientX - r.left) / k, (e.clientY - r.top) / k);
+    if (hover) G.showCursor = false;
+  };
+  const onLeave = () => { hover = null; };
+  shell.stage.addEventListener('pointermove', onMove);
+  shell.stage.addEventListener('pointerleave', onLeave);
+
+  // ── Update ────────────────────────────────────────────────────────
+  function update(dt) {
+    time += dt;
+    if (!G) return;
+    const L = geom();
+    for (const col of G.grid) for (const b of col) {
+      if (b.off > 0) { b.v = (b.v || 0) + 34 * dt; b.off = Math.max(0, b.off - b.v * dt); if (!b.off) { if (b.v > 8) sound('notifyTick'); b.v = 0; } }
+      else if (b.off < 0) b.off = Math.min(0, b.off + 5 * dt);
+      if (b.shake > 0) b.shake -= dt;
+      if (b.pop > 0) b.pop -= dt;
+    }
+    if (state === 'run') {
+      G.timeLeft -= dt;
+      const s = Math.ceil(G.timeLeft);
+      if (G.timeLeft < 10 && s !== G.lastTick) { G.lastTick = s; sound(s <= 3 ? 'notifyTickFinal' : 'notifyTick'); }
+      if (G.timeLeft <= 0) { G.timeLeft = 0; timeUp(); }
+    }
+    hTime.style.width = (100 * Math.max(0, G.timeLeft) / G.timeMax) + '%';
+    hTimeBox.classList.toggle('low', state === 'run' && G.timeLeft < 10);
+    // The friends.
+    let fell = false;
+    G.chars.forEach((ch, c) => {
+      const col = G.grid[c];
+      if (ch.st === 'top') {
+        if (!col.length) {
+          ch.st = 'fall'; ch.vy = -140; ch.ace.pose('air'); ch.ace.mood('mc-m-yay'); fell = true;
+        } else {
+          ch.y = chipY(L, c, col.length - 1) - L.bh;
+          if (state === 'run' || state === 'title') {
+            const low = col.length <= 2;
+            const m = state === 'run' && G.timeLeft < 12 ? 'mc-m-scared' : ch.look > time ? 'mc-m-dizzy' : low ? 'mc-m-jump' : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'mc-m-wink' : 'mc-m-smile');
+            if (m !== ch.mood) { ch.mood = m; ch.ace.mood(m); }
+            const p = low ? 'balance' : 'idle';
+            if (p !== ch.pose) { ch.pose = p; ch.ace.pose(p); }
+          }
+        }
+      } else if (ch.st === 'fall') {
+        ch.vy += 1300 * dt; ch.y += ch.vy * dt;
+        if (ch.y >= L.base) {
+          ch.y = L.base; ch.st = 'sink'; ch.sink = 0;
+          sound('notifyCard');
+          if (state === 'run') {
+            const pay = inPay(G.lv);
+            G.score += pay; G.inTotal++; renderHud();
+            G.fx.push({ s: t('tpIn') + ' +' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true });
+          }
+          for (let i = 0; i < 14; i++) { const a = -Math.PI * Math.random(); G.parts.push({ x: colX(L, c), y: L.base, vx: Math.cos(a) * 60, vy: Math.sin(a) * 90, t: 0, life: 0.7, c: i % 2 ? '#f5c518' : '#fbf7ee', r: 2, rot: 0 }); }
+        }
+      } else if (ch.st === 'sink') {
+        ch.sink += dt / 0.45;
+        if (ch.sink >= 1) { ch.st = 'in'; ch.ace.show(false); }
+      }
+    });
+    if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.ace.fx('cheer'); });
+    if (state === 'run' && G.chars.length && G.chars.every((ch) => ch.st === 'in')) roundClear();
+    for (let i = G.parts.length - 1; i >= 0; i--) { const p = G.parts[i]; p.t += dt; if (p.t > p.life) { G.parts.splice(i, 1); continue; } p.vy += (p.conf ? 30 : 420) * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 7; }
+    for (let i = G.fx.length - 1; i >= 0; i--) { G.fx[i].t += dt; if (G.fx[i].t > G.fx[i].life) G.fx.splice(i, 1); }
+    if (G.say) { G.say.t += dt; if (G.say.t > 2.8) G.say = null; }
+    if (G.banner) { G.banner.t += dt; if (G.banner.t > G.banner.life) G.banner = null; }
+  }
+
+  // ── Drawing ───────────────────────────────────────────────────────
+  const bokeh = Array.from({ length: 22 }, (_, i) => ({ x: Math.random(), y: Math.random() * 0.5, r: 5 + Math.random() * 18, c: ['#f5c518', '#ff6a4a', '#8a6aff', '#4ac8ff'][i % 4], s: Math.random() * 6 }));
+  function drawChip(g, L, x, yb, k, hl, sc, top) {
+    const { bh, ry } = L, ch = CHIPS[k], w = L.rx * (sc || 1);
+    // the side, with a dark seam at the bottom
+    g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.closePath();
+    g.fillStyle = ch.side; g.fill();
+    const sg = g.createLinearGradient(x - w, 0, x + w, 0);
+    sg.addColorStop(0, 'rgba(0,0,0,.35)'); sg.addColorStop(0.32, 'rgba(255,255,255,.16)'); sg.addColorStop(1, 'rgba(0,0,0,.42)');
+    g.fillStyle = ch.top; g.globalAlpha = 0.82; g.fill(); g.globalAlpha = 1; g.fillStyle = sg; g.fill();
+    g.strokeStyle = 'rgba(0,0,0,.55)'; g.lineWidth = 1; g.beginPath(); g.ellipse(x, yb, w, ry, 0, 0, Math.PI); g.stroke();
+    // edge spots and the suit in the middle of the side
+    g.fillStyle = ch.mark;
+    for (const f of [-0.78, 0.78]) g.fillRect(x + f * w - w * 0.07, yb - bh * 0.82, w * 0.14, bh * 0.64);
+    const r = Math.min(bh * 0.4, w * 0.36);
+    g.beginPath(); g.arc(x, yb - bh * 0.5 + ry * 0.15, r, 0, 7); g.fill();
+    g.fillStyle = ch.side; g.font = '700 ' + (r * 1.5).toFixed(1) + 'px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(ch.suit, x, yb - bh * 0.5 + ry * 0.2);
+    // the top
+    g.fillStyle = ch.top; g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1; g.beginPath(); g.ellipse(x, yb - bh, w - 0.5, ry - 0.5, 0, Math.PI, 0); g.stroke();
+    if (top) {
+      g.strokeStyle = ch.mark; g.lineWidth = Math.max(1, w * 0.06); g.setLineDash([w * 0.16, w * 0.12]);
+      g.beginPath(); g.ellipse(x, yb - bh, w * 0.66, ry * 0.66, 0, 0, 7); g.stroke(); g.setLineDash([]);
+      g.fillStyle = ch.mark; g.font = '800 ' + Math.max(6, ry * 1.05).toFixed(1) + 'px Inter, system-ui, sans-serif';
+      g.fillText(String(ch.v), x, yb - bh + 0.5);
+    }
+    if (hl) {
+      g.fillStyle = 'rgba(255,250,220,' + (0.28 + 0.16 * Math.sin(time * 10)).toFixed(2) + ')';
+      g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.ellipse(x, yb - bh, w, ry, 0, 0, Math.PI, true); g.fill();
+    }
+  }
+  function draw(g) {
+    if (!G) return;
+    const L = geom(), W = L.W;
+    // The club at night: velvet, blurred lights, a spot from above.
+    const bg = g.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#0d1630'); bg.addColorStop(0.6, '#1b1240'); bg.addColorStop(1, '#0b0716');
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    for (const b of bokeh) { g.globalAlpha = (shell.reduced ? 0.2 : 0.16 + 0.08 * Math.sin(time * 1.3 + b.s)); g.fillStyle = b.c; g.beginPath(); g.arc(b.x * W, b.y * H, b.r, 0, 7); g.fill(); }
+    g.globalAlpha = 1;
+    const sp = g.createRadialGradient(W / 2, -H * 0.2, 10, W / 2, H * 0.3, H);
+    sp.addColorStop(0, 'rgba(255,240,190,.24)'); sp.addColorStop(1, 'rgba(255,240,190,0)');
+    g.fillStyle = sp; g.fillRect(0, 0, W, H);
+    // The felt and its holes.
+    const ty = L.base - L.ry * 2.4;
+    const fe = g.createLinearGradient(0, ty, 0, H); fe.addColorStop(0, '#1f8a4c'); fe.addColorStop(1, '#0c3f22');
+    g.fillStyle = fe; g.fillRect(0, ty, W, H - ty);
+    g.fillStyle = '#5a361c'; g.fillRect(0, ty - 5, W, 6); g.fillStyle = '#d8b25a'; g.fillRect(0, ty - 6, W, 1.2);
+    for (let c = 0; c < G.cols; c++) {
+      const x = colX(L, c);
+      g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.12, L.ry * 1.25, 0, 0, 7); g.fill();
+      const hg = g.createRadialGradient(x, L.base + L.ry * 0.3, 1, x, L.base, L.rx); hg.addColorStop(0, '#000'); hg.addColorStop(1, '#1a1208');
+      g.fillStyle = hg; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.02, L.ry * 1.1, 0, 0, 7); g.fill();
+    }
+    // The group under the cursor or the mouse.
+    const cur = G.cursor, hl = new Set();
+    let target = null;
+    if (state === 'run') {
+      if (G.showCursor && cur.bar < 0 && G.grid[cur.c] && G.grid[cur.c].length) target = [cur.c, Math.min(cur.r, G.grid[cur.c].length - 1)];
+      else if (hover && G.grid[hover[0]] && G.grid[hover[0]][hover[1]]) target = hover;
+    }
+    let preview = null;
+    if (target) {
+      const [c, r] = target;
+      const cells = G.armed === 'joker' ? colorCells(G.grid, G.grid[c][r].k) : G.armed === 'dealer' ? crossCells(G.grid, c, r) : groupAt(G.grid, c, r);
+      if (cells.length > 1 || G.armed) cells.forEach(([x, y]) => hl.add(x + ',' + y));
+      if (!G.armed && cells.length > 1) { const p = groupPay(G.grid, cells); preview = { c, r, s: t(NAME_KEYS[p.cat]) + ' · ' + cells.length + ' · +' + fmt(p.pts) }; }
+    }
+    // The stacks.
+    for (let c = 0; c < G.grid.length; c++) {
+      const x = colX(L, c), col = G.grid[c];
+      for (let r = 0; r < col.length; r++) {
+        const b = col[r], sx = b.shake > 0 ? Math.sin(time * 70) * 2.5 : (r % 3 === 1 ? 0.8 : r % 3 === 2 ? -0.6 : 0);
+        drawChip(g, L, x + sx, chipY(L, c, r), b.k, hl.has(c + ',' + r), b.pop > 0 ? 1 + b.pop * 0.35 : 1, r === col.length - 1);
+      }
+    }
+    // The cursor (keys, pad, remote).
+    if (state === 'run' && G.showCursor && cur.bar < 0 && G.grid[cur.c]) {
+      const n = G.grid[cur.c].length, r = Math.min(cur.r, Math.max(0, n - 1)), x = colX(L, cur.c), yb = n ? chipY(L, cur.c, r) : L.base;
+      g.save(); g.strokeStyle = '#fbf7ee'; g.lineWidth = 2; g.shadowColor = '#f5c518'; g.shadowBlur = 8;
+      rr(g, x - L.rx - 4, yb - L.bh - L.ry - 4, L.rx * 2 + 8, L.bh + L.ry * 2 + 8, 6); g.stroke(); g.restore();
+    }
+    if (preview) {
+      g.font = '700 10px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const tw = Math.min(W - 8, g.measureText(preview.s).width + 14);
+      const yb = Math.max(TOP + 8, chipY(L, preview.c, preview.r) - L.bh - L.ry - 8), x = Math.max(tw / 2 + 4, Math.min(W - tw / 2 - 4, colX(L, preview.c)));
+      rr(g, x - tw / 2, yb - 9, tw, 18, 9); g.fillStyle = 'rgba(8,14,22,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.7)'; g.lineWidth = 1; g.stroke();
+      g.fillStyle = '#f5d77a'; g.fillText(preview.s, x, yb, tw - 10);
+    }
+    // The friends (DOM actors): feet on their stack, or falling into the hole.
+    const s = L.cw / 120;
+    G.chars.forEach((ch, c) => {
+      if (ch.st === 'in') return;
+      const sk = ch.st === 'sink' ? 1 - Math.min(1, ch.sink) : 1;
+      ch.ace.place(colX(L, c), ch.y - L.ry * 0.3 + (1 - sk) * 10, s * sk, shell.k);
+      if (sk < 1) ch.ace.fade(sk);
+    });
+    // The powers' pills.
+    if (state !== 'title') {
+      const PILL_W = pillW(W), ix = PILL_W < 50 ? 9 : 12;
+      POWERS.forEach((p, i) => {
+        const x = pillX(L, i), n = G.inv[p], on = G.armed === p, lit = G.showCursor && cur.bar === i;
+        g.globalAlpha = n ? 1 : 0.4;
+        rr(g, x - PILL_W / 2, PILL_Y - PILL_H / 2, PILL_W, PILL_H, PILL_H / 2);
+        g.fillStyle = on ? 'rgba(245,197,24,.35)' : 'rgba(8,14,22,.72)'; g.fill();
+        g.strokeStyle = on || lit ? '#f5d77a' : 'rgba(216,178,90,.5)'; g.lineWidth = lit ? 2 : 1; g.stroke();
+        g.fillStyle = '#f5f0e3'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        if (p === 'dealer') { g.beginPath(); g.arc(x - ix, PILL_Y, 7, 0, 7); g.fill(); g.fillStyle = '#141414'; g.font = '800 8px Inter, sans-serif'; g.fillText('D', x - ix, PILL_Y + 0.5); }
+        else { g.font = '12px system-ui, sans-serif'; g.fillText(P_ICON[p], x - ix, PILL_Y + 1); }
+        g.fillStyle = '#f5f0e3'; g.font = '700 11px Inconsolata, monospace'; g.fillText('×' + n, x + ix * 0.75, PILL_Y + 0.5);
+        g.globalAlpha = 1;
+      });
+    }
+    // Particles, scores, the Ace's word, the banner.
+    for (const p of G.parts) {
+      g.globalAlpha = Math.max(0, 1 - p.t / p.life); g.fillStyle = p.c;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.rot);
+      if (p.conf) g.fillRect(-p.r, -1.5, p.r * 2, 3 * Math.abs(Math.cos(p.rot)));
+      else { g.beginPath(); g.ellipse(0, 0, p.r, p.r * 0.45, 0, 0, 7); g.fill(); }
+      g.restore();
+    }
+    g.globalAlpha = 1;
+    for (const f of G.fx) {
+      const p = f.t / f.life, sc = 1 + 0.3 * Math.max(0, 1 - p * 6);
+      g.globalAlpha = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
+      g.font = '800 ' + (f.big ? 15 : 11) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const fw = g.measureText(f.s).width, fit = Math.min(1, (W - 8) / Math.max(1, fw));
+      g.save(); g.translate(Math.max(fw * fit / 2 + 4, Math.min(W - fw * fit / 2 - 4, f.x)), f.y - p * 26); g.scale(sc * fit, sc * fit);
+      g.lineWidth = 3.5; g.strokeStyle = '#141414'; g.strokeText(f.s, 0, 0);
+      g.fillStyle = f.green ? '#7ee2a0' : f.big ? '#f5d77a' : '#fbf7ee'; g.fillText(f.s, 0, 0);
+      g.restore();
+    }
+    g.globalAlpha = 1;
+    if (G.say && state !== 'title') {
+      const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > 2.4 ? Math.max(0, 1 - (G.say.t - 2.4) / 0.4) : 1;
+      g.save(); g.globalAlpha = a;
+      g.font = '600 10.5px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const s2 = '♠ ' + G.say.s, tw = Math.min(W - 16, g.measureText(s2).width + 18), y = TOP + 12;
+      rr(g, W / 2 - tw / 2, y - 10, tw, 20, 10); g.fillStyle = '#fbf7ee'; g.fill();
+      g.fillStyle = '#141414'; g.fillText(s2, W / 2, y, tw - 12);
+      g.restore();
+    }
+    if (G.banner) {
+      const b = G.banner, p = b.t / b.life, sc = 1 + 0.25 * Math.max(0, 1 - p * 6);
+      g.save(); g.globalAlpha = p < 0.8 ? 1 : 1 - (p - 0.8) / 0.2;
+      g.font = '700 26px Cinzel, Georgia, serif';
+      const fit = Math.min(1, (W * 0.9) / Math.max(1, g.measureText(b.s).width));
+      g.translate(W / 2, H * 0.42); g.scale(sc * fit, sc * fit);
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.lineWidth = 5; g.strokeStyle = '#141414'; g.strokeText(b.s, 0, 0); g.fillStyle = '#f5d77a'; g.fillText(b.s, 0, 0);
+      if (b.s2) { g.font = '700 12px Inter, system-ui, sans-serif'; g.lineWidth = 3.5; g.strokeText(b.s2, 0, 24); g.fillStyle = '#fbf7ee'; g.fillText(b.s2, 0, 24); }
+      g.restore();
+    }
+  }
+
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
+  return {
+    update, draw, input, resize: () => {},
+    running: () => state === 'run' || state === 'clear',
+    destroy() {
+      clearTimeout(timer); clearTimeout(check);
+      shell.stage.removeEventListener('pointermove', onMove);
+      shell.stage.removeEventListener('pointerleave', onLeave);
+      if (G) G.chars.forEach((ch) => ch.ace.remove());
+    },
+  };
+}

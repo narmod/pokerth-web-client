@@ -1080,6 +1080,7 @@ export const strings = {
     "gmGameMenu": "Clàr a' gheama",
     "gmCourse": "Slighe",
     "gmBestHand": "Làmh as fheàrr",
+    "tpName": "Tapis!", "tpHint": "Leig le caraidean an Aon tuiteam nan tuill", "tpRules": "Air gach cruach de chips tha caraid aig an Aon na sheasamh, os cionn a thuill san aodach.\nThoir gnogag air 2 chip no barrachd den aon dath a tha a' suathadh: falbhaidh iad is tuitidh a' chruach. Fanaidh chip aonarach.\nCruach falamh: tuitidh a caraid na toll. Leig leotha uile tuiteam mus ruith an ùine a-mach gus leibheil a dhìreadh.\nGheibh buidheann ainm làimhe a rèir a mheud (paidhir, trì den aon seòrsa, sreath…) agus pàighidh i a chips × an làmh sin: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nBheir 6+ chips còmhla bònas: Dèiligeadair (sreath is colbh), Measgachadh; 9+ an Joker (dath slàn). Gun phaidhir? Lìonaidh an dèiligeadair.\nThoir gnogag air chip, no ← → ↑ ↓ agus Space / A (meur-chlàr, uidheam-smachd, smachd-iomallach TBh); 1 2 3 airson nam bònasan.", "tpClassic": "Clasaigeach", "tpClassicD": "Cuairtean an aghaidh a' chloc, èiridh na blinds", "tpAlone": "Fanaidh chip aonarach: feumaidh tu 2 a' suathadh", "tpWon": "Bònas: {b}!", "tpJoker": "Joker", "tpDealer": "Dèiligeadair", "tpShuffle": "Measgachadh", "tpArmed": "Thoir gnogag air chip", "tpRecave": "Gun phaidhir: lìonaidh an dèiligeadair!", "tpClear": "Bòrd falamh!", "tpClean": "Sguabadh glan", "tpBlinds": "Blinds {b}", "tpIn": "Dhan toll!", "gmKindEgg": "Ugh na Càisge",
     "prDrifts": "Sleamhnachaidhean",
     "prPasses": "Dol seachad",
     "prHits": "Buillean",

@@ -21,15 +21,18 @@
 //    (train_on) or not yet (train_off): does the suspense bring more games?
 // ═══════════════════════════════════════════════════════════════════
 
-// The mini-games, in the path's order (public/modules/games/index.mjs GAMES;
-// scripts/test-arcade-stats.mjs checks they match).
-const GAMES = Object.freeze(['whowins', 'ace-runner', 'hilo', 'house', 'videopoker', 'pokerdrop', 'solitaire', 'ace-dash', 'bluff', 'poker-run']);
+// The mini-games, in the path's order (public/modules/games/index.mjs
+// pathGames(); scripts/test-arcade-stats.mjs checks they match). Tapis! took
+// the House of Cards' place in web.75; the House stays as the easter-egg bonus
+// (BONUS: opened and ended counted, no reveal — it is not in the path).
+const GAMES = Object.freeze(['whowins', 'ace-runner', 'hilo', 'tapis', 'videopoker', 'pokerdrop', 'solitaire', 'ace-dash', 'bluff', 'poker-run']);
+const BONUS = Object.freeze(['house']);
 const FUNNEL = Object.freeze(['unlock_trophies', 'unlock_word', 'toast', 'celebrated', 'celebrate_play', 'login_open', 'menu_open']);
 const EVENTS = Object.freeze([].concat(
   FUNNEL,
   GAMES.map((g, i) => 'reveal_' + (i + 1)),
-  GAMES.map((g) => 'open_' + g),
-  GAMES.map((g) => 'end_' + g),
+  GAMES.concat(BONUS).map((g) => 'open_' + g),
+  GAMES.concat(BONUS).map((g) => 'end_' + g),
   ['train_on', 'train_off']));
 
 /** Is this an event we count? */
@@ -79,9 +82,10 @@ function summary(a) {
     unlocked,
     playRate: rate(n('celebrate_play'), n('celebrated')),
     reveals: GAMES.map((g, i) => n('reveal_' + (i + 1))),
-    games: GAMES.map((g) => ({ id: g, open: n('open_' + g), end: n('end_' + g) })),
+    games: GAMES.map((g) => ({ id: g, open: n('open_' + g), end: n('end_' + g) }))
+      .concat(BONUS.map((g) => ({ id: g, bonus: true, open: n('open_' + g), end: n('end_' + g) }))),
     training: { on: n('train_on'), off: n('train_off') },
   };
 }
 
-module.exports = { GAMES, FUNNEL, EVENTS, valid, record, period, summary };
+module.exports = { GAMES, BONUS, FUNNEL, EVENTS, valid, record, period, summary };

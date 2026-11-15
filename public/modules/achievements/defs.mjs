@@ -99,10 +99,8 @@ export const ACHIEVEMENTS = [
   // (mot secret en pseudo d'entraînement, modules/games/index.mjs).
   { id: 'runner',        icon: '🏃', cat: CATS.secret, when: 'always',
     test: () => false },
-  // Débloqué par grantSecret('house') : un château de cartes de 10 étages dans
-  // le jeu caché (menu arcade, modules/games/house.mjs).
-  { id: 'house',         icon: '🃏', cat: CATS.secret, when: 'always',
-    test: () => false },
+  // (Le trophée « Château de cartes », 'house', est retiré depuis web.75 : le
+  // jeu est devenu le bonus easter egg du menu Mini-jeux — narmod 2026-11-15.)
   // Débloqué par grantSecret('solitaire') : 75 points ou plus au Poker
   // Solitaire du jeu caché (modules/games/solitaire.mjs).
   { id: 'solitaire',     icon: '♠️', cat: CATS.secret, when: 'always',

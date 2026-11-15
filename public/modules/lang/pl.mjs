@@ -1184,6 +1184,7 @@ export const strings = {
     "gmGameMenu": "Menu gry",
     "gmCourse": "Trasa",
     "gmBestHand": "Najlepszy układ",
+    "tpName": "Tapis!", "tpHint": "Wrzuć przyjaciół Asa do ich dołków", "tpRules": "Na każdym stosie żetonów stoi przyjaciel Asa, nad swoim dołkiem w suknie.\nStuknij 2 lub więcej stykających się żetonów jednego koloru: znikają, a stos opada. Samotny żeton zostaje.\nPusty stos: jego przyjaciel wpada do dołka. Wrzuć wszystkich, zanim minie czas, by wejść poziom wyżej.\nGrupa nosi nazwę układu według wielkości (para, trójka, strit…) i płaci swoje żetony × ten układ: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ żetonów naraz daje premię: Krupier (rząd i kolumna), Tasowanie; 9+ Joker (cały kolor). Brak par? Krupier dokłada.\nStuknij żeton albo ← → ↑ ↓ i Spacja / A (klawiatura, pad, pilot TV); 1 2 3 dla premii.", "tpClassic": "Klasyczny", "tpClassicD": "Rundy na czas, ciemne rosną", "tpAlone": "Samotny żeton zostaje: potrzeba 2 stykających się", "tpWon": "Premia: {b}!", "tpJoker": "Joker", "tpDealer": "Krupier", "tpShuffle": "Tasowanie", "tpArmed": "Stuknij żeton", "tpRecave": "Brak par: krupier dokłada!", "tpClear": "Stół pusty!", "tpClean": "Czysta karta", "tpBlinds": "Ciemne {b}", "tpIn": "Do dołka!", "gmKindEgg": "Easter egg",
     "prDrifts": "Drifty",
     "prPasses": "Wyprzedzenia",
     "prHits": "Stłuczki",

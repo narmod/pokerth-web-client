@@ -70,20 +70,27 @@ export const HOME = 'arcade';
 // game every 2 trophies, the last at 27 = every trophy that is not secret, so
 // that all of them can be opened without the secret ones. The secret word
 // opens everything (ALL_KEY).
+// bonus: out of the path (no number, no threshold, not a mystery game, not
+// counted in « x / 10 »), shown only once the secret word has opened the mode:
+// the House of Cards, an easter egg since Tapis! took its place (web.75,
+// narmod 2026-11-15, claude/CONCEPTION_TAPIS.md); its trophy is gone.
 export const ARCADE_UNLOCK = { trophies: 8 };
 export const GAMES = [
   { id: HOME, nameKey: 'gmTitle', name: 'Mini-games', page: true, load: () => import('./menu.mjs') },
   { id: 'whowins', kind: 'learn', unlock: { trophies: 8 }, nameKey: 'wwName', icon: '⚖️', rulesKey: 'wwRules', aspect: [0.6, 2.2], load: () => import('./whowins.mjs') },
   { id: 'ace-runner', kind: 'fun', unlock: { trophies: 10 }, name: 'Ace Runner', icon: '🏃', rulesKey: 'arRules', aspect: [4 / 3, 2.4], load: () => import('./ace-runner.mjs') },
   { id: 'hilo', kind: 'learn', unlock: { trophies: 12 }, nameKey: 'hlName', icon: '↕️', rulesKey: 'hlRules', aspect: [0.6, 2.2], load: () => import('./hilo.mjs') },
-  { id: 'house', kind: 'fun', unlock: { trophies: 14 }, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [0.5, 2.4], load: () => import('./house.mjs') },
+  { id: 'tapis', kind: 'fun', unlock: { trophies: 14 }, nameKey: 'tpName', icon: '🪙', rulesKey: 'tpRules', aspect: [0.5, 2.4], load: () => import('./tapis.mjs') },
   { id: 'videopoker', kind: 'learn', unlock: { trophies: 16 }, nameKey: 'vpName', icon: '🎰', rulesKey: 'vpRules', aspect: [0.6, 2.2], load: () => import('./videopoker.mjs') },
   { id: 'pokerdrop', kind: 'fun', unlock: { trophies: 18 }, nameKey: 'pdName', icon: '⬇️', rulesKey: 'pdRules', aspect: [0.6, 2.2], load: () => import('./pokerdrop.mjs') },
   { id: 'solitaire', kind: 'learn', unlock: { trophies: 20 }, nameKey: 'psName', icon: '♠', rulesKey: 'psRules', aspect: [1.25, 2.2], load: () => import('./solitaire.mjs') },
   { id: 'ace-dash', kind: 'fun', unlock: { trophies: 22 }, name: 'Ace Dash', icon: '🏁', rulesKey: 'adRules', rulesMore: ['adJetRule', 'adBonusRule', 'adPoolRule'], aspect: [0.6, 1.9], load: () => import('./ace-dash.mjs') },
   { id: 'bluff', kind: 'learn', unlock: { trophies: 24 }, nameKey: 'blName', icon: '🎭', rulesKey: 'blRules', aspect: [0.5, 2.4], load: () => import('./bluff.mjs') },
   { id: 'poker-run', kind: 'fun', unlock: { trophies: 27 }, name: 'Poker Run', icon: '🏎️', rulesKey: 'prRules', aspect: [0.6, 1.9], load: () => import('./poker-run.mjs') },
+  { id: 'house', bonus: true, unlock: {}, nameKey: 'hcName', icon: '🃏', rulesKey: 'hcRules', aspect: [0.5, 2.4], load: () => import('./house.mjs') },
 ];
+/** The games of the path (the home and the easter-egg bonus left out). */
+export const pathGames = () => GAMES.filter((g) => g.id !== HOME && !g.bonus);
 /**
  * Is game `g` open in the Mini-games mode? have = { count, owned }: the number
  * of trophies won and the set of their ids.
@@ -113,7 +120,7 @@ export function countUnlock(how) {
 // nothing on the device. A game already played there stays open (narmod
 // 2026-11-14, choice B): its own secret trophy or its best score says so.
 // Ace Dash and Poker Run have no trophy: their best score only.
-export const GAME_TROPHY = { 'ace-runner': 'runner', house: 'house', solitaire: 'solitaire', videopoker: 'videopoker',
+export const GAME_TROPHY = { 'ace-runner': 'runner', solitaire: 'solitaire', videopoker: 'videopoker',
   whowins: 'whowins', hilo: 'hilo', bluff: 'bluff', pokerdrop: 'pdrop' };
 /** The games already played on this device (owned: the trophies won). */
 export function playedGames(owned) {
@@ -137,12 +144,13 @@ export function playedGames(owned) {
 export function arcadeState(have, all) {
   const h = have || { count: 0, owned: new Set() };
   const played = h.played || new Set();
-  const games = GAMES.filter((g) => g.id !== HOME).map((g) => ({
+  const games = pathGames().map((g) => ({
     id: g.id, kind: g.kind, open: !!all || unlocked(g, h) || played.has(g.id), played: played.has(g.id),
     need: (g.unlock && g.unlock.trophies) || 0,
   }));
   return {
-    mode: !!all || (h.count || 0) >= ARCADE_UNLOCK.trophies || games.some((g) => g.played),
+    // (the House of Cards played before it became a bonus still shows the mode)
+    mode: !!all || (h.count || 0) >= ARCADE_UNLOCK.trophies || games.some((g) => g.played) || played.has('house'),
     open: games.filter((g) => g.open).length, total: games.length, count: h.count || 0, games,
   };
 }

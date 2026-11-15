@@ -1179,6 +1179,7 @@ export const strings = {
     "gmGameMenu": "Spillmeny",
     "gmCourse": "Rute",
     "gmBestHand": "Beste hånd",
+    "tpName": "Tapis!", "tpHint": "Få Essets venner til å falle ned i hullene sine", "tpRules": "På hver stabel sjetonger står en av Essets venner, over hullet sitt i filten.\nTrykk på 2 eller flere sjetonger i samme farge som berører hverandre: de forsvinner og stabelen synker. En ensom sjetong blir.\nTom stabel: vennen faller ned i hullet. Få alle ned før tiden går ut for å gå opp et nivå.\nEn gruppe får navnet til en hånd etter størrelsen (par, tre like, straight…) og betaler sjetongene sine × den hånden: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ sjetonger på én gang gir en bonus: Dealer (en rad og en kolonne), Stokk; 9+ Jokeren (en hel farge). Ingen par igjen? Dealeren fyller på.\nTrykk på en sjetong, eller ← → ↑ ↓ og Mellomrom / A (tastatur, håndkontroll, TV-fjernkontroll); 1 2 3 for bonusene.", "tpClassic": "Klassisk", "tpClassicD": "Runder mot klokka, blindene stiger", "tpAlone": "En ensom sjetong blir: det trengs 2 som berører hverandre", "tpWon": "Bonus: {b}!", "tpJoker": "Joker", "tpDealer": "Dealer", "tpShuffle": "Stokk", "tpArmed": "Trykk på en sjetong", "tpRecave": "Ingen par: dealeren fyller på!", "tpClear": "Bordet er tomt!", "tpClean": "Rent bord", "tpBlinds": "Blinds {b}", "tpIn": "I hullet!", "gmKindEgg": "Påskeegg",
     "prDrifts": "Drifter",
     "prPasses": "Forbikjøringer",
     "prHits": "Kollisjoner",

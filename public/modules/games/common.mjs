@@ -192,16 +192,18 @@ export function rr(g, x, y, w, h, r) {
  * The Ace in `layer`: poses (idle run air duck balance wave ko), moods
  * (mc-m-smile jump yay ko cool fierce), the All-In king look, and place():
  * his feet (84, 212 in sprite px) at world (x, y), sprite scale s, world→CSS k.
+ * id: the root's id, for several actors at once (Tapis!, one per column;
+ * their CSS is the same, scoped to each id). Default: the Ace (ACE_ID).
  */
-export function aceActor(layer) {
-  if (!document.getElementById(ACE_ID + '-css')) {
-    const st = document.createElement('style'); st.id = ACE_ID + '-css';
-    st.textContent = actorKit(ACE_ID).css + CSS;   // ours after the kit: overrides its fixed root
+export function aceActor(layer, id = ACE_ID) {
+  if (!document.getElementById(id + '-css')) {
+    const st = document.createElement('style'); st.id = id + '-css';
+    st.textContent = actorKit(id).css + (id === ACE_ID ? CSS : CSS.split(ACE_ID).join(id));   // ours after the kit: overrides its fixed root
     document.head.appendChild(st);
   }
   const root = document.createElement('div');
-  root.id = ACE_ID;
-  root.innerHTML = '<div class="ar-box"><div class="mc-pos mc-m-smile mc-hat-none mc-tool-none idle">' + actorKit(ACE_ID).html + '</div></div>';
+  root.id = id;
+  root.innerHTML = '<div class="ar-box"><div class="mc-pos mc-m-smile mc-hat-none mc-tool-none idle">' + actorKit(id).html + '</div></div>';
   layer.appendChild(root);
   const box = /** @type {HTMLElement} */ (root.firstElementChild);
   const pos = /** @type {HTMLElement} */ (box.firstElementChild);

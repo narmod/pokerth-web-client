@@ -1077,6 +1077,7 @@ export const strings = {
     "gmGameMenu": "Játék menü",
     "gmCourse": "Útvonal",
     "gmBestHand": "Legjobb lap",
+    "tpName": "Tapis!", "tpHint": "Ejtsd az Ász barátait a lyukaikba", "tpRules": "Minden zsetonoszlopon az Ász egy barátja áll, a posztóban lévő lyuka fölött.\nKoppints 2 vagy több egymáshoz érő, azonos színű zsetonra: eltűnnek, és az oszlop lejjebb száll. A magányos zseton marad.\nÜres oszlop: a barátja a lyukba esik. Ejtsd le mindet, mielőtt lejár az idő, hogy szintet lépj.\nEgy csoport a mérete szerint egy kéz nevét kapja (pár, drill, sor…), és a zsetonjait × azt a kezet fizeti: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\nEgyszerre 6+ zseton bónuszt ad: Osztó (egy sor és egy oszlop), Keverés; 9+ a Joker (egy egész szín). Nincs pár? Az osztó pótol.\nKoppints egy zsetonra, vagy ← → ↑ ↓ és Szóköz / A (billentyűzet, kontroller, tévé-távirányító); 1 2 3 a bónuszokhoz.", "tpClassic": "Klasszikus", "tpClassicD": "Körök az óra ellen, a vakok emelkednek", "tpAlone": "A magányos zseton marad: 2 egymáshoz érő kell", "tpWon": "Bónusz: {b}!", "tpJoker": "Joker", "tpDealer": "Osztó", "tpShuffle": "Keverés", "tpArmed": "Koppints egy zsetonra", "tpRecave": "Nincs pár: az osztó pótol!", "tpClear": "Tiszta az asztal!", "tpClean": "Tiszta lap", "tpBlinds": "Vakok {b}", "tpIn": "A lyukba!", "gmKindEgg": "Húsvéti tojás",
     "prDrifts": "Driftek",
     "prPasses": "Előzések",
     "prHits": "Ütközések",

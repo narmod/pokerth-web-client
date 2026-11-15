@@ -21,7 +21,9 @@
 //   Showdown  when it falls, the best floor's five cards are turned one by one
 // The Ace lives in the house: he stands on the last floor (drawn behind the
 // cards, a second canvas above him), climbs when a floor is done, balances
-// when it leans, and goes down with it. Secret trophy at 10 floors.
+// when it leans, and goes down with it. (Its secret trophy at 10 floors is
+// gone since web.75: the House is now the arcade's easter-egg bonus, shown
+// after the secret word only — Tapis! took its place in the path.)
 //
 // web.52 (narmod: « all of the proposals », 1-9):
 //   1 Portrait   the stage may be tall (aspect 0.6, games/index.mjs): the
@@ -63,7 +65,6 @@ const RAIL_Y = 64;               // screen y of the dealer's rail
 const HANG = 34;                 // card centre below the rail
 const S = 0.25;                  // the Ace's sprite scale: he fits under a floor
 const BLIND_EVERY = 5;           // floors per blind level
-const TROPHY_FLOORS = 10;
 const PERFECT = 2;               // px off the mark that still counts as Perfect
 const MISS_TILT = 0.25;          // a card off its mark: four of them bring it down
 const OFF_TILT = 0.14;           // a card on its mark but not Perfect (× how far off)
@@ -348,7 +349,6 @@ export function create(shell) {
     if (!G.best || ev.cat > G.best.ev.cat || (ev.cat === G.best.ev.cat && pts > G.best.pts)) G.best = { ev, pts };
     G.yayUntil = performance.now() + 700;
     G.aceHop = 1;                                   // he climbs to the new floor
-    if (G.floors.length === TROPHY_FLOORS) shell.grant('house');
     if (G.floors.length % BLIND_EVERY === 0) {
       G.level++;
       G.burns = Math.min(5, G.burns + 1);

@@ -20,10 +20,11 @@ const freePort = () => new Promise((r) => { const s = net.createServer(); s.list
 console.log('test-arcade-stats');
 const A = require(path.join(root, 'server/arcade-stats.js'));
 const reg = await import(path.join(root, 'public/modules/games/index.mjs'));
-const ids = reg.GAMES.filter((g) => g.id !== reg.HOME).map((g) => g.id);
+const ids = reg.pathGames().map((g) => g.id);
 ok(A.GAMES.join(',') === ids.join(','), 'the server knows the games in the path\'s order (' + A.GAMES.length + ')');
-ok(A.EVENTS.length === 7 + 10 + 20 + 2 && A.valid('reveal_10') && A.valid('open_poker-run') && A.valid('end_whowins') && A.valid('train_on'),
-  'a closed list: funnel, reveal_1…10, open_ / end_ per game, train_on / train_off');
+ok(A.EVENTS.length === 7 + 10 + 22 + 2 && A.valid('reveal_10') && A.valid('open_poker-run') && A.valid('end_whowins') && A.valid('train_on') && A.valid('open_tapis') && A.valid('end_house'),
+  'a closed list: funnel, reveal_1…10, open_ / end_ per game (the easter-egg House too), train_on / train_off');
+ok(A.BONUS.join(',') === reg.GAMES.filter((g) => g.bonus).map((g) => g.id).join(','), 'the server knows the easter-egg bonus');
 ok(!A.valid('reveal_11') && !A.valid('open_nope') && !A.valid('__proto__') && !A.valid(42) && !A.valid(''), 'anything else is refused');
 const store = {}, days = [{}, {}, {}];
 const rec = (i, ev) => A.record(store, days[i], ev, 1000);

@@ -61,7 +61,7 @@ ok(NAME_KEYS.length === 10 && MULT.length === 10, 'ten categories');
 
 console.log('secret word');
 const { art } = await import('../public/modules/games/art.mjs');
-for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'pokerdrop', 'poker-run']) {
+for (const id of ['ace-runner', 'house', 'tapis', 'solitaire', 'videopoker', 'whowins', 'hilo', 'bluff', 'pokerdrop', 'poker-run']) {
   const d = art(id, false), l = art(id, true);
   const ids = [...d.matchAll(/id="([^"]+)"/g)].map((m) => m[1]), idsL = [...l.matchAll(/id="([^"]+)"/g)].map((m) => m[1]);
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
@@ -84,7 +84,8 @@ const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',
   'arAgain', 'arPause', 'arDistance', 'arLevel', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
-  'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'hcModeFreeD', 'hcModeDailyD', 'hcModeZen', 'hcModeZenD', 'hcGlue', 'hcWind', 'hcBump', 'hcGoalMet', 'hcGold', 'hcHold', 'gmPick', 'ach_house', 'ach_house_d',
+  'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'hcModeFreeD', 'hcModeDailyD', 'hcModeZen', 'hcModeZenD', 'hcGlue', 'hcWind', 'hcBump', 'hcGoalMet', 'hcGold', 'hcHold', 'gmPick',
+  'tpName', 'tpHint', 'tpRules', 'tpClassic', 'tpClassicD', 'tpAlone', 'tpWon', 'tpJoker', 'tpDealer', 'tpShuffle', 'tpArmed', 'tpRecave', 'tpClear', 'tpClean', 'tpBlinds', 'tpIn', 'gmKindEgg',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'vpVarJacks', 'vpVarBonus', 'vpVarDeuces', 'vpVarJoker', 'vpVarJacksD', 'vpVarBonusD', 'vpVarDeucesD', 'vpVarJokerD', 'vpKings', 'vpFiveKind', 'vpWildRoyal', 'vpFourDeuces', 'vpFourAces', 'vpFour2to4', 'vpFour5toK', 'vpCashOut', 'ach_videopoker', 'ach_videopoker_d',
@@ -103,6 +104,9 @@ for (const f of files) {
   for (const k of KEYS) if (typeof strings[k] !== 'string' || !strings[k].trim()) missing.push(f + ':' + k);
   if (strings.arRecord && strings.arRecord.indexOf('{n}') < 0) badRecord.push(f);
   for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
+  if (strings.tpWon && strings.tpWon.indexOf('{b}') < 0) badRecord.push(f + ':tpWon');
+  if (strings.tpBlinds && strings.tpBlinds.indexOf('{b}') < 0) badRecord.push(f + ':tpBlinds');
+  if (strings.tpRules && strings.tpRules.split('\n').length !== 6) badRecord.push(f + ':tpRules lines');
   if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
   if (strings.adRules && (strings.adRules.split('\n').length !== 8 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
   if (strings.prRules && (strings.prRules.split('\n').length !== 6 || !/22|۲۲/.test(strings.prRules) || strings.prRules.indexOf('◀ ▶') < 0 || !/flop/i.test(strings.prRules))) badRecord.push(f + ':prRules');
@@ -111,7 +115,7 @@ for (const f of files) {
   if (gameForNick('mascot', tr) !== 'arcade') missing.push(f + ': English word not recognised');
 }
 ok(missing.length === 0, 'every language has the Ace Runner strings and a working word' + (missing.length ? ' — ' + missing.slice(0, 6).join(', ') : ''));
-ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, pdRules 7 lines, adRules 8, prRules 6' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
+ok(badRecord.length === 0, 'arRecord, pdPlayer, pdTurn, pdWins keep {n}, tpWon / tpBlinds {b}, pdRules 7 lines, adRules 8, prRules 6, tpRules 6' + (badRecord.length ? ' — ' + badRecord.join(', ') : ''));
 const fr = (k) => ({ gameWordAce: 'mascotte' })[k] || k;
 ok(gameForNick('  MaScOtTe ', fr) === 'arcade', 'case and spaces ignored');
 ok(gameForNick('Mascóte', (k) => ({ gameWordAce: 'mascote' })[k] || k) === 'arcade', 'accents ignored');
@@ -303,8 +307,8 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   ok(['preflop', 'nuts', 'outs', 'potodds', 'equity'].every((x) => !ids.has(x)) && ids.has('whowins'),
     'Who Wins? is back and no lesson is left');
   ok(games.every((g) => !g.unlock.trophy || ids.has(g.unlock.trophy) || g.unlock.trophy.length), 'unlock trophies are named');
-  const house = games.find((g) => g.id === 'house');
-  ok(reg.unlocked(house, { count: 14, owned: new Set() }) && !reg.unlocked(house, { count: 13, owned: new Set() })
+  const tapis = games.find((g) => g.id === 'tapis');
+  ok(reg.unlocked(tapis, { count: 14, owned: new Set() }) && !reg.unlocked(tapis, { count: 13, owned: new Set() })
     && reg.unlocked({ unlock: { trophy: 'x' } }, { count: 0, owned: new Set(['x']) }) && !reg.unlocked({ unlock: { trophy: 'x' } }, { count: 30, owned: new Set() }),
     'unlocked(): a count of trophies, or one trophy in particular');
   // The Mini-games mode (claude/CONCEPTION_MODE_ARCADE.md): a game to get better
@@ -313,9 +317,13 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   // are not secret (every game can be opened without the secret ones).
   const { ACHIEVEMENTS } = await import('../public/modules/achievements/defs.mjs');
   const normal = ACHIEVEMENTS.filter((d) => d.cat !== 'secret').length;
-  ok(games.map((g) => g.id).join(',') === 'whowins,ace-runner,hilo,house,videopoker,pokerdrop,solitaire,ace-dash,bluff,poker-run'
-    && games.every((g, i) => g.kind === (i % 2 ? 'fun' : 'learn')), 'Mini-games: the path alternates a game to learn and a game for fun');
-  const needs = games.map((g) => g.unlock.trophies);
+  const path10 = reg.pathGames();
+  ok(path10.map((g) => g.id).join(',') === 'whowins,ace-runner,hilo,tapis,videopoker,pokerdrop,solitaire,ace-dash,bluff,poker-run'
+    && path10.every((g, i) => g.kind === (i % 2 ? 'fun' : 'learn')), 'Mini-games: the path alternates a game to learn and a game for fun, Tapis! 4th');
+  const bonus = games.filter((g) => g.bonus);
+  ok(bonus.length === 1 && bonus[0].id === 'house' && !bonus[0].kind && !reg.GAME_TROPHY.house && !ACHIEVEMENTS.some((d) => d.id === 'house'),
+    'the House of Cards: an easter-egg bonus out of the path, its trophy gone');
+  const needs = path10.map((g) => g.unlock.trophies);
   ok(reg.ARCADE_UNLOCK.trophies === 8 && needs[0] === 8 && needs.slice(0, -1).every((n, i) => i === 0 || n === needs[i - 1] + 2)
     && needs[needs.length - 1] === normal && normal === 27, 'Mini-games: 8 trophies, then every 2, the last at every normal trophy (' + needs.join(' ') + ' / ' + normal + ')');
   const none = reg.arcadeState({ count: 7, owned: new Set() }, false);
@@ -327,9 +335,11 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
     'arcadeState(): hidden at 7 trophies, 3 games open at 12, everything with the secret word');
   // Games already played before the mode (the secret word kept nothing then)
   // stay open, the rest follows the trophies (choice B, 2026-11-14).
-  const old = reg.arcadeState({ count: 3, owned: new Set(), played: new Set(['house', 'poker-run']) }, false);
+  const old = reg.arcadeState({ count: 3, owned: new Set(), played: new Set(['tapis', 'poker-run']) }, false);
+  const egg = reg.arcadeState({ count: 0, owned: new Set(), played: new Set(['house']) }, false);
+  ok(egg.mode && egg.open === 0 && egg.total === 10 && !egg.games.some((g) => g.id === 'house'), 'arcadeState(): the bonus is not in the path, but a House played before still shows the mode');
   const mix = reg.arcadeState({ count: 9, owned: new Set(), played: new Set(['bluff']) }, false);
-  ok(old.mode && old.open === 2 && old.games.filter((g) => g.open).map((g) => g.id).join(',') === 'house,poker-run'
+  ok(old.mode && old.open === 2 && old.games.filter((g) => g.open).map((g) => g.id).join(',') === 'tapis,poker-run'
     && mix.open === 2 && mix.games.filter((g) => g.open).map((g) => g.id).join(',') === 'whowins,bluff' && mix.games[8].played,
     'arcadeState(): a game already played stays open, even below 8 trophies; the others follow the trophies');
   const store = {}, prevLS = globalThis.localStorage;
@@ -421,6 +431,30 @@ console.log('Ace Dash: the long run, the score, the modes');
   ok([0, 0.5, 0.99].every((r) => HC.goalFor(1, r) <= 2) && [0, 0.5, 0.99].every((r) => HC.goalFor(9, r) >= 3 && HC.goalFor(9, r) <= 6), 'House of Cards: the hand asked climbs with the blinds (a pair at first, up to a full house)');
   ok(HC.floorPay({ cat: 2, mult: 3 }, 1, false) === 120 && HC.floorPay({ cat: 2, mult: 3 }, 3, false) === 60 && HC.floorPay({ cat: 2, mult: 3 }, 3, true) === 120 && HC.floorPay({ cat: 6, mult: 8 }, 6, true) === 640,
     'House of Cards: a floor pays 20 × its hand, × 2 with its goal met, × 2 with a gold card');
+  // Tapis! (claude/CONCEPTION_TAPIS.md): groups, hands, falls, the recave.
+  const TP = await import('../public/modules/games/tapis-rules.mjs');
+  const mk = (cols) => cols.map((col) => col.map((k) => ({ k, off: 0 })));
+  const g1 = mk([[0, 0, 1], [0, 2], [1]]);
+  ok(TP.groupAt(g1, 0, 0).length === 3 && TP.groupAt(g1, 2, 0).length === 1 && TP.groupAt(g1, 0, 2).length === 1 && TP.groupAt(g1, 5, 0).length === 0,
+    'Tapis!: a group is the chips of one colour touching across and up (3 reds), a lone chip is alone');
+  ok(TP.handOf(1) === -1 && TP.handOf(2) === 1 && TP.handOf(3) === 3 && TP.handOf(4) === 4 && TP.handOf(5) === 5 && TP.handOf(6) === 6 && TP.handOf(7) === 7 && TP.handOf(8) === 8 && TP.handOf(9) === 8 && TP.handOf(10) === 9 && TP.handOf(30) === 9,
+    'Tapis!: a group is named by its size — pair, trips, straight, flush, full house, quads, straight flush (8), royal (10)');
+  ok(TP.groupPay(g1, TP.groupAt(g1, 0, 0)).pts === 15 * 4 && TP.groupPay(mk([[3, 3]]), [[0, 0], [0, 1]]).pts === 200 * 2,
+    'Tapis!: a group pays its chips\' values × its hand (3 × 5 × brelan 4; a pair of 100s: 400)');
+  const g2 = mk([[0, 0, 1, 2], [2]]);
+  TP.removeCells(g2, [[0, 0], [0, 1]]);
+  ok(g2[0].length === 2 && g2[0][0].k === 1 && g2[0][0].off === 2 && g2[0][1].off === 2 && g2[1][0].off === 0, 'Tapis!: the chips above a group fall the rows it leaves');
+  ok(TP.anyMove(mk([[0, 1], [1, 0]])) === false && TP.anyMove(mk([[0, 1], [0]])) === true && TP.anyMove(mk([[0, 0]])) === true, 'Tapis!: anyMove() sees pairs across and up, none in a chessboard');
+  const g3 = mk([[0, 1], [1, 0], [], [2]]);
+  TP.recaveRow(g3, 3, () => 0.5);
+  ok(g3[0].length === 3 && g3[0][0].k === g3[1][0].k && g3[3][0].k === 2 && g3[2].length === 0 && g3[0][1].off === -1 && TP.anyMove(g3),
+    'Tapis!: the recave pushes in a row of pairs (neighbours share a colour, a lone column its own), never under an empty column');
+  ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 45 && TP.timeFor(100, 1) === 110 && TP.timeFor(100, 30) === 80,
+    'Tapis!: 3 colours, a 4th at level 5, a 5th at 13; 1.1 s a chip down to 0.8 s, 45 s at least');
+  const R = (await import('../public/modules/games/deal.mjs')).rng('tapis-test'), d = TP.dealRound(1, 6, 12, R);
+  ok(d.length === 6 && d.every((c) => c.length >= 2 && c.length <= 13) && TP.anyMove(d) && d.every((c) => c.every((b) => b.k < 3)), 'Tapis!: a round deals 6 columns of 3 colours with a move to play');
+  ok(TP.crossCells(mk([[0, 1, 2], [1, 1], [2]]), 0, 1).length === 4 && TP.colorCells(mk([[0, 1], [1, 0]]), 1).length === 2, 'Tapis!: the Dealer takes a row and a column, the Joker a colour');
+  ok(TP.powerFor(5) === '' && TP.powerFor(9) === 'joker' && ['dealer', 'shuffle'].includes(TP.powerFor(6)), 'Tapis!: a group of 6 wins a Dealer or a Shuffle, 9 a Joker');
 }
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

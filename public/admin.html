@@ -4863,7 +4863,7 @@
   }
   // ── Mini-games mode (web.25, server/arcade-stats.js) — funnel, path, games ──
   var _arcKnown=false, _arcData=null, _arcPeriodDays=0, _arcSince=0;
-  var ARC_GAMES={'whowins':'Who Wins?','ace-runner':'Ace Runner','hilo':'Higher or Lower','house':'House of Cards','videopoker':'Video Poker','pokerdrop':'Poker Drop','solitaire':'Poker Solitaire','ace-dash':'Ace Dash','bluff':'The Ace\u2019s Bluff','poker-run':'Poker Run'};
+  var ARC_GAMES={'whowins':'Who Wins?','ace-runner':'Ace Runner','hilo':'Higher or Lower','tapis':'Tapis!','videopoker':'Video Poker','pokerdrop':'Poker Drop','solitaire':'Poker Solitaire','ace-dash':'Ace Dash','bluff':'The Ace\u2019s Bluff','poker-run':'Poker Run','house':'House of Cards (easter egg)'};
   var ARC_KIND=['learn','fun','learn','fun','learn','fun','learn','fun','learn','fun'];
   function renderArcade(){
     var box=$('trafArcade'); if(!box) return;
@@ -4891,7 +4891,7 @@
       +rv.map(function(n,i){ var id=Object.keys(ARC_GAMES)[i]; return _gBar((i+1)+'. '+ARC_GAMES[id]+' <span class="muted">'+(ARC_KIND[i]==='learn'?'\ud83c\udf93':'\ud83c\udf89')+' '+(i===0?8:i===9?27:8+2*i)+' trophies</span>',n,rmax,(i&&rv[0])?(_gPct(n/rv[0])+' of game 1'):'',C); }).join('');
     var G=a.games||[], gmax=Math.max(1,Math.max.apply(null,G.map(function(g){ return g.open; }).concat([0])));
     h+='<h4 style="margin:14px 0 4px">The games \u2014 opened \u00b7 played to the end</h4>'
-      +G.map(function(g,i){ return _gBar((i+1)+'. '+(ARC_GAMES[g.id]||g.id),g.open,gmax,g.end+' finished'+(g.open?' \u00b7 '+(g.end/g.open).toFixed(1)+' per opening':''),ARC_KIND[i]==='learn'?'var(--ok-text)':C); }).join('');
+      +G.map(function(g,i){ return _gBar((g.bonus?'\ud83e\udd5a ':(i+1)+'. ')+(ARC_GAMES[g.id]||g.id),g.open,gmax,g.end+' finished'+(g.open?' \u00b7 '+(g.end/g.open).toFixed(1)+' per opening':''),ARC_KIND[i]==='learn'?'var(--ok-text)':C); }).join('');
     var tr=a.training||{on:0,off:0}, tt=tr.on+tr.off;
     h+='<h4 style="margin:14px 0 4px">Training games ended</h4>'
       +_gBar('By players who have the mode',tr.on,Math.max(1,tt),tt?_gPct(tr.on/tt):'',C)

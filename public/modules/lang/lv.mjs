@@ -809,6 +809,7 @@ export const strings = {
     "gmGameMenu": "Spēles izvēlne",
     "gmCourse": "Maršruts",
     "gmBestHand": "Labākā roka",
+    "tpName": "Tapis!", "tpHint": "Iemet Dūža draugus viņu bedrītēs", "tpRules": "Uz katras žetonu kaudzītes stāv Dūža draugs, virs savas bedrītes audumā.\nPieskaries 2 vai vairāk vienas krāsas žetoniem, kas saskaras: tie pazūd, un kaudzīte nolaižas. Vientuļš žetons paliek.\nTukša kaudzīte: tās draugs iekrīt bedrītē. Iemet visus, pirms beidzas laiks, lai paceltos līmenī.\nGrupu pēc lieluma nosauc par roku (pāris, trijnieks, sēta…), un tā maksā savus žetonus × šo roku: 5 ♥, 10 ♦, 25 ♣, 100 ♠, 500 ★.\n6+ žetoni uzreiz dod bonusu: Dalītājs (rinda un kolonna), Jaukšana; 9+ Džokers (vesela krāsa). Pāru vairs nav? Dalītājs papildina.\nPieskaries žetonam vai ← → ↑ ↓ un Atstarpe / A (tastatūra, spēļu pults, TV pults); 1 2 3 bonusiem.", "tpClassic": "Klasika", "tpClassicD": "Raundi pret pulksteni, blaindi aug", "tpAlone": "Vientuļš žetons paliek: vajag 2, kas saskaras", "tpWon": "Bonuss: {b}!", "tpJoker": "Džokers", "tpDealer": "Dalītājs", "tpShuffle": "Jaukšana", "tpArmed": "Pieskaries žetonam", "tpRecave": "Pāru nav: dalītājs papildina!", "tpClear": "Galds tukšs!", "tpClean": "Tīrs galds", "tpBlinds": "Blaindi {b}", "tpIn": "Bedrītē!", "gmKindEgg": "Lieldienu ola",
     "prDrifts": "Slīdes",
     "prPasses": "Apdzīšanas",
     "prHits": "Sadursmes",
