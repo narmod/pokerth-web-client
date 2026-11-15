@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Bands that hid the play** (`web.78`, narmod: « in Ace Dash and Poker Run you can't see anything ») — Ace Dash:
+  `drawBanner` at `HOR − 20` (34 px, 17 px type) over the scenery instead of a third of the height, where it covered
+  the far felt for 1.6 s. Poker Run: `.prun-prev` is now a flex row, the two choices at the sides
+  (`clamp(84px, 24%, 150px)`, a little more see-through), the stage tag between them; on a phone held sideways the
+  grid covered the road and the car.
 - **Tapis!: columns close up, the dealer always tops up** (`web.77`, narmod) — once a friend is in his hole, his
   column and hole go and the others slide together in the middle (the chips keep the round's size, `cols0`;
   `G.xs` eases the drawn columns, hit tests follow them); no column is ever apart. No pair left → the dealer

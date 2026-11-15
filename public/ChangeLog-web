@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.77 (current series):
+2026-11-15 version 2.1.11-web.78 (current series):
+- improvement: Ace Dash — the « Blinds » and venue band now sits over the scenery, above the felt: it no longer hides the obstacles coming
+- improvement: Poker Run — the two choices of a fork are shown at the sides of the screen: the road and the car stay in view (on a phone held sideways they covered everything)
+
+2026-11-15 version 2.1.11-web.77:
 - improvement: Tapis! — the stacks are never apart: when a character has gone into his hole, the others slide together
 - improvement: Tapis! — no pair left? The dealer gives you a new row of chips right away (−5 s), even with a Joker or a Dealer button in hand
 

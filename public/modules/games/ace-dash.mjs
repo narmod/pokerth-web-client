@@ -1209,13 +1209,15 @@ export function create(shell) {
   function drawBanner(g) {
     const b = G.banner; if (!b) return;
     const a = b.t < 0.2 ? b.t / 0.2 : b.t > 1.2 ? Math.max(0, 1 - (b.t - 1.2) / 0.4) : 1;
-    const w = shell.W, y = shell.H * 0.34;
+    // Over the scenery, just above the horizon (web.77, narmod: « the band hides the felt »: at a third of
+    // the height it covered the far end of the felt, where the obstacles come from).
+    const w = shell.W, y = Math.max(HOR - 20, 36), hb = 17;
     g.globalAlpha = a;
-    g.fillStyle = C.band; g.fillRect(0, y - 26, w, 52);
-    g.fillStyle = C.bandLine; g.fillRect(0, y - 26, w, 1); g.fillRect(0, y + 25, w, 1);
+    g.fillStyle = C.band; g.fillRect(0, y - hb, w, hb * 2);
+    g.fillStyle = C.bandLine; g.fillRect(0, y - hb, w, 1); g.fillRect(0, y + hb - 1, w, 1);
     g.textBaseline = 'middle'; g.textAlign = 'left';
-    const fLvl = '700 22px Inconsolata, monospace';
-    let px = 22;
+    const fLvl = '700 17px Inconsolata, monospace';
+    let px = 17;
     g.font = fLvl; const lw = g.measureText(b.sub).width;
     g.font = '700 ' + px + 'px Cinzel, Georgia, serif';
     while (px > 12 && g.measureText(b.s).width > w - lw - 40) { px--; g.font = '700 ' + px + 'px Cinzel, Georgia, serif'; }

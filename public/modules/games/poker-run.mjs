@@ -147,16 +147,19 @@ const CSS = `
 #pth-game .prun-hud .prun-gap{width:6px;flex:none}
 #pth-game .prun-hud .ar-slot{display:flex;align-items:center;justify-content:center;font:600 10px 'Inconsolata',monospace;color:rgba(216,178,90,.6)}
 #pth-game .prun-b .pk{box-shadow:0 0 0 2px #d8b25a}
-#pth-game .prun-prev{position:absolute;left:8px;right:8px;top:64px;z-index:397;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;pointer-events:none;max-width:420px;margin:0 auto}
+/* The fork's two choices at the sides, over the verges, the road and the car left clear (web.77, narmod: « it hides the road »). */
+#pth-game .prun-prev{position:absolute;left:6px;right:6px;top:64px;z-index:397;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;pointer-events:none}
 #pth-game .prun-prev[hidden]{display:none}
-#pth-game .prun-prev .prun-tag{grid-column:1/-1;text-align:center;font:700 12px 'Inconsolata',monospace;letter-spacing:.08em;color:#d8b25a;text-shadow:0 1px 3px #000}
-#pth-game .prun-opt{min-width:0;background:rgba(13,17,23,.82);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:5px 3px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#f5f0e3;text-align:center}
+#pth-game .prun-prev .prun-tag{order:2;flex:1 1 0;min-width:0;padding-top:2px;text-align:center;font:700 12px 'Inconsolata',monospace;letter-spacing:.06em;color:#d8b25a;text-shadow:0 1px 3px #000}
+#pth-game .prun-prev .prun-opt:first-of-type{order:1}
+#pth-game .prun-prev .prun-opt:last-of-type{order:3}
+#pth-game .prun-opt{flex:none;width:clamp(84px,24%,150px);background:rgba(13,17,23,.72);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:5px 3px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#f5f0e3;text-align:center}
 #pth-game .prun-opt.on{border-color:#d8b25a;background:rgba(40,32,10,.9)}
 #pth-game .prun-opt .pk{margin:0}
 #pth-game .prun-opt b{font:600 12px/1.1 'Inter',system-ui,sans-serif}
 #pth-game .prun-opt em{font:700 12px 'Inconsolata',monospace;font-style:normal;color:#d8b25a}
-#pth-game .prun-opt .prun-lvl{display:flex;align-items:center;gap:3px;font:700 11px 'Inconsolata',monospace;color:#e8b84a}
-#pth-game .prun-opt .prun-lvl i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18)}
+#pth-game .prun-opt .prun-lvl{display:flex;align-items:center;gap:2px;white-space:nowrap;font:700 11px 'Inconsolata',monospace;color:#e8b84a}
+#pth-game .prun-opt .prun-lvl i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.18)}
 #pth-game .prun-opt .prun-lvl i.on{background:#e0573f}
 #pth-game .prun-opt .prun-lvl i.on.e{background:#5fbf6a}
 #pth-game .prun-opt .prun-lvl b{margin-left:4px;font:inherit}

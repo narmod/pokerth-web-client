@@ -92,6 +92,7 @@ const poolRun = async (steer) => {
       const G = window.__pthDash.run();
       // Missing it on purpose: off the ramp's lane once the row before it has passed.
       const rp = G.obj.find((o) => o.kind === 'ramp');
+      if (st === 'under') G.obj = G.obj.filter((o) => o.kind === 'ball' || o.kind === 'ramp');   // only the table's business
       if (st === 'under' && rp && rp.z < 7 && rp.z > 3) G.lane = (Math.round(rp.x / 1.6) + 2) % 3;
       if (st !== 'hit' && G.pool) { const nb = G.obj.filter((o) => o.kind === 'ball' && !o.dead && o.z > 4.3).sort((a, b) => a.z - b.z)[0];
         if (nb && nb.z < 12) { const used = G.obj.filter((o) => o.kind === 'ball' && !o.dead && Math.abs(o.z - nb.z) < 0.1).map((o) => Math.round(o.x / 1.6) + 1); const fr = [0, 1, 2].filter((l) => !used.includes(l)); if (!fr.includes(G.lane)) G.lane = fr[0]; } else if (!nb && G.pool.z0 < 4) G.lane = 1; }
@@ -103,6 +104,8 @@ const poolRun = async (steer) => {
     if (!st.pool && i > 3) break;
     await sleep(120);
   }
+  // Still falling from the table's end, maybe: let him land.
+  await pg.waitForFunction(() => window.__pthDash.state() !== 'run' || window.__pthDash.run().y === 0, null, { timeout: 2000 }).catch(() => {});
   const end = await pg.evaluate(() => { const G = window.__pthDash.run(); return { chips: G.chips, hand: G.hand.length, y: G.y }; });
   return Object.assign(ramp, seen, end);
 };
