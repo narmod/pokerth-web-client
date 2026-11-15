@@ -125,4 +125,9 @@ export const ACHIEVEMENTS = [
   // 40 points ou plus (modules/games/pokerdrop.mjs).
   { id: 'pdrop',         icon: '⬇️', cat: CATS.secret, when: 'always',
     test: () => false },
+  // Débloqué par grantSecret('tapis') : « Table rase », finir une manche de
+  // Tapis ! dès le niveau 5 sans que le croupier recave (Classique ou Défi du
+  // jour — narmod 2026-11-15, choix A ; modules/games/tapis.mjs).
+  { id: 'tapis',         icon: '🕳️', cat: CATS.secret, when: 'always',
+    test: () => false },
 ];

@@ -73,6 +73,8 @@ console.log('test-login-arcade-browser');
   const c = await card(pg);
   ok(c.shown && c.last && c.desc === "Les jeux de l'As · 1/10 ouverts" && c.pill, '8 trophies: the fourth card, « 1/10 open », the NEW pill (' + c.desc + ')');
   // The first time the unlocked mode is on screen it appears in the light, then the Ace speaks.
+  // (it waits for the login to settle and the games to warm up: give a slow machine the time)
+  await pg.waitForFunction(() => window.__light && window.__light.canvas, null, { timeout: 8000 }).catch(() => {});
   const anim = await pg.evaluate(() => window.__light);
   ok(anim.canvas && anim.hide, 'its first appearance: the light (canvas) while the card waits for the flash');
   await pg.waitForFunction(() => !document.querySelector('canvas.pth-backlight'), null, { timeout: 9000 }).catch(() => {});

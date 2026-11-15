@@ -48,6 +48,8 @@
 //             Daily (the Classic, every deal seeded by the day — pth_tp_daily);
 //             Zen (no clock, no rising rows, no seals, free recaves, 5 rounds).
 //             Records: Classic shell.best, Madness and Zen pth_tp_best.
+//   Trophy    (push 6, web.84) « Table rase », the secret trophy 'tapis': a
+//             round cleared from level 5 without a recave, Classic or Daily.
 //   Duel      (push 5, web.83) two players on one screen, each in turn on the
 //             same table (narmod: form A): TURN_S seconds a move (out: the
 //             turn passes), DUEL_ROUNDS rounds, each player his own score,
@@ -85,6 +87,7 @@ export const MODES = [
 ];
 export const ZEN_ROUNDS = 5;
 export const DUEL_ROUNDS = 3, TURN_S = 10;
+export const TROPHY_LV = 5;              // « Table rase »: from this level
 const HANDOVER_S = 0.9;                     // a move made: the turn passes once its chips and cards have landed
 const P_COLOR = ['#e8b84a', '#7fc8ff'];     // player 1 gold, player 2 blue (as in Poker Drop)
 /** Madness: seconds between two rising rows at level lv. */
@@ -355,6 +358,8 @@ export function create(shell) {
     state = 'clear';
     const L = geom(), left = chipsLeft(G.grid), secs = timed() ? Math.ceil(G.timeLeft) : 0;
     const bonus = secs * TIME_PAY * G.lv, clean = left === 0 && !duel() ? cleanPay(G.lv) : 0;
+    // « Table rase » (secret trophy, narmod: choice A): a round from level 5 without a recave, Classic or Daily.
+    if (timed() && G.lv >= TROPHY_LV && !G.recaved) { shell.grant('tapis'); G.trophy = true; }
     G.score += bonus + clean;
     G.rounds.push({ lv: G.lv, done: 1 });
     renderHud(); sound('notifyBigWin');
@@ -855,7 +860,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpClear')); } }, turn: () => G.turn, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpClear')); } }, turn: () => G.turn, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',

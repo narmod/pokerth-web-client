@@ -121,7 +121,7 @@ export function countUnlock(how) {
 // 2026-11-14, choice B): its own secret trophy or its best score says so.
 // Ace Dash and Poker Run have no trophy: their best score only.
 export const GAME_TROPHY = { 'ace-runner': 'runner', solitaire: 'solitaire', videopoker: 'videopoker',
-  whowins: 'whowins', hilo: 'hilo', bluff: 'bluff', pokerdrop: 'pdrop' };
+  whowins: 'whowins', hilo: 'hilo', bluff: 'bluff', pokerdrop: 'pdrop', tapis: 'tapis' };
 /** The games already played on this device (owned: the trophies won). */
 export function playedGames(owned) {
   const s = new Set();

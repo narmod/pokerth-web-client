@@ -224,6 +224,18 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(tpm.same && tpm.zen.mode === 'zen' && tpm.zen.hidden && tpm.zen.still && tpm.risen && tpm.over === 'over',
     label + ': Tapis!: Daily deals the same board, Zen has no clock, in Madness the rows rise and a stack over the red line ends it (' + JSON.stringify(tpm) + ')');
   await sleep(1600);
+  // web.84: « Table rase » — a round cleared from level 5 without a recave grants the secret trophy; with a recave, not
+  const tpt = await pg.evaluate(async () => {
+    const T = window.__pthTapis, clear = async (recaved) => {
+      T.start('classic'); const G = T.run(); T.level(5); G.recaved = recaved;
+      G.grid.forEach((col) => col.splice(0));
+      await new Promise((r) => setTimeout(r, 3800));
+      return { state: T.state(), trophy: T.trophy() };
+    };
+    return { no: await clear(true), yes: await clear(false) };
+  });
+  ok(tpt.yes.state === 'clear' && tpt.yes.trophy && tpt.no.state === 'clear' && !tpt.no.trophy,
+    label + ': Tapis!: « Table rase » — a round from level 5 without a recave grants the trophy, with a recave not (' + JSON.stringify(tpt) + ')');
   // web.83: the Duel — a move passes the turn, each his own score; too slow, the turn passes; 3 rounds, a winner
   const tpd = await pg.evaluate(async () => {
     const T = window.__pthTapis; T.start('duel');

@@ -86,6 +86,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'arAgain', 'arPause', 'arDistance', 'arLevel', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'hcModeFreeD', 'hcModeDailyD', 'hcModeZen', 'hcModeZenD', 'hcGlue', 'hcWind', 'hcBump', 'hcGoalMet', 'hcGold', 'hcHold', 'gmPick',
   'tpName', 'tpHint', 'tpRules', 'tpClassic', 'tpClassicD', 'tpAlone', 'tpWon', 'tpJoker', 'tpDealer', 'tpShuffle', 'tpArmed', 'tpRecave', 'tpClear', 'tpClean', 'tpBlinds', 'tpIn', 'gmKindEgg',
+  'tpNewCards', 'tpNewWild', 'tpNewDealer', 'tpNewSeal', 'tpNewRise', 'tpFolie', 'tpFolieD', 'tpZenD', 'tpOver', 'tpDuelD', 'ach_tapis', 'ach_tapis_d',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'vpVarJacks', 'vpVarBonus', 'vpVarDeuces', 'vpVarJoker', 'vpVarJacksD', 'vpVarBonusD', 'vpVarDeucesD', 'vpVarJokerD', 'vpKings', 'vpFiveKind', 'vpWildRoyal', 'vpFourDeuces', 'vpFourAces', 'vpFour2to4', 'vpFour5toK', 'vpCashOut', 'ach_videopoker', 'ach_videopoker_d',
@@ -106,7 +107,7 @@ for (const f of files) {
   for (const k of ['pdPlayer', 'pdTurn', 'pdWins']) if (strings[k] && strings[k].indexOf('{n}') < 0) badRecord.push(f + ':' + k);
   if (strings.tpWon && strings.tpWon.indexOf('{b}') < 0) badRecord.push(f + ':tpWon');
   if (strings.tpBlinds && strings.tpBlinds.indexOf('{b}') < 0) badRecord.push(f + ':tpBlinds');
-  if (strings.tpRules && strings.tpRules.split('\n').length !== 6) badRecord.push(f + ':tpRules lines');
+  if (strings.tpRules && strings.tpRules.split('\n').length !== 8) badRecord.push(f + ':tpRules lines');
   if (strings.pdRules && strings.pdRules.split('\n').length !== 7) badRecord.push(f + ':pdRules lines');
   if (strings.adRules && (strings.adRules.split('\n').length !== 8 || strings.adRules.indexOf('300') < 0 || strings.adRules.indexOf('← →') < 0)) badRecord.push(f + ':adRules');
   if (strings.prRules && (strings.prRules.split('\n').length !== 6 || !/22|۲۲/.test(strings.prRules) || strings.prRules.indexOf('◀ ▶') < 0 || !/flop/i.test(strings.prRules))) badRecord.push(f + ':prRules');
@@ -323,6 +324,7 @@ ok(SCORE[9] === 100 && SCORE[1] === 2 && SCORE[0] === 0, 'American scale');
   const bonus = games.filter((g) => g.bonus);
   ok(bonus.length === 1 && bonus[0].id === 'house' && !bonus[0].kind && !reg.GAME_TROPHY.house && !ACHIEVEMENTS.some((d) => d.id === 'house'),
     'the House of Cards: an easter-egg bonus out of the path, its trophy gone');
+  ok(reg.GAME_TROPHY.tapis === 'tapis' && ACHIEVEMENTS.some((d) => d.id === 'tapis' && d.cat === 'secret'), 'Tapis!: its secret trophy « Table rase » (tapis)');
   const needs = path10.map((g) => g.unlock.trophies);
   ok(reg.ARCADE_UNLOCK.trophies === 8 && needs[0] === 8 && needs.slice(0, -1).every((n, i) => i === 0 || n === needs[i - 1] + 2)
     && needs[needs.length - 1] === normal && normal === 27, 'Mini-games: 8 trophies, then every 2, the last at every normal trophy (' + needs.join(' ') + ' / ' + normal + ')');

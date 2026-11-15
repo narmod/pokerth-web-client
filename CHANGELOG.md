@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: the secret trophy and the full rules** (`web.84`, push 6 — the last — of `claude/CONCEPTION_TAPIS.md`;
+  tag `v2.1.11-web.84`) — « Clean slate » (`ach_tapis`, « Table rase », secret, 🕳️; `GAME_TROPHY.tapis`): a round
+  cleared from level 5 (`TROPHY_LV`) without the dealer recaving (`G.recaved`), Classic or Daily (narmod's choice
+  A; not Madness, Zen or Two players). The rules sheet now has 8 lines: what the levels bring and the five modes
+  (`tpRules`, 83 catalogues; `test-games.mjs` checks 8 lines and every Tapis! key). `test-games-browser.mjs`: the
+  trophy granted without a recave, not with one. `test-login-arcade-browser.mjs`: waits (up to 8 s) for the light of
+  the mode's first appearance instead of reading it at once (it waits for the login to settle and the warm-up: it
+  failed now and then on a slow machine). `docs/ROADMAP.md`: Tapis! in Delivered.
+
+### Added
 - **Tapis!: the Duel** (`web.83`, push 5 of `claude/CONCEPTION_TAPIS.md`, narmod's form A) — a fifth tile, « Two
   players » (`pdTwo`): two players on one screen, each in turn on the same table, `DUEL_ROUNDS` = 3 rounds (each
   started by the other player). Each player has his own score, bonuses and hand of 5: `turnTo(i)` puts the
