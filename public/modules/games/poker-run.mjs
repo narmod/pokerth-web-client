@@ -30,6 +30,12 @@
 // finish) and speaks in the mascot's bubbles (emoji, or the hand's name).
 // Touch pad: ◀ NITRO ▶ (the shell's ▲ relabelled, ▼ hidden; ↓ still brakes);
 // in landscape ◀ left of the stage, NITRO and ▶ right of it.
+// Défi du jour (web.68, narmod: « mode 4 of the proposals », OutRun 2's Time
+// Attack): the road, the cards, the scenes and the traffic drawn from the UTC
+// date — each stage from its own stream (stage, scene, level), so the same
+// forks give the same road whatever the timing; no car comes back once passed.
+// The best run of the day is kept with its line (a sample every 0.1 s): its
+// ghost drives beside you, and the HUD tells how far ahead or behind you are.
 // Texts: prHint, prRules, prTimeUp plus shared keys (blChips, gameTimeLabel,
 // arLevel, arTapStart, arRecord, arNewRecord, gmAgain, mascotHello, mascotTada,
 // the hand names h1n…h10n).
@@ -40,6 +46,8 @@ import { drawCar, seatPoint } from './car3d.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { endScreen, listHtml } from './end.mjs';
+import { rng } from './deal.mjs';
+import { dayKey } from './solitaire-rules.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -176,6 +184,8 @@ const CSS = `
 #pth-game .prun-q .prun-qbar i{display:block;height:100%;background:linear-gradient(90deg,#e0573f,#e8b84a)}
 #pth-game .prun-hearts{position:absolute;font:700 14px system-ui;color:#e0405a;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap}
 #pth-game .prun-hearts span{color:rgba(255,255,255,.3)}
+#pth-game .prun-ghost{position:absolute;font:700 13px 'Inconsolata',monospace;color:#bfe3ff;text-shadow:0 1px 2px rgba(0,0,0,.7);white-space:nowrap}
+#pth-game .prun-ghost.ahead{color:#7ee08a}#pth-game .prun-ghost.behind{color:#ff8a7a}
 #pth-game .prun-nitro{position:absolute;left:12px;bottom:12px;z-index:397;display:flex;align-items:center;gap:7px;pointer-events:none;font:800 11px 'Inter',system-ui,sans-serif;letter-spacing:.1em;color:#d8b25a;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 #pth-game.pg-touch:not(.pg-nopad) .prun-nitro{display:none}
 #pth-game .prun-nitro[hidden]{display:none}
@@ -241,11 +251,11 @@ export function create(shell) {
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('blChips')) + '</div><div class="ar-num pr-c">0</div></div>'
     + '<div><div class="ar-lab">' + esc(t('gameTimeLabel')) + '</div><div class="ar-num pr-t">' + TIME0.toFixed(1) + '</div></div>'
     + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num pr-s">1/' + STAGES + '</div></div></div>'
-    + '<div class="prun-hearts" hidden></div>'
+    + '<div class="prun-hearts" hidden></div><div class="prun-ghost" hidden></div>'
     + '<div class="prun-mini" aria-hidden="true" hidden></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
-  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini'), hHearts = q('.prun-hearts');
+  const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini'), hHearts = q('.prun-hearts'), hGhost = q('.prun-ghost');
 
   // ── Track ──────────────────────────────────────────────────────────
   let segs = [], finishSeg = 0, gates = [], cars = [], buildStage = 0;
@@ -272,18 +282,24 @@ export function create(shell) {
   // the fork does not change), and the gate makes it final.
   //   lvl[k]: stage k's difficulty, 0 … 5 — the number of rights taken so far.
   let stageStart = [], tmpl = [], applied = [], lvl = [0];
-  // The mode: 'free' or 'queen'; the Queen's requests of this run.
-  const MODES = ['free', 'queen'];
-  let mode = 'free', modeSel = 0;
+  // The mode: 'free', 'queen' or 'daily'; the Queen's requests of this run.
+  const MODES = ['free', 'queen', 'daily'];
+  let mode = 'free', modeSel = 0, day = '';
+  /** A random stream: the day's for one purpose (the daily challenge), else Math.random. */
+  const S = (tag) => (mode === 'daily' ? rng('prun:' + day + ':' + tag) : Math.random);
+  // The daily's best run today (score, picks, line) and the run being recorded.
+  const DAILY_KEY = 'pth_prun_daily', G_DT = 0.1;
+  const dLoad = () => { try { const o = JSON.parse(localStorage.getItem(DAILY_KEY) || '{}') || {}; return o.d === dayKey() ? o : {}; } catch (e) { return {}; } };
+  let ghost = null, gRec = null, gT = 0, gNext = 0, gIdx = 0, gGap = null, gShown = '';
   let quest = null, quests = [], qPool = [], driftRun = 0, fastRun = 0;
   let stDrifts = 0, stPasses = 0, stHits = 0;     // for the end screen
   const qBest = () => { try { return JSON.parse(localStorage.getItem('pth_prun_best') || '{}') || {}; } catch (e) { return {}; } };
   const chipVal = (k) => 10 + 5 * (lvl[k] || 0);
   function buildTrack() {
-    segs = []; cars = []; gates = []; buildStage = 0; stageStart = []; tmpl = []; applied = []; lvl = [0];
+    segs = []; cars = []; gates = []; buildStage = 0; stageStart = []; tmpl = []; applied = []; lvl = [0]; carSeq = 0;
     addRoad(0, 40, 0, 0, 0);
-    const deck = []; for (let n = 0; n < 52; n++) deck.push(n);
-    for (let i = 51; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = deck[i]; deck[i] = deck[j]; deck[j] = x; }
+    const deck = [], rd = S('deck'); for (let n = 0; n < 52; n++) deck.push(n);
+    for (let i = 51; i > 0; i--) { const j = Math.floor(rd() * (i + 1)); const x = deck[i]; deck[i] = deck[j]; deck[j] = x; }
     hole = [deck.pop(), deck.pop()];
     for (let k = 0; k <= FORKS; k++) {
       stageStart[k] = segs.length;
@@ -310,31 +326,33 @@ export function create(shell) {
     const free = (i) => segs[i] && segs[i].f === 0 && segs[i].m === 0 && !segs[i].gate;
     // Traffic (web.60, narmod: « more people »): of three kinds, now and then
     // two side by side — a gap to thread; a harder road adds its own (addTraffic).
+    const rt = S('traffic');
     for (let k = 0; k < TRAFFIC; k++) {
-      let z = Math.floor(120 + k * (finishSeg - 220) / TRAFFIC + Math.random() * 30);
+      let z = Math.floor(120 + k * (finishSeg - 220) / TRAFFIC + rt() * 30);
       while (!free(z) && z < finishSeg) z++;
-      const c = newCar(z, k % 2);
+      const c = newCar(z, k % 2, rt);
       cars.push(c);
-      if (k % 6 === 3) { const c2 = newCar(z, 1 - k % 2); c2.lane = (c.lane + 1 + (c.lane === 1 ? Math.floor(Math.random() * 2) : 0)) % 3; c2.v = c.v; cars.push(c2); }
+      if (k % 6 === 3) { const c2 = newCar(z, 1 - k % 2, rt); c2.lane = (c.lane + 1 + (c.lane === 1 ? Math.floor(rt() * 2) : 0)) % 3; c2.v = c.v; cars.push(c2); }
     }
+    trafficSig = cars.map((c) => Math.round(c.z / SEG) + ':' + c.lane + ':' + Math.round(c.v)).join();   // tests: the daily's traffic
   }
   /** A stage's road: bends sharper and closer on a harder one, S-bends, hills by scene. */
   function genStage(k, key, d) {
-    const len = stageLen(k), c = new Array(len).fill(0), dy = new Array(len).fill(0);
+    const r = S('st' + k + '-' + key + '-' + d), len = stageLen(k), c = new Array(len).fill(0), dy = new Array(len).fill(0);
     const hk = (key ? HILLS[key] : 1) * (0.8 + 0.12 * d), lim = 560 * (key ? HILLS[key] : 1);
     const y0 = segs[stageStart[k]] ? segs[stageStart[k]].p1.w.y : 0;
-    let i = 60, y = y0, sg = Math.random() < 0.5 ? 1 : -1;
+    let i = 60, y = y0, sg = r() < 0.5 ? 1 : -1;
     while (i < len) {
       const rest = len - i;
-      let en = 20 + Math.floor(Math.random() * 25), ho = Math.floor((30 + Math.random() * 60) * (1 - 0.07 * d)), le = en;
+      let en = 20 + Math.floor(r() * 25), ho = Math.floor((30 + r() * 60) * (1 - 0.07 * d)), le = en;
       if (rest < 30) { en = 0; ho = rest; le = 0; }
       else if (en + ho + le > rest) { const f = rest / (en + ho + le); en = Math.floor(en * f); le = Math.floor(le * f); ho = rest - en - le; }
-      const straight = rest < 30 || Math.random() < 0.35 - 0.05 * d;
-      sg = Math.random() < 0.35 + 0.1 * d ? -sg : (Math.random() < 0.5 ? 1 : -1);
-      const cu = straight ? 0 : sg * ((0.8 + 0.25 * d) + Math.random() * (0.8 + 0.3 * d));
+      const straight = rest < 30 || r() < 0.35 - 0.05 * d;
+      sg = r() < 0.35 + 0.1 * d ? -sg : (r() < 0.5 ? 1 : -1);
+      const cu = straight ? 0 : sg * ((0.8 + 0.25 * d) + r() * (0.8 + 0.3 * d));
       // Hills pulled back towards the level, the last stage's last piece back to it (the finish is flat).
       const lastPiece = k === FORKS && i + en + ho + le >= len;
-      const hill = lastPiece ? -y : clamp((Math.random() * 2 - 1) * 420 * hk - y * 0.5, -lim - y, lim - y);
+      const hill = lastPiece ? -y : clamp((r() * 2 - 1) * 420 * hk - y * 0.5, -lim - y, lim - y);
       const n = en + ho + le, y1 = y + hill; let py = y;
       for (let j = 0; j < n; j++) {
         c[i + j] = j < en ? ease(0, cu, j / en) : j < en + ho ? cu : ease(cu, 0, (j - en - ho) / Math.max(1, le));
@@ -351,8 +369,9 @@ export function create(shell) {
     for (let i = Math.max(1, s0); i < segs.length; i++) { const sg = segs[i]; sg.p1.w.y = segs[i - 1].p2.w.y; sg.p2.w.y = sg.p1.w.y + (sg.dy || 0); }
     // Chips: closer together on a harder road.
     for (let i = s0; i < end; i++) if (segs[i].sprites.length) segs[i].sprites = segs[i].sprites.filter((sp) => sp.t !== 'chip');
-    for (let i = s0 + (k ? 70 : 30); i < end - 20; i += 54 - 5 * t.d + Math.floor(Math.random() * 20)) {
-      const lane = Math.floor(Math.random() * 3);
+    const r = S('ch' + k + '-' + t.key + '-' + t.d);
+    for (let i = s0 + (k ? 70 : 30); i < end - 20; i += 54 - 5 * t.d + Math.floor(r() * 20)) {
+      const lane = Math.floor(r() * 3);
       for (let j = 0; j < 4; j++) if (i + j * 4 < end) segs[i + j * 4].sprites.push({ t: 'chip', lane });
     }
     applied[k] = t;
@@ -367,21 +386,22 @@ export function create(shell) {
   /** A harder road brings its own traffic, out of sight ahead. */
   function addTraffic(k, from) {
     const n = 3 * (lvl[k] || 0), z0 = Math.max(stageStart[k], from + DRAW + 10), z1 = k < FORKS ? gates[k].seg - 200 : finishSeg - 40;
-    for (let i = 0; i < n && z1 > z0; i++) cars.push(newCar(Math.floor(z0 + Math.random() * (z1 - z0)), Math.random() < 0.5 ? 0 : 1));
+    const r = S('tr' + k + '-' + (lvl[k] || 0));
+    for (let i = 0; i < n && z1 > z0; i++) cars.push(newCar(Math.floor(z0 + r() * (z1 - z0)), r() < 0.5 ? 0 : 1, r));
   }
-  let carSeq = 0;
-  function newCar(z, side) {
+  let carSeq = 0, trafficSig = '';
+  function newCar(z, side, r = Math.random) {
     const n = carSeq++;
-    return { z: z * SEG, lane: Math.floor(Math.random() * 3), side, v: MAXV * (0.3 + Math.random() * 0.24),
-      col: CAR_COLS[(n * 3 + Math.floor(Math.random() * 2)) % CAR_COLS.length], kind: CAR_KINDS[Math.floor(Math.random() * 10) < 6 ? 0 : Math.random() < 0.5 ? 1 : 2], dead: false, ahead: true };
+    return { z: z * SEG, lane: Math.floor(r() * 3), side, v: MAXV * (0.3 + r() * 0.24),
+      col: CAR_COLS[(n * 3 + Math.floor(r() * 2)) % CAR_COLS.length], kind: CAR_KINDS[Math.floor(r() * 10) < 6 ? 0 : r() < 0.5 ? 1 : 2], dead: false, ahead: true };
   }
   const findSeg = (z) => segs[clamp(Math.floor(z / SEG), 0, segs.length - 1)];
   const nextGate = () => gates.find((g) => g.picked < 0);
   /** The branch of a fork: the one taken, the one the car is on while it comes, else the left one. */
   const chosenLane = (g) => g.picked >= 0 ? g.picked : (nextGate() === g ? hover : 0);
   function assignBranches(k) {
-    const pool = KEYS_TH.filter((x) => x !== stageTheme[k]);
-    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = pool[i]; pool[i] = pool[j]; pool[j] = x; }
+    const pool = KEYS_TH.filter((x) => x !== stageTheme[k]), r = S('br' + k + '-' + stageTheme[k]);
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const x = pool[i]; pool[i] = pool[j]; pool[j] = x; }
     branches[k] = pool.slice(0, 2);
   }
   function themeOf(k) {
@@ -481,10 +501,11 @@ export function create(shell) {
     prev.hidden = false;
   }
   function titlePanel() {
-    const best = shell.best.get(), qb = qBest().queen || 0;
+    const best = shell.best.get(), qb = qBest().queen || 0, dl = dLoad();
     titleScreen(shell, { id: 'poker-run', live: true, name: 'Poker Run', hint: t('prHint'), sel: modeSel,
       modes: [{ icon: '🏎️', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' },
-        { icon: '♥️', label: t('prQueen'), desc: t('prQueenD'), rec: qb ? t('arRecord', { n: fmt(qb) }) : '' }],
+        { icon: '♥️', label: t('prQueen'), desc: t('prQueenD'), rec: qb ? t('arRecord', { n: fmt(qb) }) : '' },
+        { icon: '📅', label: t('psDaily'), desc: t('adModeDailyD') + ' · 👻', rec: dl.s ? t('wwDailyToday', { n: fmt(dl.s) }) : '' }],
       onPick: (i) => { modeSel = i; start(); } });
   }
 
@@ -501,7 +522,12 @@ export function create(shell) {
   function start() {
     clearTimeout(revealTimer);
     mode = MODES[modeSel] || 'free';
+    day = dayKey();
     reset(); state = 'run'; shell.panel(null); lastMini = '';
+    // The daily: today's best run drives as a ghost; this one is recorded.
+    if (mode === 'daily') { const g = dLoad().g; ghost = g && g.z && g.z.length > 1 ? g : null; gRec = { p: [], z: [], x: [] }; }
+    else { ghost = null; gRec = null; }
+    gT = 0; gNext = 0; gIdx = 0; gGap = null; gShown = ''; hGhost.hidden = true;
     quest = null; quests = []; qPool = []; driftRun = 0; fastRun = 0; stDrifts = 0; stPasses = 0; stHits = 0; renderHearts();
     if (aceRoot) aceRoot.classList.remove('prun-spin');
     ace.mood('mc-m-smile');
@@ -537,6 +563,7 @@ export function create(shell) {
     driftGain = 0;
   }
   function respawn(c, pi) {
+    if (mode === 'daily') { c.dead = true; return; }      // the daily: the same traffic for everyone, none drawn anew
     let z = pi + DRAW + 10 + Math.floor(Math.random() * 120);
     while (segs[z] && (segs[z].f > 0 || segs[z].m > 0)) z++;
     if (z >= finishSeg) { c.dead = true; return; }
@@ -649,6 +676,7 @@ export function create(shell) {
     v = v < cap ? Math.min(cap, v + ACCEL * (boost || mt > 0 ? 2 : 1) * dt) : Math.max(cap, v - ACCEL * (B ? 3 : 2.2) * dt);
     pos += v * dt; time -= dt; if (inv > 0) inv -= dt; if (shake > 0) shake -= dt;
     skyOff += ps.curve * sp * dt * 90;
+    if (gRec) ghostTick(dt);
 
     // Traffic
     const pNow = findSeg(pos + PLAYER_Z).i;
@@ -699,6 +727,54 @@ export function create(shell) {
     renderMini();
     if (mode === 'queen') queenTick(dt, ps, sp, inZone);
   }
+  // ── Défi du jour: the ghost ─────────────────────────────────────────
+  const myZ = () => (pos + PLAYER_Z) / SEG;
+  /** Record this run's line; tell the gap to today's best (the time it took to reach where the car is). */
+  function ghostTick(dt) {
+    gT += dt;
+    while (gT >= gNext) { gRec.z.push(Math.round(myZ() * 10) / 10); gRec.x.push(Math.round(px * 100) / 100); gNext += G_DT; }
+    if (!ghost) return;
+    const z = myZ(), Z = ghost.z;
+    while (gIdx < Z.length - 1 && Z[gIdx + 1] < z) gIdx++;
+    gGap = Z[Z.length - 1] < z || !ghostRoute(z) ? null : gT - (gIdx + (Z[gIdx + 1] > Z[gIdx] ? clamp((z - Z[gIdx]) / (Z[gIdx + 1] - Z[gIdx]), 0, 1) : 0)) * G_DT;
+    renderGhost();
+  }
+  /** Is the ghost's road at z the player's? The same branch at every fork before it. */
+  function ghostRoute(z) {
+    const sg = segs[clamp(Math.floor(z), 0, segs.length - 1)];
+    for (let k = 0; k < sg.stage; k++) if (ghost.p[k] !== chosenLane(gates[k])) return false;
+    return true;
+  }
+  /** Where the ghost is now (segment units, lateral), or null (gone, or on another road). */
+  function ghostNow(any) {
+    if (!ghost || state !== 'run') return null;
+    const f = gT / G_DT, i = Math.floor(f), Z = ghost.z, X = ghost.x;
+    if (i >= Z.length - 1) return null;
+    const u = f - i, z = Z[i] + (Z[i + 1] - Z[i]) * u;
+    return any || ghostRoute(z) ? { z, x: X[i] + (X[i + 1] - X[i]) * u } : null;
+  }
+  /** The ghost on the HUD's map: a pale dot along the branches it took. */
+  function ghostDot() {
+    const dot = hMini.querySelector('.prun-gdot'), gz = ghostNow(true);
+    if (!dot) return;
+    if (!gz) { dot.setAttribute('opacity', '0'); return; }
+    const i = clamp(Math.floor(gz.z), 0, segs.length - 1), k = Math.min(segs[i].stage, STAGES - 1);
+    const z0 = k ? gates[k - 1].seg : 0, z1 = k < FORKS ? gates[k].seg : finishSeg, p = clamp((i - z0) / Math.max(1, z1 - z0), 0, 1);
+    const x0 = MX(k), y0 = MY(k, k ? Math.max(0, ghost.p[k - 1]) : 0), x1 = k === STAGES - 1 ? MFX : MX(k + 1);
+    dot.setAttribute('cx', (x0 + (x1 - x0) * p).toFixed(1)); dot.setAttribute('cy', (y0 + (70 - y0) * p).toFixed(1)); dot.setAttribute('opacity', '0.9');
+  }
+  function renderGhost() {
+    const s = gGap == null ? '' : (gGap > 0 ? '+' : '−') + Math.abs(gGap).toFixed(1) + ' s';
+    if (s === gShown) return;
+    gShown = s;
+    hGhost.hidden = !s;
+    if (!s) return;
+    hGhost.textContent = '👻 ' + s;
+    hGhost.className = 'prun-ghost ' + (gGap > 0.05 ? 'behind' : gGap < -0.05 ? 'ahead' : '');
+    hGhost.style.top = Math.round(hMini.hidden ? 10 : hMini.offsetTop + hMini.offsetHeight + 4) + 'px';
+    hGhost.style.left = Math.round(hMini.hidden ? 12 : hMini.offsetLeft + 4) + 'px';
+  }
+
   // ── Dame de Cœur ───────────────────────────────────────────────────
   /** A new request at the start of each stage (once the last one is over). */
   function queenTick(dt, ps, sp, inZone) {
@@ -765,7 +841,12 @@ export function create(shell) {
   let lastMini = '';
   function renderMini() {
     const pr = progress(), key = pr.stage + '|' + gates.map((g) => g.picked).join('') + '|' + (branches[pr.stage] || []).join();
-    if (key !== lastMini) { lastMini = key; hMini.innerHTML = courseMap(pr, true); hMini.hidden = false; if (mode === 'queen') renderHearts(); return; }
+    if (key !== lastMini) {
+      lastMini = key; hMini.innerHTML = courseMap(pr, true); hMini.hidden = false; if (mode === 'queen') renderHearts();
+      if (ghost) { const car = hMini.querySelector('.prun-car'); if (car) car.insertAdjacentHTML('beforebegin', '<circle class="prun-gdot" r="11" fill="#9fd3ff" stroke="#fff" stroke-width="2" opacity="0"/>'); ghostDot(); }
+      return;
+    }
+    if (ghost) ghostDot();
     const c = mapCar(pr), car = hMini.querySelector('.prun-car');
     if (car) car.setAttribute('transform', 'translate(' + c.x.toFixed(1) + ' ' + (c.y - 6 * 2.6).toFixed(1) + ') scale(2.6)');
   }
@@ -854,7 +935,8 @@ export function create(shell) {
   function over() {
     state = 'over'; overAt = performance.now(); hMini.hidden = true; nitroBox.hidden = true;
     const pr = progress();
-    for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(Math.random() * 2), false); }
+    const ra = S('auto');
+    for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(ra() * 2), false); }
     curStage = Math.min(curStage, pr.stage);   // the auto-dealt cards do not count as stages driven (HUD level)
     renderHand(); renderStats(true);
     shell.ended();
@@ -863,13 +945,19 @@ export function create(shell) {
     qBox.hidden = true;
     const hearts = quests.reduce((a, q) => a + (q.h || 0), 0), hm = mode === 'queen' ? queenMult(hearts) : 1;
     const base = stack + bonus, score = Math.round(base * ev.mult * hm);
-    const qb = qBest(), prevBest = mode === 'queen' ? qb.queen || 0 : shell.best.get(), record = score > prevBest;
-    if (record) { if (mode === 'queen') { qb.queen = score; try { localStorage.setItem('pth_prun_best', JSON.stringify(qb)); } catch (e) {} } else shell.best.set(score); }
+    const qb = qBest(), dl = dLoad(), prevBest = mode === 'queen' ? qb.queen || 0 : mode === 'daily' ? dl.s || 0 : shell.best.get(), record = score > prevBest;
+    hGhost.hidden = true;
+    // The daily: the best run of the day kept with its line, the ghost of the next tries.
+    if (mode === 'daily' && gRec && (record || !dl.s)) {
+      gRec.p = gates.map((g) => (g.auto ? -1 : g.picked));
+      try { localStorage.setItem(DAILY_KEY, JSON.stringify({ d: day, s: score, g: gRec })); } catch (e) {}
+    }
+    if (record && mode !== 'daily') { if (mode === 'queen') { qb.queen = score; try { localStorage.setItem('pth_prun_best', JSON.stringify(qb)); } catch (e) {} } else shell.best.set(score); }
     // The end screen (end.mjs, web.67): the showdown, the score and how it was
     // made, the course driven (OutRun's map) or the Queen's requests, a few numbers.
     const rights = gates.filter((g) => g.picked === 1 && !g.auto).length, reached = Math.min(STAGES, pr.stage + 1);
     endScreen(shell, {
-      title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : t('adModeFree')) + ' · Poker Run',
+      title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : mode === 'daily' ? t('psDaily') + ' · ' + day : t('adModeFree')) + ' · Poker Run',
       cards: ev.best, hand: t(ev.nameKey) + ' ×' + ev.mult, score, prev: prevBest,
       calc: [[t('blChips'), fmt(stack)], [t('gameTimeLabel'), '+' + fmt(bonus)], [t(ev.nameKey), '×' + ev.mult], hm !== 1 ? ['♥ ' + hearts, '×' + String(hm).replace('.', ',')] : null],
       levels: mode === 'queen'
@@ -879,6 +967,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: () => { state = 'title'; titlePanel(); },
     });
+    gRec = null;
   }
 
   // ── Drawing ────────────────────────────────────────────────────────
@@ -1018,6 +1107,8 @@ const carW = () => Math.min(W * 0.24, 100);
     // Sprites, far to near, each clipped by the road in front of it.
     const bySeg = new Map();
     for (const c of cars) { if (c.dead) continue; const i = Math.floor(c.z / SEG); if (i >= base.i && i <= last) { if (!bySeg.has(i)) bySeg.set(i, []); bySeg.get(i).push(c); } }
+    // The daily's ghost: today's best run, see-through, when it is ahead on the same road.
+    let gh = ghostNow(); if (gh && (gh.z < myZ() + 1.5 || gh.z > last)) gh = null;
     for (let n = last - base.i; n > 0; n--) {
       const s = segs[base.i + n]; if (s.p1.c.z <= DEPTH) continue;
       const sc = s.p1.s.scale * W / 2, sx = s.p1.s.x, sy = s.p1.s.y, g = s.g;
@@ -1029,6 +1120,15 @@ const carW = () => Math.min(W * 0.24, 100);
       }
       if (s.gate) drawGate(s, sc, sx, sy, g);
       if (s.i === finishSeg) drawFinish(sc, sx, sy, g);
+      if (gh && Math.floor(gh.z) === s.i) {
+        const tt = gh.z % 1, gx = sx + sc * gh.x * ROAD, gy = sy + (s.p2.s.y - sy) * tt, gw = sc * 560;
+        ctx.globalAlpha = 0.55;
+        drawCarRear(gx, gy, gw, '#9fd3ff', s.T.night, 'sport');
+        // Its 👻 above it, readable even far down the road.
+        ctx.globalAlpha = 0.9; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.font = Math.round(clamp(gw * 0.4, 11, 26)) + 'px system-ui, sans-serif';
+        ctx.fillText('👻', gx, gy - gw * 0.55 - 3);
+        ctx.globalAlpha = 1;
+      }
       const cs = bySeg.get(s.i);
       if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind); }
       ctx.restore();
@@ -1338,7 +1438,7 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal, mode: () => mode, quests: () => quests.map((q) => Object.assign({}, q)), quest: () => quest && Object.assign({}, quest), setMode: (m) => { modeSel = Math.max(0, MODES.indexOf(m)); }, forceQuest: (id) => { if (quest) quests.pop(); quest = { id, stage: findSeg(pos + PLAYER_Z).stage, t: 0, c: 0, done: false }; quests.push(quest); renderQuest(true); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal, mode: () => mode, quests: () => quests.map((q) => Object.assign({}, q)), quest: () => quest && Object.assign({}, quest), setMode: (m) => { modeSel = Math.max(0, MODES.indexOf(m)); }, ghost: () => ghost, gap: () => gGap, ghostNow: () => ghostNow(), hole: () => hole.slice(), cards: () => gates.map((g) => g.cards.slice()), carsAt: () => trafficSig, gT: () => gT, forceQuest: (id) => { if (quest) quests.pop(); quest = { id, stage: findSeg(pos + PLAYER_Z).stage, t: 0, c: 0, done: false }; quests.push(quest); renderQuest(true); } }; } catch (e) {}
 
   return {
     update, draw, input,

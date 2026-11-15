@@ -1,4 +1,8 @@
-2026-11-15 version 2.1.11-web.68 (current series):
+2026-11-15 version 2.1.11-web.69 (current series):
+- new: Poker Run — « Défi du jour »: the same cards, scenes, road and traffic for everyone today (the same forks give the same road), your best run of the day kept
+- new: Poker Run — in the daily challenge, the ghost of your best run today drives ahead of you (👻 above it, a pale dot on the small map) and the HUD shows how far behind or ahead you are (👻 +1.3 s)
+
+2026-11-15 version 2.1.11-web.68:
 - bugfix: Mini-games — the end screen now uses the whole game area instead of the playing field only: on a phone it was cut off at the top and bottom (and it shrinks to fit a short landscape screen)
 
 2026-11-15 version 2.1.11-web.67:

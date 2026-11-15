@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: « Défi du jour »** (`web.69`, narmod's pick of the proposed modes, OutRun 2's Time Attack) —
+  `poker-run.mjs`: a third title tile (📅, today's score). `S(tag)`: in the daily, each draw comes from its own
+  stream of the UTC date (`deal.mjs rng`): the deck, the traffic, each stage's road by (stage, scene, level), its
+  chips, the scenes of each fork, the cards dealt at time-out — the same forks give the same road whatever the
+  timing; no car is drawn anew once passed. The run is recorded (position and lateral every 0.1 s, the picks);
+  the best of the day is kept in `pth_prun_daily` with its line and drives as a ghost: see-through car with 👻 when
+  on the same road, a pale dot on the HUD's map, the gap in the HUD (time the ghost took to reach where you are).
+  `scripts/test-poker-run-daily.mjs` (13 checks).
 - **One end screen for every mini-game** (`web.67`, narmod: « no button to play again or go back to the game's
   menu, the scores are not pretty, you don't see the levels reached ») — new `games/end.mjs`: `endScreen(shell, o)`
   draws a card (title, mode line, the hand dealt face down then turned, the score counting up, « new record » ribbon

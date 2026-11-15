@@ -21,7 +21,7 @@ await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }); await sleep(5
 await pg.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[data-art="poker-run"]').closest('.gm-card'); (c.querySelector('[data-play]') || c).click(); });
 await sleep(1200);
 const tiles = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .pg-panel .gm-mode, #pth-game .pg-panel [data-m]')].map((x) => x.textContent));
-ok(tiles.length === 2 && /Dame de Cœur/.test(tiles[1]), 'two tiles on the title: free run and Dame de Cœur');
+ok(tiles.length === 3 && /Dame de Cœur/.test(tiles[1]), 'three tiles on the title: free run, Dame de Cœur, daily challenge');
 await pg.keyboard.press('ArrowRight'); await sleep(200); await pg.keyboard.press('Space'); await sleep(3000);
 const q0 = await pg.evaluate(() => ({ mode: window.__pthRun.mode(), q: window.__pthRun.quest(), box: (() => { const e = document.querySelector('#pth-game .prun-q'); return e && !e.hidden ? e.textContent : ''; })(), hearts: (() => { const e = document.querySelector('#pth-game .prun-hearts'); return e && !e.hidden ? e.textContent : ''; })() }));
 ok(q0.mode === 'queen' && q0.q && q0.box.length > 5, 'the Queen asks for something at the start (' + (q0.q && q0.q.id) + ': ' + q0.box.slice(0, 40) + ')');
