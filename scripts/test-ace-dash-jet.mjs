@@ -3,7 +3,9 @@
 // a card wall without a scratch, ← → still change lane; three cards in the sky,
 // the one he flies through joins his hand and the others go; he lands safe;
 // time attack: +5 s; the rules sheet tells it. Then (web.73) the roller skates
-// (faster, distance ×1.5, the rail to grind along) and the hourglass (slow motion).
+// (faster, distance ×1.5, the rail to grind along) and the hourglass (slow motion);
+// (web.74) the pool table in the air: the gold ramp lands him on it, the 8-ball's
+// jackpot, the drop at its end; a ball knocks him off; missed, he runs underneath.
 import { chromium } from 'playwright';
 import { startServer } from './lib/mobile-harness.mjs';
 
@@ -24,7 +26,7 @@ await sleep(1000);
 // The rules sheet: the jetpack's line, before the keys.
 await pg.evaluate(() => window.PthGames.rules()); await sleep(300);
 const rules = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .pg-rules li')].map((l) => l.textContent));
-ok(rules.length >= 4 && /Jetpack/.test(rules[rules.length - 3]) && /Patins/.test(rules[rules.length - 2]) && /Espace/.test(rules[rules.length - 1]), 'the rules tell the jetpack, the skates and the hourglass, before the keys');
+ok(rules.length >= 5 && /Jetpack/.test(rules[rules.length - 4]) && /Patins/.test(rules[rules.length - 3]) && /Billard/.test(rules[rules.length - 2]) && /Espace/.test(rules[rules.length - 1]), 'the rules tell the jetpack, the skates, the hourglass and the pool table, before the keys');
 await pg.click('#pth-game .pg-rules [data-r="close"]').catch(() => {}); await sleep(300);
 await pg.evaluate(() => window.__pthDash.start('free')); await sleep(600);
 // A jetpack in his lane.
@@ -79,6 +81,40 @@ await sleep(1000);
 const s1 = await pg.evaluate(() => ({ t: window.__pthDash.run().t, w: performance.now() }));
 const rate = (s1.t - s0.t) / ((s1.w - s0.w) / 1000);
 ok(s0.on && rate > 0.4 && rate < 0.6, 'the hourglass: the game at half speed (' + rate.toFixed(2) + ')');
+// The pool table: the gold ramp, then on top; the 8-ball's jackpot; down at its end.
+const poolRun = async (steer) => {
+  await pg.evaluate(() => { window.__pthDash.start('free'); }); await sleep(300);
+  await pg.evaluate(() => window.__pthDash.pool()); await sleep(150);
+  const ramp = await pg.evaluate((st) => { const G = window.__pthDash.run(); const r = G.obj.find((o) => o.kind === 'ramp'); G.lane = Math.round(r.x / 1.6) + 1; return { pool: !!G.pool, gold: r && r.gold, balls: G.obj.filter((o) => o.kind === 'ball').length, eight: G.items.some((i) => i.kind === 'eight') }; }, steer);
+  const seen = { on: false, maxY: 0, under: false, chips0: await pg.evaluate(() => window.__pthDash.run().chips), hand0: await pg.evaluate(() => window.__pthDash.run().hand.length), knocked: false };
+  for (let i = 0; i < 80; i++) {
+    const st = await pg.evaluate((st) => {
+      const G = window.__pthDash.run();
+      // Missing it on purpose: off the ramp's lane once the row before it has passed.
+      const rp = G.obj.find((o) => o.kind === 'ramp');
+      if (st === 'under' && rp && rp.z < 7 && rp.z > 3) G.lane = (Math.round(rp.x / 1.6) + 2) % 3;
+      if (st !== 'hit' && G.pool) { const nb = G.obj.filter((o) => o.kind === 'ball' && !o.dead && o.z > 4.3).sort((a, b) => a.z - b.z)[0];
+        if (nb && nb.z < 12) { const used = G.obj.filter((o) => o.kind === 'ball' && !o.dead && Math.abs(o.z - nb.z) < 0.1).map((o) => Math.round(o.x / 1.6) + 1); const fr = [0, 1, 2].filter((l) => !used.includes(l)); if (!fr.includes(G.lane)) G.lane = fr[0]; } else if (!nb && G.pool.z0 < 4) G.lane = 1; }
+      if (st === 'hit' && G.pool && G.pool.on) { const nb = G.obj.filter((o) => o.kind === 'ball' && !o.dead && o.z > 4.3).sort((a, b) => a.z - b.z)[0]; if (nb) G.lane = Math.round(nb.x / 1.6) + 1; }
+      return { st: window.__pthDash.state(), y: G.y, on: !!(G.pool && G.pool.on), drop: !!(G.pool && G.pool.drop), pool: !!G.pool, under: !!(G.pool && G.pool.z0 < 4 && G.pool.z1 > 4 && G.y < 1) };
+    }, steer);
+    if (st.st !== 'run') return Object.assign(ramp, seen, { dead: true });
+    seen.on = seen.on || st.on; seen.maxY = Math.max(seen.maxY, st.y); seen.under = seen.under || st.under; seen.knocked = seen.knocked || st.drop;
+    if (!st.pool && i > 3) break;
+    await sleep(120);
+  }
+  const end = await pg.evaluate(() => { const G = window.__pthDash.run(); return { chips: G.chips, hand: G.hand.length, y: G.y }; });
+  return Object.assign(ramp, seen, end);
+};
+const pr = await poolRun('ramp');
+ok(pr.pool && pr.gold && pr.balls > 0 && pr.eight, 'the pool table: a gold ramp before it, balls on it, the 8-ball at its end (' + pr.balls + ' balls)');
+ok(pr.on && pr.maxY >= 1.3, 'the ramp lands him on the table (' + pr.maxY.toFixed(2) + ' m)');
+ok(pr.chips - pr.chips0 >= 25 && pr.hand - pr.hand0 === 1, 'the 8-ball: the jackpot, +25 chips and a card (+' + (pr.chips - pr.chips0) + ', +' + (pr.hand - pr.hand0) + ' card)');
+ok(!pr.dead && pr.y === 0, 'at the table\'s end he drops back on the felt');
+const pu = await poolRun('under');
+ok(!pu.dead && !pu.on && pu.under && pu.hand === pu.hand0, 'missed: he runs underneath, no harm, no jackpot');
+const ph = await poolRun('hit');
+ok(!ph.dead && ph.on && ph.knocked, 'a ball on the table knocks him off, back on the felt, still running');
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
 await b.close(); server.close();
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

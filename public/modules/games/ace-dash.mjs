@@ -62,6 +62,14 @@
 //              sparks; nothing on the rail, no chips either).
 //   Hourglass  (web.73) the sand chip: SLOW_MS of slow motion — the whole
 //              game at SLOW_K (the time attack's clock too).
+//   Pool table (web.74, narmod: « a pool table in the air, climb on it for a
+//              super bonus ») from level POOL_LEVEL, now and then: a gold ramp,
+//              then a pool table floating at POOL_Y over the three lanes. The
+//              ramp's backflip lands him on it (a backflip at the right time
+//              too): balls to jump or go round — one hit knocks him off the
+//              table, back to the felt, no harm done —, gold chips worth ×2
+//              and at the end the 8-ball: the jackpot (POOL_CHIPS chips and a
+//              card). Missed, he simply runs underneath (no rows there).
 // Sounds come from modules/sounds.mjs, the texts from Ace Runner's keys (ar*)
 // plus the ad* keys.
 // ═══════════════════════════════════════════════════════════════════
@@ -95,6 +103,12 @@ const SKATE_COL = ['#178a8a', '#e6fbfb'], SLOW_COL = ['#b98a2e', '#fff3d6'];
 // Roller skates and the hourglass (web.73).
 export const SKATE_MS = 8000, SKATE_SPEED = 1.2, SKATE_DIST = 1.5, GRIND_PTS = 5, GRIND_EVERY = 0.25, SLOW_MS = 5000, SLOW_K = 0.5;
 const RAIL_X = HALF + RAIL / 2, RAIL_Y = 0.11;      // the middle of the rail, its top
+// The pool table in the air (web.74): its top's height and thickness, half its width, the jackpot.
+export const POOL_Y = 1.35, POOL_LEVEL = 4, POOL_CHIPS = 25;
+const POOL_T = 0.12, POOL_HW = HALF - 0.15, POOL_ROWS = 55, POOL_ROWS_RND = 20;
+const BALL_R = 0.26, BALL_COL = ['#f2c12e', '#2364c4', '#d23a2f', '#6a3fb5', '#f07f2a', '#1f8a4c', '#8a2a2a'];
+/** The pool table's length for a speed: 3.4 s of it, 36 to 85 m. */
+export const poolLen = (speed) => clamp(speed * 3.4, 36, 85);
 const DAILY_KEY = 'pth_ad_daily', BEST_KEY = 'pth_ad_best';
 // The jetpack: flight (s), height (m), the climb and the landing (s), the
 // rows between two (about 800 – 1 000 m), safety after landing, time attack's gift.
@@ -265,7 +279,7 @@ export function create(shell) {
       allInUntil: 0, allInWarned: false, magnetUntil: 0, lookAt: 0, ins: false, safeUntil: 0, yayUntil: 0, coolUntil: 0, banner: null,
       obj: [], items: [], fx: [], deck: deckWith(R), hand: [], ev: evalCards([]),
       spawnAt: 6, extra: 0, rows: 0, free: 1, nextCard: 2, nextPower: 14, nextRamp: 6, zig: false, overAt: 0,
-      skateUntil: 0, slowUntil: 0, grindT: 0, grinding: false,
+      skateUntil: 0, slowUntil: 0, grindT: 0, grinding: false, pool: null, nextPool: 30,
       jet: false, jetT: 0, jetNext: 0, jetLane: 1, jetRun: 0, jetGrp: 0, jetCardAt: -1, jetTrio: 0, nextJet: 18, jetFx: 0, jetR: null,
       venue: 0, prevVenue: 0, venueT: 1, time: TIME_S, rebought: false, mode, day: dayKey() };
     const g = newGroup();
@@ -310,7 +324,7 @@ export function create(shell) {
   newRun();
   titlePanel();
   turnBack(false); ace.pose('wave');
-  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, pool: () => { G.level = Math.max(G.level, POOL_LEVEL); G.nextPool = 0; G.rows = Math.max(G.rows, 1); G.zig = false; G.obj = []; G.items = []; G.spawnAt = G.travel; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer); clearTimeout(rebuyTimer);
@@ -328,7 +342,7 @@ export function create(shell) {
     else if (kind === 'wall') G.obj.push({ kind, x, z, h: 1.6, hw: 0.66, dz: 0.3, tilt: (R() - 0.5) * 0.08 });
     else if (kind === 'fly') G.obj.push(o.low ? { kind, x, z, y0: 0.08, y1: 0.5, hw: 0.66, dz: 0.5, spin: R() * 6, low: true }
       : { kind, x, z, y0: 0.74, y1: 1.32, hw: 0.66, dz: 0.5, spin: R() * 6 });
-    else if (kind === 'ramp') G.obj.push({ kind, x, z, len: 1.3, h: 0.34, hw: 0.56 });
+    else if (kind === 'ramp') G.obj.push({ kind, x, z, len: 1.3, h: 0.34, hw: 0.56, gold: !!o.gold });
     else {
       // The dealer button rolls towards the Ace: set off further away so it arrives with its row.
       const vz = 5;
@@ -374,11 +388,32 @@ export function create(shell) {
       }
     }
     if (zig || G.jet) return;          // in flight: the rows pass below, nothing to pick up there
+    // The pool table in the air: a gold ramp in the free lane, the table just after.
+    // (before anything else in the free lane: nothing to jump just before the ramp)
+    if (L >= POOL_LEVEL && G.rows >= G.nextPool && !G.pool && gapM - 4.5 > 6) {
+      G.nextPool = G.rows + POOL_ROWS + Math.floor(R() * POOL_ROWS_RND);
+      if (G.nextJet < G.rows + 8) G.nextJet = G.rows + 8;
+      const zr = z + 2.6;
+      addObstacle('ramp', free, zr, { gold: true });
+      const z0 = zr + G.speed * 0.3, len = poolLen(G.speed), z1 = z0 + len;
+      G.pool = { z0, z1, drop: false };
+      // Rows of balls, a free lane each, gold chips (×2) in it; the 8-ball at the end.
+      let fl = 1, n = 0;
+      for (let zb = z0 + 9; zb < z1 - 9; zb += 9) {
+        fl = clamp(fl + (R() < 0.5 ? -1 : 1), 0, 2);
+        const others = [0, 1, 2].filter((l) => l !== fl).sort(() => R() - 0.5);
+        for (const lane of others.slice(0, R() < 0.5 ? 2 : 1)) G.obj.push({ kind: 'ball', x: (lane - 1) * LANE, z: zb, y0: POOL_Y, y1: POOL_Y + BALL_R * 2, hw: BALL_R + 0.1, dz: BALL_R * 2, col: BALL_COL[n++ % BALL_COL.length], num: (n % 7) + 1, spin: 0 });
+        const g = newGroup();
+        for (let k = -2; k <= 0; k++) addItem('chip', fl, zb - 3 + k * 1.6, POOL_Y + 0.45, { grp: g, gold: true, col: ['#d8b25a', '#fff6cf'] });
+      }
+      addItem('eight', 1, z1 - 3, POOL_Y + 0.5);
+      return;
+    }
     if (L >= 4 && R() < (v >= 5 ? 0.45 : 0.3)) addObstacle(R() < 0.5 ? 'stack' : 'fly', free, z);
     if (v >= 4 && R() < 0.4) G.zig = true;                                 // the next row comes sooner, the free lane moves
     const room = gapM - 4.5;
     // The jetpack: rare, from level JET_LEVEL, never while All-In.
-    if (L >= JET_LEVEL && G.rows >= G.nextJet && room > 3 && !G.zig && performance.now() >= G.allInUntil) {
+    if (L >= JET_LEVEL && G.rows >= G.nextJet && room > 3 && !G.zig && !G.pool && performance.now() >= G.allInUntil) {
       G.nextJet = G.rows + JET_ROWS + Math.floor(R() * JET_ROWS_RND);
       addItem('jet', free, z + 2.5 + room / 2, 0.6);
       return;
@@ -471,11 +506,20 @@ export function create(shell) {
   }
   /** Bottom and top of an obstacle (m). */
   function span(o) {
-    if (o.kind === 'fly') return [o.y0, o.y1];
+    if (o.kind === 'fly' || o.kind === 'ball') return [o.y0, o.y1];
     if (o.kind === 'button') return [o.cy - o.r, o.cy + o.r];
     return [0, o.h];
   }
-  const at = (o) => P(o.x, o.kind === 'fly' ? (o.y0 + o.y1) / 2 : o.kind === 'button' ? o.cy : 0.5, Math.max(o.z, 1.2));
+  const at = (o) => P(o.x, o.kind === 'fly' || o.kind === 'ball' ? (o.y0 + o.y1) / 2 : o.kind === 'button' ? o.cy : 0.5, Math.max(o.z, 1.2));
+  /** The pool table under him (he stands on it, or runs underneath). */
+  const poolHere = () => !!(G.pool && !G.pool.drop && G.pool.z0 <= PZ && G.pool.z1 >= PZ && Math.abs(G.x) < POOL_HW);
+  /** A ball hit on the table: it flies off, and so does he — down to the felt, no harm done. */
+  function knockedOff(o, now) {
+    o.dead = true; G.pool.drop = true; G.onGround = false; G.vy = 1.5; G.safeUntil = now + SAFE_MS;
+    const p = at(o); burst(p[0], p[1], 10, [o.col, '#f5f0e3']);
+    textFx('💥🎱', p[0], p[1] - 24, false, true);
+    sound('notifyFold'); buzz(40); ace.fx('wobble');
+  }
 
   function update(dt) {
     if (state === 'title') { attract += 7 * dt; return; }
@@ -513,12 +557,21 @@ export function create(shell) {
     const tx = G.lane < 0 ? -RAIL_X : G.lane > 2 ? RAIL_X : (G.lane - 1) * LANE, dx = tx - G.x, step = LANE_V * (skate ? 2.6 : 1) * dt;
     G.x += Math.abs(dx) <= step ? dx : Math.sign(dx) * step;
     G.lean += (clamp(dx, -1, 1) - G.lean) * Math.min(1, dt * 14);
+    const onTable = poolHere();
     if (G.jet) jetStep(dt, now);
     else if (!G.onGround) {
+      const py = G.y;
       G.vy -= GRAV * dt; G.y += G.vy * dt;
-      if (G.y <= 0) { G.y = 0; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; ace.fx('land'); if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); } }
+      // Under the pool table his head stops at its underside; from above, it is a floor.
+      if (onTable && py < POOL_Y - 0.05 && G.y + STAND > POOL_Y - POOL_T) { G.y = POOL_Y - POOL_T - STAND; if (G.vy > 0) G.vy = 0; }
+      const floor = onTable && py >= POOL_Y - 0.05 ? POOL_Y : 0;
+      if (G.y <= floor) {
+        G.y = floor; G.vy = 0; G.onGround = true; G.dbl = false; G.flipAt = -1; ace.fx('land');
+        if (floor && !G.pool.on) { G.pool.on = true; const p = P(G.x, POOL_Y + STAND + 0.3, PZ); textFx('🎱', p[0], p[1], true, true); sound('notifyRaise'); buzz(20); }
+        if (now < G.jumpBuf) { G.jumpBuf = 0; doJump(); }
+      }
       else if (G.flipAt >= 0 && G.t - G.flipAt >= FLIP_S) G.flipAt = -1;
-    }
+    } else if (G.y > 0 && !onTable) { G.onGround = false; G.vy = 0; }      // off the end (or knocked off) of the table
     G.duck = (G.duckKey || now < G.duckUntil) && G.onGround;
     // Grinding along the rail: points and sparks.
     const onRail = skate && G.onGround && Math.abs(G.x) > HALF - 0.05;
@@ -572,6 +625,7 @@ export function create(shell) {
         }
         continue;
       }
+      if (o.kind === 'ball') { if (king) smash(o); else knockedOff(o, now); continue; }
       if (king) smash(o);
       else if (now < G.safeUntil) { /* still blinking after the insurance paid */ }
       else if (G.ins) insured(o);
@@ -594,11 +648,13 @@ export function create(shell) {
         if (gr && gr.got > 0 && !gr.broken) { gr.broken = true; if (G.streak > 1) { G.streak = 1; renderStats(); } }
       }
     }
+    if (G.pool) { G.pool.z0 -= mv; G.pool.z1 -= mv; if (G.pool.z1 < ZN - 2) G.pool = null; }
     G.obj = G.obj.filter((o) => o.z > ZN - 0.3 - (o.len || 0) && !(o.dead && o.z < PZ));
     G.items = G.items.filter((i) => i.z > ZN - 0.3 && !i.got);
     if (G.travel >= G.spawnAt) {
       // Before he lands the felt is cleared: no row that would reach him in the landing.
       if (G.jet && JET_S - G.jetT < (Z_SPAWN - PZ) / G.speed + JET_DOWN + 0.5) G.spawnAt += G.speed * gapTime();
+      else if (G.pool && G.pool.z1 > Z_SPAWN - 14) G.spawnAt += G.speed * gapTime();   // nothing under the table, room after it
       else { G.extra = 0; spawnRow(); G.spawnAt += G.speed * (gapTime() * (G.zig ? 0.55 : 1) + G.extra); }
     }
 
@@ -682,7 +738,7 @@ export function create(shell) {
     it.got = true;
     const p = P(it.x, it.y, PZ);
     if (it.kind === 'chip') {
-      G.chips++; G.chipPts += CHIP_PTS * G.streak; burst(p[0], p[1], 3, ['#d8b25a', '#f5f0e3']);
+      G.chips++; G.chipPts += CHIP_PTS * G.streak * (it.gold ? 2 : 1); burst(p[0], p[1], 3, ['#d8b25a', '#f5f0e3']);
       if (now - lastChipSnd > 90) { lastChipSnd = now; sound('notifyAction'); }
       const gr = G.grps[it.grp];
       if (gr) {
@@ -715,6 +771,20 @@ export function create(shell) {
       jetStart(now);
       textFx('🚀 JETPACK' + (mode === 'time' ? ' +' + JET_TIME + ' s' : ''), p[0], p[1] - 40, true, true); burst(p[0], p[1], 14, ['#ff8a3d', '#ffd27a', '#b3261e']);
       sound('notifyAllIn'); buzz([20, 20, 40]); ace.fx('cheer'); G.lookAt = 0; look('mc-m-fierce', 900);
+      return;
+    }
+    if (it.kind === 'eight') {
+      // The jackpot: chips and a card.
+      G.chips += POOL_CHIPS; G.chipPts += POOL_CHIPS * CHIP_PTS * G.streak;
+      textFx('JACKPOT 🎱 +' + POOL_CHIPS, p[0], p[1] - 40, true, true);
+      for (let k = 0; k < 4; k++) burst(p[0] + (k - 1.5) * 50, p[1] - 30 - (k % 2) * 30, 14, ['#ffd27a', '#f5f0e3', '#141414', '#2364c4']);
+      sound('notifyBigWin'); buzz([30, 30, 60]); ace.fx('cheer'); G.lookAt = 0; look('mc-m-yay', 1000);
+      if (G.deck.length) {
+        const prev = G.ev.cat;
+        G.hand.push(G.deck.pop()); G.ev = evalCards(G.hand); renderHand();
+        if (G.ev.cat > prev && bonusOf(G.ev) > 0) textFx(t(G.ev.nameKey) + ' +' + Math.round(bonusOf(G.ev) * 100) + '%', p[0], p[1] - 70, true);
+      }
+      renderStats();
       return;
     }
     if (it.kind === 'skates') {
@@ -889,8 +959,8 @@ export function create(shell) {
       }
     }
   }
-  function shadow(g, x, z, r, a) {
-    const p = P(x, 0, z), s = p[2];
+  function shadow(g, x, z, r, a, y) {
+    const p = P(x, y || 0, z), s = p[2];
     g.fillStyle = 'rgba(0,0,0,' + a + ')';
     g.beginPath(); g.ellipse(p[0], p[1], r * s, r * s * clamp(camH / z * 0.55, 0.12, 0.6), 0, 0, Math.PI * 2); g.fill();
   }
@@ -959,7 +1029,7 @@ export function create(shell) {
     shadow(g, o.x, o.z + o.len * 0.6, 0.62, 0.28);
     poly(g, [P(x0, 0, z0), P(x0, yAt(z1), z1), P(x0, 0, z1)], '#5a3b22');
     poly(g, [P(x1, 0, z0), P(x1, yAt(z1), z1), P(x1, 0, z1)], '#5a3b22');
-    poly(g, [P(x0, yAt(z0), z0), P(x1, yAt(z0), z0), P(x1, yAt(z1), z1), P(x0, yAt(z1), z1)], '#9a6a3c');
+    poly(g, [P(x0, yAt(z0), z0), P(x1, yAt(z0), z0), P(x1, yAt(z1), z1), P(x0, yAt(z1), z1)], o.gold ? '#c99a2e' : '#9a6a3c');
     for (let k = 1; k <= 3; k++) {
       const za = o.z + o.len * (k / 4) - 0.12, zb = za + 0.12;
       if (za < z0) continue;
@@ -975,7 +1045,7 @@ export function create(shell) {
     const bob = Math.sin(now / 260 + it.z) * 0.05;
     const p = P(it.x, it.y + bob, it.z), s = p[2];
     if (it.kind === 'chip') {
-      shadow(g, it.x, it.z, 0.16, 0.18);
+      shadow(g, it.x, it.z, 0.16, 0.18, it.gold ? POOL_Y + 0.01 : 0);
       const r = 0.2 * s, w = Math.max(0.16, Math.abs(Math.cos(it.spin)));
       g.fillStyle = it.col[0]; g.beginPath(); g.ellipse(p[0], p[1], r * w, r, 0, 0, Math.PI * 2); g.fill();
       if (w > 0.35 && r > 2) {
@@ -994,6 +1064,11 @@ export function create(shell) {
       return;
     }
     if (it.kind === 'jet') { drawJetItem(g, it, p, s, now); return; }
+    if (it.kind === 'eight') {
+      glow(g, p[0], p[1], 1.0 * s, 0.6, '255,210,120');
+      ball(g, it.x, it.y + bob, it.z, 0.34, '#141414', 8);
+      return;
+    }
     const allin = it.kind === 'allin', mag = it.kind === 'magnet', sk = it.kind === 'skates', sl = it.kind === 'slow';
     shadow(g, it.x, it.z, 0.24, 0.22);
     glow(g, p[0], p[1], 0.9 * s, 0.55, allin ? '245,197,24' : mag ? '160,110,240' : sk ? '60,200,200' : sl ? '230,180,90' : '90,150,255');
@@ -1067,6 +1142,44 @@ export function create(shell) {
     const s = '+' + Math.round(bonusOf(e) * 100) + '%';     // the hand's name on the card would not fit three abreast
     g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.55)'; g.strokeText(s, p[0], p[1]); g.fillStyle = '#ffd27a'; g.fillText(s, p[0], p[1]);
   }
+  /** The pool table in the air: its shadow on the felt, its edge, the blue cloth, cushions and pockets. */
+  function drawPool(g) {
+    const pl = G.pool, z0 = Math.max(ZN + 0.05, pl.z0), z1 = Math.min(ZFAR, pl.z1), W2 = POOL_HW, CU = 0.16, WD = 0.16;
+    if (z1 <= z0) return;
+    g.globalAlpha = 1;
+    quad(g, -W2, W2, 0.005, z0, z1, 'rgba(0,0,0,.22)');
+    const n = Math.ceil((z1 - z0) / SEG);
+    for (let i = n - 1; i >= 0; i--) {
+      const a = z0 + i * SEG, b = Math.min(z1, a + SEG), f = fogAt(b);
+      g.globalAlpha = 1 - f * 0.9;
+      quad(g, -W2 - CU - WD, -W2 - CU, POOL_Y + 0.1, a, b, '#5a3b22');
+      quad(g, W2 + CU, W2 + CU + WD, POOL_Y + 0.1, a, b, '#5a3b22');
+      quad(g, -W2 - CU, -W2, POOL_Y + 0.08, a, b, '#17497d');
+      quad(g, W2, W2 + CU, POOL_Y + 0.08, a, b, '#17497d');
+      quad(g, -W2, W2, POOL_Y, a, b, i & 1 ? '#1f5f9e' : '#1c5791');
+    }
+    g.globalAlpha = 1;
+    // Its near edge, when it is still ahead: the wood under the cloth.
+    if (pl.z0 > ZN + 0.05) poly(g, [P(-W2 - CU - WD, POOL_Y + 0.1, pl.z0), P(W2 + CU + WD, POOL_Y + 0.1, pl.z0), P(W2 + CU + WD, POOL_Y - POOL_T, pl.z0), P(-W2 - CU - WD, POOL_Y - POOL_T, pl.z0)], '#4a2f1a');
+    // The pockets: the corners and the middle of each side.
+    for (const zz of [pl.z0 + 0.2, (pl.z0 + pl.z1) / 2, pl.z1 - 0.2]) {
+      if (zz < ZN + 0.3 || zz > ZFAR) continue;
+      for (const sx of [-1, 1]) { const p = P(sx * (W2 + 0.02), POOL_Y + 0.09, zz), r = 0.2 * p[2]; g.globalAlpha = 1 - fogAt(zz); g.fillStyle = '#0b0b0b'; g.beginPath(); g.ellipse(p[0], p[1], r, r * clamp(camH / zz * 0.55, 0.12, 0.6), 0, 0, Math.PI * 2); g.fill(); }
+    }
+    g.globalAlpha = 1;
+  }
+  /** A pool ball (or the 8-ball) of radius rr at (x, y, z). */
+  function ball(g, x, y, z, rr0, col, num) {
+    const p = P(x, y, z), r = rr0 * p[2];
+    if (r < 0.8) return;
+    g.fillStyle = col; g.beginPath(); g.arc(p[0], p[1], r, 0, Math.PI * 2); g.fill();
+    if (r > 3) {
+      g.fillStyle = '#fbf7ee'; g.beginPath(); g.arc(p[0], p[1] - r * 0.12, r * 0.42, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#141414'; g.font = '700 ' + Math.max(4, r * 0.55) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText(String(num), p[0], p[1] - r * 0.1);
+      g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.arc(p[0] - r * 0.4, p[1] - r * 0.45, r * 0.2, 0, Math.PI * 2); g.fill();
+    }
+  }
   function drawThing(g, o, now) {
     g.globalAlpha = 1 - fogAt(o.z);
     if (o.kind === 'stack') drawStack(g, o);
@@ -1074,6 +1187,7 @@ export function create(shell) {
     else if (o.kind === 'fly') drawFly(g, o);
     else if (o.kind === 'button') drawButton(g, o);
     else if (o.kind === 'ramp') drawRamp(g, o);
+    else if (o.kind === 'ball') { shadow(g, o.x, o.z, BALL_R * 0.9, 0.3, POOL_Y + 0.01); ball(g, o.x, POOL_Y + BALL_R, o.z, BALL_R, o.col, o.num); }
     else drawItem(g, o, now);
     g.globalAlpha = 1;
   }
@@ -1141,10 +1255,18 @@ export function create(shell) {
     drawWorld(g, G.travel);
     // Far to near: behind the Ace on the stage's canvas, past him on the front
     // one (the ramps lie on the felt: always under him).
-    const things = G.obj.filter((o) => !o.dead).concat(G.items.filter((i) => !i.got))
+    let things = G.obj.filter((o) => !o.dead).concat(G.items.filter((i) => !i.got))
       .sort((a, b) => (b.z + (b.len || 0) / 2) - (a.z + (a.len || 0) / 2));
+    // The pool table: what is beyond it first, then the table, then the rest.
+    if (G.pool && G.pool.z0 < ZFAR) {
+      const z1 = G.pool.z1, far = things.filter((o) => o.z > z1);
+      for (const o of far) drawThing(g, o, now);
+      drawPool(g);
+      things = things.filter((o) => o.z <= z1);
+    }
     let aceDone = false;
-    const aceShadow = (cv) => { const lift = clamp(1 - G.y / 1.4, 0.35, 1); shadow(cv, G.x, PZ, 0.42 * lift, 0.38 * lift); };
+    const base = state === 'run' && G.y >= POOL_Y - 0.01 && poolHere() ? POOL_Y : 0;
+    const aceShadow = (cv) => { const lift = clamp(1 - (G.y - base) / 1.4, 0.35, 1); shadow(cv, G.x, PZ, 0.42 * lift, 0.38 * lift, base); };
     for (const o of things) {
       if (o.z >= PZ || o.kind === 'ramp') drawThing(g, o, now);
       else { if (!aceDone) { aceShadow(g); aceDone = true; } drawThing(gF, o, now); }

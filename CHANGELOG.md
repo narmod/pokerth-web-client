@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ace Dash: the pool table in the air** (`web.74`, narmod's idea « a pool table in the air, climb on it for a super
+  bonus ») — `ace-dash.mjs`: every `POOL_ROWS`+rnd rows from `POOL_LEVEL` 4 (never with the jetpack), a gold ramp in
+  the free lane (nothing before it in that lane), then `G.pool` {z0, z1} at `POOL_Y` 1.35 m over the three lanes,
+  `poolLen(speed)` long. Physics: the table is a floor from above (the ramp's backflip, or a well-timed one), its
+  underside stops his head from below, he drops at its end. Balls (`kind: 'ball'`, a free lane per row): a hit
+  knocks him off (`knockedOff`: the table no longer holds him, safety, no harm), All-In smashes them; gold chips ×2;
+  the 8-ball (`eight`): `POOL_CHIPS` 25 chips and a card. No rows under the table and a gap after it. Drawn: its
+  shadow on the felt, blue cloth in bands, cushions, wood, pockets, its near edge; what lies beyond it first.
+  `adPoolRule` in 83 languages; `test-ace-dash-jet.mjs` 19 checks.
 - **Ace Dash: roller skates and the hourglass** (`web.73`, narmod's « skates + a bonus that slows down ») —
   `ace-dash.mjs`: two more power chips in the rotation (`skates` from level 2, `slow`). Skates `SKATE_MS` 8 s:
   speed ×`SKATE_SPEED` 1.2, distance ×`SKATE_DIST` 1.5, lane changes ×2.6 faster; lanes −1 and 3 are the rails
