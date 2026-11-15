@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.78 (current series):
+2026-11-15 version 2.1.11-web.79 (current series):
+- bugfix: Ace Dash — when the pool table is missed (or a ball knocks the Ace off it), the table and its chips are now drawn over him, see-through: he is plainly running underneath, not on it
+
+2026-11-15 version 2.1.11-web.78:
 - improvement: Ace Dash — the « Blinds » and venue band now sits over the scenery, above the felt: it no longer hides the obstacles coming
 - improvement: Poker Run — the two choices of a fork are shown at the sides of the screen: the road and the car stay in view (on a phone held sideways they covered everything)
 

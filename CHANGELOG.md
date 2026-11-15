@@ -531,6 +531,10 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Under the pool table, he looked on it** (`web.79`, narmod: « when you don't take the pool level it's as if you
+  had, except you can't get the chips ») — the Ace (a DOM sprite over the stage canvas) was drawn over the table;
+  `ace-dash.mjs`: while he is under it, the table and what lies on it (balls, gold chips, the 8-ball) are drawn on an
+  offscreen canvas laid over him at 38 % (`underView()` for the tests); `test-ace-dash-jet.mjs` 20 checks.
 - **The backlight under its element on iPhone** (`web.71`, narmod's screen recording) — `ui/backlight.mjs`: the
   canvas was `100vw × 100vh` while drawn in `innerWidth × innerHeight`; in Safari with its bars shown 100vh is the
   tallest viewport, so the bitmap was stretched down (≈ 12 %) and the light and the egg landed under the Mini-games

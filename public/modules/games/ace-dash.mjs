@@ -214,6 +214,10 @@ export function create(shell) {
   front.style.zIndex = '396';
   shell.layer.appendChild(front);
   const gF = /** @type {CanvasRenderingContext2D} */ (front.getContext('2d'));
+  // The pool table seen from under it (web.79): drawn here, then laid see-through over the Ace.
+  const ghostCv = document.createElement('canvas');
+  let seenUnder = false;                                   // tests: the last frame showed him under the table
+  const gG = /** @type {CanvasRenderingContext2D} */ (ghostCv.getContext('2d'));
   shell.lanes(true);
   const buzz = (p) => { try { if (typeof window.hapticBuzz === 'function') window.hapticBuzz(p); } catch (e) {} };
 
@@ -324,7 +328,7 @@ export function create(shell) {
   newRun();
   titlePanel();
   turnBack(false); ace.pose('wave');
-  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, pool: () => { G.level = Math.max(G.level, POOL_LEVEL); G.nextPool = 0; G.rows = Math.max(G.rows, 1); G.zig = false; G.obj = []; G.items = []; G.spawnAt = G.travel; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, underView: () => seenUnder, pool: () => { G.level = Math.max(G.level, POOL_LEVEL); G.nextPool = 0; G.rows = Math.max(G.rows, 1); G.zig = false; G.obj = []; G.items = []; G.spawnAt = G.travel; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer); clearTimeout(rebuyTimer);
@@ -1260,11 +1264,19 @@ export function create(shell) {
     let things = G.obj.filter((o) => !o.dead).concat(G.items.filter((i) => !i.got))
       .sort((a, b) => (b.z + (b.len || 0) / 2) - (a.z + (a.len || 0) / 2));
     // The pool table: what is beyond it first, then the table, then the rest.
+    // He runs under it (missed, or knocked off — web.79, narmod: « as if we had taken it, but the chips
+    // can't be had »): the table and what is on it go over him, see-through — he is plainly below.
+    let ghost = null;
+    seenUnder = false;
     if (G.pool && G.pool.z0 < ZFAR) {
-      const z1 = G.pool.z1, far = things.filter((o) => o.z > z1);
+      const pl = G.pool, z1 = pl.z1, far = things.filter((o) => o.z > z1);
       for (const o of far) drawThing(g, o, now);
-      drawPool(g);
+      const under = state === 'run' && pl.z0 <= PZ + 0.5 && z1 >= PZ && G.y < POOL_Y - 0.05;
       things = things.filter((o) => o.z <= z1);
+      if (under) {
+        ghost = things.filter((o) => o.kind === 'ball' || o.kind === 'eight' || o.gold); seenUnder = true;
+        things = things.filter((o) => !ghost.includes(o));
+      } else drawPool(g);
     }
     let aceDone = false;
     const base = state === 'run' && G.y >= POOL_Y - 0.01 && poolHere() ? POOL_Y : 0;
@@ -1274,6 +1286,14 @@ export function create(shell) {
       else { if (!aceDone) { aceShadow(g); aceDone = true; } drawThing(gF, o, now); }
     }
     if (!aceDone) aceShadow(g);
+    if (ghost) {
+      if (ghostCv.width !== front.width || ghostCv.height !== front.height) { ghostCv.width = front.width; ghostCv.height = front.height; }
+      gG.setTransform(shell.dpr * shell.k, 0, 0, shell.dpr * shell.k, 0, 0);
+      gG.clearRect(0, 0, shell.W, shell.H);
+      drawPool(gG);
+      for (const o of ghost) drawThing(gG, o, now);
+      gF.save(); gF.setTransform(1, 0, 0, 1, 0, 0); gF.globalAlpha = 0.38; gF.drawImage(ghostCv, 0, 0); gF.restore();
+    }
     const run = state === 'run';
     if (run && G.ins && !shell.reduced) {
       const p = P(G.x, G.y + STAND / 2, PZ), r = STAND * p[2] * 0.9;

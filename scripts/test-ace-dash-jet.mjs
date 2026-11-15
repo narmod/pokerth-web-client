@@ -97,9 +97,10 @@ const poolRun = async (steer) => {
       if (st !== 'hit' && G.pool) { const nb = G.obj.filter((o) => o.kind === 'ball' && !o.dead && o.z > 4.3).sort((a, b) => a.z - b.z)[0];
         if (nb && nb.z < 12) { const used = G.obj.filter((o) => o.kind === 'ball' && !o.dead && Math.abs(o.z - nb.z) < 0.1).map((o) => Math.round(o.x / 1.6) + 1); const fr = [0, 1, 2].filter((l) => !used.includes(l)); if (!fr.includes(G.lane)) G.lane = fr[0]; } else if (!nb && G.pool.z0 < 4) G.lane = 1; }
       if (st === 'hit' && G.pool && G.pool.on) { const nb = G.obj.filter((o) => o.kind === 'ball' && !o.dead && o.z > 4.3).sort((a, b) => a.z - b.z)[0]; if (nb) G.lane = Math.round(nb.x / 1.6) + 1; }
-      return { st: window.__pthDash.state(), y: G.y, on: !!(G.pool && G.pool.on), drop: !!(G.pool && G.pool.drop), pool: !!G.pool, under: !!(G.pool && G.pool.z0 < 4 && G.pool.z1 > 4 && G.y < 1) };
+      return { st: window.__pthDash.state(), y: G.y, on: !!(G.pool && G.pool.on), drop: !!(G.pool && G.pool.drop), pool: !!G.pool, under: !!(G.pool && G.pool.z0 < 4 && G.pool.z1 > 4 && G.y < 1), ghost: window.__pthDash.underView() };
     }, steer);
     if (st.st !== 'run') return Object.assign(ramp, seen, { dead: true });
+    seen.ghost = seen.ghost || (st.under && st.ghost); seen.onGhost = seen.onGhost || (st.on && !st.drop && st.ghost && st.y >= 1.3);
     seen.on = seen.on || st.on; seen.maxY = Math.max(seen.maxY, st.y); seen.under = seen.under || st.under; seen.knocked = seen.knocked || st.drop;
     if (!st.pool && i > 3) break;
     await sleep(120);
@@ -116,6 +117,7 @@ ok(pr.chips - pr.chips0 >= 25 && pr.hand - pr.hand0 === 1, 'the 8-ball: the jack
 ok(!pr.dead && pr.y === 0, 'at the table\'s end he drops back on the felt');
 const pu = await poolRun('under');
 ok(!pu.dead && !pu.on && pu.under && pu.hand === pu.hand0, 'missed: he runs underneath, no harm, no jackpot');
+ok(pu.ghost && !pr.onGhost, 'underneath, the table is drawn over him, see-through (on it, it is not)');
 const ph = await poolRun('hit');
 ok(!ph.dead && ph.on && ph.knocked, 'a ball on the table knocks him off, back on the felt, still running');
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
