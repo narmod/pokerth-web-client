@@ -67,6 +67,12 @@ for (const id of ['ace-runner', 'house', 'solitaire', 'videopoker', 'whowins', '
   ok(/^<svg[^>]*viewBox="0 0 320 140"/.test(d) && d !== l && ids.every((x) => idsL.indexOf(x) < 0), id + ': a cover picture, one for each theme, ids that do not clash');
 }
 ok(art('nope', false) === '', 'no picture for an unknown game');
+{
+  const pr = await import('../public/modules/games/poker-run.mjs');
+  const L = [0, 1, 2, 3, 4, 5].map(pr.stageLen);
+  ok(L.every((x, i) => x > 600 && (!i || x >= L[i - 1])) && L[5] < L[0] * 1.5, 'Poker Run: six stages of like length, the last one too (' + L.join(', ') + ')');
+  ok(pr.branchOfLane(0, 1) === 0 && pr.branchOfLane(2, 0) === 1 && pr.branchOfLane(1, 0) === 0 && pr.branchOfLane(1, 1) === 1, 'Poker Run: two roads at a fork, the middle lane takes its side');
+}
 const langDir = path.resolve('public/modules/lang');
 const files = fs.readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
 const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'arRecord', 'arNewRecord',

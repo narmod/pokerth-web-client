@@ -1270,7 +1270,7 @@ export const strings = {
     "adRebuyQ": "Zapłacić {n} żetonów, by wrócić do biegu?",
     "adRebuyKeys": "Spacja: rebuy · ↓: nie, dzięki",
     "prHint": "◀ ▶ lub ← →: skręcaj · ↑ lub spacja: nitro · ↓: hamuj · wybierz kartę na każdym rozwidleniu",
-    "prRules": "As rusza z Las Vegas swoim kabrioletem, z dwiema kartami w ręce.\nDroga pięć razy rozwidla się na trzy odnogi: odnoga, którą wybierzesz, wykłada kartę wspólną (flop, turn, river) i prowadzi do nowej scenerii. Przed każdym rozwidleniem auto zwalnia: porównaj trzy karty.\nKażde rozwidlenie dodaje 22 s do zegara. Gdy czas się skończy, krupier uzupełnia stół.\nZbieraj żetony; zderzenie kosztuje 20% z nich. Skręć w ciasnym zakręcie przy pełnej prędkości, by driftować: żetony i nitro.\nWynik: (żetony + 5 za każdą pozostałą sekundę) × twój najlepszy układ z pięciu kart.\n◀ ▶ lub ← →: skręcaj · ↑ lub spacja: nitro · ↓: hamuj · P: pauza",
+    "prRules": "As rusza z Las Vegas swoim kabrioletem, z dwiema kartami w ręce.\nDroga pięć razy rozwidla się na dwie odnogi, w lewo lub w prawo: odnoga, którą wybierzesz, wykłada kartę wspólną (flop, turn, river) i prowadzi do nowej scenerii. Przed każdym rozwidleniem auto zwalnia: porównaj obie karty.\nKażde rozwidlenie dodaje 22 s do zegara. Gdy czas się skończy, krupier uzupełnia stół.\nZbieraj żetony; zderzenie kosztuje 20% z nich. Skręć w ciasnym zakręcie przy pełnej prędkości, by driftować: żetony i nitro.\nWynik: (żetony + 5 za każdą pozostałą sekundę) × twój najlepszy układ z pięciu kart.\n◀ ▶ lub ← →: skręcaj · ↑ lub spacja: nitro · ↓: hamuj · P: pauza",
     "prTimeUp": "Koniec czasu!",
     "ach_pdrop": "Spadający poker",
     "ach_pdrop_d": "Pokonaj Asa w Spadającym pokerze, zdobywając 40 punktów lub więcej",

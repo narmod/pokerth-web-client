@@ -1,4 +1,11 @@
-2026-11-15 version 2.1.11-web.57 (current series):
+2026-11-15 version 2.1.11-web.58 (current series):
+- improvement: Poker Run — the road now forks in two, left or right, like OutRun: two cards to compare instead of three
+- improvement: Poker Run — the result shows the course like OutRun's map: the route you drove with the card each fork dealt, where the car stopped and what was left to the finish
+- bugfix: Poker Run — the last stage was only a few hundred metres after the last gate; it is now as long as the others
+- bugfix: Poker Run — the « A♠ » on the car's plate is centred on iPhone too
+- bugfix: Poker Run — when time runs out, the level shown stays the one you reached (the dealer's cards no longer count as stages driven)
+
+2026-11-15 version 2.1.11-web.57:
 - improvement: Mini-games — new pictures for nine games, in the style of Ace Dash: a scene in the club at night (the dark room, its lamps, the felt in perspective) with the game's things on the table, and no buttons or pay table any more
 - improvement: Poker Run — its picture shows one straight road to the city, without the three forks
 - improvement: Video Poker — its picture is now a poker machine on the bar, the Ace on his stool beside it

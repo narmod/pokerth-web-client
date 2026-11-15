@@ -632,6 +632,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForFunction(() => window.__pthRun && window.__pthRun.state() === 'run', null, { timeout: 4000 }).catch(() => {});
   const pr0 = await pg.evaluate(() => ({ st: window.__pthRun.state(), hole: document.querySelectorAll('#pth-game .prun-hud .ar-slots .pk').length, slots: document.querySelectorAll('#pth-game .prun-hud .ar-slot').length }));
   ok(pr0.st === 'run' && pr0.hole === 2 && pr0.slots === 5, label + ': Space starts the run, two cards in hand and five board slots');
+  // Two roads at each fork (OutRun), and the last stage as long as the others.
+  const prT = await pg.evaluate(() => { const G = window.__pthRun.game().gates, z = G.map((g) => g.seg).concat(window.__pthRun.finish()); return { two: G.every((g) => g.cards.length === 2), len: z.map((x, i) => x - (i ? z[i - 1] : 0)) }; });
+  const prM = prT.len.reduce((a, b) => a + b, 0) / prT.len.length;
+  ok(prT.two && prT.len.length === 6 && prT.len.every((x) => x > prM * 0.75 && x < prM * 1.25), label + ': two roads at each fork, six stages of like length (' + prT.len.join(', ') + ')');
   await pg.keyboard.press('Space');   // let go of the nitro the start may have left down
   await sleep(1500);
   await pg.keyboard.down('ArrowLeft'); await sleep(450); await pg.keyboard.up('ArrowLeft');
@@ -650,9 +654,12 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.evaluate(() => window.__pthRun.setTime(0.2));
   await pg.waitForSelector('#pth-game .ar-final', { timeout: 15000 }).catch(() => {});
   const prOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_poker-run'),
-    board: window.__pthRun.game().board.length, route: (document.querySelector('#pth-game .prun-route') || {}).textContent || '' }));
-  ok(/\) × \d+ = /.test(prOver.final) && (prOver.best !== null || / = 0$/.test(prOver.final.trim())) && prOver.board === 5 && prOver.route.split('→').length === 6,
-    label + ': time out, the board is completed, score saved (' + prOver.final.trim() + ' · ' + prOver.route + ')');
+    board: window.__pthRun.game().board.length, map: !!document.querySelector('#pth-game svg.prun-map'),
+    nodes: document.querySelectorAll('#pth-game .prun-map > g > circle').length, car: !!document.querySelector('#pth-game .prun-map g g rect'),
+    flag: /🏁/.test((document.querySelector('#pth-game .prun-map') || {}).textContent || '') }));
+  ok(/\) × \d+ = /.test(prOver.final) && (prOver.best !== null || / = 0$/.test(prOver.final.trim())) && prOver.board === 5,
+    label + ': time out, the board is completed, score saved (' + prOver.final.trim() + ')');
+  ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');
   await pg.keyboard.press('Escape'); await sleep(300);
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && !document.querySelector('#pth-game-ace.prun-back') && !document.querySelector('#pth-game .prun-prev')), label + ': back on the arcade page, the car and its Ace gone');

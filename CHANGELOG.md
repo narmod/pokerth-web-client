@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: two roads at each fork, OutRun's course map** (`web.58`, narmod: « two, like OutRun, it's more logical
+  and easier; show the course, how far you went and what was left ») — `games/poker-run.mjs`: a fork is now the
+  road's two halves pulling apart (`BR_OFF`), two cards a gate, `branchOfLane()` sends the middle lane's traffic
+  either way; the preview has two columns (◀ left / right ▶). The result replaces the text route with
+  `courseMap()`: an SVG of the six stages, each fork's two scenes, the route taken in gold with its card, the rest
+  in grey, the car at `progress()` and the 🏁. Fixed: the last stage was a short straight after the fifth gate —
+  `stageLen(k)` now gives it the length of the others; the plate's « A♠ » slid off centre on iOS Safari (the ♠
+  measured in one font and drawn in the emoji one) — the spade is now a vector path; the HUD level showed 6/6 on a
+  time-out once the dealer had completed the board.
 - **New covers, on the model of Ace Dash** (`web.57`, narmod) — `games/art.mjs`: new `club()` (the dark room and
   its two lamps) and `table()` (the felt in perspective, its wooden rim; returns `at(f, y)`) and `glow()`; Ace
   Runner, House of Cards, Poker Solitaire, Who Wins?, Higher or Lower, the Ace's Bluff and Poker Drop redrawn as

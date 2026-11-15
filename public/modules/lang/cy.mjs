@@ -896,7 +896,7 @@ export const strings = {
     "adRebuyQ": "Talu {n} sglodyn i fynd yn ôl i'r ras?",
     "adRebuyKeys": "Bylchwr: prynu eto · ↓: dim diolch",
     "prHint": "◀ ▶ neu ← →: llywio · ↑ neu Bylchwr: nitro · ↓: brecio · dewis dy gerdyn ym mhob fforch",
-    "prRules": "Mae'r As yn gadael Las Vegas yn ei gar to agored, gyda dau gerdyn yn ei law.\nMae'r ffordd yn fforchio bum gwaith yn dair cangen: mae'r gangen a gymeri yn gosod cerdyn ar y bwrdd (flop, turn, river) ac yn arwain at olygfa newydd. Mae'r car yn arafu cyn pob fforch: cymhara'r tri cherdyn.\nMae pob fforch yn ychwanegu 22 eiliad at y cloc. Os daw'r amser i ben, mae'r deliwr yn cwblhau'r bwrdd.\nCasgla sglodion; mae gwrthdrawiad yn costio 20% ohonynt. Llywia i dro tynn ar gyflymder llawn i ddrifftio: sglodion a nitro.\nSgôr: (sglodion + 5 am bob eiliad sy'n weddill) × dy law bum cerdyn orau.\n◀ ▶ neu ← →: llywio · ↑ neu Bylchwr: nitro · ↓: brecio · P: oedi",
+    "prRules": "Mae'r As yn gadael Las Vegas yn ei gar to agored, gyda dau gerdyn yn ei law.\nMae'r ffordd yn fforchio bum gwaith yn ddwy gangen, i'r chwith neu i'r dde: mae'r gangen a gymeri yn gosod cerdyn ar y bwrdd (flop, turn, river) ac yn arwain at olygfa newydd. Mae'r car yn arafu cyn pob fforch: cymhara'r ddau gerdyn.\nMae pob fforch yn ychwanegu 22 eiliad at y cloc. Os daw'r amser i ben, mae'r deliwr yn cwblhau'r bwrdd.\nCasgla sglodion; mae gwrthdrawiad yn costio 20% ohonynt. Llywia i dro tynn ar gyflymder llawn i ddrifftio: sglodion a nitro.\nSgôr: (sglodion + 5 am bob eiliad sy'n weddill) × dy law bum cerdyn orau.\n◀ ▶ neu ← →: llywio · ↑ neu Bylchwr: nitro · ↓: brecio · P: oedi",
     "prTimeUp": "Mae'r amser ar ben!",
     "ach_pdrop": "Pocer Gollwng",
     "ach_pdrop_d": "Curo’r As yn Pocer Gollwng gyda 40 pwynt neu fwy",

@@ -4,13 +4,17 @@
 // narmod 2026-11-13). Arcade page (games/index.mjs), after Ace Dash.
 //
 // A segment road in pseudo-3D (curves, hills) drawn on the shell's canvas,
-// the camera behind the car. Six stages from Las Vegas: at the end of the
-// first five the road forks into three branches; the branch the car takes
-// deals that board card (flop ×3, turn, river) and leads to the next scene
-// (Las Vegas, Saint-Tropez, Monument Valley, Chamonix, Monaco). The car
-// slows down before each fork so the three cards can be compared (the
-// preview names the hand each one makes). Every fork adds EXTEND seconds to
-// the clock; when it runs out the dealer completes the board.
+// the camera behind the car. Six stages from Las Vegas, all of the same
+// length: at the end of the first five the road forks in two, left or right
+// like OutRun (web.58, narmod: « two, it's more logical and easier »); the
+// branch the car takes deals that board card (flop ×3, turn, river) and leads
+// to the next scene (Las Vegas, Saint-Tropez, Monument Valley, Chamonix,
+// Monaco). The car slows down before each fork so the two cards can be
+// compared (the preview names the hand each one makes). Every fork adds
+// EXTEND seconds to the clock; when it runs out the dealer completes the
+// board. The result shows the course like OutRun's map: the stages driven,
+// the branch left aside at each fork, where the car stopped and what was
+// left to the finish.
 //   Steer      ← → held (keys, ◀ ▶ of the pad), a swipe nudges
 //   Nitro      ↑, Space, ▲ held (a tap: a short burst); refilled by the
 //              chips and the drifts
@@ -31,8 +35,8 @@
 // the hand names h1n…h10n).
 // ═══════════════════════════════════════════════════════════════════
 
-import { evalCards } from './poker-hand.mjs';
-import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID } from './common.mjs';
+import { evalCards, suitOf } from './poker-hand.mjs';
+import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
 import { titleScreen } from './title.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
@@ -40,7 +44,12 @@ const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
 const DEPTH = 1 / Math.tan(FOV / 2 * Math.PI / 180), PLAYER_Z = CAMH * DEPTH;
 const MAXV = SEG * 62, ACCEL = MAXV / 4.5, OFFROAD = MAXV / 3.5, CENTRI = 0.27;
 const LANE_OFF = [-0.66, 0, 0.66];          // lane centres, in half-road widths
-const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 0.9, MERGE = 60;
+const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
+const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 1, MERGE = 60;
+/** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
+export const stageLen = (k) => 740 + k * 40;
+/** The branch (0 left, 1 right) a car in lane l keeps at a fork: the middle lane goes either way. */
+export const branchOfLane = (l, side) => (l === 0 ? 0 : l === 2 ? 1 : side);
 const GATE_LABELS = ['FLOP 1/3', 'FLOP 2/3', 'FLOP 3/3', 'TURN', 'RIVER'];
 const BOARD_TAGS = ['F', 'F', 'F', 'T', 'R'];
 const SUITS = ['♦', '♥', '♠', '♣'], VS = '︎';
@@ -98,7 +107,7 @@ const CSS = `
 #pth-game .prun-hud .prun-gap{width:6px;flex:none}
 #pth-game .prun-hud .ar-slot{display:flex;align-items:center;justify-content:center;font:600 10px 'Inconsolata',monospace;color:rgba(216,178,90,.6)}
 #pth-game .prun-b .pk{box-shadow:0 0 0 2px #d8b25a}
-#pth-game .prun-prev{position:absolute;left:8px;right:8px;top:64px;z-index:397;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;pointer-events:none}
+#pth-game .prun-prev{position:absolute;left:8px;right:8px;top:64px;z-index:397;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;pointer-events:none;max-width:420px;margin:0 auto}
 #pth-game .prun-prev[hidden]{display:none}
 #pth-game .prun-prev .prun-tag{grid-column:1/-1;text-align:center;font:700 12px 'Inconsolata',monospace;letter-spacing:.08em;color:#d8b25a;text-shadow:0 1px 3px #000}
 #pth-game .prun-opt{min-width:0;background:rgba(13,17,23,.82);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:5px 3px;display:flex;flex-direction:column;align-items:center;gap:2px;color:#f5f0e3;text-align:center}
@@ -119,8 +128,7 @@ const CSS = `
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="left"]{order:-3}
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1;width:72px;font-size:12px;letter-spacing:.04em}
 #pth-game.prun-pad.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:3}
-#pth-game .prun-route{font:500 12px/1.3 'Inter',system-ui,sans-serif;color:#cfd8d2}
-#pth-game.pg-light .prun-route{color:#2b3138}
+#pth-game .prun-map{display:block;color:#f1e9d4;width:min(520px,100%);height:auto;margin:2px 0 4px}
 @media (prefers-reduced-motion:reduce){#${ACE_ID}.prun-back.prun-spin .mc-card3d,#pth-game .prun-hud .ar-num.prun-ext{animation:none}}
 `;
 
@@ -164,7 +172,7 @@ export function create(shell) {
 
   // ── Track ──────────────────────────────────────────────────────────
   let segs = [], finishSeg = 0, gates = [], cars = [], buildStage = 0;
-  let stageTheme = [], branches = [], hover = 1, hole = [], board = [];
+  let stageTheme = [], branches = [], hover = 0, hole = [], board = [];
   const lastY = () => segs.length ? segs[segs.length - 1].p2.w.y : 0;
   function addSeg(curve, y) {
     const n = segs.length;
@@ -185,14 +193,14 @@ export function create(shell) {
     for (let i = 51; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = deck[i]; deck[i] = deck[j]; deck[j] = x; }
     hole = [deck.pop(), deck.pop()];
     for (let k = 0; k < FORKS; k++) {
-      const start = segs.length, target = 740 + k * 40;
+      const start = segs.length, target = stageLen(k);
       while (segs.length - start < target) {
         const en = 25 + Math.floor(Math.random() * 25), ho = 30 + Math.floor(Math.random() * 60);
         // Gentle hills: the road stays in sight up to the horizon, like what stands on it.
         const hill = clamp((Math.random() * 2 - 1) * 420 - lastY() * 0.5, -560, 560);
         addRoad(en, ho, en, pick([0, 0, 1.5, -1.5, 2.4, -2.4, 3.2, -3.2]), hill);
       }
-      // The fork: a flat straight, three branches, the gate, then the branch taken swings back to the middle.
+      // The fork: a flat straight, two branches, the gate, then the branch taken swings back to the middle.
       const f0 = segs.length; addRoad(0, 30 + 150 + MERGE + 20, 0, 0, 0);
       const gate = f0 + 180;
       for (let i = f0 + 30; i <= gate; i++) { segs[i].f = ease(0, 1, (i - (f0 + 30)) / 100); segs[i].gk = k; }
@@ -200,11 +208,18 @@ export function create(shell) {
       segs[gate + MERGE].mEnd = k;
       for (let i = gate + 1; i < segs.length; i++) segs[i].stage = k + 1;
       buildStage = k + 1;
-      const g = { seg: gate, k, cards: [deck.pop(), deck.pop(), deck.pop()], label: GATE_LABELS[k], picked: -1 };
+      const g = { seg: gate, k, cards: [deck.pop(), deck.pop()], label: GATE_LABELS[k], picked: -1, auto: false };
       gates.push(g); segs[gate].gate = g;
     }
-    addRoad(30, 120, 30, pick([1.5, -1.5]), 0); addRoad(0, 140, 0, 0, 0);
-    finishSeg = segs.length - 60; addRoad(0, DRAW + 30, 0, 0, 0);
+    // The last stage, to the finish: as long as the others (it was a short
+    // straight, a few hundred metres after the last gate).
+    const start = segs.length;
+    while (segs.length - start < stageLen(FORKS)) {
+      const en = 25 + Math.floor(Math.random() * 25), ho = 30 + Math.floor(Math.random() * 60);
+      addRoad(en, ho, en, pick([0, 0, 1.5, -1.5, 2.4, -2.4, 3.2, -3.2]), clamp((Math.random() * 2 - 1) * 420 - lastY() * 0.5, -560, 560));
+    }
+    addRoad(20, 20, 20, 0, -lastY() * 0.6); addRoad(0, 80, 0, 0, 0);
+    finishSeg = segs.length - 20; addRoad(0, DRAW + 30, 0, 0, 0);
     const free = (i) => segs[i] && segs[i].f === 0 && segs[i].m === 0 && !segs[i].gate;
     for (let s = 70; s < finishSeg - 20; s += 36 + Math.floor(Math.random() * 24)) {
       const lane = Math.floor(Math.random() * 3);
@@ -214,40 +229,47 @@ export function create(shell) {
     for (let k = 0; k < 34; k++) {
       let z = Math.floor(150 + k * (finishSeg - 250) / 34 + Math.random() * 40);
       while (!free(z) && z < finishSeg) z++;
-      cars.push({ z: z * SEG, lane: Math.floor(Math.random() * 3), v: MAXV * (0.32 + Math.random() * 0.2), col: ['#5d6b7a', '#3d6a8f', '#8a8f96', '#6b5a86', '#2f7a6a'][k % 5], dead: false, ahead: true });
+      cars.push({ z: z * SEG, lane: Math.floor(Math.random() * 3), side: k % 2, v: MAXV * (0.32 + Math.random() * 0.2), col: ['#5d6b7a', '#3d6a8f', '#8a8f96', '#6b5a86', '#2f7a6a'][k % 5], dead: false, ahead: true });
     }
   }
   const findSeg = (z) => segs[clamp(Math.floor(z / SEG), 0, segs.length - 1)];
   const nextGate = () => gates.find((g) => g.picked < 0);
-  const chosenLane = (g) => g.picked >= 0 ? g.picked : (nextGate() === g ? hover : 1);
+  /** The branch of a fork: the one taken, the one the car is on while it comes, else the left one. */
+  const chosenLane = (g) => g.picked >= 0 ? g.picked : (nextGate() === g ? hover : 0);
   function assignBranches(k) {
     const pool = KEYS_TH.filter((x) => x !== stageTheme[k]);
     for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = pool[i]; pool[i] = pool[j]; pool[j] = x; }
-    branches[k] = pool.slice(0, 3);
+    branches[k] = pool.slice(0, 2);
   }
   function themeOf(k) {
     if (stageTheme[k]) return TH[stageTheme[k]];
     const b = branches[k - 1];
     return b ? TH[b[chosenLane(gates[k - 1])]] : TH.vegas;
   }
-  // Lateral layout of a segment (half-road units): three lane pieces, and the branches not taken.
+  // Lateral layout of a segment (half-road units): the three lanes of the
+  // road; at a fork its two branches (the road's halves pulling apart); after
+  // it the branch taken swinging back to the middle, the other one leaving.
+  const BR_HW = 0.5 * 0.7;                  // a branch's half width at the gate
   function geom(s) {
     if (s.f > 0) {
-      const sp = 1 + SPLIT * s.f, hw = (1 / 3) * (1 - 0.3 * s.f);
-      return { pcs: LANE_OFF.map((o) => ({ c: o * sp, hw })), joined: s.f < 0.12, ghosts: null };
+      const sp = 1 + SPLIT * s.f, hw = 0.5 * (1 - 0.3 * s.f);
+      return { pcs: BR_OFF.map((o) => ({ c: o * sp, hw })), joined: s.f < 0.12, ghosts: null, fork: true };
     }
     if (s.m > 0) {
-      const cl = chosenLane(gates[s.gk]), m = s.m, C = LANE_OFF[cl] * (1 + SPLIT), hw = (1 / 3) * (0.7 + 0.3 * (1 - m));
+      const cl = chosenLane(gates[s.gk]), m = s.m, C = BR_OFF[cl] * (1 + SPLIT), hw = BR_HW * m + (1 / 3) * (1 - m);
       return { pcs: LANE_OFF.map((o) => ({ c: C * m + o * (1 - m), hw })), joined: true,
-        ghosts: LANE_OFF.map((o, l) => l === cl ? null : { c: o * (1 + SPLIT + 5 * (1 - m)), hw: (1 / 3) * 0.7, a: m }) };
+        ghosts: BR_OFF.map((o, b) => b === cl ? null : { c: o * (1 + SPLIT + 5 * (1 - m)), hw: BR_HW, a: m }) };
     }
     return { pcs: LANE_OFF.map((o) => ({ c: o, hw: 1 / 3 })), joined: true, ghosts: null };
   }
-  const envL = (g) => Math.min(g.pcs[0].c - g.pcs[0].hw, g.pcs[1].c - g.pcs[1].hw, g.pcs[2].c - g.pcs[2].hw);
-  const envR = (g) => Math.max(g.pcs[0].c + g.pcs[0].hw, g.pcs[1].c + g.pcs[1].hw, g.pcs[2].c + g.pcs[2].hw);
+  const envL = (g) => Math.min(...g.pcs.map((p) => p.c - p.hw));
+  const envR = (g) => Math.max(...g.pcs.map((p) => p.c + p.hw));
   const nearest = (g, x) => { let bi = 0; g.pcs.forEach((p, i) => { if (Math.abs(x - p.c) < Math.abs(x - g.pcs[bi].c)) bi = i; }); return bi; };
   function carX(c, s, g) {
-    if (s.m > 0) { const cl = chosenLane(gates[s.gk]); return c.lane === cl ? (envL(g) + envR(g)) / 2 : g.ghosts[c.lane].c; }
+    const b = branchOfLane(c.lane, c.side);
+    if (s.m > 0) { const cl = chosenLane(gates[s.gk]); return b === cl ? (envL(g) + envR(g)) / 2 : g.ghosts[b].c; }
+    // At a fork, a car eases from its lane into its branch.
+    if (g.fork) { const k = clamp(s.f * 3, 0, 1); return LANE_OFF[c.lane] * (1 - k) + g.pcs[b].c * k; }
     return g.pcs[c.lane].c;
   }
 
@@ -265,7 +287,7 @@ export function create(shell) {
     buildTrack();
     pos = 0; px = 0; v = 0; pv = 0; yaw = 0; slide = 0; lastCen = null; board = []; stack = 0; time = TIME0; nitro = 0.2; boost = false;
     inv = 0; shake = 0; fx = []; parts = []; drift = false; holdT = 0; curStage = 0; stageTheme = ['vegas']; branches = []; assignBranches(0);
-    hover = 1; skyFrom = 'vegas'; skyGate = -1; act = { a: '', t: 0, dur: 0, prio: 0 }; bub = { s: '', t: 0, d: 1 };
+    hover = 0; skyFrom = 'vegas'; skyGate = -1; act = { a: '', t: 0, dur: 0, prio: 0 }; bub = { s: '', t: 0, d: 1 };
     wasBoost = false; wasOff = false; lowSaid = false; offCd = 0;
     keys.l = keys.r = keys.n = keys.b = false; pulse.l = pulse.r = pulse.n = pulse.b = 0;
     renderHand(); renderStats(true);
@@ -304,7 +326,7 @@ export function create(shell) {
     const base = hole.concat(board), br = branches[g.k];
     prev.innerHTML = '<div class="prun-tag">' + g.label + ' · +' + EXTEND + ' s</div>' + g.cards.map((c, i) => {
       const e = evalCards(base.concat([c]));
-      return '<div class="prun-opt' + (i === hover ? ' on' : '') + '">' + cardHtml(c, 'sm') + '<b>' + esc(t(e.nameKey)) + '</b><em>×' + e.mult + '</em><small>→ ' + esc(TH[br[i]].name) + '</small></div>';
+      return '<div class="prun-opt' + (i === hover ? ' on' : '') + '">' + cardHtml(c, 'sm') + '<b>' + esc(t(e.nameKey)) + '</b><em>×' + e.mult + '</em><small>' + (i ? '' : '◀ ') + esc(TH[br[i]].name) + (i ? ' ▶' : '') + '</small></div>';
     }).join('');
     prev.style.top = Math.round(shell.hud.offsetHeight + 4) + 'px';
     prev.hidden = false;
@@ -386,7 +408,8 @@ export function create(shell) {
     const L = keys.l || pulse.l > 0, R = keys.r || pulse.r > 0, N = keys.n || pulse.n > 0, B = keys.b || pulse.b > 0;
     const ps = findSeg(pos + PLAYER_Z), g = geom(ps), sp = v / MAXV, dir = (R ? 1 : 0) - (L ? 1 : 0);
     const ng = nextGate();
-    if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = nearest(g, px);
+    // The branch the car heads for: the left or the right half of the road.
+    if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = px < 0 ? 0 : 1;
     // Drift: steering into a tight bend at speed, held a moment.
     const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 1.3 && sp > 0.62;
     holdT = into ? holdT + dt : 0;
@@ -438,7 +461,7 @@ export function create(shell) {
       const nw = Math.floor(c.z / SEG);
       for (let i = old + 1; i <= nw; i++) {
         const s = segs[i];
-        if (s && s.mEnd >= 0) { if (c.lane === chosenLane(gates[s.mEnd])) c.lane = 1; else respawn(c, ps.i); }
+        if (s && s.mEnd >= 0) { if (branchOfLane(c.lane, c.side) !== chosenLane(gates[s.mEnd])) respawn(c, ps.i); }
       }
       if (Math.floor(c.z / SEG) >= finishSeg) { c.dead = true; continue; }
       const ci = Math.floor(c.z / SEG);
@@ -491,18 +514,69 @@ export function create(shell) {
     stepFx(dt); stepParts(dt);
     if (outroT > 1.8) over();
   }
+  /** How far the car went: the stage it was in and how much of it (0 … 1). */
+  function progress() {
+    if (outroWin) return { stage: STAGES, p: 1 };
+    const k = curStage, z0 = k ? gates[k - 1].seg : 0, z1 = k < FORKS ? gates[k].seg : finishSeg;
+    return { stage: k, p: clamp((findSeg(pos + PLAYER_Z).i - z0) / Math.max(1, z1 - z0), 0, 1) };
+  }
+  /** The course like OutRun's map: Las Vegas, then at each fork its two
+   *  scenes (left above, right below), the branch taken in gold with the card
+   *  it dealt, the road not driven in grey, the car where it stopped, 🏁. */
+  function courseMap(pr) {
+    const X = (k) => 34 + k * 82, Y = (k, b) => (k === 0 ? 70 : b === 0 ? 38 : 102), FX = X(STAGES - 1) + 70;
+    const gold = '#e8b84a', grey = 'rgba(160,170,165,.45)';
+    let lines = '', nodes = '';
+    // Long scene names wrap on two lines so neighbouring columns never collide.
+    const label = (name, x, y, up) => {
+      const w = name.length > 10 && name.includes(' ') ? [name.slice(0, name.indexOf(' ')), name.slice(name.indexOf(' ') + 1)] : [name];
+      const y0 = up ? y - 16 - (w.length - 1) * 12 : y + 25;
+      return w.map((l, i) => '<tspan x="' + x + '" y="' + (y0 + i * 12) + '">' + esc(l) + '</tspan>').join('');
+    };
+    const node = (k, b, key, on, card) => {
+      const th = TH[key], x = X(k), y = Y(k, b);
+      nodes += '<circle cx="' + x + '" cy="' + y + '" r="' + (on ? 12 : 8) + '" fill="' + th.sky[on ? 2 : 1] + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 2.5 : 1.2) + '"' + (on ? '' : ' opacity=".55"') + '/>'
+        + '<text x="' + x + '" font-size="' + (on ? 12 : 10) + '" text-anchor="middle" fill="currentColor" opacity="' + (on ? 0.95 : 0.45) + '" font-family="Inter,system-ui,sans-serif" font-weight="' + (on ? 700 : 500) + '">' + label(th.name, x, y, b === 0 && k) + '</text>';
+      if (card != null) nodes += '<text x="' + x + '" y="' + (y + 3.5) + '" font-size="10" text-anchor="middle" font-weight="800" font-family="Inter,system-ui,sans-serif" fill="' + (isRed(card) ? '#c62828' : '#141414') + '" paint-order="stroke" stroke="#fffdf8" stroke-width="2.5">'
+        + RANKS[card % 13] + SUITS[suitOf(card)] + VS + '</text>';
+    };
+    const seg = (x1, y1, x2, y2, on) => { lines += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 3 : 1.5) + '"' + (on ? '' : ' stroke-dasharray="3 4"') + ' stroke-linecap="round"/>'; };
+    // Driven stages follow the route taken; beyond where the car stopped every
+    // scene still links to both scenes of the next fork (the road merges between forks).
+    const from = (k) => (k === 0 ? [70] : k <= pr.stage ? [Y(k, gates[k - 1].picked)] : [38, 102]);
+    node(0, 0, 'vegas', true, null);
+    for (let k = 1; k < STAGES; k++) {
+      const g = gates[k - 1], driven = k <= pr.stage;
+      for (let b = 0; b < 2; b++) {
+        const taken = g.picked === b && !g.auto && driven;
+        for (const fy of from(k - 1)) seg(X(k - 1), fy, X(k), Y(k, b), taken);
+        node(k, b, branches[k - 1][b], taken, taken ? g.cards[b] : null);
+      }
+    }
+    for (const fy of from(STAGES - 1)) seg(X(STAGES - 1), fy, FX, 70, pr.stage >= STAGES);
+    nodes += '<text x="' + FX + '" y="77" font-size="18" text-anchor="middle">🏁</text>';
+    // The car where it stopped.
+    const k = Math.min(pr.stage, STAGES - 1), x0 = X(k), y0 = Y(k, k ? gates[k - 1].picked : 0);
+    const x1 = k === STAGES - 1 ? FX : X(k + 1), y1 = 70;   // towards the next fork (its two scenes either side) or the finish
+    const cx = pr.stage >= STAGES ? FX - 16 : x0 + (x1 - x0) * pr.p, cyy = pr.stage >= STAGES ? 70 : y0 + (y1 - y0) * pr.p;
+    const car = '<g transform="translate(' + cx.toFixed(1) + ' ' + (cyy - 6).toFixed(1) + ')"><rect x="-7" y="-4" width="14" height="8" rx="3" fill="#c2303a" stroke="#fff" stroke-width="1"/>'
+      + '<circle cx="-4" cy="4.5" r="1.8" fill="#141414"/><circle cx="4" cy="4.5" r="1.8" fill="#141414"/></g>';
+    return '<svg class="prun-map" viewBox="0 0 520 152" role="img" aria-label="' + esc(stageTheme.slice(0, pr.stage + 1).map((x) => TH[x].name).join(' → ')) + '"><g transform="translate(0 10)">'
+      + '<rect x="2" y="-8" width="516" height="148" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
+  }
   function over() {
     state = 'over'; overAt = performance.now();
-    for (const g of gates) if (g.picked < 0) takeGate(g, Math.floor(Math.random() * 3), false);
+    const pr = progress();
+    for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(Math.random() * 2), false); }
+    curStage = Math.min(curStage, pr.stage);   // the auto-dealt cards do not count as stages driven (HUD level)
     renderHand(); renderStats(true);
     shell.ended();
     const all = hole.concat(board), ev = evalCards(all), bonus = Math.ceil(Math.max(0, time)) * 5;
     const base = stack + bonus, score = base * ev.mult, prevBest = shell.best.get(), record = score > prevBest;
     if (record) shell.best.set(score);
     const cards = ev.best;
-    const route = stageTheme.slice(0, STAGES).map((k) => TH[k].name).join(' → ');
     const tail = '<div class="ar-final">(' + fmt(stack) + ' + ' + fmt(bonus) + ') × ' + ev.mult + ' = <em>' + fmt(score) + '</em></div>'
-      + '<p class="prun-route">' + esc(route) + '</p>'
+      + courseMap(pr)
       + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
       + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p>';
     const title = outroWin ? 'Showdown' : t('prTimeUp');
@@ -618,7 +692,7 @@ export function create(shell) {
         band(a.y, U(a, c1 - h1 - rw), U(a, c1 + h1 + rw), b.y, U(b, c2 - h2 - rw), U(b, c2 + h2 + rw), col('R'));
         band(a.y, U(a, c1 - h1), U(a, c1 + h1), b.y, U(b, c2 - h2), U(b, c2 + h2), road);
       };
-      if (g1.ghosts && g2.ghosts) for (let l = 0; l < 3; l++) {
+      if (g1.ghosts && g2.ghosts) for (let l = 0; l < g1.ghosts.length; l++) {
         const q1 = g1.ghosts[l], q2 = g2.ghosts[l];
         if (!q1 || !q2 || q1.a < 0.05) continue;
         ctx.globalAlpha = q1.a; piece(q1.c, q1.hw, q2.c, q2.hw, 0.06); ctx.globalAlpha = 1;
@@ -627,12 +701,16 @@ export function create(shell) {
         const L1 = envL(g1), R1 = envR(g1), L2 = envL(g2), R2 = envR(g2), rw = 0.12 * (R1 - L1) / 2;
         band(a.y, U(a, L1 - rw), U(a, R1 + rw), b.y, U(b, L2 - rw), U(b, R2 + rw), col('R'));
         band(a.y, U(a, L1), U(a, R1), b.y, U(b, L2), U(b, R2), road);
-        if (alt && !fin) for (let l = 0; l < 2; l++) {
+        if (alt && !fin && g1.pcs.length === g2.pcs.length) for (let l = 0; l < g1.pcs.length - 1; l++) {
           if (g1.pcs[l + 1].c - g1.pcs[l].c <= 0.4) continue;
           const m1 = (g1.pcs[l].c + g1.pcs[l + 1].c) / 2, m2 = (g2.pcs[l].c + g2.pcs[l + 1].c) / 2, lw = 0.022 * (R1 - L1) / 2;
           band(a.y, U(a, m1 - lw), U(a, m1 + lw), b.y, U(b, m2 - lw), U(b, m2 + lw), '#e9e4d6');
         }
-      } else for (let l = 0; l < 3; l++) { const q1 = g1.pcs[l], q2 = g2.pcs[l]; piece(q1.c, q1.hw, q2.c, q2.hw, 0.05 * Math.min(1, s.f * 4)); }
+      } else for (let l = 0; l < g1.pcs.length; l++) {
+        // At the gate the next segment is the branch taken coming back: draw this one square.
+        const q1 = g1.pcs[l], q2 = g2.pcs.length === g1.pcs.length ? g2.pcs[l] : q1;
+        piece(q1.c, q1.hw, q2.c, q2.hw, 0.05 * Math.min(1, s.f * 4));
+      }
       const fogA = Math.min(0.18, Math.pow(n / DRAW, 3) * 0.25);
       if (fogA > 0.02) { ctx.fillStyle = rgb(T.F, fogA); ctx.fillRect(0, b.y, W, a.y - b.y); }
     }
@@ -672,7 +750,7 @@ export function create(shell) {
   }
   function drawGate(s, sc, sx, sy, g) {
     const gate = s.gate, br = branches[gate.k] || [];
-    for (let l = 0; l < 3; l++) {
+    for (let l = 0; l < g.pcs.length; l++) {
       const p = g.pcs[l], X = sx + sc * p.c * ROAD, half = sc * p.hw * 1.15 * ROAD, h = sc * 1500, top = sy - h, pw = Math.max(1.5, sc * 70);
       ctx.globalAlpha = gate.picked >= 0 && gate.picked !== l ? 0.25 : 1;
       ctx.fillStyle = '#0d1117'; ctx.fillRect(X - half - pw / 2, top, pw, h); ctx.fillRect(X + half - pw / 2, top, pw, h);
@@ -786,8 +864,7 @@ export function create(shell) {
     }
     ctx.fillStyle = '#5e1117'; rr(-w * 0.14, -h * 0.66, w * 0.28, h * 0.3, h * 0.14); ctx.fill();
     ctx.fillStyle = '#f4eedf'; rr(-w * 0.11, -h * 0.62, w * 0.22, h * 0.22, h * 0.1); ctx.fill();
-    ctx.fillStyle = '#0d1117'; ctx.font = '700 ' + Math.max(6, Math.round(h * 0.2)) + 'px Inter, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText('A♠' + VS, 0, -h * 0.45);
+    plate(ctx, 0, -h * 0.51, h * 0.2);
     ctx.fillStyle = '#262b32'; rr(-w * 0.42, -h * 0.3, w * 0.84, h * 0.17, h * 0.085); ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,.18)'; rr(-w * 0.38, -h * 0.28, w * 0.76, h * 0.04, h * 0.02); ctx.fill();
     for (const ex of [-0.2, 0.2]) { ctx.fillStyle = '#b9c0c8'; ctx.beginPath(); ctx.arc(w * ex, -h * 0.16, w * 0.035, 0, 7); ctx.fill(); ctx.fillStyle = '#1a1e24'; ctx.beginPath(); ctx.arc(w * ex, -h * 0.16, w * 0.018, 0, 7); ctx.fill(); }
@@ -802,6 +879,30 @@ export function create(shell) {
       const s = 'DRIFT' + (driftGain ? ' +' + driftGain : ''); ctx.strokeText(s, 0, -h * 2.5); ctx.fillStyle = '#ffd27a'; ctx.fillText(s, 0, -h * 2.5);
     }
     ctx.restore();
+  }
+  /** The plate « A♠ », centred on (x, y): the A in the font, the spade drawn —
+   *  iOS Safari sometimes measured the « ♠ » with one font and drew it with
+   *  another (the emoji one), and the plate's text slid off its centre. */
+  function plate(g, x, y, fs) {
+    const size = Math.max(6, Math.round(fs));
+    g.font = '700 ' + size + 'px Inter, system-ui, sans-serif';
+    g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#0d1117';
+    const wa = g.measureText('A').width, sw = size * 0.72, gap = size * 0.08, x0 = x - (wa + gap + sw) / 2;
+    g.fillText('A', x0, y + size * 0.04);
+    spade(g, x0 + wa + gap + sw / 2, y, sw);
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  }
+  /** A spade, w wide, centred on (x, y). */
+  function spade(g, x, y, w) {
+    const h = w * 1.05, top = y - h / 2;
+    g.beginPath();
+    g.moveTo(x, top);
+    g.bezierCurveTo(x + w * 0.2, top + h * 0.25, x + w * 0.5, top + h * 0.35, x + w * 0.5, top + h * 0.58);
+    g.bezierCurveTo(x + w * 0.5, top + h * 0.78, x + w * 0.22, top + h * 0.82, x + w * 0.06, top + h * 0.68);
+    g.lineTo(x + w * 0.16, top + h); g.lineTo(x - w * 0.16, top + h); g.lineTo(x - w * 0.06, top + h * 0.68);
+    g.bezierCurveTo(x - w * 0.22, top + h * 0.82, x - w * 0.5, top + h * 0.78, x - w * 0.5, top + h * 0.58);
+    g.bezierCurveTo(x - w * 0.5, top + h * 0.35, x - w * 0.2, top + h * 0.25, x, top);
+    g.closePath(); g.fill();
   }
   /** The Ace in the driver's seat: the SVG mascot, moved with the car. */
   function placeAce() {
@@ -882,7 +983,7 @@ export function create(shell) {
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg }; } catch (e) {}
 
   return {
     update, draw, input,

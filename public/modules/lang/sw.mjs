@@ -894,7 +894,7 @@ export const strings = {
     "adRebuyQ": "Ulipe chipu {n} ili urudi kwenye mbio?",
     "adRebuyKeys": "Nafasi: nunua tena · ↓: hapana, asante",
     "prHint": "◀ ▶ au ← →: endesha · ↑ au Nafasi: nitro · ↓: breki · chagua kadi yako kwenye kila njia panda",
-    "prRules": "Ace anaondoka Las Vegas kwa gari lake lisilo na paa, akiwa na kadi mbili mkononi.\nBarabara inagawanyika mara tano kuwa matawi matatu: tawi unalochukua linaweka kadi mezani (flop, turn, river) na kukupeleka kwenye mandhari mpya. Gari linapunguza mwendo kabla ya kila njia panda: linganisha kadi tatu.\nKila njia panda inaongeza sekunde 22 kwenye saa. Muda ukiisha, mgawaji anakamilisha meza.\nKusanya chipu; kugongana kunagharimu 20% yake. Geuka kwenye kona kali kwa kasi kamili ili kuteleza: chipu na nitro.\nAlama: (chipu + 5 kwa kila sekunde iliyobaki) × mkono wako bora wa kadi tano.\n◀ ▶ au ← →: endesha · ↑ au Nafasi: nitro · ↓: breki · P: sitisha",
+    "prRules": "Ace anaondoka Las Vegas kwa gari lake lisilo na paa, akiwa na kadi mbili mkononi.\nBarabara inagawanyika mara tano kuwa matawi mawili, kushoto au kulia: tawi unalochukua linaweka kadi mezani (flop, turn, river) na kukupeleka kwenye mandhari mpya. Gari linapunguza mwendo kabla ya kila njia panda: linganisha kadi mbili.\nKila njia panda inaongeza sekunde 22 kwenye saa. Muda ukiisha, mgawaji anakamilisha meza.\nKusanya chipu; kugongana kunagharimu 20% yake. Geuka kwenye kona kali kwa kasi kamili ili kuteleza: chipu na nitro.\nAlama: (chipu + 5 kwa kila sekunde iliyobaki) × mkono wako bora wa kadi tano.\n◀ ▶ au ← →: endesha · ↑ au Nafasi: nitro · ↓: breki · P: sitisha",
     "prTimeUp": "Muda umekwisha!",
     "ach_pdrop": "Dondosha Poka",
     "ach_pdrop_d": "Mshinde Ree katika Dondosha Poka kwa pointi 40 au zaidi",

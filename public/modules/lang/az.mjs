@@ -896,7 +896,7 @@ export const strings = {
     "adRebuyQ": "Yarışa qayıtmaq üçün {n} fişka ödəyirsən?",
     "adRebuyKeys": "Boşluq: rebay · ↓: yox, sağ ol",
     "prHint": "◀ ▶ və ya ← →: sükan · ↑ və ya Boşluq: nitro · ↓: əyləc · hər ayrıcda kartını seç",
-    "prRules": "Tuz üstüaçıq maşınında əlində iki kartla Las-Veqasdan yola düşür.\nYol beş dəfə üç qola ayrılır: seçdiyin qol masaya bir kart açır (flop, turn, river) və yeni mənzərəyə aparır. Maşın hər ayrıcdan əvvəl yavaşlayır: üç kartı müqayisə et.\nHər ayrıc saata 22 san. əlavə edir. Vaxt bitsə, krupye masanı tamamlayır.\nFişkaları topla; toqquşma onların 20%-nə başa gəlir. Drift üçün dar döngədə tam sürətlə sükanı burax: fişka və nitro.\nXal: (fişkalar + qalan hər saniyə üçün 5) × ən yaxşı beş kartlıq əlin.\n◀ ▶ və ya ← →: sükan · ↑ və ya Boşluq: nitro · ↓: əyləc · P: fasilə",
+    "prRules": "Tuz üstüaçıq maşınında əlində iki kartla Las-Veqasdan yola düşür.\nYol beş dəfə iki qola ayrılır, sola və ya sağa: seçdiyin qol masaya bir kart açır (flop, turn, river) və yeni mənzərəyə aparır. Maşın hər ayrıcdan əvvəl yavaşlayır: iki kartı müqayisə et.\nHər ayrıc saata 22 san. əlavə edir. Vaxt bitsə, krupye masanı tamamlayır.\nFişkaları topla; toqquşma onların 20%-nə başa gəlir. Drift üçün dar döngədə tam sürətlə sükanı burax: fişka və nitro.\nXal: (fişkalar + qalan hər saniyə üçün 5) × ən yaxşı beş kartlıq əlin.\n◀ ▶ və ya ← →: sükan · ↑ və ya Boşluq: nitro · ↓: əyləc · P: fasilə",
     "prTimeUp": "Vaxt bitdi!",
     "ach_pdrop": "Poker yağışı",
     "ach_pdrop_d": "Poker yağışında Tuzu 40 və ya daha çox xalla məğlub et",

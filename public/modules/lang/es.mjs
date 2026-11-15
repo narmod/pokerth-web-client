@@ -1272,7 +1272,7 @@ export const strings = {
     "adRebuyQ": "¿Pagar {n} fichas para volver a la carrera?",
     "adRebuyKeys": "Espacio: recompra · ↓: no, gracias",
     "prHint": "◀ ▶ o ← →: girar · ↑ o Espacio: nitro · ↓: frenar · elige tu carta en cada bifurcación",
-    "prRules": "El As sale de Las Vegas al volante de su descapotable, con dos cartas en la mano.\nLa carretera se divide cinco veces en tres ramales: el que tomas pone una carta del board (flop, turn, river) y lleva a un nuevo escenario. El coche frena antes de cada bifurcación: compara las tres cartas.\nCada bifurcación suma 22 s al reloj. Si se agota, el crupier completa el board.\nRecoge fichas; un choque te cuesta el 20 %. Gira en una curva cerrada a toda velocidad para derrapar: fichas y nitro.\nPuntuación: (fichas + 5 por segundo restante) × tu mejor mano de cinco cartas.\n◀ ▶ o ← →: girar · ↑ o Espacio: nitro · ↓: frenar · P: pausa",
+    "prRules": "El As sale de Las Vegas al volante de su descapotable, con dos cartas en la mano.\nLa carretera se divide cinco veces en dos ramales, a la izquierda o a la derecha: el que tomas pone una carta del board (flop, turn, river) y lleva a un nuevo escenario. El coche frena antes de cada bifurcación: compara las dos cartas.\nCada bifurcación suma 22 s al reloj. Si se agota, el crupier completa el board.\nRecoge fichas; un choque te cuesta el 20 %. Gira en una curva cerrada a toda velocidad para derrapar: fichas y nitro.\nPuntuación: (fichas + 5 por segundo restante) × tu mejor mano de cinco cartas.\n◀ ▶ o ← →: girar · ↑ o Espacio: nitro · ↓: frenar · P: pausa",
     "prTimeUp": "¡Se acabó el tiempo!",
     "ach_pdrop": "Póquer en cascada",
     "ach_pdrop_d": "Ganar al As en Póquer en cascada con 40 puntos o más",

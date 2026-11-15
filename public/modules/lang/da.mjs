@@ -1267,7 +1267,7 @@ export const strings = {
     "adRebuyQ": "Betal {n} jetoner for at komme med igen?",
     "adRebuyKeys": "Mellemrum: rebuy · ↓: nej tak",
     "prHint": "◀ ▶ eller ← →: styr · ↑ eller Mellemrum: nitro · ↓: brems · vælg dit kort ved hver forgrening",
-    "prRules": "Esset kører fra Las Vegas i sin cabriolet med to kort på hånden.\nVejen deler sig fem gange i tre grene: den gren, du tager, lægger et boardkort (flop, turn, river) og fører til en ny kulisse. Bilen sænker farten før hver forgrening: sammenlign de tre kort.\nHver forgrening giver 22 s ekstra på uret. Løber det ud, gør dealeren boardet færdigt.\nSaml jetoner; et sammenstød koster 20 % af dem. Styr ind i et skarpt sving i fuld fart for at drifte: jetoner og nitro.\nPoint: (jetoner + 5 pr. resterende sekund) × din bedste hånd på fem kort.\n◀ ▶ eller ← →: styr · ↑ eller Mellemrum: nitro · ↓: brems · P: pause",
+    "prRules": "Esset kører fra Las Vegas i sin cabriolet med to kort på hånden.\nVejen deler sig fem gange i to grene, til venstre eller højre: den gren, du tager, lægger et boardkort (flop, turn, river) og fører til en ny kulisse. Bilen sænker farten før hver forgrening: sammenlign de to kort.\nHver forgrening giver 22 s ekstra på uret. Løber det ud, gør dealeren boardet færdigt.\nSaml jetoner; et sammenstød koster 20 % af dem. Styr ind i et skarpt sving i fuld fart for at drifte: jetoner og nitro.\nPoint: (jetoner + 5 pr. resterende sekund) × din bedste hånd på fem kort.\n◀ ▶ eller ← →: styr · ↑ eller Mellemrum: nitro · ↓: brems · P: pause",
     "prTimeUp": "Tiden er gået!",
     "ach_pdrop": "Pokerfald",
     "ach_pdrop_d": "Slå esset i Pokerfald med 40 point eller mere",

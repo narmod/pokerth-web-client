@@ -1271,7 +1271,7 @@ export const strings = {
     "adRebuyQ": "Pagare {n} fiches per tornare in gara?",
     "adRebuyKeys": "Spazio: rebuy · ↓: no grazie",
     "prHint": "◀ ▶ o ← →: sterza · ↑ o Spazio: nitro · ↓: frena · scegli la tua carta a ogni bivio",
-    "prRules": "L'Asso parte da Las Vegas al volante della sua decappottabile, con due carte in mano.\nLa strada si divide cinque volte in tre rami: quello che prendi mette una carta del board (flop, turn, river) e porta a un nuovo scenario. L'auto rallenta prima di ogni bivio: confronta le tre carte.\nOgni bivio aggiunge 22 s al cronometro. Se arriva a zero, il dealer completa il board.\nRaccogli le fiches; un urto ne costa il 20%. Sterza in una curva stretta a tutta velocità per derapare: fiches e nitro.\nPunteggio: (fiches + 5 per ogni secondo rimasto) × la tua miglior mano di cinque carte.\n◀ ▶ o ← →: sterza · ↑ o Spazio: nitro · ↓: frena · P: pausa",
+    "prRules": "L'Asso parte da Las Vegas al volante della sua decappottabile, con due carte in mano.\nLa strada si divide cinque volte in due rami, a sinistra o a destra: quello che prendi mette una carta del board (flop, turn, river) e porta a un nuovo scenario. L'auto rallenta prima di ogni bivio: confronta le due carte.\nOgni bivio aggiunge 22 s al cronometro. Se arriva a zero, il dealer completa il board.\nRaccogli le fiches; un urto ne costa il 20%. Sterza in una curva stretta a tutta velocità per derapare: fiches e nitro.\nPunteggio: (fiches + 5 per ogni secondo rimasto) × la tua miglior mano di cinque carte.\n◀ ▶ o ← →: sterza · ↑ o Spazio: nitro · ↓: frena · P: pausa",
     "prTimeUp": "Tempo scaduto!",
     "ach_pdrop": "Poker a caduta",
     "ach_pdrop_d": "Battere l'Asso a Poker a caduta con 40 punti o più",

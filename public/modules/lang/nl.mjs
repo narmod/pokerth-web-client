@@ -1271,7 +1271,7 @@ export const strings = {
     "adRebuyQ": "{n} fiches betalen om weer mee te doen?",
     "adRebuyKeys": "Spatie: rebuy · ↓: nee, dank je",
     "prHint": "◀ ▶ of ← →: sturen · ↑ of Spatie: nitro · ↓: remmen · kies je kaart bij elke splitsing",
-    "prRules": "De Aas vertrekt uit Las Vegas in zijn cabrio, met twee kaarten in de hand.\nDe weg splitst vijf keer in drie takken: de tak die je neemt legt een boardkaart (flop, turn, river) en leidt naar een nieuw decor. De auto remt af voor elke splitsing: vergelijk de drie kaarten.\nElke splitsing geeft 22 s extra op de klok. Loopt die af, dan maakt de dealer het board af.\nPak fiches; een aanrijding kost er 20% van. Stuur in een scherpe bocht op volle snelheid in om te driften: fiches en nitro.\nScore: (fiches + 5 per resterende seconde) × je beste hand van vijf kaarten.\n◀ ▶ of ← →: sturen · ↑ of Spatie: nitro · ↓: remmen · P: pauze",
+    "prRules": "De Aas vertrekt uit Las Vegas in zijn cabrio, met twee kaarten in de hand.\nDe weg splitst vijf keer in twee takken, links of rechts: de tak die je neemt legt een boardkaart (flop, turn, river) en leidt naar een nieuw decor. De auto remt af voor elke splitsing: vergelijk de twee kaarten.\nElke splitsing geeft 22 s extra op de klok. Loopt die af, dan maakt de dealer het board af.\nPak fiches; een aanrijding kost er 20% van. Stuur in een scherpe bocht op volle snelheid in om te driften: fiches en nitro.\nScore: (fiches + 5 per resterende seconde) × je beste hand van vijf kaarten.\n◀ ▶ of ← →: sturen · ↑ of Spatie: nitro · ↓: remmen · P: pauze",
     "prTimeUp": "Tijd is op!",
     "ach_pdrop": "Pokerval",
     "ach_pdrop_d": "De Aas verslaan bij Pokerval met 40 punten of meer",

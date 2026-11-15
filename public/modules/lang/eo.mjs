@@ -896,7 +896,7 @@ export const strings = {
     "adRebuyQ": "Pagi {n} ĵetonojn por reveni al la vetkuro?",
     "adRebuyKeys": "Spaceto: reaĉeto · ↓: ne, dankon",
     "prHint": "◀ ▶ aŭ ← →: stiri · ↑ aŭ Spaceto: nitro · ↓: bremsi · elektu vian karton ĉe ĉiu vojforko",
-    "prRules": "La Aso forveturas el Las-Vegaso en sia kabrioleto, kun du kartoj en la mano.\nLa vojo forkiĝas kvinfoje en tri branĉojn: la branĉo, kiun vi prenas, metas komunan karton (flop, turn, river) kaj kondukas al nova pejzaĝo. La aŭto malrapidiĝas antaŭ ĉiu vojforko: komparu la tri kartojn.\nĈiu vojforko aldonas 22 s al la horloĝo. Se la tempo finiĝas, la disdonanto kompletigas la tablon.\nKolektu ĵetonojn; kolizio kostas 20 % el ili. Stiru en akran kurbon je plena rapido por drifti: ĵetonoj kaj nitro.\nPoentoj: (ĵetonoj + 5 po ĉiu restanta sekundo) × via plej bona kvinkarta mano.\n◀ ▶ aŭ ← →: stiri · ↑ aŭ Spaceto: nitro · ↓: bremsi · P: paŭzo",
+    "prRules": "La Aso forveturas el Las-Vegaso en sia kabrioleto, kun du kartoj en la mano.\nLa vojo forkiĝas kvinfoje en du branĉojn, maldekstren aŭ dekstren: la branĉo, kiun vi prenas, metas komunan karton (flop, turn, river) kaj kondukas al nova pejzaĝo. La aŭto malrapidiĝas antaŭ ĉiu vojforko: komparu la du kartojn.\nĈiu vojforko aldonas 22 s al la horloĝo. Se la tempo finiĝas, la disdonanto kompletigas la tablon.\nKolektu ĵetonojn; kolizio kostas 20 % el ili. Stiru en akran kurbon je plena rapido por drifti: ĵetonoj kaj nitro.\nPoentoj: (ĵetonoj + 5 po ĉiu restanta sekundo) × via plej bona kvinkarta mano.\n◀ ▶ aŭ ← →: stiri · ↑ aŭ Spaceto: nitro · ↓: bremsi · P: paŭzo",
     "prTimeUp": "La tempo finiĝis!",
     "ach_pdrop": "Pokera Falo",
     "ach_pdrop_d": "Venki la Ason ĉe Pokera Falo per 40 poentoj aŭ pli",

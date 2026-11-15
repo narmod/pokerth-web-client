@@ -1268,7 +1268,7 @@ export const strings = {
     "adRebuyQ": "Zaplatiť {n} žetónov a vrátiť sa do pretekov?",
     "adRebuyKeys": "Medzerník: rebuy · ↓: nie, vďaka",
     "prHint": "◀ ▶ alebo ← →: riadenie · ↑ alebo medzerník: nitro · ↓: brzda · na každej križovatke si vyber kartu",
-    "prRules": "Eso vyráža z Las Vegas vo svojom kabriolete s dvoma kartami v ruke.\nCesta sa päťkrát rozdelí na tri vetvy: vetva, ktorú zvolíš, vyloží kartu na stôl (flop, turn, river) a zavedie ťa do novej kulisy. Pred každou križovatkou auto spomalí: porovnaj tri karty.\nKaždá križovatka pridá na hodiny 22 s. Keď čas vyprší, krupiér doplní stôl.\nZbieraj žetóny; zrážka stojí 20 % z nich. V ostrej zákrute v plnej rýchlosti zatoč a driftuj: žetóny a nitro.\nSkóre: (žetóny + 5 za každú zostávajúcu sekundu) × tvoja najlepšia päťkartová kombinácia.\n◀ ▶ alebo ← →: riadenie · ↑ alebo medzerník: nitro · ↓: brzda · P: pauza",
+    "prRules": "Eso vyráža z Las Vegas vo svojom kabriolete s dvoma kartami v ruke.\nCesta sa päťkrát rozdelí na dve vetvy, doľava alebo doprava: vetva, ktorú zvolíš, vyloží kartu na stôl (flop, turn, river) a zavedie ťa do novej kulisy. Pred každou križovatkou auto spomalí: porovnaj obe karty.\nKaždá križovatka pridá na hodiny 22 s. Keď čas vyprší, krupiér doplní stôl.\nZbieraj žetóny; zrážka stojí 20 % z nich. V ostrej zákrute v plnej rýchlosti zatoč a driftuj: žetóny a nitro.\nSkóre: (žetóny + 5 za každú zostávajúcu sekundu) × tvoja najlepšia päťkartová kombinácia.\n◀ ▶ alebo ← →: riadenie · ↑ alebo medzerník: nitro · ↓: brzda · P: pauza",
     "prTimeUp": "Čas vypršal!",
     "ach_pdrop": "Padajúci poker",
     "ach_pdrop_d": "Poraz eso v Padajúcom pokri so 40 bodmi alebo viac",

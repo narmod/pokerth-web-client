@@ -895,7 +895,7 @@ export const strings = {
     "adRebuyQ": "Samaksāt {n} žetonus, lai atgrieztos sacīkstē?",
     "adRebuyKeys": "Atstarpe: rebuy · ↓: nē, paldies",
     "prHint": "◀ ▶ vai ← →: stūrēt · ↑ vai atstarpe: nitro · ↓: bremzēt · izvēlies savu kārti katrā krustcelē",
-    "prRules": "Dūzis izbrauc no Lasvegasas savā kabrioletā ar divām kārtīm rokā.\nCeļš piecas reizes sadalās trīs zaros: zars, ko izvēlies, uzliek galda kārti (flop, turn, river) un aizved uz jaunu ainavu. Pirms katras krustceles mašīna piebremzē: salīdzini trīs kārtis.\nKatra krustcele pieliek pulkstenim 22 s. Ja laiks beidzas, dīleris aizpilda galdu.\nVāc žetonus; sadursme maksā 20% no tiem. Pagriez stūri asā līkumā pilnā ātrumā, lai slīdētu: žetoni un nitro.\nPunkti: (žetoni + 5 par katru atlikušo sekundi) × tava labākā piecu kāršu roka.\n◀ ▶ vai ← →: stūrēt · ↑ vai atstarpe: nitro · ↓: bremzēt · P: pauze",
+    "prRules": "Dūzis izbrauc no Lasvegasas savā kabrioletā ar divām kārtīm rokā.\nCeļš piecas reizes sadalās divos zaros, pa kreisi vai pa labi: zars, ko izvēlies, uzliek galda kārti (flop, turn, river) un aizved uz jaunu ainavu. Pirms katras krustceles mašīna piebremzē: salīdzini abas kārtis.\nKatra krustcele pieliek pulkstenim 22 s. Ja laiks beidzas, dīleris aizpilda galdu.\nVāc žetonus; sadursme maksā 20% no tiem. Pagriez stūri asā līkumā pilnā ātrumā, lai slīdētu: žetoni un nitro.\nPunkti: (žetoni + 5 par katru atlikušo sekundi) × tava labākā piecu kāršu roka.\n◀ ▶ vai ← →: stūrēt · ↑ vai atstarpe: nitro · ↓: bremzēt · P: pauze",
     "prTimeUp": "Laiks beidzies!",
     "ach_pdrop": "Pokera kritiens",
     "ach_pdrop_d": "Uzvari dūzi Pokera kritienā ar 40 vai vairāk punktiem",

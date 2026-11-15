@@ -1267,7 +1267,7 @@ export const strings = {
     "adRebuyQ": "Pagar {n} fichas para voltar à corrida?",
     "adRebuyKeys": "Espaço: rebuy · ↓: não, obrigado",
     "prHint": "◀ ▶ ou ← →: virar · ↑ ou Espaço: nitro · ↓: travar · escolhe a tua carta em cada bifurcação",
-    "prRules": "O Ás parte de Las Vegas ao volante do seu descapotável, com duas cartas na mão.\nA estrada divide-se cinco vezes em três ramos: o que escolhes põe uma carta do board (flop, turn, river) e leva a um novo cenário. O carro abranda antes de cada bifurcação: compara as três cartas.\nCada bifurcação junta 22 s ao relógio. Se chegar a zero, o dealer completa o board.\nApanha fichas; um choque custa 20% delas. Vira numa curva apertada a fundo para derrapar: fichas e nitro.\nPontuação: (fichas + 5 por segundo restante) × a tua melhor mão de cinco cartas.\n◀ ▶ ou ← →: virar · ↑ ou Espaço: nitro · ↓: travar · P: pausa",
+    "prRules": "O Ás parte de Las Vegas ao volante do seu descapotável, com duas cartas na mão.\nA estrada divide-se cinco vezes em dois ramos, à esquerda ou à direita: o que escolhes põe uma carta do board (flop, turn, river) e leva a um novo cenário. O carro abranda antes de cada bifurcação: compara as duas cartas.\nCada bifurcação junta 22 s ao relógio. Se chegar a zero, o dealer completa o board.\nApanha fichas; um choque custa 20% delas. Vira numa curva apertada a fundo para derrapar: fichas e nitro.\nPontuação: (fichas + 5 por segundo restante) × a tua melhor mão de cinco cartas.\n◀ ▶ ou ← →: virar · ↑ ou Espaço: nitro · ↓: travar · P: pausa",
     "prTimeUp": "Acabou o tempo!",
     "ach_pdrop": "Póquer em Queda",
     "ach_pdrop_d": "Vencer o Ás no Póquer em Queda com 40 pontos ou mais",

@@ -1163,7 +1163,7 @@ export const strings = {
     "adRebuyQ": "Betaal {n} skyfies om weer in die wedloop te kom?",
     "adRebuyKeys": "Spasie: rebuy · ↓: nee dankie",
     "prHint": "◀ ▶ of ← →: stuur · ↑ of Spasie: nitro · ↓: rem · kies jou kaart by elke vurk",
-    "prRules": "Die Aas ry uit Las Vegas weg in sy afslaankapmotor, met twee kaarte in die hand.\nDie pad vurk vyf keer in drie takke: die tak wat jy neem, deel 'n bordkaart (flop, turn, river) en lei na 'n nuwe toneel. Die motor stadig af voor elke vurk: vergelyk die drie kaarte.\nElke vurk voeg 22 s by die horlosie. As dit opraak, voltooi die dealer die bord.\nTel skyfies op; 'n botsing kos 20% daarvan. Stuur by volle spoed in 'n skerp draai in om te gly: skyfies en nitro.\nTelling: (skyfies + 5 per oorblywende sekonde) × jou beste vyfkaarthand.\n◀ ▶ of ← →: stuur · ↑ of Spasie: nitro · ↓: rem · P: pouse",
+    "prRules": "Die Aas ry uit Las Vegas weg in sy afslaankapmotor, met twee kaarte in die hand.\nDie pad vurk vyf keer in twee takke, links of regs: die tak wat jy neem, deel 'n bordkaart (flop, turn, river) en lei na 'n nuwe toneel. Die motor stadig af voor elke vurk: vergelyk die twee kaarte.\nElke vurk voeg 22 s by die horlosie. As dit opraak, voltooi die dealer die bord.\nTel skyfies op; 'n botsing kos 20% daarvan. Stuur by volle spoed in 'n skerp draai in om te gly: skyfies en nitro.\nTelling: (skyfies + 5 per oorblywende sekonde) × jou beste vyfkaarthand.\n◀ ▶ of ← →: stuur · ↑ of Spasie: nitro · ↓: rem · P: pouse",
     "prTimeUp": "Tyd is om!",
     "ach_pdrop": "Pokerval",
     "ach_pdrop_d": "Klop die Aas in Pokerval met 40 punte of meer",
