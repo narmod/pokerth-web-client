@@ -44,6 +44,13 @@ const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
 const DEPTH = 1 / Math.tan(FOV / 2 * Math.PI / 180), PLAYER_Z = CAMH * DEPTH;
 const MAXV = SEG * 62, ACCEL = MAXV / 4.5, OFFROAD = MAXV / 3.5, CENTRI = 0.27;
 const LANE_OFF = [-0.66, 0, 0.66];          // lane centres, in half-road widths
+// Traffic: bright bodies that stand out on the dark tarmac, day and night
+// (web.59, narmod: « the other cars, I don't see them very well sometimes »).
+const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3b', '#e0527a'];
+// Hit: the gap between the player's car and a car's middle under which they touch
+// (half-road units). Lanes are 0.66 apart: at 0.36 two cars side by side left
+// no way through; at 0.25 there is a window between them.
+const HIT = 0.25;
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 1, MERGE = 60;
 /** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
@@ -56,11 +63,11 @@ const SUITS = ['♦', '♥', '♠', '♣'], VS = '︎';
 
 // ── Scenes, one per branch (proper names: nothing to translate) ─────
 const TH = {
-  vegas: { name: 'Las Vegas', sky: ['#0a1322', '#1d2b46', '#c8743a'], g: ['#1c5639', '#195034'], r: ['#e8b84a', '#f4eedf'], d: ['#2b3038', '#272b33'], fog: '#1e283e', skyT: 'city', side: 'post', a: '#101a2b', b: '#e8b84a' },
+  vegas: { name: 'Las Vegas', sky: ['#0a1322', '#1d2b46', '#c8743a'], g: ['#1c5639', '#195034'], r: ['#e8b84a', '#f4eedf'], d: ['#2b3038', '#272b33'], fog: '#1e283e', skyT: 'city', side: 'post', night: true, a: '#101a2b', b: '#e8b84a' },
   tropez: { name: 'Saint-Tropez', sky: ['#23305e', '#d9667a', '#ffbe7a'], g: ['#d8bf8c', '#cdb27e'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eaa886', skyT: 'sea', side: 'palm', a: '#2f4f86', b: '#ffe0a0' },
   valley: { name: 'Monument Valley', sky: ['#2e63a8', '#86b4dc', '#f3d9a8'], g: ['#c88a4c', '#bd7f44'], r: ['#f4eedf', '#8a3b1c'], d: ['#4b4541', '#46403c'], fog: '#ecceA6', skyT: 'mesa', side: 'cactus', a: '#9c4f2c', b: '#c46a3c' },
   chamonix: { name: 'Chamonix', sky: ['#22487e', '#79a3cd', '#dfe9f1'], g: ['#3f7a3a', '#386f34'], r: ['#f4eedf', '#c2303a'], d: ['#33373e', '#2f333a'], fog: '#cddae8', skyT: 'peaks', side: 'pine', a: '#5b6f8a', b: '#f4f7fa' },
-  monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', a: '#1b1430', b: '#ffd68c' },
+  monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', night: true, a: '#1b1430', b: '#ffd68c' },
 };
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const rgb = (a, al) => al == null ? 'rgb(' + (a[0] | 0) + ',' + (a[1] | 0) + ',' + (a[2] | 0) + ')' : 'rgba(' + (a[0] | 0) + ',' + (a[1] | 0) + ',' + (a[2] | 0) + ',' + al + ')';
@@ -229,7 +236,7 @@ export function create(shell) {
     for (let k = 0; k < 34; k++) {
       let z = Math.floor(150 + k * (finishSeg - 250) / 34 + Math.random() * 40);
       while (!free(z) && z < finishSeg) z++;
-      cars.push({ z: z * SEG, lane: Math.floor(Math.random() * 3), side: k % 2, v: MAXV * (0.32 + Math.random() * 0.2), col: ['#5d6b7a', '#3d6a8f', '#8a8f96', '#6b5a86', '#2f7a6a'][k % 5], dead: false, ahead: true });
+      cars.push({ z: z * SEG, lane: Math.floor(Math.random() * 3), side: k % 2, v: MAXV * (0.32 + Math.random() * 0.2), col: CAR_COLS[k % CAR_COLS.length], dead: false, ahead: true });
     }
   }
   const findSeg = (z) => segs[clamp(Math.floor(z / SEG), 0, segs.length - 1)];
@@ -277,7 +284,7 @@ export function create(shell) {
   let state = 'title', overAt = 0, revealTimer = 0, lastChipSnd = 0;
   let pos = 0, px = 0, v = 0, pv = 0, yaw = 0, slide = 0, bob = 0, camY = CAMH, lastCen = null;
   let stack = 0, time = TIME0, nitro = 0, boost = false, inv = 0, shake = 0, skyOff = 0, curStage = 0, skyFrom = 'vegas', skyGate = -1;
-  let holdT = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
+  let holdT = 0, letGo = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
   let act = { a: '', t: 0, dur: 0, prio: 0 }, bub = { s: '', t: 0, d: 1 }, wasBoost = false, wasOff = false, lowSaid = false, offCd = 0, outroT = 0, outroWin = false;
   const keys = { l: false, r: false, n: false, b: false }, pulse = { l: 0, r: 0, n: 0, b: 0 };
   let W = 640, H = 360, cy = 160, ctx = shell.g;
@@ -410,13 +417,18 @@ export function create(shell) {
     const ng = nextGate();
     // The branch the car heads for: the left or the right half of the road.
     if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = px < 0 ? 0 : 1;
-    // Drift: steering into a tight bend at speed, held a moment.
-    const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 1.3 && sp > 0.62;
-    holdT = into ? holdT + dt : 0;
-    if (!drift && holdT > 0.22) { drift = true; driftDir = dir; driftTick = 0; driftGain = 0; say('😎'); }
-    if (drift && (dir !== driftDir || Math.abs(ps.curve) < 0.5 || sp < 0.45)) endDrift();
+    // Drift: steering into a bend at speed, held a moment (web.59: easier —
+    // any real bend, not only the tightest; a short let-go of the stick, a
+    // swipe ending on the phone, no longer breaks it; steering out does).
+    const into = dir !== 0 && Math.sign(dir) === Math.sign(ps.curve) && Math.abs(ps.curve) > 0.9 && sp > 0.55;
+    holdT = into ? holdT + dt : Math.max(0, holdT - dt * 2);
+    if (!drift && holdT > 0.14) { drift = true; driftDir = dir; driftTick = 0; driftGain = 0; letGo = 0; say('😎'); }
+    if (drift) {
+      letGo = dir === driftDir ? 0 : letGo + dt;
+      if (dir === -driftDir || letGo > 0.4 || Math.abs(ps.curve) < 0.4 || sp < 0.4) endDrift();
+    }
     const rate = (drift ? 3.4 : 2.5) * Math.max(0.35, sp);
-    pv += (dir * rate - pv) * Math.min(1, dt * (drift ? 5 : 11));
+    pv += ((drift && dir === 0 ? driftDir * 0.6 : dir) * rate - pv) * Math.min(1, dt * (drift ? 5 : 11));
     px += pv * dt - dt * 2.4 * sp * sp * ps.curve * CENTRI * (drift ? 0.3 : 1);
     // After a fork the branch taken swings back to the middle: the car goes with it.
     if (ps.m > 0) { const cen = (envL(g) + envR(g)) / 2; if (lastCen != null) px += cen - lastCen; lastCen = cen; } else lastCen = null;
@@ -465,9 +477,9 @@ export function create(shell) {
       }
       if (Math.floor(c.z / SEG) >= finishSeg) { c.dead = true; continue; }
       const ci = Math.floor(c.z / SEG);
-      if (c.ahead && ci < ps.i) { const d = Math.abs(px - carX(c, ps, g)); if (d > 0.36 && d < 1.1 && Math.random() < 0.45) aceDo('wave', 1, t('mascotHello'), 1); }
+      if (c.ahead && ci < ps.i) { const d = Math.abs(px - carX(c, ps, g)); if (d > HIT && d < 1.1 && Math.random() < 0.45) aceDo('wave', 1, t('mascotHello'), 1); }
       c.ahead = ci >= ps.i;
-      if (ci === ps.i && inv <= 0 && v > c.v && Math.abs(px - carX(c, ps, g)) < 0.36) {
+      if (ci === ps.i && inv <= 0 && v > c.v && Math.abs(px - carX(c, ps, g)) < HIT) {
         if (drift) { drift = false; driftGain = 0; }
         aceDo('flail', 0.9, '💥', 5);
         const loss = Math.ceil(stack * 0.2); stack -= loss; v = c.v * 0.45; inv = 1.1; if (!shell.reduced) shake = 0.35;
@@ -597,7 +609,9 @@ export function create(shell) {
   }
 
   // ── Drawing ────────────────────────────────────────────────────────
-  const carW = () => Math.min(W * 0.28, 100);
+  // The player's car: on a narrow screen it was 0.39 of the half-road wide, wider
+// than the gap between two cars side by side (0.40); 0.24 of W leaves room.
+const carW = () => Math.min(W * 0.24, 100);
   function project(p, cx, cyw, cz) {
     p.c.x = -cx; p.c.y = p.w.y - cyw; p.c.z = p.w.z - cz; p.s.scale = DEPTH / p.c.z;
     p.s.x = W / 2 + p.s.scale * p.c.x * W / 2; p.s.y = cy - p.s.scale * p.c.y * H / 2; p.s.w = p.s.scale * ROAD * W / 2;
@@ -728,7 +742,7 @@ export function create(shell) {
       }
       if (s.gate) drawGate(s, sc, sx, sy, g);
       const cs = bySeg.get(s.i);
-      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col); }
+      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night); }
       ctx.restore();
     }
     const spd = v / MAXV;
@@ -805,14 +819,24 @@ export function create(shell) {
       ctx.fillStyle = '#ffe6b0'; ctx.beginPath(); ctx.arc(lx, ly, u * 0.7, 0, 7); ctx.fill();
     }
   }
-  function drawCarRear(X, by, w, col) {
+  function drawCarRear(X, by, w, col, night) {
     if (w < 2.5) return;
-    const h = w * 0.62, x = X - w / 2, y = by - h;
+    const h = w * 0.62, x = X - w / 2, y = by - h, lx = [x + w * 0.15, x + w * 0.85], ly = y + h * 0.52;
+    // At night the tail lights glow: a car is seen from afar before its shape.
+    if (night) for (const cx of lx) {
+      const r = Math.max(w * 0.32, 4), gl = ctx.createRadialGradient(cx, ly, 0, cx, ly, r);
+      gl.addColorStop(0, 'rgba(255,70,70,.55)'); gl.addColorStop(1, 'rgba(255,70,70,0)'); ctx.fillStyle = gl; ctx.fillRect(cx - r, ly - r, r * 2, r * 2);
+    }
     ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(X, by, w * 0.55, w * 0.07, 0, 0, 7); ctx.fill();
     ctx.fillStyle = '#0d1117'; rr(x + w * 0.04, by - h * 0.32, w * 0.18, h * 0.32, w * 0.05); ctx.fill(); rr(x + w * 0.78, by - h * 0.32, w * 0.18, h * 0.32, w * 0.05); ctx.fill();
-    ctx.fillStyle = col; rr(x, y + h * 0.2, w, h * 0.68, w * 0.16); ctx.fill(); rr(x + w * 0.16, y, w * 0.68, h * 0.4, w * 0.14); ctx.fill();
+    // A dark outline sets the body off the tarmac and off the light verges.
+    ctx.strokeStyle = 'rgba(8,10,14,.75)'; ctx.lineWidth = Math.max(1, w * 0.035); ctx.fillStyle = col;
+    rr(x, y + h * 0.2, w, h * 0.68, w * 0.16); ctx.fill(); ctx.stroke(); rr(x + w * 0.16, y, w * 0.68, h * 0.4, w * 0.14); ctx.fill(); ctx.stroke();
+    rr(x, y + h * 0.2, w, h * 0.68, w * 0.16); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.22)'; rr(x + w * 0.06, y + h * 0.24, w * 0.88, h * 0.08, h * 0.04); ctx.fill();
     ctx.fillStyle = '#1b2533'; rr(x + w * 0.22, y + h * 0.06, w * 0.56, h * 0.26, w * 0.08); ctx.fill();
-    ctx.fillStyle = '#ff4a4f'; ctx.beginPath(); ctx.arc(x + w * 0.15, y + h * 0.52, w * 0.07, 0, 7); ctx.arc(x + w * 0.85, y + h * 0.52, w * 0.07, 0, 7); ctx.fill();
+    ctx.fillStyle = '#f4eedf'; rr(X - w * 0.12, y + h * 0.6, w * 0.24, h * 0.13, h * 0.03); ctx.fill();
+    ctx.fillStyle = night ? '#ff6a6a' : '#ff3b40'; ctx.beginPath(); ctx.arc(lx[0], ly, w * 0.08, 0, 7); ctx.arc(lx[1], ly, w * 0.08, 0, 7); ctx.fill();
   }
 
   // The player's car, in two halves around the Ace: what is behind him on the
@@ -983,7 +1007,7 @@ export function create(shell) {
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, curve: (i) => segs[i].curve }; } catch (e) {}
 
   return {
     update, draw, input,

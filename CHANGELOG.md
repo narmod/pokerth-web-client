@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: traffic you can see and get through, easier drifts** (`web.59`, narmod: « I don't see the other cars very
+  well; my car has trouble passing between two cars, I crash very often; drifting isn't obvious ») — `poker-run.mjs`:
+  the hit distance was 0.36 half-road with lanes 0.66 apart, so two cars side by side left no way through; it is now
+  `HIT = 0.25`. The player's car is `W × 0.24` wide (was 0.28: on a phone it was wider than the gap between two cars).
+  Traffic in `CAR_COLS` (bright bodies instead of greys), with a dark outline, a plate and, on night scenes
+  (`TH.night`: Las Vegas, Monaco), glowing tail lights. Drift: starts in a bend over 0.9 (was 1.3) above 55 % speed
+  after 0.14 s (was 0.22 s); a let-go of up to 0.4 s keeps it (a phone swipe's pulse used to end it at once), steering
+  the other way ends it; hands off, the car keeps leaning into the bend.
 - **Poker Run: two roads at each fork, OutRun's course map** (`web.58`, narmod: « two, like OutRun, it's more logical
   and easier; show the course, how far you went and what was left ») — `games/poker-run.mjs`: a fork is now the
   road's two halves pulling apart (`BR_OFF`), two cards a gate, `branchOfLane()` sends the middle lane's traffic

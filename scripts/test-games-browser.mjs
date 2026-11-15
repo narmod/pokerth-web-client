@@ -641,6 +641,27 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.down('ArrowLeft'); await sleep(450); await pg.keyboard.up('ArrowLeft');
   ok(await pg.evaluate(() => window.__pthRun.game().px < -0.15), label + ': ← held steers to the left (x ' + (await pg.evaluate(() => window.__pthRun.game().px.toFixed(2))) + ')');
   await shot(pg, label + '-prun-run');
+  // Between two cars side by side there is a way through; into one, a crash.
+  const prGap = [];
+  for (const x of [-0.33, 0]) prGap.push(await pg.evaluate((x) => new Promise((res) => {
+    const R = window.__pthRun; R.setTime(99); R.setPos(0);
+    const cs = R.cars(); cs.forEach((c) => { c.dead = true; });
+    for (let l = 0; l < 2; l++) Object.assign(cs[l], { dead: false, lane: l, z: 20 * 200, v: 200 * 62 * 0.3, ahead: true });
+    let hit = false; const iv = setInterval(() => { R.setPx(x); R.setV(0.8); if (R.game().inv > 0) hit = true; }, 8);
+    setTimeout(() => { clearInterval(iv); res(hit); }, 1200);
+  }), x));
+  ok(!prGap[0] && prGap[1], label + ': the car slips between two cars side by side, and crashes into one (' + prGap.join(', ') + ')');
+  // Drift: into a bend at speed, it starts; a short let-go does not break it.
+  const prBend = await pg.evaluate(() => { const R = window.__pthRun; for (let i = 100; i < 2000; i++) { let ok = true; for (let j = 0; j < 30; j++) if (Math.abs(R.curve(i + j)) < 1.2 || Math.sign(R.curve(i + j)) !== Math.sign(R.curve(i))) ok = false; if (ok) return { i, d: Math.sign(R.curve(i)) }; } return null; });
+  if (prBend) {
+    await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i - 8); R.setPx(0); R.setV(0.9); }, prBend);
+    const k = prBend.d > 0 ? 'ArrowRight' : 'ArrowLeft';
+    await pg.keyboard.down(k); await sleep(350);
+    const dr1 = await pg.evaluate(() => window.__pthRun.drift());
+    await pg.keyboard.up(k); await sleep(150);
+    const dr2 = await pg.evaluate(() => window.__pthRun.drift());
+    ok(dr1 && dr2, label + ': steering into a bend at speed starts a drift, a short let-go keeps it (' + dr1 + ', ' + dr2 + ')');
+  } else ok(false, label + ': a long bend to drift in');
   // Gentle hills: along the course the road stays in sight up to the horizon.
   let crests = 0;
   const nSeg = await pg.evaluate(() => window.__pthRun.segs());
