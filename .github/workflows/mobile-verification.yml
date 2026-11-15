@@ -45,7 +45,8 @@ concurrency:
 
 jobs:
   mobile:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04 (2026-11-15), where the pinned Playwright cannot install its browsers.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -96,7 +97,8 @@ jobs:
   # Every table size (2-10 players), seated and spectator, portrait and
   # landscape: 90 configurations, about 15 minutes. Runs beside the job above.
   table-sweep:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04 (2026-11-15), where the pinned Playwright cannot install its browsers.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Checkout
@@ -128,7 +130,8 @@ jobs:
   # Every interface language on narrow phones: clipped labels, text running out
   # of buttons, overlaps. About 4 minutes per phone.
   i18n-overflow:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04 (2026-11-15), where the pinned Playwright cannot install its browsers.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -163,7 +166,8 @@ jobs:
   # WebKit (Safari, every iPad browser) and the real Microsoft Edge (desktop
   # profiles and the resize run; Playwright installs it as "msedge").
   screen-matrix:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04 (2026-11-15), where the pinned Playwright cannot install its browsers.
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
