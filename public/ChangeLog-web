@@ -1,4 +1,13 @@
-2026-11-15 version 2.1.11-web.64 (current series):
+2026-11-15 version 2.1.11-web.65 (current series):
+- improvement: Mini-games — the pause has two buttons, Resume and Quit: with only a gamepad or a TV remote you can now leave a game (Start or ⏯ pauses, then B or Back quits; A or OK resumes)
+- improvement: Mini-games — a TV remote's Back pauses a game, Back again leaves it; its ⏯ key pauses and resumes
+- improvement: Mini-games — on the mini-games page, ↑ and ↓ (keys, D-pad or stick) move between the rows of games; A or Space plays, Y or R shows the rules, B goes back
+- improvement: Mini-games — on a game's title screen, the gamepad's ↑ / ↓ move between its tiles too; Y and X switch its options
+- bugfix: Mini-games — with a gamepad, letting go of ←/→ is now seen (a held direction stayed stuck), and steering with the stick no longer presses up or down
+- improvement: Poker Run — the gamepad drives like a racing game: ←/→ to steer, A or RT nitro, B or LT brake
+- improvement: Poker Run — the car turns about its middle (it seemed to turn about its boot)
+
+2026-11-15 version 2.1.11-web.64:
 - new: Poker Run — at each fork, the left road is the easier one and the right road a harder one: sharper and closer bends, S-bends, more traffic, but chips worth more (+5 per level). Take only rights and every stage gets harder, up to chips worth 35
 - new: Poker Run — before a fork, each option shows its difficulty (five dots) and what its chips are worth; the left arch is green, the right one red
 - improvement: Poker Run — Saint-Tropez is now the Côte d'Azur: the coast road with the beach and the sea on the right, garrigue inland, umbrella pines, villas, palms and parasols

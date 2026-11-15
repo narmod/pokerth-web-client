@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Mini-games with a gamepad or a TV remote** (`web.65`, narmod: « with the pad it doesn't work at all — left/right
+  like a real game, nitro on a button; up/down in the menus, the rest on buttons; with a pad or a remote only there
+  is no way to quit ») — `games/shell.mjs` `pollPad()` reads the pad three ways: menus (the arcade page, a title
+  screen: D-pad / stick move, ↑/↓ included — `up`/`down` to a game with `grid`, else previous/next —, A plays, Y
+  rules or the title's option, X `n4`, B back), racing (`shell.padMode = 'racing'`, set by Poker Run: ←/→ held,
+  A / RT nitro, B / LT / ↓ brake) and the others (as before); ←/→ releases are sent (games ignore them unless they
+  steer), the stick counts on its main axis only. The pause panel gets Resume / Quit buttons (focused, ←/→ between
+  them; pad A / Start resume, B quits); a remote's Back (`GoBack`, `BrowserBack`, key code 4) acts as Escape and ⏯
+  as P. `menu.mjs`: `vert()` row moves, `rules` action (R, Y), the keys line. Poker Run: the car turns about its
+  middle (`pivot` 1.0) and the camera no longer leads it to the side it steers to (that held the rear in place).
+  New `scripts/test-games-gamepad.mjs` (fake standard pad: menu, title, Poker Run, pause, remote keys, every game).
 - **Poker Run: easy left, hard right; truer scenes** (`web.64`, narmod: « left easier, right harder at each fork — all
   rights the hardest, and it pays more; Saint-Tropez is a desert, it should be the Côte d'Azur; climbs and descents in
   the mountains ») — `poker-run.mjs`: the track is a skeleton (`stageStart`, forks, finish) whose stages are shaped

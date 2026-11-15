@@ -83,6 +83,8 @@ const CSS = `
 @keyframes gm-rv-fade{from{opacity:.3}to{opacity:1}}
 #pth-game .gm-keys{margin:0;color:var(--text);font-size:12px;opacity:.8}
 #pth-game .gm-keys .pg-k{color:var(--gold);border-color:var(--border-hi)}
+#pth-game .gm-keys .gm-padk{display:none}
+body.has-gamepad #pth-game .gm-keys .gm-padk{display:inline}
 `;
 
 export function create(shell) {
@@ -144,7 +146,8 @@ export function create(shell) {
     + '<p class="gm-count">' + esc(countLine) + '</p></div></div>'
     + '<div class="gm-grid">' + games.map((g, i) => (g.locked || pending.indexOf(i) >= 0 ? lockedCard(g, i) : openCard(g, i))).join('')
     + '</div>'
-    + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> · <span class="pg-k">↓</span> ' + esc(t('gmRules')) + '</p></div>';
+    + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">↑</span> <span class="pg-k">↓</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> ' + esc(t('gmPlay')) + ' · <span class="pg-k">R</span> ' + esc(t('gmRules'))
+    + ' <span class="gm-padk">· 🎮 <span class="pg-k">A</span> ' + esc(t('gmPlay')) + ' · <span class="pg-k">Y</span> ' + esc(t('gmRules')) + ' · <span class="pg-k">B</span> ←</span></p></div>';
   const cards = Array.from(shell.view.querySelectorAll('.gm-card'));
   const mark = () => cards.forEach((c, i) => c.classList.toggle('on', i === sel));
   mark();
@@ -211,11 +214,28 @@ export function create(shell) {
   ace.pose('wave');
   ace.place(38, 94, 0.42, 1);
 
-  function input(a, down) {
-    if (!down) return;
-    if (a === 'left' || a === 'right') { sel = (sel + (a === 'left' ? -1 : 1) + games.length) % games.length; mark(); cards[sel].scrollIntoView({ block: 'nearest' }); }
-    else if (a === 'jump') play(sel);
-    else if (a === 'duck') rules(sel);
+  /** The card above or below the lit one (web.65): the nearest in the next row up or down. */
+  function vert(dir) {
+    const r0 = cards[sel].getBoundingClientRect(), cx = r0.left + r0.width / 2;
+    let best = -1, bd = Infinity;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect(), dy = (r.top - r0.top) * dir;
+      if (dy < 8) return;
+      const d = dy * 4 + Math.abs(r.left + r.width / 2 - cx);
+      if (d < bd) { bd = d; best = i; }
+    });
+    return best;
   }
-  return { update() {}, draw() {}, input, theme, running: () => false, destroy() { gone = true; ace.remove(); } };
+  function go(i) { if (i < 0) return; sel = i; mark(); cards[sel].scrollIntoView({ block: 'nearest' }); }
+  function input(a, down, info) {
+    if (!down) return;
+    const code = info && info.code;
+    // ↑ / ↓ (keys or pad) move between rows; Space / Enter or A plays; R or Y, the rules.
+    if (a === 'left' || a === 'right') go((sel + (a === 'left' ? -1 : 1) + games.length) % games.length);
+    else if (a === 'up' || (a === 'jump' && code === 'ArrowUp') || (a === 'jump' && code === 'KeyW')) go(vert(-1));
+    else if (a === 'down' || (a === 'duck' && (code === 'ArrowDown' || code === 'KeyS'))) go(vert(1));
+    else if (a === 'jump') play(sel);
+    else if (a === 'rules' || a === 'duck') rules(sel);
+  }
+  return { update() {}, draw() {}, input, theme, grid: true, running: () => false, destroy() { gone = true; ace.remove(); } };
 }

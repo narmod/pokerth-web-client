@@ -63,6 +63,10 @@ const CSS = `
   background:radial-gradient(ellipse at center,rgba(11,18,16,.35),rgba(11,18,16,.82));pointer-events:none;color:#e8efea}
 #${ROOT_ID} .pg-panel[hidden]{display:none}
 #${ROOT_ID} .pg-panel.pg-clear{background:none}
+#${ROOT_ID} .pg-pause-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;pointer-events:auto;margin:4px 0}
+#${ROOT_ID} .pg-pause-btns .pg-btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+#${ROOT_ID} .pg-pk{display:none;font-style:normal;font-weight:800;margin-right:6px;border:1.5px solid currentColor;border-radius:50%;width:18px;height:18px;line-height:15px;font-size:11px;text-align:center}
+body.has-gamepad #${ROOT_ID} .pg-pk{display:inline-block}
 #${ROOT_ID} .pg-panel>div{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:520px}
 #${ROOT_ID} .pg-panel h2{margin:0;font:700 clamp(22px,4.4vw,38px)/1.05 'Cinzel',Georgia,serif;letter-spacing:.04em;color:#f5f0e3}
 #${ROOT_ID} .pg-panel p{margin:0;font-size:clamp(12px,1.8vw,14px)}
@@ -174,6 +178,10 @@ export function run(def, gameMod, opts = {}) {
     root.id = ROOT_ID;
     root.innerHTML = '<div class="pg-play"><div class="pg-stage" tabindex="0"><canvas></canvas><div class="pg-layer"></div><div class="pg-hud"></div>'
       + '<div class="pg-panel" hidden><div></div></div><div class="pg-panel pg-pause" hidden><div><h2>' + esc(tr('arPause')) + '</h2>'
+      // Resume or quit from the pause (web.65, narmod: « with a pad or a TV remote only, there was no way out »):
+      // A / Start / OK resume, B / Select / Back quit; ←/→ move between the two.
+      + '<div class="pg-pause-btns"><button type="button" class="pg-btn" data-p="resume"><i class="pg-pk">A</i>' + esc(tr('padMenuResume') || 'Resume') + '</button>'
+      + '<button type="button" class="pg-btn pg-ghost" data-p="quit"><i class="pg-pk">B</i>' + esc(tr('arQuit') || 'Quit') + '</button></div>'
       + '<p class="pg-dim"><span class="pg-k">P</span> · <span class="pg-k">Esc</span></p></div></div></div>'
       + '<div class="pg-pad"><button type="button" class="pg-lr" data-a="left" aria-label="◀">◀</button><button type="button" data-a="jump" aria-label="▲">▲</button>'
       + '<button type="button" data-a="duck" aria-label="▼">▼</button><button type="button" class="pg-lr" data-a="right" aria-label="▶">▶</button></div></div>'
@@ -186,6 +194,16 @@ export function run(def, gameMod, opts = {}) {
     const g = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
     const panel = /** @type {HTMLElement} */ (root.querySelector('.pg-panel'));
     const pausePanel = /** @type {HTMLElement} */ (root.querySelector('.pg-pause'));
+    const pauseQuit = () => { shell.pause(false); shell.back(); };
+    pausePanel.querySelectorAll('[data-p]').forEach((b) => {
+      b.addEventListener('pointerdown', (e) => e.stopPropagation());
+      b.addEventListener('click', (e) => { e.stopPropagation(); if (b.getAttribute('data-p') === 'quit') pauseQuit(); else shell.pause(false); });
+    });
+    /** ←/→ (keys, remote, pad) between the pause's two buttons. */
+    const pauseFocus = (d) => {
+      const bs = Array.from(pausePanel.querySelectorAll('[data-p]')), i = bs.indexOf(/** @type {any} */ (document.activeElement));
+      try { /** @type {HTMLElement} */ (bs[(i < 0 ? 0 : i + d + bs.length) % bs.length]).focus({ preventScroll: true }); } catch (e) {}
+    };
     const view = /** @type {HTMLElement} */ (root.querySelector('.pg-view'));
     const rulesBox = /** @type {HTMLElement} */ (root.querySelector('.pg-rules'));
     const sheet = /** @type {HTMLElement} */ (root.querySelector('.pg-sheet'));
@@ -228,6 +246,7 @@ export function run(def, gameMod, opts = {}) {
         if (on === shell.paused) return;
         shell.paused = on; pausePanel.hidden = !on;
         if (!on) last = performance.now();
+        else { try { /** @type {HTMLElement} */ (pausePanel.querySelector('[data-p="resume"]')).focus({ preventScroll: true }); } catch (e) {} }
       },
       close,
       /** Show or hide the ▲ ▼ touch buttons (a game played by tapping hides them). */
@@ -334,7 +353,7 @@ export function run(def, gameMod, opts = {}) {
       rulesBox.hidden = true; rulesPaused = false;
       shell.layer.innerHTML = ''; shell.hud.innerHTML = ''; shell.hud.className = 'pg-hud'; view.innerHTML = '';
       shell.panel(null); shell.pause(false); padOn = true; root.classList.remove('pg-nopad');
-      lanes = false; root.classList.remove('pg-lanes');
+      lanes = false; root.classList.remove('pg-lanes'); shell.padMode = null;
       cur = d; window._pthPadOwner = d.id;
       if (titleEl) titleEl.textContent = d.id === opts.home ? (tr('gmTitle') || 'Mini-games') : (d.name || tr('gmTitle') || 'Mini-games');
       if (helpBtn) helpBtn.style.display = d.rulesKey ? '' : 'none';
@@ -353,18 +372,26 @@ export function run(def, gameMod, opts = {}) {
       // 1 2 3: a game's own choices (Who Wins?'s jokers, Higher or Lower's bets); ignored by the others.
       Digit1: 'n1', Digit2: 'n2', Digit3: 'n3', Numpad1: 'n1', Numpad2: 'n2', Numpad3: 'n3',
       // 4: Higher or Lower's Fold (web.44).
-      Digit4: 'n4', Numpad4: 'n4' };
+      Digit4: 'n4', Numpad4: 'n4',
+      // R: the rules of the lit game on the arcade page (web.65).
+      KeyR: 'rules' };
     function onKey(e) {
       if (closed || !screen.classList.contains('active')) return;
       // A window opened from the header (options, trophies…) or a field: its keys.
       if (windowOver() || editable(e.target)) return;
       const down = e.type === 'keydown';
+      // A TV remote's Back (GoBack, BrowserBack, Android 4) acts as Escape; its ⏯ as P.
+      const back = e.code === 'Escape' || e.key === 'GoBack' || e.key === 'BrowserBack' || e.keyCode === 4;
+      const playPause = e.key === 'MediaPlayPause' || e.key === 'MediaPlay' || e.key === 'MediaPause' || e.keyCode === 179;
+      if (shell.paused && rulesBox.hidden && down && (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
+        pauseFocus(e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1); e.preventDefault(); e.stopImmediatePropagation(); return;
+      }
       const onButton = e.target && /** @type {HTMLElement} */ (e.target).tagName === 'BUTTON';
       const a = (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'Space') && onButton ? null : KEYS[e.code];
-      if (e.code === 'Escape' && down) {
+      if (back && down) {
         if (rulesBox.hidden && game && game.running && game.running() && !shell.paused) shell.pause(true);
         else { if (rulesBox.hidden) shell.pause(false); shell.back(); }
-      } else if ((e.code === 'KeyP' || e.code === 'Pause') && down) {
+      } else if ((e.code === 'KeyP' || e.code === 'Pause' || playPause) && down) {
         if (game && game.running && game.running() && rulesBox.hidden) shell.pause(!shell.paused);
       } else if (a && rulesBox.hidden) {
         if (down && shell.paused) shell.pause(false);
@@ -421,7 +448,17 @@ export function run(def, gameMod, opts = {}) {
     const foldMenu = () => { const m = document.getElementById('ar-overflow-menu'); if (m) m.classList.remove('open'); };
     document.addEventListener('click', foldMenu);
 
-    // Gamepad: polled every frame (standard mapping).
+    // Gamepad: polled every frame (standard mapping). Three ways of reading it
+    // (web.65, narmod: « with the pad it doesn't work at all — left/right like
+    // a real video game, nitro on a button; up/down to move in the menus, the
+    // other things on buttons »):
+    //   menus — the arcade page and a game's title screen: D-pad / stick move
+    //     (up/down too), A play, Y rules (the page) or a title's option, X a
+    //     title's second option (n4), B / Select back;
+    //   racing — a game that says shell.padMode = 'racing' (Poker Run): ←/→
+    //     held and let go, A or RT nitro, B, LT or ↓ brake;
+    //   other games — A / B / ↑ jump, ↓ duck, ←/→ (now let go too).
+    // The stick counts on its main axis only, so steering never presses up or down.
     let padPrev = [];
     function pollPad() {
       let list = [];
@@ -429,27 +466,72 @@ export function run(def, gameMod, opts = {}) {
       if (!list.length || windowOver()) { padPrev = []; return; }
       const p = [];
       for (const pad of list) {
-        const b = (i) => !!(pad.buttons[i] && pad.buttons[i].pressed);
-        const ay = pad.axes && pad.axes.length > 1 ? pad.axes[1] : 0;
-        const ax = pad.axes && pad.axes.length ? pad.axes[0] : 0;
-        if (b(0) || b(1) || b(12) || ay < -0.6) p[0] = true;     // jump
-        if (b(12) || ay < -0.6) p[6] = true;                      // (of which: up)
-        if (b(13) || ay > 0.6) p[1] = true;                       // duck
+        const b = (i) => !!(pad.buttons[i] && (pad.buttons[i].pressed || pad.buttons[i].value > 0.4));
+        const ax = pad.axes && pad.axes.length ? pad.axes[0] : 0, ay = pad.axes && pad.axes.length > 1 ? pad.axes[1] : 0;
+        const horiz = Math.abs(ax) >= Math.abs(ay);
+        if (b(0)) p[0] = true;                                    // A
+        if (b(1)) p[7] = true;                                    // B
+        if (b(2)) p[9] = true;                                    // X
+        if (b(3)) p[8] = true;                                    // Y
+        if (b(6)) p[11] = true;                                   // LT
+        if (b(7)) p[10] = true;                                   // RT
+        if (b(12) || (!horiz && ay < -0.6)) p[6] = true;          // up
+        if (b(13) || (!horiz && ay > 0.6)) p[1] = true;           // down
         if (b(9)) p[2] = true;                                    // Start: pause
         if (b(8)) p[3] = true;                                    // Select: back
-        if (b(14) || ax < -0.6) p[4] = true;                      // left
-        if (b(15) || ax > 0.6) p[5] = true;                       // right
+        if (b(14) || (horiz && ax < -0.5)) p[4] = true;           // left
+        if (b(15) || (horiz && ax > 0.5)) p[5] = true;            // right
       }
       const dn = (i) => p[i] && !padPrev[i], up = (i) => !p[i] && padPrev[i];
       if (dn(3)) { padPrev = p; if (rulesBox.hidden) shell.pause(false); shell.back(); return; }
-      if (!rulesBox.hidden) { if (dn(0)) hideRules(); padPrev = p; return; }
+      if (!rulesBox.hidden) { if (dn(0) || dn(7)) hideRules(); padPrev = p; return; }
+      const running = !!(game && game.running && game.running());
+      // Paused: A or Start resume, B quits (Select too, above), ←/→ between the buttons.
+      if (shell.paused && !cur.page) {
+        if (dn(0) || dn(2)) shell.pause(false);
+        else if (dn(7)) { padPrev = p; pauseQuit(); return; }
+        else if (dn(4) || dn(6)) pauseFocus(-1);
+        else if (dn(5) || dn(1)) pauseFocus(1);
+        padPrev = p;
+        return;
+      }
+      const menu = !!cur.page || (!running && panel.classList.contains('gm-title') && !panel.hidden);
+      if (menu) {
+        if (dn(4)) send('left', true);
+        if (dn(5)) send('right', true);
+        if (dn(6)) send(game && game.grid ? 'up' : 'left', true, { pad: 'up' });
+        if (dn(1)) send(game && game.grid ? 'down' : 'right', true, { pad: 'down' });
+        if (dn(0) || dn(2)) send('jump', true, { pad: 'a' });
+        if (up(0) || up(2)) send('jump', false);
+        if (dn(8)) send(cur.page ? 'rules' : 'duck', true, { pad: 'y' });
+        if (dn(9)) send('n4', true, { pad: 'x' });
+        if (dn(7)) { padPrev = p; shell.back(); return; }
+        padPrev = p;
+        return;
+      }
       if (dn(4)) send('left', true);
       if (dn(5)) send('right', true);
-      if (dn(2) && game && game.running && game.running()) shell.pause(!shell.paused);
+      if (up(4)) send('left', false);
+      if (up(5)) send('right', false);
+      if (shell.padMode === 'racing' && running) {
+        if (dn(2)) shell.pause(!shell.paused);
+        const nit = p[0] || p[10], was = padPrev[0] || padPrev[10];
+        if (nit && !was) { if (shell.paused) shell.pause(false); else send('jump', true, { pad: 'a' }); }
+        if (!nit && was) send('jump', false);
+        const brk = p[7] || p[11] || p[1], wasB = padPrev[7] || padPrev[11] || padPrev[1];
+        if (brk && !wasB) send('duck', true, { pad: 'b' });
+        if (!brk && wasB) send('duck', false);
+        padPrev = p;
+        return;
+      }
+      if (p[7]) p[0] = true;                                      // B jumps too
+      if (p[6]) p[0] = true;                                      // and ↑
+      if (dn(2) && running) shell.pause(!shell.paused);
       else if (dn(0)) { if (shell.paused) shell.pause(false); else send('jump', true, { pad: p[6] ? 'up' : 'a' }); }
       if (up(0)) send('jump', false);
       if (dn(1)) send('duck', true, { pad: 'down' });
       if (up(1)) send('duck', false);
+      if (dn(9)) send('n4', true, { pad: 'x' });
       padPrev = p;
     }
 

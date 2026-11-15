@@ -180,6 +180,8 @@ export function create(shell) {
   shell.lanes(true);
   // The pad of this game: ◀ NITRO ▶ (the brake stays on ↓), with the nitro gauge; put back as it was on leaving.
   shell.root.classList.add('prun-pad');
+  // The pad as a racing game: ←/→ held, A or RT nitro, B, LT or ↓ brake (shell.mjs).
+  shell.padMode = 'racing';
   const nitroBtn = /** @type {HTMLElement|null} */ (shell.root.querySelector('.pg-pad button[data-a="jump"]'));
   const nitroWas = nitroBtn ? { text: nitroBtn.textContent, label: nitroBtn.getAttribute('aria-label') } : null;
   const gauge = document.createElement('i');
@@ -562,7 +564,9 @@ export function create(shell) {
     // swings, overshoots a little and settles. The camera trails it.
     const yT = clamp(pv / 2.5, -1, 1) * 0.13 + turn * 0.5;
     yawVel += (70 * (yT - yaw) - 10 * yawVel) * Math.min(dt, 0.05); yaw += yawVel * Math.min(dt, 0.05);
-    slide += (clamp(pv / 2.5, -1.2, 1.2) * W * 0.05 - turn * W * 0.035 - slide) * Math.min(1, dt * 5);
+    // The car turns about its middle (web.65, narmod: « it seems to turn about its boot »): no lead to the
+    // side it steers to any more (that held the rear in place), only a little push out of the bend in a drift.
+    slide += (-turn * W * 0.03 - slide) * Math.min(1, dt * 5);
     if (spin > 0) spin = Math.max(0, spin - dt);
     if (mt > 0) mt = Math.max(0, mt - dt);
     bob = sp > 0.8 && !shell.reduced ? Math.sin(performance.now() / 38) * sp * 1.1 : 0;
@@ -1075,7 +1079,7 @@ const carW = () => Math.min(W * 0.24, 100);
   // The car in 3D (car3d.mjs): its yaw follows the steering a little and a
   // drift a lot (web.62, narmod: « a car in 3/4, a real rotation »).
   const carYaw = () => yaw + (spin > 0 ? Math.sin(spin * 26) * 0.3 * spin / 0.6 : 0);
-  const carOpts = () => { const { w, x, y } = carFrame(); return { x, y, w, yaw: carYaw(), pitch: 0.22, pivot: 1.3, color: '#c2303a', boost: boost || mt > 0, plate }; };
+  const carOpts = () => { const { w, x, y } = carFrame(); return { x, y, w, yaw: carYaw(), pitch: 0.22, pivot: 1.0, color: '#c2303a', boost: boost || mt > 0, plate }; };
   /** The tyre marks a drift leaves behind the rear wheels. */
   function skidMarks(w, x, y) {
     const a = Math.abs(turn); if (a < 0.05) return;
@@ -1205,7 +1209,7 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal }; } catch (e) {}
 
   return {
     update, draw, input,
@@ -1216,7 +1220,7 @@ const carW = () => Math.min(W * 0.24, 100);
       clearTimeout(revealTimer);
       try { if (window.__pthRun) delete window.__pthRun; } catch (e) {}
       front.remove(); prev.remove(); ace.remove();
-      shell.root.classList.remove('prun-pad');
+      shell.root.classList.remove('prun-pad'); shell.padMode = null;
       if (nitroBtn && nitroWas) { gauge.remove(); nitroBtn.textContent = nitroWas.text; if (nitroWas.label) nitroBtn.setAttribute('aria-label', nitroWas.label); nitroBtn.classList.remove('prun-ready', 'prun-burn'); }
     },
   };
