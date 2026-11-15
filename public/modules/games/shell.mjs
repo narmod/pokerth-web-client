@@ -235,8 +235,10 @@ export function run(def, gameMod, opts = {}) {
       /** Show `html` in the panel slot (null hides it); clear = no dimming behind. */
       panel(html, clear) {
         // The title template (title.mjs) adds its dark picture after this call.
-        panel.classList.remove('gm-title', 'gm-end');
+        panel.classList.remove('gm-title', 'gm-end', 'gm-eout');
         shell.endBack = null; shell.endTimers = null;      // the end template (end.mjs) sets them again
+        // The end screen takes the whole game area (end.mjs moves it out of the stage): back in the stage.
+        if (panel.parentNode !== stage) { stage.insertBefore(panel, pausePanel); panel.style.removeProperty('--gm-ez'); }
         const bg = panel.querySelector(':scope > .gm-bg'); if (bg) bg.remove();
         if (html == null) { panel.hidden = true; return; }
         panel.firstElementChild.innerHTML = html; panel.hidden = false;

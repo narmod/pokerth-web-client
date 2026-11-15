@@ -42,6 +42,9 @@ import { cardHtml, fmt } from './common.mjs';
 const CSS = `
 #pth-game .pg-panel.gm-end{background:radial-gradient(ellipse at center,rgba(6,9,14,.55),rgba(6,9,14,.82));pointer-events:auto;overflow:auto}
 #pth-game .pg-panel.gm-end>div{max-width:none;width:100%;align-items:center}
+#pth-game .pg-panel.gm-eout{position:absolute;inset:0;z-index:15;padding:10px;align-items:safe center}
+#pth-game .pg-panel.gm-eout>div{margin:auto 0}
+#pth-game .gm-endc{zoom:var(--gm-ez,1)}
 #pth-game .gm-endc{width:min(420px,100%);box-sizing:border-box;margin:auto;background:linear-gradient(180deg,rgba(24,30,40,.97),rgba(14,18,25,.98));border:1.5px solid rgba(232,184,74,.55);border-radius:20px;padding:14px 14px 12px;color:#f1e9d4;box-shadow:0 12px 40px rgba(0,0,0,.55);text-align:center}
 #pth-game .gm-endc h2{margin:0;font:700 clamp(20px,5.2vw,26px)/1.1 'Cinzel',Georgia,serif;font-variant:small-caps;letter-spacing:.04em;color:#f5f0e3}
 #pth-game.pg-light .pg-panel .gm-endc h2,#pth-game .pg-panel .gm-endc h2{color:#f5f0e3}
@@ -148,6 +151,20 @@ export function endScreen(shell, o) {
   const panel = /** @type {HTMLElement|null} */ (shell.root.querySelector('.pg-panel'));
   if (!panel) return;
   panel.classList.add('gm-end');
+  // The whole game area, not the stage (web.68, narmod: « the windows don't fit the game's window »: on a
+  // phone the stage is a short band); the card zoomed out if it is still taller than the area.
+  panel.classList.add('gm-eout');
+  shell.root.insertBefore(panel, shell.root.firstChild);     // first, so `.pg-panel` still finds it before the pause
+  const card = /** @type {HTMLElement} */ (panel.querySelector('.gm-endc'));
+  let ro = null;
+  const fit = () => {
+    if (!card || !card.isConnected || !panel.classList.contains('gm-end')) { if (ro) ro.disconnect(); return; }
+    panel.style.setProperty('--gm-ez', '1');
+    const room = panel.clientHeight - 20, h = card.offsetHeight;
+    if (h > room && room > 0) panel.style.setProperty('--gm-ez', String(Math.max(0.55, Math.floor(room / h * 100) / 100)));
+  };
+  fit();
+  try { ro = new ResizeObserver(fit); ro.observe(panel); } catch (e) {}
   panel.classList.toggle('gm-ekeys', !!o.keys);
   shell.endBack = o.onMenu || null;
   let done = false;

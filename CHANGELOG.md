@@ -455,6 +455,10 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **Mini-games' end screen cut off on phones** (`web.68`, narmod's iPhone screenshot) — the card lived in the
+  stage, a short band in portrait: `end.mjs` moves the panel to the top of the game root (class `gm-eout`, first
+  child so `.pg-panel` still finds it), zooms the card out (`--gm-ez`, ≥ 0.55) when it is still taller than the
+  area, a `ResizeObserver` keeps it fitted; `shell.panel()` puts the panel back in the stage.
 - **Music player entries** (`web.56`, audit `AUDIT_MUSIQUE_2026-11-15`) — the 🎵 entry of the mini-games overflow
   menu had no id, so `_applyMusicFlag` (admin music kill switch) left it visible as a dead button; it is now
   `#music-toggle-arcade-mob`. `toggleMusicPanel`'s active-state list targeted a non-existent `music-btn-connect`

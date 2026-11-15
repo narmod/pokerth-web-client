@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.67 (current series):
+2026-11-15 version 2.1.11-web.68 (current series):
+- bugfix: Mini-games — the end screen now uses the whole game area instead of the playing field only: on a phone it was cut off at the top and bottom (and it shrinks to fit a short landscape screen)
+
+2026-11-15 version 2.1.11-web.67:
 - new: Mini-games — a new end screen for every game: the hand turned card by card, the score counting up, a « New record » ribbon, how the score was made, the levels reached (venues, stages, floors, questions…) and three numbers from the game
 - new: Mini-games — two buttons at the end of a game: « Play again » and « Game menu » (A / B on a gamepad, ←/→ to move between them, Esc goes back to the game's menu)
 - improvement: Poker Run — the end screen shows the course you drove, or the Queen's requests, with your drifts, overtakes and bumps
