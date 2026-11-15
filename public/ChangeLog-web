@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.70 (current series):
+2026-11-15 version 2.1.11-web.71 (current series):
+- bugfix: Mini-games — on iPhone, the light and the golden egg that reveal the Mini-games card (and a mystery game) played below the card, over « Ace's Help »: they now play on the card itself
+
+2026-11-15 version 2.1.11-web.70:
 - improvement: Mini-games — the mini-games page and its animations are loaded ahead: on a device that had never opened them, unlocking the mode (the egg, the light) and opening the page no longer stutter while files arrive
 
 2026-11-15 version 2.1.11-web.69:

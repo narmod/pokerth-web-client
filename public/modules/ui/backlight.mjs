@@ -72,7 +72,10 @@ export function backlight(el, opts = {}) {
   const cv = document.createElement('canvas');
   cv.className = 'pth-backlight';
   cv.setAttribute('aria-hidden', 'true');
-  cv.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2147483000';
+  // Sized in px to the window, as the drawing is (web.71, narmod's iPhone video: at 100vh — the tallest
+  // viewport, Safari's bars hidden — the bitmap was stretched downwards and the light and the egg
+  // landed under the card, over « Aide de l'As »).
+  cv.style.cssText = 'position:fixed;left:0;top:0;pointer-events:none;z-index:2147483000';
   document.body.appendChild(cv);
   const g = cv.getContext('2d');
   if (!g) { cv.remove(); flash(); return Promise.resolve(); }
@@ -81,6 +84,7 @@ export function backlight(el, opts = {}) {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     W = window.innerWidth; H = window.innerHeight;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
   size();
@@ -131,6 +135,8 @@ export function backlight(el, opts = {}) {
   return new Promise((done) => {
     const t0 = performance.now();
     window.addEventListener('resize', size);
+    const vv = window.visualViewport;            // Safari's bars coming and going
+    if (vv) vv.addEventListener('resize', size);
     (function step(now) {
       const t = (now - t0) / 1000;
       let r = r0;
@@ -207,7 +213,7 @@ export function backlight(el, opts = {}) {
       }
       if (t >= flashAt) flash();
       if (t < total) requestAnimationFrame(step);
-      else { window.removeEventListener('resize', size); cv.remove(); done(undefined); }
+      else { window.removeEventListener('resize', size); if (vv) vv.removeEventListener('resize', size); cv.remove(); done(undefined); }
     })(t0);
   });
 }

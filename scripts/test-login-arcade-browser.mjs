@@ -169,6 +169,9 @@ console.log('test-login-arcade-browser');
   await sleep(1400);
   const egg = await pg.evaluate(() => ({ canvas: !!document.querySelector('canvas.pth-backlight'), hide: document.getElementById('login-card-arcade').classList.contains('lc-hide') }));
   ok(egg.canvas && egg.hide, 'Mascotte: the easter egg plays round the empty card');
+  // web.71: the light's canvas has the window's size in px, as its drawing (at 100vh, Safari's bars shown, it was stretched).
+  const cvs = await pg.evaluate(() => { const c = document.querySelector('canvas.pth-backlight'); if (!c) return null; const r = c.getBoundingClientRect(); return { h: r.height, w: r.width, ih: innerHeight, iw: innerWidth, px: c.style.height }; });
+  ok(cvs && Math.abs(cvs.h - cvs.ih) < 1 && Math.abs(cvs.w - cvs.iw) < 1 && /px$/.test(cvs.px), 'the light is drawn over the window it measures (' + JSON.stringify(cvs) + ')');
   // web.70: the mini-games page's modules and fonts are loaded before the egg plays (nothing fetched during it).
   const warmed = await pg.evaluate(() => typeof window.loginArcadeWarmed === 'function' && window.loginArcadeWarmed());
   ok(warmed, 'Mascotte: the page, its light and its fonts loaded ahead of the egg');

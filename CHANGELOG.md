@@ -469,6 +469,11 @@ highlights below.
   build-ID fallbacks in `net/messages.mjs` and `proto/index.mjs` move to 2.1.11 (`web.0`).
 
 ### Fixed
+- **The backlight under its element on iPhone** (`web.71`, narmod's screen recording) — `ui/backlight.mjs`: the
+  canvas was `100vw × 100vh` while drawn in `innerWidth × innerHeight`; in Safari with its bars shown 100vh is the
+  tallest viewport, so the bitmap was stretched down (≈ 12 %) and the light and the egg landed under the Mini-games
+  card, over « Ace's Help » (the trophies' light and a mystery game's reveal too). Now sized in px to the window,
+  resized with `visualViewport` too; checked in `test-login-arcade-browser`.
 - **Mini-games' end screen cut off on phones** (`web.68`, narmod's iPhone screenshot) — the card lived in the
   stage, a short band in portrait: `end.mjs` moves the panel to the top of the game root (class `gm-eout`, first
   child so `.pg-panel` still finds it), zooms the card out (`--gm-ez`, ≥ 0.55) when it is still taller than the
