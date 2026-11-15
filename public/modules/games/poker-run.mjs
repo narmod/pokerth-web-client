@@ -39,6 +39,7 @@ import { evalCards, suitOf } from './poker-hand.mjs';
 import { drawCar, seatPoint } from './car3d.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
 import { titleScreen, titleStep } from './title.mjs';
+import { endScreen, listHtml } from './end.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -175,10 +176,6 @@ const CSS = `
 #pth-game .prun-q .prun-qbar i{display:block;height:100%;background:linear-gradient(90deg,#e0573f,#e8b84a)}
 #pth-game .prun-hearts{position:absolute;font:700 14px system-ui;color:#e0405a;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap}
 #pth-game .prun-hearts span{color:rgba(255,255,255,.3)}
-#pth-game .prun-qlist{list-style:none;margin:2px 0 4px;padding:6px 12px;width:min(420px,100%);background:rgba(8,12,18,.62);border:1px solid rgba(232,184,74,.25);border-radius:12px;color:#f1e9d4;text-align:left}
-#pth-game .prun-qlist li{display:flex;justify-content:space-between;gap:8px;font:600 12.5px/1.75 'Inter',system-ui,sans-serif}
-#pth-game .prun-qlist li span{color:#e0405a;letter-spacing:1px;white-space:nowrap}
-#pth-game .prun-qlist li span.no{color:rgba(241,233,212,.4)}
 #pth-game .prun-nitro{position:absolute;left:12px;bottom:12px;z-index:397;display:flex;align-items:center;gap:7px;pointer-events:none;font:800 11px 'Inter',system-ui,sans-serif;letter-spacing:.1em;color:#d8b25a;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 #pth-game.pg-touch:not(.pg-nopad) .prun-nitro{display:none}
 #pth-game .prun-nitro[hidden]{display:none}
@@ -279,6 +276,7 @@ export function create(shell) {
   const MODES = ['free', 'queen'];
   let mode = 'free', modeSel = 0;
   let quest = null, quests = [], qPool = [], driftRun = 0, fastRun = 0;
+  let stDrifts = 0, stPasses = 0, stHits = 0;     // for the end screen
   const qBest = () => { try { return JSON.parse(localStorage.getItem('pth_prun_best') || '{}') || {}; } catch (e) { return {}; } };
   const chipVal = (k) => 10 + 5 * (lvl[k] || 0);
   function buildTrack() {
@@ -504,7 +502,7 @@ export function create(shell) {
     clearTimeout(revealTimer);
     mode = MODES[modeSel] || 'free';
     reset(); state = 'run'; shell.panel(null); lastMini = '';
-    quest = null; quests = []; qPool = []; driftRun = 0; fastRun = 0; renderHearts();
+    quest = null; quests = []; qPool = []; driftRun = 0; fastRun = 0; stDrifts = 0; stPasses = 0; stHits = 0; renderHearts();
     if (aceRoot) aceRoot.classList.remove('prun-spin');
     ace.mood('mc-m-smile');
   }
@@ -590,7 +588,7 @@ export function create(shell) {
     else if (dir !== 0 && slip > 0) want = slip * 0.7;                        // steering out of the bend widens and eases off
     slip += (want - slip) * Math.min(1, dt * (want > slip ? 1.6 : 2.2));
     if (dir) slipDir = dir === bend || !drift ? dir : slipDir;
-    if (!drift && slip > 0.4) { drift = true; driftDir = bend || dir; slipDir = driftDir; driftTick = 0; driftGain = 0; charge = 0; say('😎'); }
+    if (!drift && slip > 0.4) { drift = true; stDrifts++; driftDir = bend || dir; slipDir = driftDir; driftTick = 0; driftGain = 0; charge = 0; say('😎'); }
     if (drift) { charge += dt * (0.4 + 0.6 * slip); if (slip < 0.22 || sp < 0.4) endDrift(); }
     const rate = 2.5 * Math.max(0.35, sp);
     // Gripping, the stick moves the car across; sliding, holding into the bend
@@ -666,7 +664,7 @@ export function create(shell) {
       }
       if (Math.floor(c.z / SEG) >= finishSeg) { c.dead = true; continue; }
       const ci = Math.floor(c.z / SEG);
-      if (c.ahead && ci < ps.i && !c.dead) questCount('pass');
+      if (c.ahead && ci < ps.i && !c.dead) { questCount('pass'); stPasses++; }
       if (c.ahead && ci < ps.i) { const d = Math.abs(px - carX(c, ps, g)); if (d > HIT && d < 1.1 && Math.random() < 0.45) aceDo('wave', 1, t('mascotHello'), 1); }
       c.ahead = ci >= ps.i;
       // Hit: the car within the stretch the player covered this frame (at a low frame rate he moves more than a segment).
@@ -674,7 +672,7 @@ export function create(shell) {
         if (drift) { drift = false; driftGain = 0; charge = 0; }
         slip = 0;
         mt = 0;
-        aceDo('flail', 0.9, '💥', 5); questHit();
+        aceDo('flail', 0.9, '💥', 5); questHit(); stHits++;
         // A bounce (web.63): pushed aside and spun a little, slowed but still rolling.
         const side = Math.sign(px - carX(c, ps, g)) || (Math.random() < 0.5 ? -1 : 1);
         const loss = Math.ceil(stack * 0.2); stack -= loss; v = Math.max(c.v * 0.7, v * 0.55); pv = side * 3; spin = 0.6; inv = 1.1; if (!shell.reduced) shake = 0.35;
@@ -867,27 +865,20 @@ export function create(shell) {
     const base = stack + bonus, score = Math.round(base * ev.mult * hm);
     const qb = qBest(), prevBest = mode === 'queen' ? qb.queen || 0 : shell.best.get(), record = score > prevBest;
     if (record) { if (mode === 'queen') { qb.queen = score; try { localStorage.setItem('pth_prun_best', JSON.stringify(qb)); } catch (e) {} } else shell.best.set(score); }
-    const cards = ev.best;
-    const list = '<ul class="prun-qlist">' + quests.map((q) => '<li>' + esc(questText(q).replace(/\s*!$/, '')) + (q.h ? '<span>' + '♥'.repeat(q.h) + '</span>' : '<span class="no">✗</span>') + '</li>').join('') + '</ul>';
-    const tail = '<div class="ar-final">(' + fmt(stack) + ' + ' + fmt(bonus) + ') × ' + ev.mult + (hm !== 1 ? ' × ' + String(hm).replace('.', ',') + ' ♥' : '') + ' = <em>' + fmt(score) + '</em></div>'
-      + (mode === 'queen' ? list : courseMap(pr))
-      + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p>';
-    const title = mode === 'queen' ? t('prQueen') + ' · ♥ ' + hearts : outroWin ? 'Showdown' : t('prTimeUp');
-    let shown = 0;
-    const paint = () => {
-      let row = '';
-      for (let i = 0; i < cards.length; i++) row += i < shown ? cardHtml(cards[i], 'lg') : '<div class="pk lg back"></div>';
-      shell.panel('<h2>' + esc(title) + '</h2><div class="ar-show">' + row + '</div><p>' + (shown >= cards.length ? esc(t(ev.nameKey)) : '&nbsp;') + '</p>'
-        + (shown >= cards.length ? tail : ''));
-    };
-    const next = () => {
-      if (state !== 'over') return;
-      paint();
-      if (shown < cards.length) revealTimer = setTimeout(() => { shown++; sound('notifyCard'); next(); }, shown ? 260 : 500);
-      else if (record && prevBest) sound('notifyBigWin');
-    };
-    revealTimer = setTimeout(next, 300);
+    // The end screen (end.mjs, web.67): the showdown, the score and how it was
+    // made, the course driven (OutRun's map) or the Queen's requests, a few numbers.
+    const rights = gates.filter((g) => g.picked === 1 && !g.auto).length, reached = Math.min(STAGES, pr.stage + 1);
+    endScreen(shell, {
+      title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : t('adModeFree')) + ' · Poker Run',
+      cards: ev.best, hand: t(ev.nameKey) + ' ×' + ev.mult, score, prev: prevBest,
+      calc: [[t('blChips'), fmt(stack)], [t('gameTimeLabel'), '+' + fmt(bonus)], [t(ev.nameKey), '×' + ev.mult], hm !== 1 ? ['♥ ' + hearts, '×' + String(hm).replace('.', ',')] : null],
+      levels: mode === 'queen'
+        ? { title: t('prQueen'), right: '♥ ' + hearts + ' / ' + STAGES * 3, html: listHtml(esc, quests.map((q) => [questText(q).replace(/\s*[!！]$/, ''), q.h ? '♥'.repeat(q.h) : '✗', !!q.h])) }
+        : { title: t('gmCourse'), right: reached + '/' + STAGES + (rights ? ' · ' + rights + ' ▶' : ''), html: courseMap(pr) },
+      stats: [[stDrifts, t('prDrifts')], [stPasses, t('prPasses')], [stHits, t('prHits')]],
+      onAgain: () => start(),
+      onMenu: () => { state = 'title'; titlePanel(); },
+    });
   }
 
   // ── Drawing ────────────────────────────────────────────────────────

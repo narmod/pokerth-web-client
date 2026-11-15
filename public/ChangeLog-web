@@ -1,4 +1,10 @@
-2026-11-15 version 2.1.11-web.66 (current series):
+2026-11-15 version 2.1.11-web.67 (current series):
+- new: Mini-games — a new end screen for every game: the hand turned card by card, the score counting up, a « New record » ribbon, how the score was made, the levels reached (venues, stages, floors, questions…) and three numbers from the game
+- new: Mini-games — two buttons at the end of a game: « Play again » and « Game menu » (A / B on a gamepad, ←/→ to move between them, Esc goes back to the game's menu)
+- improvement: Poker Run — the end screen shows the course you drove, or the Queen's requests, with your drifts, overtakes and bumps
+- improvement: Ace Dash — the rebuy is now a card with your stack, the run so far, a countdown ring and two buttons, « Rebuy » and « No thanks »
+
+2026-11-15 version 2.1.11-web.66:
 - new: Poker Run — « Dame de Cœur » mode: the Queen of Hearts rides beside the Ace and asks one thing per stage against the clock (drift, chips, overtakes, no bumps, nitro, flat out, take the left or the right at the next fork). Done fast: ♥♥♥, in time: ♥ or ♥♥; the hearts multiply your score (12 ♥ = × 2.2), with its own record
 - improvement: Poker Run — the car no longer slows down before a fork: the preview shows long enough to compare the two cards at full speed
 - improvement: Poker Run — a nitro meter on the stage when there is no touch pad (keyboard, gamepad)

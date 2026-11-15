@@ -52,6 +52,7 @@ import { drawScenery } from './runner-scenery.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, barsHtml } from './end.mjs';
 
 const CW = 30, CH = 42;          // a leaning card
 const LEAN = 18 * Math.PI / 180;
@@ -375,7 +376,7 @@ export function create(shell) {
   }
   function finish(fell) {
     state = 'over'; G.overAt = performance.now();
-    const floorsN = G.floors.length;
+    const floorsN = G.floors.length, built = G.floors.slice();   // kept for the end screen (a collapse empties them)
     if (fell) { G.floors = []; G.cur = []; G.descend = G.camY > 30 && !shell.reduced; ace.king(false); ace.pose('ko'); ace.mood('mc-m-ko'); sound('notifyFold'); }
     else { ace.pose('wave'); ace.mood('mc-m-yay'); sound('notifyBigWin'); }
     shell.ended();
@@ -385,28 +386,22 @@ export function create(shell) {
     else if (mode === 'daily') { const d = loadJ(DAILY_KEY), day = dayKey(); prevBest = d.d === day ? d.s || 0 : 0; if (score > prevBest) saveJ(DAILY_KEY, { d: day, s: score }); }
     else { const b = loadJ(BEST_KEY); prevBest = b.zen || 0; if (score > prevBest) { b.zen = score; saveJ(BEST_KEY, b); } }
     try { localStorage.setItem('pth_game_played_house', '1'); } catch (e) {}
-    const record = score > prevBest;
-    const cards = G.best ? G.best.ev.best : [];
-    const tail = '<div class="ar-final">' + fmt(floorsN) + ' · <em>' + fmt(score) + '</em></div>'
-      + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('hcAgain')) + '</p>';
-    let shown = 0;
-    const head = fell ? t('hcCollapse') : '🏰 ' + fmt(floorsN) + ' ' + t('hcFloors');
-    const paint = () => {
-      let row = '';
-      for (let i = 0; i < cards.length; i++) row += i < shown ? cardHtml(cards[i], 'lg') : '<div class="pk lg back"></div>';
-      const hand = !cards.length ? '&nbsp;' : shown >= cards.length ? esc(t(G.best.ev.nameKey)) : '&nbsp;';
-      shell.panel('<h2>' + esc(head) + '</h2>' + (cards.length ? '<div class="ar-show">' + row + '</div>' : '')
-        + '<p>' + hand + '</p>' + (shown >= cards.length ? tail : ''));
-    };
-    const next = () => {
+    // The end screen (end.mjs, web.67): the castle floor by floor (gold: its hand made), the best floor's hand.
+    const cards = G.best ? G.best.ev.best : [], met = built.filter((f) => f.met).length;
+    const show = () => {
       if (state !== 'over') return;
-      if (G.descend) { revealTimer = setTimeout(next, 120); return; }   // the camera is still going down
-      paint();
-      if (shown < cards.length) revealTimer = setTimeout(() => { shown++; sound('notifyCard'); next(); }, shown ? 260 : 700);
-      else if (record && prevBest) sound('notifyBigWin');
+      if (G.descend) { revealTimer = setTimeout(show, 120); return; }   // the camera is still going down
+      endScreen(shell, {
+        title: fell ? t('hcCollapse') : '🏰 ' + fmt(floorsN) + ' ' + t('hcFloors'), sub: t(MODES.find((m) => m.id === mode).key) + ' · ' + t('hcName'),
+        cards, hand: G.best ? t(G.best.ev.nameKey) : '', score, prev: prevBest,
+        calc: [[t('hcFloors'), fmt(floorsN)], G.best ? [t('gmBestHand'), t(G.best.ev.nameKey)] : null, met ? ['🎯', fmt(met)] : null],
+        levels: floorsN ? { title: t('hcFloors'), right: fmt(floorsN) + (met ? ' · 🎯 ' + met : ''), html: barsHtml(built.slice(-40).map((f) => ({ h: 0.18 + 0.82 * Math.min(9, f.ev.cat) / 9, cls: f.met ? 'gold' : '' }))) } : null,
+        stats: [[fmt(floorsN), t('hcFloors')], [met, t('hcGoalMet')], [G.best ? t(G.best.ev.nameKey) : '—', t('gmBestHand')]],
+        onAgain: () => start(),
+        onMenu: () => { state = 'title'; newRun(); ace.king(false); ace.mood('mc-m-smile'); ace.pose('idle'); titlePanel(); },
+      });
     };
-    revealTimer = setTimeout(next, 900);
+    revealTimer = setTimeout(show, 900);
   }
 
   // ── Hazards (free and daily, not Zen) ─────────────────────────────

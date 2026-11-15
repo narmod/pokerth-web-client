@@ -23,6 +23,7 @@ import { deckFor } from './deal.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
 import { felt, drawBackCard, drawFloaters, stepFloaters, bubble, fitFont } from './ui.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, listHtml } from './end.mjs';
 
 export const TROPHY_SCORE = 40;
 const SHORT = ['oddsHigh', 'oddsPair', 'oddsTwoPair', 'oddsTrips', 'oddsStraight', 'oddsFlush', 'oddsFull', 'oddsQuads', 'oddsSF', 'oddsRoyal'];
@@ -216,23 +217,29 @@ export function create(shell) {
     renderHud();
     renderResult();
   }
+  function toTitle() { state = 'title'; G = null; renderHud(); ace.pose('wave'); ace.mood('mc-m-smile'); titlePanel(); }
+  /** The end screen (end.mjs, web.67): who won, the scores, the best hand made. */
   function renderResult() {
-    if (state !== 'over' || !G.res) return;
-    const ps = G.players, { record, prev } = G.res;
+    if (state !== 'over' || !G.res || G.res.shown) return;
+    G.res.shown = true;
+    const ps = G.players, { prev } = G.res;
     let head;
-    if (G.m === 'daily') head = fmt(ps[0].score);
+    if (G.m === 'daily') head = t('psDaily');
     else if (G.winner === 2) head = t('pdTie');
     else if (G.m === 'ace') head = G.winner === 0 ? t('pdYouWin') : t('pdAceWins');
     else head = t('pdWins', { n: G.winner + 1 });
-    const scores = ps.length > 1 ? ps.map((p) => esc(p.name) + ' ' + esc(fmt(p.score))).join(' · ') : '';
-    const best = G.best && G.best.cat >= 1
-      ? '<p>' + esc(t('psBestLine', { h: t(G.best.nameKey) })) + '</p><div class="ar-show">' + G.best.cards.map((c) => cardHtml(c, 'lg')).join('') + '</div>' : '';
-    const rec = G.m === 'two' ? '' : '<p class="pg-dim">' + esc(G.m === 'daily' ? t('psDaily') + ' · ' + G.day + ' · ' : '')
-      + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(ps[0].score, prev)) })) + '</p>';
-    shell.panel('<div class="pd-box"><h2>' + esc(head) + '</h2>' + (scores ? '<p>' + scores + '</p>' : '')
-      + (G.sudden ? '<p class="pg-dim">' + esc(t('pdSudden')) + '</p>' : '')
-      + best + rec + '<p class="pg-blink">' + esc(t('psAgain')) + '</p></div>', true);
+    const best = G.best && G.best.cat >= 1 ? G.best : null;
+    endScreen(shell, {
+      title: head, sub: (G.m === 'ace' ? t('pdVsAce') : G.m === 'two' ? t('pdTwo') : t('psDaily') + ' · ' + G.day) + (G.sudden ? ' · ' + t('pdSudden') : '') + ' · ' + t('pdName'),
+      cards: best ? best.cards : [], hand: best ? t('psBestLine', { h: t(best.nameKey) }) : '',
+      score: ps[0].score, prev: G.m === 'two' ? null : prev,
+      levels: ps.length > 1 ? { title: t('hcScore'), right: ps.map((p) => fmt(p.score)).join(' – '), html: listHtml(esc, ps.map((p, i) => [p.name, fmt(p.score) + (G.winner === i ? ' 🏆' : ''), G.winner === i || G.winner === 2 ? 'gold' : false])) } : null,
+      stats: [[fmt(ps[0].score), t('hcScore')], [best ? t(best.nameKey) : '—', t('gmBestHand')], [fmt(G.moves), t('psCards')]],
+      onAgain: () => start(),
+      onMenu: toTitle,
+    });
   }
+
 
   // ── Layout (world px) ─────────────────────────────────────────────
   // Wide: the grid in the middle, a hand on each side. Narrow: the grid on
@@ -279,7 +286,7 @@ export function create(shell) {
       return;
     }
     if (state === 'over') {
-      if (a === 'jump' && performance.now() > G.overAt + 900) { state = 'title'; G = null; renderHud(); ace.pose('wave'); ace.mood('mc-m-smile'); titlePanel(); }
+      if (a === 'jump' && performance.now() > G.overAt + 900) start();
       return;
     }
     if (!humanTurn()) return;

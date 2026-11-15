@@ -44,11 +44,12 @@ const q2 = await pg.evaluate(() => window.__pthRun.quests());
 ok(q2[q2.length - 1].done && q2[q2.length - 1].h === 0, 'a bump during « no bumps »: missed (✗)');
 // Time out: the score × (1 + ♥ / 10), the list of requests.
 await pg.evaluate(() => window.__pthRun.setTime(0.1));
-await pg.waitForSelector('#pth-game .prun-qlist', { timeout: 15000 }).catch(() => {});
-await sleep(400);
-const o = await pg.evaluate(() => ({ fin: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', items: document.querySelectorAll('#pth-game .prun-qlist li').length, h2: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent || '', best: localStorage.getItem('pth_prun_best') }));
-ok(/× 1,3 ♥/.test(o.fin) && o.items >= 2 && /♥ 3/.test(o.h2), 'the result: the hearts multiply the score, the requests listed (' + o.fin.trim() + ')');
-ok(/"queen":\d+/.test(o.best || '') || / = 0$/.test(o.fin.trim()), 'its own record (' + o.best + ')');
+await pg.waitForSelector('#pth-game .gm-endc .gm-erest:not(.gm-ewait)', { timeout: 15000 }).catch(() => {});
+await sleep(1200);
+const o = await pg.evaluate(() => ({ calc: (document.querySelector('#pth-game .gm-ecalc') || {}).textContent || '', items: document.querySelectorAll('#pth-game .gm-elist > div').length,
+  lv: (document.querySelector('#pth-game .gm-elt') || {}).textContent || '', score: (document.querySelector('#pth-game .gm-esv') || {}).textContent || '', best: localStorage.getItem('pth_prun_best') }));
+ok(/♥ 3\s*×1,3/.test(o.calc) && o.items >= 2 && /♥ 3/.test(o.lv), 'the result: the hearts multiply the score, the requests listed (' + o.calc + ' · ' + o.lv + ')');
+ok(/"queen":\d+/.test(o.best || '') || o.score === '0', 'its own record (' + o.best + ')');
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors[0] : ''));
 await b.close(); server.close();
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

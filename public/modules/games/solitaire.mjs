@@ -22,6 +22,7 @@ import { evalCards, rankOf, suitOf } from './poker-hand.mjs';
 import { SCORE, N, LINES, dayKey, dealFor } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, barsHtml } from './end.mjs';
 
 // Short hand names of the odds panel (the full ones are h1n…h10n).
 const SHORT = ['oddsHigh', 'oddsPair', 'oddsTwoPair', 'oddsTrips', 'oddsStraight', 'oddsFlush', 'oddsFull', 'oddsQuads', 'oddsSF', 'oddsRoyal'];
@@ -130,7 +131,7 @@ export function create(shell) {
       return;
     }
     if (state === 'over') {
-      if (a === 'jump' && performance.now() > G.overAt + 900) { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+      if (a === 'jump' && performance.now() > G.overAt + 900) start();
       return;
     }
     if (state !== 'run' || G.fly) return;
@@ -223,19 +224,22 @@ export function create(shell) {
     G.res = { score, ev, record, prev: prev || 0 };
     renderResult();
   }
-  // The result in a box over the right side (the grid stays readable); centred
-  // on a narrow stage — drawn again when the stage changes shape (a phone turned).
+  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+  /** The end screen (end.mjs, web.67): the best line, the score, the ten lines' hands. */
   function renderResult() {
-    if (state !== 'over' || !G.res) return;
-    const { score, ev, record, prev } = G.res;
-    const L = layout(), side = L.W >= 600;
-    const pos = side ? 'left:' + Math.round(L.panelX * shell.k) + 'px' : 'left:50%';
-    shell.panel('<div class="ps-box" style="' + pos + '"><h2>' + esc(fmt(score)) + '</h2>'
-      + '<p>' + esc(t('psBestLine', { h: t(ev.nameKey) })) + '</p>'
-      + '<div class="ar-show">' + ev.best.map((c) => cardHtml(c, 'lg')).join('') + '</div>'
-      + '<p class="pg-dim">' + esc(G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · '
-      + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('psAgain')) + '</p></div>', true);
+    if (state !== 'over' || !G.res || G.res.shown) return;
+    G.res.shown = true;
+    const { score, ev, prev } = G.res;
+    const made = G.lineCat.filter((c) => c >= 1).length;
+    endScreen(shell, {
+      title: t('psName'), sub: G.daily ? t('psDaily') + ' · ' + G.day : t('psFree'),
+      cards: ev.best, hand: t('psBestLine', { h: t(ev.nameKey) }), score, prev,
+      calc: [[t('gmBestHand'), t(ev.nameKey)], ['✓', made + ' / ' + G.lineCat.length]],
+      levels: { title: t('psCards'), right: made + ' / ' + G.lineCat.length, html: barsHtml(G.lineCat.map((c) => ({ h: 0.12 + 0.88 * Math.min(9, c) / 9, cls: c >= 3 ? 'gold' : c < 1 ? 'no' : '' }))) },
+      stats: [[fmt(score), t('hcScore')], [made, '✓'], [t(ev.nameKey), t('gmBestHand')]],
+      onAgain: () => start(),
+      onMenu: toTitle,
+    });
   }
 
   function update(dt) {

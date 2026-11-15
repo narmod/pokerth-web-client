@@ -43,6 +43,7 @@ import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, stepsHtml } from './end.mjs';
 
 export const POT0 = 10, LIVES = 3, RESHUFFLE = 8, TROPHY_STREAK = 10, EDGE = 0.95;
 export const HAND_SIZE = 5;
@@ -313,18 +314,22 @@ export function create(shell) {
     G.result = { score, record, prev, level };
     renderResult();
   }
+  /** The end screen (end.mjs, web.67): the score or the stack, the blind levels climbed. */
   function renderResult() {
-    if (state !== 'over' || !G.result) return;
-    const { score, record, prev, level } = G.result;
-    const head = tour() ? (G.out ? t('hlBust') : t('hlDone')) : fmt(score);
-    const line = tour()
-      ? (G.out ? esc(t('wwLevel', { n: level })) : esc(t('hlStack')) + ' <em>' + fmt(score) + '</em>') + ' · ×' + fmt(G.bestStreak)
-      : esc(t('hlPot')) + ' ' + fmt(G.bestPot) + ' · <em>×' + fmt(G.bestStreak) + '</em>';
-    shell.panel('<div class="hl-box"><h2>' + esc(head) + '</h2>'
-      + '<p class="ar-final">' + line + '</p>'
-      + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p></div>', true);
+    if (state !== 'over' || !G.result || G.result.shown) return;
+    G.result.shown = true;
+    const { score, prev, level } = G.result, tr = tour(), m = MODES.find((x) => x.id === mode);
+    endScreen(shell, {
+      title: tr ? (G.out ? t('hlBust') : t('hlDone')) : t('hlName'), sub: t(m.key) + ' · ' + t('hlName'),
+      score, prev,
+      calc: [tr ? [t('hlStack'), fmt(G.stack)] : [t('hlPot'), fmt(G.bestPot)], ['🔥', '×' + fmt(G.bestStreak)], [t('psCards'), fmt(G.cards)]],
+      levels: { title: t('hlLevel') + ' ' + level, right: BLINDS[level - 1][0] + '/' + BLINDS[level - 1][1], html: stepsHtml(esc, BLINDS.map((b, i) => ({ label: String(i + 1), cls: i < level - 1 ? 'ok' : i === level - 1 ? 'ok cur' : '' }))) },
+      stats: [[fmt(G.cards), t('psCards')], ['×' + fmt(G.bestStreak), '🔥'], [fmt(G.bestPot), t('hlPot')]],
+      onAgain: () => start(mode),
+      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); },
+    });
   }
+
 
   // ── Layout (world px) ─────────────────────────────────────────────
   // web.51 (narmod's pick: « épuré » + the ladder, the table's buttons, ▲ ▼ in
@@ -456,7 +461,7 @@ export function create(shell) {
       if (a === 'jump') start(MODES[sel].id);
       return;
     }
-    if (state === 'over') { if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); } return; }
+    if (state === 'over') { if (a === 'jump') start(mode); return; }
     if (state === 'show') { if (a === 'jump') { clearTimeout(timer); state = 'guess'; G.show = null; } return; }
     if (state !== 'guess') return;
     if (info.x != null) return;            // taps go to the buttons (HTML)

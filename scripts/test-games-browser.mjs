@@ -37,6 +37,19 @@ async function fresh(width, height) {
   await sleep(1000);
   return { ctx, pg };
 }
+/** The end screen (end.mjs, web.67): waits for it (the cards turned, the score counted up), reads it. */
+const endInfo = async (pg, ms) => {
+  await pg.waitForSelector('#pth-game .gm-endc .gm-erest:not(.gm-ewait)', { timeout: ms || 15000 }).catch(() => {});
+  await sleep(1100);
+  return pg.evaluate(() => {
+    const q = (x) => document.querySelector('#pth-game .gm-endc ' + x), tx = (x) => (q(x) || {}).textContent || '';
+    return { on: !!document.querySelector('#pth-game .pg-panel.gm-end .gm-endc'), title: tx('h2'), score: tx('.gm-esv'), calc: tx('.gm-ecalc'), lv: tx('.gm-elv'), stats: tx('.gm-estats'),
+      rec: tx('.gm-enew') + tx('.gm-erec'), note: tx('.gm-enote'), cards: document.querySelectorAll('#pth-game .gm-ecards .pk:not(.back)').length,
+      backs: document.querySelectorAll('#pth-game .gm-ecards .pk.back').length, btns: [...document.querySelectorAll('#pth-game .gm-ebtns [data-e]')].map((b) => b.textContent),
+      steps: document.querySelectorAll('#pth-game .gm-esteps i').length, bars: document.querySelectorAll('#pth-game .gm-ebars i').length,
+      list: document.querySelectorAll('#pth-game .gm-elist > div').length, focusA: !!(document.activeElement && document.activeElement.classList.contains('gm-eA')) };
+  });
+};
 const shot = async (pg, name) => { if (!SHOTS) return; mkdirSync('.shots', { recursive: true }); await pg.screenshot({ path: '.shots/games-' + name + '.png' }); };
 
 // Open game `id` from the arcade's home with the keys: → up to its card, then Space.
@@ -109,17 +122,12 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(jump.level === 11 && jump.venue === 1 && jump.banner === 'Las Vegas', label + ': level 11, a new venue and its name (' + jump.banner + ', level ' + jump.level + ')');
   // Nobody jumps: the first obstacle ends the run, then the showdown.
-  await pg.waitForSelector('#pth-game .ar-final', { timeout: 20000 }).catch(() => {});
-  const over = await pg.evaluate(() => ({
-    final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '',
-    best: localStorage.getItem('pth_game_best_ace-runner'),
-    cards: document.querySelectorAll('#pth-game .ar-show .pk:not(.back)').length,
-    backs: document.querySelectorAll('#pth-game .ar-show .pk.back').length,
-    busted: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent,
-  }));
-  ok(/ \+ .*%\) = /.test(over.final) && over.best !== null, label + ': busted, distance + hand bonus = score, saved (' + over.final.trim() + ')');
+  const over = Object.assign(await endInfo(pg, 20000), { best: await pg.evaluate(() => localStorage.getItem('pth_game_best_ace-runner')) });
+  ok(over.on && /Distance/.test(over.calc) && +over.score.replace(/\D/g, '') > 0 && over.best !== null, label + ': busted, the end screen: the score, how it was made, saved (' + over.score + ' · ' + over.calc + ')');
   ok(over.backs === 0, label + ': showdown cards all turned (' + over.cards + ')');
-  ok(over.busted === 'Éliminé !', label + ': texts in the player\'s language');
+  ok(over.title === 'Éliminé !', label + ': texts in the player\'s language');
+  ok(over.steps === 6 && /Niveau/.test(over.lv) && /Distance/.test(over.stats), label + ': the venues reached, three stat tiles (' + over.lv + ')');
+  ok(over.btns.length === 2 && /Rejouer/.test(over.btns[0]) && /Menu du jeu/.test(over.btns[1]) && over.focusA, label + ': « Rejouer » (lit) and « Menu du jeu » (' + over.btns.join(' / ') + ')');
   await shot(pg, label + '-over');
   await sleep(800);
   await pg.keyboard.press('Space');
@@ -157,11 +165,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   // Push it past the point of no return, then one more drop brings it down.
   await pg.evaluate(() => { const G = window.__pthHouse && window.__pthHouse.run(); if (G) G.tilt = 3; });
   await pg.keyboard.press('Space');
-  await pg.waitForSelector('#pth-game .ar-final', { timeout: 15000 }).catch(() => {});
-  const hOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '',
-    title: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent, best: localStorage.getItem('pth_game_best_house') }));
+  const hOver = Object.assign(await endInfo(pg, 15000), { best: await pg.evaluate(() => localStorage.getItem('pth_game_best_house')) });
   ok(floors >= 1, label + ': cards land in the house (up to ' + placed + ' on a floor, ' + floors + ' floor(s))');
-  ok(hOver.title === 'Tout s\'écroule !' && /·/.test(hOver.final), label + ': at full tilt it comes down, score saved (' + hOver.final.trim() + ')');
+  ok(hOver.title === 'Tout s\'écroule !' && hOver.btns.length === 2 && hOver.bars >= 1 && /Étages/i.test(hOver.lv), label + ': at full tilt it comes down, the floors built shown (' + hOver.bars + ' · ' + hOver.score + ')');
   await shot(pg, label + '-house-over');
   // Zen: no collapse; ← keeps the hanging card aside, once per drop.
   const c0 = await pg.evaluate(() => { const H = window.__pthHouse; H.start('zen'); return H.run().card.n; });
@@ -193,13 +199,15 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     await sleep(260);
     if (i === 12) await shot(pg, label + '-solitaire-run');
   }
-  await pg.waitForSelector('#pth-game .pg-panel .ar-show', { timeout: 12000 }).catch(() => {});
-  const ps = await pg.evaluate(() => ({ h2: (document.querySelector('#pth-game .pg-panel h2') || {}).textContent,
+  const ps = Object.assign(await endInfo(pg, 12000), await pg.evaluate(() => ({
     hud: (document.querySelector('#pth-game .ps-score') || {}).textContent, left: (document.querySelector('#pth-game .ps-left') || {}).textContent,
-    daily: localStorage.getItem('pth_game_daily_solitaire'), cards: document.querySelectorAll('#pth-game .ar-show .pk').length }));
-  ok(ps.left === '25/25' && ps.h2 === ps.hud && ps.cards === 5, label + ': 25 cards placed, ten lines counted, score ' + ps.h2 + ' and its best line shown');
+    daily: localStorage.getItem('pth_game_daily_solitaire') })));
+  ok(ps.left === '25/25' && ps.score === ps.hud && ps.cards === 5 && ps.bars === 10, label + ': 25 cards placed, ten lines counted (' + ps.bars + ' bars), score ' + ps.score + ' and its best line shown');
   ok(!!ps.daily && JSON.parse(ps.daily).d === new Date().toISOString().slice(0, 10), label + ': the daily score is kept for today');
   await shot(pg, label + '-solitaire-over');
+  await pg.keyboard.press('Escape');
+  await sleep(400);
+  ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-panel.gm-title')), label + ': Esc on the end screen: back to the game\'s menu');
   await pg.keyboard.press('Escape');
   await sleep(500);
   // ── Video Poker (daily challenge): a pair of jacks pays, then double or nothing ──
@@ -250,7 +258,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Space');
   await sleep(300);
   ok(await pg.evaluate(() => window.__pthVP.state() === 'over'), label + ': Cash out ends the session, the credits are the score');
+  const vpE = await endInfo(pg, 6000);
+  ok(vpE.on && vpE.btns.length === 2 && vpE.bars >= 2 && /→/.test(vpE.lv), label + ': Video Poker\'s end screen: the credits hand after hand (' + vpE.lv + ')');
   await shot(pg, label + '-vp-over');
+  await pg.keyboard.press('Escape'); await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Who Wins?: the right hand scores, a wrong one costs a heart ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
@@ -308,9 +319,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }
   await sleep(300);
   const ov = await pg.evaluate(() => ({ st: window.__pthWW.state(), best: JSON.parse(localStorage.getItem('pth_ww_best') || '{}'),
-    btns: [...document.querySelectorAll('#pth-game .pg-panel [data-do]')].map((b) => b.getAttribute('data-do')).join(','), txt: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '' }));
-  ok(ov.st === 'over' && ov.best.endless && ov.best.endless.level === 2 && ov.btns === 'again,modes' && /Niveau 2/.test(ov.txt), label + ': out of hearts: the level reached is kept, again / modes');
-  await pg.click('#pth-game .pg-panel [data-do="modes"]');
+    btns: [...document.querySelectorAll('#pth-game .pg-panel [data-e]')].map((b) => b.getAttribute('data-e')).join(','), txt: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '' }));
+  ok(ov.st === 'over' && ov.best.endless && ov.best.endless.level === 2 && ov.btns === 'again,menu' && /Niveau 2/.test(ov.txt), label + ': out of hearts: the level reached is kept, again / modes');
+  await pg.click('#pth-game .pg-panel [data-e="menu"]');
   await sleep(300);
   const md = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .gm-tile')].map((b) => b.textContent).join(' | '));
   ok(/Sans fin/.test(md) && /Niveau 2/.test(md), label + ': the modes page: Endless with its record and level (' + md + ')');
@@ -350,7 +361,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const tv3 = await pg.evaluate(() => ({ st: window.__pthWW.state(), won: window.__pthWW.run().won, best: JSON.parse(localStorage.getItem('pth_ww_best') || '{}'), txt: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '' }));
   ok(tv3.st === 'over' && tv3.won === 1000 && tv3.best.tv && tv3.best.tv.best === 1000 && /Mauvaise réponse/.test(tv3.txt) && /Tu repars avec/.test(tv3.txt),
     label + ': a mistake at question 6: the show ends, you leave with the safe level (' + tv3.won + ')');
-  await pg.click('#pth-game .pg-panel [data-do="modes"]');
+  await pg.click('#pth-game .pg-panel [data-e="menu"]');
   await sleep(300);
   // The Daily challenge (web.34): the day's 10 hands, mistakes go on, the first game counts.
   await pg.click('#pth-game .gm-tile[data-m="2"]');
@@ -372,7 +383,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(300);
   const dy1 = await pg.evaluate(() => ({ st: window.__pthWW.state(), right: window.__pthWW.run().right, d: JSON.parse(localStorage.getItem('pth_ww_daily') || 'null'), txt: (document.querySelector('#pth-game .pg-panel') || {}).textContent || '' }));
   ok(dy1.st === 'over' && dy1.right === 7 && dy1.d && dy1.d.right === 7 && dy1.d.streak === 1 && /Score du jour enregistré/.test(dy1.txt), label + ': three mistakes do not stop it; 7/10 saved as today\'s score');
-  await pg.click('#pth-game .pg-panel [data-do="again"]');
+  await pg.click('#pth-game .pg-panel [data-e="again"]');
   await sleep(300);
   const dy2 = await pg.evaluate(() => ({ counted: window.__pthWW.run().counted, ban: (window.__pthWW.run().ban || {}).s || '' }));
   ok(dy2.counted === false && /entraînement/.test(dy2.ban), label + ': played again the same day: practice (« ' + dy2.ban + ' »)');
@@ -590,16 +601,16 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForFunction(() => window.__pthDash.run().onGround, null, { timeout: 3000 }).catch(() => {});
   await pg.evaluate(() => { const G = window.__pthDash.run(); G.chips = 30; G.safeUntil = 0; G.ins = false; G.allInUntil = 0; G.obj = [{ kind: 'wall', x: G.x, z: 4.6, h: 1.6, hw: 0.66, dz: 0.3, tilt: 0 }]; });
   await pg.waitForFunction(() => window.__pthDash.state() === 'rebuy', null, { timeout: 3000 }).catch(() => {});
-  ok(await pg.evaluate(() => window.__pthDash.state() === 'rebuy' && !!document.querySelector('#pth-game .ad-rebuy')), label + ': busted with 30 chips: the rebuy is offered');
+  const rbS = await pg.evaluate(() => ({ st: window.__pthDash.state(), btns: [...document.querySelectorAll('#pth-game .gm-endc .gm-ebtns [data-e]')].map((b) => b.textContent),
+    ring: !!document.querySelector('#pth-game .gm-endc .gm-ecount .gm-ering'), n: (document.querySelector('#pth-game .gm-ecount b') || {}).textContent, chips: (document.querySelector('#pth-game .gm-esv') || {}).textContent }));
+  ok(rbS.st === 'rebuy' && rbS.btns.length === 2 && /Se recaver/.test(rbS.btns[0]) && /Non merci/.test(rbS.btns[1]) && rbS.ring && rbS.chips === '30', label + ': busted with 30 chips: the rebuy card, its stack, its countdown (' + rbS.btns.join(' / ') + ', ' + rbS.n + ' s)');
   await shot(pg, label + '-dash-rebuy');
   await pg.keyboard.press('Space'); await sleep(150);
   const rb = await pg.evaluate(() => ({ st: window.__pthDash.state(), chips: window.__pthDash.run().chips, rb: window.__pthDash.run().rebought }));
   ok(rb.st === 'run' && rb.chips <= 6 && rb.rb, label + ': Space pays 25 chips, back in the race (' + rb.st + ', ' + rb.chips + ')');
   // Nobody steers: a row ends the run (no second rebuy), then the showdown and the score.
-  await pg.waitForSelector('#pth-game .ar-final', { timeout: 30000 }).catch(() => {});
-  const dOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_ace-dash'),
-    front: !document.querySelector('#pth-game-ace.adash-back') }));
-  ok(/\(\+\d+%\) = /.test(dOver.final) && dOver.best !== null && dOver.front, label + ': busted, he turns round, score saved (' + dOver.final.trim() + ')');
+  const dOver = Object.assign(await endInfo(pg, 30000), await pg.evaluate(() => ({ best: localStorage.getItem('pth_game_best_ace-dash'), front: !document.querySelector('#pth-game-ace.adash-back') })));
+  ok(dOver.on && /Jetons/.test(dOver.calc) && dOver.best !== null && dOver.front && dOver.steps === 6 && /✓/.test(dOver.stats), label + ': busted, he turns round, score saved, the rebuy taken shown (' + dOver.score + ' · ' + dOver.calc + ')');
   await shot(pg, label + '-dash-over');
   // Time attack: the clock in the HUD, a crash costs 5 s and not the run.
   await pg.evaluate(() => window.__pthDash.start('time'));
@@ -613,7 +624,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }));
   ok(ta1.st === 'run' && ta1.lost > 4.9 && ta1.lost < 5.6, label + ': a crash costs 5 s, the run goes on (−' + ta1.lost.toFixed(1) + ' s)');
   await pg.evaluate(() => { window.__pthDash.run().time = 0.05; });
-  await pg.waitForSelector('#pth-game .ar-final', { timeout: 6000 }).catch(() => {});
+  await pg.waitForSelector('#pth-game .gm-endc', { timeout: 6000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthDash.state() === 'over' && /\{|"time"/.test(localStorage.getItem('pth_ad_best') || '')), label + ': time\'s up: the showdown, the time-attack record kept');
   // The daily challenge: the same cards for everyone today.
   const dd = await pg.evaluate(() => { window.__pthDash.start('daily'); const a = window.__pthDash.run().deck.join(); window.__pthDash.start('daily'); const b = window.__pthDash.run().deck.join(); window.__pthDash.start('free'); const c = window.__pthDash.run().deck.join(); return { same: a === b, other: a !== c }; });
@@ -686,13 +697,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(crests <= 7, label + ': the road is mostly seen to the horizon (' + (24 - crests) + '/24 views without a crest hiding it)');
   // The clock runs out: the dealer completes the board, the showdown and the score.
   await pg.evaluate(() => window.__pthRun.setTime(0.2));
-  await pg.waitForSelector('#pth-game .ar-final', { timeout: 15000 }).catch(() => {});
-  const prOver = await pg.evaluate(() => ({ final: (document.querySelector('#pth-game .ar-final') || {}).textContent || '', best: localStorage.getItem('pth_game_best_poker-run'),
+  const prE = await endInfo(pg, 15000);
+  const prOver = await pg.evaluate(() => ({ best: localStorage.getItem('pth_game_best_poker-run'),
     board: window.__pthRun.game().board.length, map: !!document.querySelector('#pth-game svg.prun-map'),
     nodes: document.querySelectorAll('#pth-game .prun-map > g > circle').length, car: !!document.querySelector('#pth-game .prun-map g g rect'),
     flag: /🏁/.test((document.querySelector('#pth-game .prun-map') || {}).textContent || ''), mini: document.querySelector('#pth-game .prun-mini').hidden }));
-  ok(/\) × \d+ = /.test(prOver.final) && (prOver.best !== null || / = 0$/.test(prOver.final.trim())) && prOver.board === 5,
-    label + ': time out, the board is completed, score saved (' + prOver.final.trim() + ')');
+  ok(prE.on && /×/.test(prE.calc) && (prOver.best !== null || prE.score === '0') && prOver.board === 5 && /Drifts/.test(prE.stats),
+    label + ': time out, the board is completed, score saved (' + prE.score + ' · ' + prE.calc + ')');
   ok(prOver.mini, label + ': the HUD\'s small map gone with the showdown');
   ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');

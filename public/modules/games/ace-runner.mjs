@@ -35,6 +35,7 @@ import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
 import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
 import { drawScenery, venueOf, dayAt, VENUES } from './runner-scenery.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, stepsHtml } from './end.mjs';
 
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
 const ACE_X = 120;            // the Ace's feet, from the left
@@ -394,27 +395,18 @@ export function create(shell) {
     const d = Math.floor(G.dist), score = scoreOf(G.dist, G.ev), prevBest = shell.best.get();
     const record = score > prevBest;
     if (record) shell.best.set(score);
-    const cards = G.ev.best;
-    // The distance, the hand's bonus (+n %), the score.
-    const tail = '<div class="ar-final">' + fmt(d) + ' + ' + fmt(score - d) + ' <small>(+' + Math.round(bonusOf(G.ev) * 100) + '%)</small> = <em>' + fmt(score) + '</em></div>'
-      + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('arAgain')) + '</p>';
-    // Showdown: the cards come face down, then turn one by one.
-    let shown = 0;
-    const paint = () => {
-      let row = '';
-      for (let i = 0; i < cards.length; i++) row += i < shown ? cardHtml(cards[i], 'lg') : '<div class="pk lg back"></div>';
-      const hand = !cards.length ? esc(t('arNoCards')) : shown >= cards.length ? esc(t(G.ev.nameKey)) : '&nbsp;';
-      shell.panel('<h2>' + esc(t('arBusted')) + '</h2>' + (cards.length ? '<div class="ar-show">' + row + '</div>' : '')
-        + '<p>' + hand + '</p>' + (shown >= cards.length ? tail : ''));
-    };
-    const next = () => {
-      if (state !== 'over') return;
-      paint();
-      if (shown < cards.length) { revealTimer = setTimeout(() => { shown++; sound('notifyCard'); next(); }, shown ? 260 : 600); }
-      else if (record && prevBest) sound('notifyBigWin');
-    };
-    revealTimer = setTimeout(next, 450);
+    // The end screen (end.mjs, web.67): the showdown, the score, the venues reached.
+    const v = venueOf(G.level), cards = G.ev.best;
+    endScreen(shell, {
+      title: t('arBusted'), sub: t('adModeFree') + ' · Ace Runner',
+      cards, hand: cards.length ? t(G.ev.nameKey) + ' +' + Math.round(bonusOf(G.ev) * 100) + '%' : t('arNoCards'),
+      score, prev: prevBest,
+      calc: [[t('arDistance'), fmt(d)], cards.length ? [t(G.ev.nameKey), '+' + Math.round(bonusOf(G.ev) * 100) + '%'] : null],
+      levels: { title: t('arLevel') + ' ' + G.level, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
+      stats: [[fmt(d), t('arDistance')], [G.level, t('arLevel')], [G.hand.length, t('psCards')]],
+      onAgain: () => start(),
+      onMenu: () => { state = 'title'; newRun(); setKing(false); setMood('mc-m-smile'); setPose('run'); titlePanel(); },
+    });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────

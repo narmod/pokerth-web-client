@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **One end screen for every mini-game** (`web.67`, narmod: « no button to play again or go back to the game's
+  menu, the scores are not pretty, you don't see the levels reached ») — new `games/end.mjs`: `endScreen(shell, o)`
+  draws a card (title, mode line, the hand dealt face down then turned, the score counting up, « new record » ribbon
+  or the record, the calculation as chips, a levels block, three stat tiles) and two buttons « Play again » (A) /
+  « Game menu » (B); helpers `stepsHtml`, `barsHtml`, `listHtml`. `shell.mjs`: class `gm-end` on the panel, `endBack`
+  (B / Esc → the game's menu), `endFocus` (←/→, D-pad), timers dropped when the panel changes. All ten games use it:
+  Ace Runner and Ace Dash (the six venues), Poker Run (the course map or the Queen's requests; drifts, overtakes,
+  bumps), House of Cards (the floors as bars, gold when the floor's goal was met), Poker Solitaire (the ten lines),
+  Video Poker (the credits hand after hand), Who Wins? (answers, the TV ladder, the levels), Higher or Lower (the
+  blinds), Ace's Bluff (the hands, 🎭 when a bluff was read), Poker Drop (both scores). Ace Dash's rebuy uses the same
+  card (`btnA`/`btnB`, `count`: a ring and 5 s, `note`, `foot`, `keys`: ↓ still says no thanks). Nine new keys in all
+  83 languages; `scripts/test-games-gamepad.mjs` drives an end screen with the pad.
 - **Poker Run: « Dame de Cœur » mode** (`web.66`, narmod's pick of the proposed modes, OutRun 2's Heart Attack in a poker
   key) — `poker-run.mjs`: a second title tile; the Queen of Hearts (Q♥ in the passenger seat, `seatPoint(o, 0.17)`)
   asks one request per stage (`QUEEN`: drift 2 s, 5 chips, overtake 3, no bumps 10 s, nitro 2 s, flat out 4 s — or,

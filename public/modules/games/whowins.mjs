@@ -58,6 +58,7 @@ import { dayKey } from './solitaire-rules.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, stepsHtml } from './end.mjs';
 
 export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, FEVER_STREAK = 5, LEVEL_EVERY = 5;
 // The board turned over (s after the deal): the three flop cards, the turn,
@@ -340,6 +341,7 @@ export function create(shell) {
     }
     G.answer = pick;
     G.ok = pick === q.win;
+    (G.log || (G.log = [])).push(G.ok);     // each answer, for the end screen
     state = 'shown';
     // The pot goes to the winning hand (half to each on a split).
     G.fly = { t: 0, n: G.pot, win: q.win };
@@ -393,7 +395,7 @@ export function create(shell) {
       if (G.won > prevTv) { best.tv = Object.assign({}, best.tv, { best: G.won }); saveBest(best); }
       const top = G.right >= LADDER.length;
       ace.mood(top ? 'mc-m-yay' : 'mc-m-smile'); ace.pose(top ? 'wave' : 'idle');
-      G.res = { tv: true, top, record: G.won > prevTv && prevTv > 0 };
+      G.res = { tv: true, top, record: G.won > prevTv && prevTv > 0, prev: prevTv };
       renderHud();
       renderResult();
       return;
@@ -419,34 +421,40 @@ export function create(shell) {
     renderHud();
     renderResult();
   }
-  /** The result: the score, the level reached, again or the modes. */
+  /** The end screen (end.mjs, web.67): the score, the level or the ladder climbed, again or the modes. */
   function renderResult() {
-    if (state !== 'over' || !G.res) return;
-    const btn = (id, label, ghost) => '<button type="button" class="pg-btn' + (ghost ? ' pg-ghost' : '') + '" data-do="' + id + '">' + esc(label) + '</button>';
-    const btns2 = '<div class="ww-btns">' + btn('again', t('wwRetry')) + btn('modes', t('wwModes'), true) + '</div></div>';
+    if (state !== 'over' || !G.res || G.res.shown) return;
+    G.res.shown = true;
+    const log = G.log || [], common = { onAgain: () => act('again'), onMenu: () => act('modes') };
+    const answers = stepsHtml(esc, log.slice(-15).map((ok) => ({ label: ok ? '✓' : '✗', cls: ok ? 'ok' : 'hard' })));
     if (G.res.daily) {
       const { counted, today, streak } = G.res;
-      shell.panel('<div class="ww-box"><p class="pg-dim">📅 ' + esc(t('wwModeDaily')) + ' · ' + esc(G.day) + '</p><h2>' + esc(fmt(G.score)) + '</h2>'
-        + '<p class="ar-final">✓ ' + fmt(G.right) + '/' + DAILY_HANDS + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
-        + '<p class="pg-dim">' + esc(counted ? t('wwDailyDone') : t('wwDailyPractice', { n: fmt(today) })) + '</p>'
-        + (streak > 1 ? '<p class="ww-streakd">🔥 ' + esc(t('wwDailyStreak', { n: streak })) + '</p>' : '') + btns2, true);
+      endScreen(shell, Object.assign({
+        title: t('wwName'), sub: '📅 ' + t('wwModeDaily') + ' · ' + G.day + (counted ? '' : ' · ' + t('wwDailyPracticeShort')),
+        hero: '', score: G.score, prev: counted ? 0 : today, note: counted ? t('wwDailyDone') : t('wwDailyPractice', { n: fmt(today) }),
+        calc: [['✓', G.right + '/' + DAILY_HANDS], ['🔥', '×' + fmt(G.bestStreak)], streak > 1 ? ['📅', t('wwDailyStreak', { n: streak })] : null],
+        levels: { title: t('wwHandLab'), right: G.right + ' / ' + DAILY_HANDS, html: answers },
+        stats: [[G.right + '/' + DAILY_HANDS, '✓'], ['×' + fmt(G.bestStreak), '🔥'], [streak || 1, '📅']],
+      }, common));
     } else if (G.res.tv) {
-      const { top, record } = G.res;
-      shell.panel('<div class="ww-box"><p class="pg-dim">📺 ' + esc(t('wwModeTv')) + ' · ' + esc(t('wwQuestion', { n: Math.min(G.right + (top ? 0 : 1), LADDER.length) })) + '</p>'
-        + '<h2>' + esc(top ? t('wwMillion') : t('wwLost')) + '</h2>'
-        + '<p class="ww-won">💰 ' + esc(fmt(G.won)) + '</p>'
-        + (top ? '' : '<p class="ar-final">' + esc(t('wwKeep', { n: fmt(G.won) })) + '</p>')
-        + (record ? '<p class="pg-dim">' + esc(t('arNewRecord')) + '</p>' : '') + btns2, true);
+      const { top } = G.res;
+      endScreen(shell, Object.assign({
+        title: top ? t('wwMillion') : t('wwLost'), sub: '📺 ' + t('wwModeTv') + ' · ' + t('wwQuestion', { n: Math.min(G.right + (top ? 0 : 1), LADDER.length) }),
+        score: G.won, prev: G.res.prev, unit: '💰', note: top ? '' : t('wwKeep', { n: fmt(G.won) }),
+        calc: [['✓', G.right + '/' + LADDER.length]],
+        levels: { title: t('wwQLab'), right: G.right + ' / ' + LADDER.length, html: stepsHtml(esc, LADDER.map((v, i) => ({ label: '', cls: i < G.right ? (SAFE.indexOf(i) >= 0 ? 'hard' : 'ok') : i === G.right && !top ? 'cur' : '' }))) },
+        stats: [[G.right, t('wwQLab')], [fmt(G.won), '💰'], [fmt(LADDER[Math.min(LADDER.length - 1, G.right)]), '🎯']],
+      }, common));
     } else {
-      const { score, record, prev } = G.res;
-      shell.panel('<div class="ww-box"><p class="pg-dim">' + esc(levelName(G.level)) + '</p><h2>' + esc(fmt(score)) + '</h2>'
-        + '<p class="ar-final">✓ ' + fmt(G.right) + ' · <em>×' + fmt(G.bestStreak) + '</em></p>'
-        + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>' + btns2, true);
+      const { score, prev } = G.res;
+      endScreen(shell, Object.assign({
+        title: t('wwName'), sub: levelName(G.level),
+        score, prev,
+        calc: [['✓', fmt(G.right)], ['🔥', '×' + fmt(G.bestStreak)]],
+        levels: { title: t('wwLevelLab') + ' ' + (G.level + 1), right: t(LEVELS[G.level].key), html: stepsHtml(esc, LEVELS.map((x, i) => ({ label: String(i + 1), cls: i < G.level ? 'ok' : i === G.level ? 'ok cur' : '' }))) },
+        stats: [[fmt(G.right), '✓'], ['×' + fmt(G.bestStreak), '🔥'], [G.level + 1, t('wwLevelLab')]],
+      }, common));
     }
-    shell.root.querySelectorAll('.pg-panel [data-do]').forEach((b) => {
-      b.addEventListener('pointerdown', (e) => e.stopPropagation());
-      b.addEventListener('click', () => act(b.getAttribute('data-do')));
-    });
   }
   function act(what) {
     if (state !== 'over') return;

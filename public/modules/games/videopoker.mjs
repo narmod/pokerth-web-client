@@ -32,6 +32,7 @@ import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs'
 import { drawBackCard, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { VARIANTS, variantOf, rowOf, payOf, madeBy, deckOf, MAX_BET } from './videopoker-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, barsHtml } from './end.mjs';
 
 export const START = 100, MAX_DOUBLE = 5, TROPHY_DOUBLES = 3;
 export { VARIANTS, MAX_BET };
@@ -66,7 +67,7 @@ export function create(shell) {
     G = { daily, day: dayKey(), v: V(), credits: START, shown: START, bet: MAX_BET, hand: 0, deck: [], cards: [], held: [false, false, false, false, false],
       stopAt: [0, 0, 0, 0, 0], clicked: [true, true, true, true, true], spinFrom: 0,
       cursor: 0, focus: 'deal', win: 0, row: -1, msg: '', dbl: null, chain: 0, bestRow: -1, bestCards: null, peak: START,
-      fx: [], winAt: -9, yayUntil: 0, koUntil: 0, tickAt: 0 };
+      fx: [], winAt: -9, yayUntil: 0, koUntil: 0, tickAt: 0, hist: [], wins: 0 };
     renderHud();
   }
   function renderHud() {
@@ -160,6 +161,7 @@ export function create(shell) {
   function collect() {
     if (state !== 'win') return;
     G.credits += G.win;               // the counter counts up to it (update)
+    G.wins++;
     G.peak = Math.max(G.peak, G.credits);
     sound('notifyAction');
     G.win = 0; G.dbl = null;
@@ -168,6 +170,7 @@ export function create(shell) {
   }
   function nextOrEnd() {
     renderHud();
+    G.hist.push(G.credits);           // the credits after each hand (the end screen's bars)
     if (G.credits < 1 && !G.win) { state = 'end'; clearTimeout(timer); timer = setTimeout(finish, 1100); }
     else { state = 'ready'; G.focus = 'deal'; }
   }
@@ -241,18 +244,24 @@ export function create(shell) {
     G.res = { score, record, prev };
     renderResult();
   }
+  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+  /** The end screen (end.mjs, web.67): the credits, the best hand, the credits hand after hand. */
   function renderResult() {
-    if (state !== 'over' || !G.res) return;
-    const { score, record, prev } = G.res;
-    const best = G.bestCards && G.bestRow >= 0
-      ? '<p>' + esc(t('psBestLine', { h: t(G.v.rows[G.bestRow][1]) })) + '</p>'
-        + '<div class="ar-show">' + G.bestCards.map((c) => cardHtml(c, 'lg')).join('') + '</div>'
-      : '';
-    shell.panel('<div class="vp-box"><h2>' + esc(fmt(score)) + '</h2><p class="pg-dim">' + esc(t('vpCredits')) + ' · ' + esc(t('vpHands')) + ' ' + G.hand + '</p>' + best
-      + '<p class="pg-dim">' + esc(t(G.v.key)) + ' · ' + esc(G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')) + ' · '
-      + esc(record ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('psAgain')) + '</p></div>', true);
+    if (state !== 'over' || !G.res || G.res.shown) return;
+    G.res.shown = true;
+    const { score, prev } = G.res, row = G.bestCards && G.bestRow >= 0 ? t(G.v.rows[G.bestRow][1]) : '';
+    const top = Math.max(1, G.peak, ...G.hist);
+    endScreen(shell, {
+      title: t('vpName'), sub: t(G.v.key) + ' · ' + (G.daily ? t('psDaily') + ' · ' + G.day : t('psFree')),
+      cards: G.bestCards || [], hand: row ? t('psBestLine', { h: row }) : '', score, prev, unit: t('vpCredits'),
+      calc: [[t('vpHands'), fmt(G.hand)], ['✓', fmt(G.wins)], [t('vpCredits') + ' max', fmt(G.peak)]],
+      levels: G.hist.length ? { title: t('vpCredits'), right: fmt(START) + ' → ' + fmt(score), html: barsHtml(G.hist.slice(-48).map((c) => ({ h: c / top, cls: c >= G.peak ? 'gold' : c < 1 ? 'no' : '' }))) } : null,
+      stats: [[fmt(G.hand), t('vpHands')], [fmt(G.wins), '✓'], [row || '—', t('gmBestHand')]],
+      onAgain: () => start(),
+      onMenu: toTitle,
+    });
   }
+
 
   // ── Layout (world px): the cabinet, the screen, the reels, the panel ──
   function L() {
@@ -339,7 +348,7 @@ export function create(shell) {
       return;
     }
     if (state === 'over') {
-      if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+      if (a === 'jump') start();
       return;
     }
     const l = L();

@@ -118,6 +118,22 @@ const o1 = await pg.evaluate(() => (document.querySelector('#pth-game .gm-opt.on
 ok(o0 && o1 && o0 !== o1, "Y switches the title's option (" + o0.slice(0, 14) + ' → ' + o1.slice(0, 14) + ')');
 await tap(B); await sleep(400);
 ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card')), 'B on a title goes back to the arcade page');
+console.log('an end screen (Ace Runner)');
+const arI = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .gm-card')].findIndex((c) => !!c.querySelector('.gm-art[data-art="ace-runner"]')));
+for (let n = 0; n < 12 && (await lit()).i !== arI; n++) await tap(LEFT);
+await tap(A); await sleep(900); await tap(A);
+const endUp = () => pg.waitForSelector('#pth-game .gm-endc .gm-erest:not(.gm-ewait)', { timeout: 25000 }).then(() => sleep(300)).catch(() => {});
+const focused = () => pg.evaluate(() => (document.activeElement && document.activeElement.getAttribute('data-e')) || '');
+await endUp();
+const f0 = await focused(); await tap(RIGHT); const f1 = await focused(); await tap(LEFT); const f2 = await focused();
+ok(f0 === 'again' && f1 === 'menu' && f2 === 'again', 'the end screen: « Rejouer » lit, the D-pad moves between its two buttons (' + f0 + ' → ' + f1 + ' → ' + f2 + ')');
+await tap(A); await sleep(500);
+ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.hidden && window._pthPadOwner === 'ace-runner'; }), 'A plays again');
+await endUp();
+await tap(B); await sleep(400);
+ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-panel.gm-title')), "B: the game's menu");
+await tap(B); await sleep(400);
+ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card')), 'B again: the arcade page');
 console.log('every game: A opens it, A starts it, Select comes back');
 const ids = await pg.evaluate(() => [...document.querySelectorAll('#pth-game .gm-card .gm-art[data-art]')].map((x) => x.getAttribute('data-art')));
 for (const id of ids) {

@@ -199,6 +199,12 @@ export function run(def, gameMod, opts = {}) {
       b.addEventListener('pointerdown', (e) => e.stopPropagation());
       b.addEventListener('click', (e) => { e.stopPropagation(); if (b.getAttribute('data-p') === 'quit') pauseQuit(); else shell.pause(false); });
     });
+    const onEnd = () => !panel.hidden && panel.classList.contains('gm-end');
+    /** ←/→ between the end screen's two buttons (end.mjs). */
+    const endFocus = (d) => {
+      const bs = Array.from(panel.querySelectorAll('[data-e]')), i = bs.indexOf(/** @type {any} */ (document.activeElement));
+      try { /** @type {HTMLElement} */ (bs[(i < 0 ? 0 : i + d + bs.length) % bs.length]).focus({ preventScroll: true }); } catch (e) {}
+    };
     /** ←/→ (keys, remote, pad) between the pause's two buttons. */
     const pauseFocus = (d) => {
       const bs = Array.from(pausePanel.querySelectorAll('[data-p]')), i = bs.indexOf(/** @type {any} */ (document.activeElement));
@@ -229,7 +235,8 @@ export function run(def, gameMod, opts = {}) {
       /** Show `html` in the panel slot (null hides it); clear = no dimming behind. */
       panel(html, clear) {
         // The title template (title.mjs) adds its dark picture after this call.
-        panel.classList.remove('gm-title');
+        panel.classList.remove('gm-title', 'gm-end');
+        shell.endBack = null; shell.endTimers = null;      // the end template (end.mjs) sets them again
         const bg = panel.querySelector(':scope > .gm-bg'); if (bg) bg.remove();
         if (html == null) { panel.hidden = true; return; }
         panel.firstElementChild.innerHTML = html; panel.hidden = false;
@@ -270,6 +277,8 @@ export function run(def, gameMod, opts = {}) {
       /** Back: the rules sheet, then the arcade's home, then out of the arcade. */
       back() {
         if (!rulesBox.hidden) { hideRules(); return; }
+        // On a game's end screen (end.mjs): back to that game's menu, not out of it.
+        if (shell.endBack && !panel.hidden && panel.classList.contains('gm-end')) { const f = shell.endBack; shell.endBack = null; f(); return; }
         if (opts.home && cur.id !== opts.home) shell.open(opts.home); else close();
       },
       /** The rules sheet of game `d` (default: the one on screen); onPlay adds a « Play » button. */
@@ -386,6 +395,9 @@ export function run(def, gameMod, opts = {}) {
       if (shell.paused && rulesBox.hidden && down && (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
         pauseFocus(e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1); e.preventDefault(); e.stopImmediatePropagation(); return;
       }
+      if (onEnd() && rulesBox.hidden && down && (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || !panel.classList.contains('gm-ekeys') && (e.code === 'ArrowUp' || e.code === 'ArrowDown'))) {
+        endFocus(e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1); e.preventDefault(); e.stopImmediatePropagation(); return;
+      }
       const onButton = e.target && /** @type {HTMLElement} */ (e.target).tagName === 'BUTTON';
       const a = (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'Space') && onButton ? null : KEYS[e.code];
       if (back && down) {
@@ -492,6 +504,15 @@ export function run(def, gameMod, opts = {}) {
         else if (dn(7)) { padPrev = p; pauseQuit(); return; }
         else if (dn(4) || dn(6)) pauseFocus(-1);
         else if (dn(5) || dn(1)) pauseFocus(1);
+        padPrev = p;
+        return;
+      }
+      // The end screen (end.mjs): A presses the lit button (« play again » at first), B the game's menu, ←/→ between them.
+      if (!running && onEnd()) {
+        if (dn(0) || dn(2)) { const b = /** @type {HTMLElement|null} */ (document.activeElement && panel.contains(document.activeElement) ? document.activeElement : panel.querySelector('[data-e="again"]')); padPrev = p; if (b) b.click(); return; }
+        if (dn(7)) { padPrev = p; shell.back(); return; }
+        if (dn(4) || dn(6)) endFocus(-1);
+        if (dn(5) || dn(1)) endFocus(1);
         padPrev = p;
         return;
       }

@@ -58,6 +58,7 @@ import { RUN_BONUS } from './ace-runner.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, stepsHtml } from './end.mjs';
 
 // World units are metres; the camera looks down the felt (+z, away from it).
 const PZ = 4;                 // the Ace's depth in front of the camera
@@ -125,7 +126,6 @@ const CSS = `
 #pth-game .ad-x{display:inline-block;margin-left:.3em;padding:0 .3em;border-radius:.5em;font-size:.72em;vertical-align:.15em;background:#d8b25a;color:#1d222b}
 #pth-game .ad-x[hidden]{display:none}
 #pth-game .ar-num.ad-low{color:#ff8a80}
-#pth-game .ad-rebuy .pg-blink{margin-top:.6em}
 @media (prefers-reduced-motion:reduce){#${ACE_ID} .mc-card3d{transition:none}#${ACE_ID}.adash-back .run .mc-card3d,#${ACE_ID}.adash-back .run .mc-breath{animation:none}}
 .reduce-fx #${ACE_ID}.adash-back .run .mc-card3d,.reduce-fx #${ACE_ID}.adash-back .run .mc-breath{animation:none}
 `;
@@ -397,7 +397,7 @@ export function create(shell) {
       return;
     }
     if (state === 'over') {
-      if (a === 'jump' && down && now > G.overAt + 700) start();
+      if (a === 'jump' && down && now > G.overAt + 700 && G.res) start();
       return;
     }
     if (state !== 'run' || !down && a !== 'duck') return;
@@ -634,22 +634,26 @@ export function create(shell) {
     if (!G.rebought && G.chips >= REBUY) { offerRebuy(); return; }
     finish();
   }
+  /** The rebuy (web.67): the same card as the end screen — the stack, the run
+   *  so far, « rebuy » (A) or « no thanks » (B), and a ring that runs out. */
   function offerRebuy() {
     state = 'rebuy';
-    let left = 5;
-    const paint = () => shell.panel('<div class="ad-rebuy"><h2>' + esc(t('adRebuy')) + '</h2><p><i class="adash-chip"></i>'
-      + esc(t('adRebuyQ', { n: REBUY })) + '</p><p class="pg-dim">' + left + '</p><p class="pg-blink">' + esc(t('adRebuyKeys')) + '</p></div>');
-    const tick = () => {
-      if (state !== 'rebuy') return;
-      if (left <= 0) { rebuy(false); return; }
-      paint(); left--; rebuyTimer = setTimeout(tick, 1000);
-    };
-    tick();
+    const cards = G.ev.best, lvl = G.level, v = venueAt(lvl), d = Math.floor(G.dist + G.bonus);
+    endScreen(shell, {
+      title: t('adRebuy'), sub: t('arBusted').replace(/\s*!$/, '') + ' · ' + t(MODES[sel].key) + ' · Ace Dash',
+      cards, instant: true, hand: cards.length ? t(G.ev.nameKey) : t('arNoCards'),
+      score: G.chips, prev: null, unit: t('blChips'),
+      count: 5, note: t('adRebuyQ', { n: REBUY }),
+      levels: { title: t('arLevel') + ' ' + lvl, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
+      stats: [[fmt(d), t('arDistance')], [lvl, t('arLevel')], [fmt(G.chips), t('blChips')]],
+      btnA: t('adRebuyGo'), btnB: t('adRebuyNo'), foot: t('adRebuyKeys'), keys: true,
+      onAgain: () => rebuy(true), onMenu: () => rebuy(false),
+    });
   }
   function rebuy(yes) {
     if (state !== 'rebuy') return;
-    clearTimeout(rebuyTimer);
-    if (!yes) { state = 'over'; G.overAt = performance.now() - 700; finish(); return; }
+    clearTimeout(rebuyTimer); shell.endTimers = null;
+    if (!yes) { state = 'over'; G.overAt = performance.now() - 700; shell.panel(null); finish(); return; }
     G.rebought = true; G.chips -= REBUY; G.chipPts = Math.max(0, G.chipPts - REBUY * CHIP_PTS); G.streak = 1;
     G.obj = G.obj.filter((o) => o.z > PZ + 14);
     G.safeUntil = performance.now() + 1500;
@@ -681,28 +685,19 @@ export function create(shell) {
       if (score > prevBest) { b.time = score; saveJ(BEST_KEY, b); }
     }
     try { localStorage.setItem('pth_game_played_ace-dash', '1'); } catch (e) {}
-    const record = score > prevBest;
-    const cards = G.ev.best, base = timed ? chipPts : d + chipPts;
-    const tail = '<div class="ar-final">' + (timed ? '<i class="adash-chip"></i>' + fmt(chipPts) : '(' + fmt(d) + ' + <i class="adash-chip"></i>' + fmt(chipPts) + ')')
-      + ' + ' + fmt(score - base) + ' <small>(+' + Math.round(bonusOf(G.ev) * 100) + '%)</small> = <em>' + fmt(score) + '</em></div>'
-      + '<p class="pg-dim">' + esc(record && prevBest ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prevBest)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('arAgain')) + '</p>';
-    // Showdown: the cards come face down, then turn one by one.
-    let shown = 0;
-    const paint = () => {
-      let row = '';
-      for (let i = 0; i < cards.length; i++) row += i < shown ? cardHtml(cards[i], 'lg') : '<div class="pk lg back"></div>';
-      const hand = !cards.length ? esc(t('arNoCards')) : shown >= cards.length ? esc(t(G.ev.nameKey)) : '&nbsp;';
-      shell.panel('<h2>' + esc(t(timed ? 'prTimeUp' : 'arBusted')) + '</h2>' + (cards.length ? '<div class="ar-show">' + row + '</div>' : '')
-        + '<p>' + hand + '</p>' + (shown >= cards.length ? tail : ''));
-    };
-    const next = () => {
-      if (state !== 'over') return;
-      paint();
-      if (shown < cards.length) { revealTimer = setTimeout(() => { shown++; sound('notifyCard'); next(); }, shown ? 260 : 600); }
-      else if (record && prevBest) sound('notifyBigWin');
-    };
-    revealTimer = setTimeout(next, 450);
+    const cards = G.ev.best, base = timed ? chipPts : d + chipPts, pct = Math.round(bonusOf(G.ev) * 100);
+    const lvl = G.level, v = venueAt(lvl);
+    G.res = { score, prev: prevBest };
+    endScreen(shell, {
+      title: t(timed ? 'prTimeUp' : 'arBusted'), sub: t(MODES[sel].key) + (mode === 'daily' ? ' · ' + dayKey() : '') + ' · Ace Dash',
+      cards, hand: cards.length ? t(G.ev.nameKey) + (pct ? ' +' + pct + '%' : '') : t('arNoCards'),
+      score, prev: prevBest,
+      calc: [timed ? null : [t('arDistance'), fmt(d)], [t('blChips'), fmt(chipPts)], cards.length && pct ? [t(G.ev.nameKey), '+' + fmt(score - base)] : null],
+      levels: timed ? null : { title: t('arLevel') + ' ' + lvl, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
+      stats: [[fmt(d), t('arDistance')], [timed ? fmt(G.chips) : lvl, timed ? t('blChips') : t('arLevel')], [G.rebought ? '✓' : '—', t('adRebuy')]],
+      onAgain: () => start(),
+      onMenu: () => { clearTimeout(revealTimer); state = 'title'; newRun(); buildHud('free'); turnBack(false); ace.king(false); ace.mood('mc-m-smile'); ace.pose('wave'); titlePanel(); },
+    });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────

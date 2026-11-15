@@ -34,6 +34,7 @@ import { rankHand, compareHands, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled, rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { endScreen, stepsHtml } from './end.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 
@@ -377,6 +378,7 @@ export function create(shell) {
       if (c > 0) fly(l.potX, l.potY, l.meX, l.meY, G.pot);
     }
     if (c <= 0 && kind !== 'hefold') fly(l.potX, l.potY, l.himX, l.himY, G.pot);
+    (G.log || (G.log = [])).push({ net: G.net, read: kind !== 'fold' && c > 0 && G.bluffed && (G.called || (kind === 'hefold' && G.raised)) });   // the end screen's hands
     // The notebook: what each tell of this hand meant.
     for (const st of G.streetTells) { const e = G.book[st.tell] || (G.book[st.tell] = { b: 0, v: 0 }); if (st.bluff) e.b++; else e.v++; }
     // The replay: his bluff's tell, again and faster.
@@ -409,15 +411,22 @@ export function create(shell) {
     bookOpen = false;
     renderResult();
   }
+  /** The end screen (end.mjs, web.67): the chips, the bluffs read, hand after hand. */
   function renderResult() {
-    if (state !== 'over' || !G.result) return;
-    const { score, record, prev, won } = G.result;
-    shell.panel('<div class="bl-box"><h2>' + esc(fmt(score)) + '</h2>'
-      + (mode === 'tourney' ? '<p>' + esc(t(won ? 'blWin' : 'blLose')) + '</p>' : '<p class="pg-dim">' + esc(t('blChips')) + '</p>')
-      + '<p class="ar-final">🎭 ' + fmt(G.caught) + (G.quick ? ' · ⚡ ' + fmt(G.quick) : '') + '</p>'
-      + '<p class="pg-dim">' + esc(record && prev ? t('arNewRecord') : t('arRecord', { n: fmt(Math.max(score, prev)) })) + '</p>'
-      + '<p class="pg-blink">' + esc(t('gmAgain')) + '</p></div>', true);
+    if (state !== 'over' || !G.result || G.result.shown) return;
+    G.result.shown = true;
+    const { score, prev, won } = G.result, log = G.log || [], m = MODES.find((x) => x.id === mode);
+    endScreen(shell, {
+      title: t('blName'), sub: t(m.key) + (mode === 'tourney' ? ' · ' + t(won ? 'blWin' : 'blLose') : ''),
+      score, prev,
+      calc: [[t('blChips'), fmt(G.chips)], ['🎭', fmt(G.caught)], G.quick ? ['⚡', fmt(G.quick)] : null],
+      levels: log.length ? { title: t('hlColHands'), right: fmt(log.length) + (mode === 'tourney' ? '' : ' / ' + HANDS), html: stepsHtml(esc, log.slice(-20).map((h) => ({ label: h.read ? '🎭' : '', cls: h.net > 0 ? 'ok' : h.net < 0 ? 'hard' : '' }))) } : null,
+      stats: [[fmt(G.caught), '🎭 ' + t('blBluff').replace(/[!！¡]/g, '')], [fmt(G.quick), '⚡'], [fmt(log.length), t('hlColHands')]],
+      onAgain: () => start(),
+      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderBook(); titlePanel(); },
+    });
   }
+
 
   // ── Chips on the move ─────────────────────────────────────────────
   function fly(x0, y0, x1, y1, n) {
@@ -529,7 +538,7 @@ export function create(shell) {
       if (a === 'jump') start();
       return;
     }
-    if (state === 'over') { if (a === 'jump') { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderBook(); titlePanel(); } return; }
+    if (state === 'over') { if (a === 'jump') start(); return; }
     if (a === 'n4' && state !== 'decide' && state !== 'you') { toggleBook(); return; }
     if (state === 'shown') { if (a === 'jump') goOn(); return; }
     if (state !== 'decide' && state !== 'you') return;
