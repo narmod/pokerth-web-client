@@ -1,4 +1,10 @@
-2026-11-15 version 2.1.11-web.63 (current series):
+2026-11-15 version 2.1.11-web.64 (current series):
+- new: Poker Run — at each fork, the left road is the easier one and the right road a harder one: sharper and closer bends, S-bends, more traffic, but chips worth more (+5 per level). Take only rights and every stage gets harder, up to chips worth 35
+- new: Poker Run — before a fork, each option shows its difficulty (five dots) and what its chips are worth; the left arch is green, the right one red
+- improvement: Poker Run — Saint-Tropez is now the Côte d'Azur: the coast road with the beach and the sea on the right, garrigue inland, umbrella pines, villas, palms and parasols
+- improvement: Poker Run — Chamonix's road really climbs and dives; each scene has its own relief (Las Vegas flat, the coast gently rolling)
+
+2026-11-15 version 2.1.11-web.63:
 - improvement: Poker Run — the drift is now continuous: the harder you steer into a bend, the tighter it is and the faster you go, the more the car slides; it eases off as smoothly when you let go (no more steps, no more hop)
 - improvement: Poker Run — the car has some play: it turns on a spring, swings a little past and settles, and its rear swings out more in a turn
 

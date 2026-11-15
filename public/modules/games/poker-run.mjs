@@ -56,7 +56,7 @@ const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3
 // (half-road units). Lanes are 0.66 apart: at 0.36 two cars side by side left
 // no way through; at 0.25 there is a window between them.
 const HIT = 0.25;
-const TRAFFIC = 64, CAR_KINDS = ['car', 'van', 'sport'];
+const TRAFFIC = 48, CAR_KINDS = ['car', 'van', 'sport'];
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, GATE_SLOW = 0.5, SPLIT = 1, MERGE = 60;
 /** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
@@ -70,7 +70,9 @@ const SUITS = ['♦', '♥', '♠', '♣'], VS = '︎';
 // ── Scenes, one per branch (proper names: nothing to translate) ─────
 const TH = {
   vegas: { name: 'Las Vegas', sky: ['#0a1322', '#1d2b46', '#c8743a'], g: ['#1c5639', '#195034'], r: ['#e8b84a', '#f4eedf'], d: ['#2b3038', '#272b33'], fog: '#1e283e', skyT: 'city', side: 'post', night: true, a: '#101a2b', b: '#e8b84a' },
-  tropez: { name: 'Saint-Tropez', sky: ['#23305e', '#d9667a', '#ffbe7a'], g: ['#d8bf8c', '#cdb27e'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eaa886', skyT: 'sea', side: 'palm', a: '#2f4f86', b: '#ffe0a0' },
+  // Saint-Tropez (web.64, narmod: « it's a desert — it should be the Côte d'Azur »): the coast road, the
+  // garrigue inland, a beach and the sea on the right, umbrella pines, villas, palms and parasols.
+  tropez: { name: 'Saint-Tropez', sky: ['#23305e', '#d9667a', '#ffbe7a'], g: ['#6f8f45', '#678540'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eaa886', skyT: 'sea', side: 'riviera', coast: true, a: '#2f4f86', b: '#ffe0a0' },
   valley: { name: 'Monument Valley', sky: ['#2e63a8', '#86b4dc', '#f3d9a8'], g: ['#c88a4c', '#bd7f44'], r: ['#f4eedf', '#8a3b1c'], d: ['#4b4541', '#46403c'], fog: '#ecceA6', skyT: 'mesa', side: 'cactus', a: '#9c4f2c', b: '#c46a3c' },
   chamonix: { name: 'Chamonix', sky: ['#22487e', '#79a3cd', '#dfe9f1'], g: ['#3f7a3a', '#386f34'], r: ['#f4eedf', '#c2303a'], d: ['#33373e', '#2f333a'], fog: '#cddae8', skyT: 'peaks', side: 'pine', a: '#5b6f8a', b: '#f4f7fa' },
   monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', night: true, a: '#1b1430', b: '#ffd68c' },
@@ -82,6 +84,8 @@ for (const k in TH) {
   const s = /** @type {any} */ (TH[k]);
   s.key = k; s.G = s.g.map(hex); s.R = s.r.map(hex); s.D = s.d.map(hex); s.F = hex(s.fog); s.FAR = mixA(s.G[0], s.F, 0.75);
 }
+// How hilly each scene's road is (× the base); Chamonix climbs and dives (web.64).
+const HILLS = { vegas: 0.5, tropez: 0.9, valley: 1, chamonix: 2.6, monaco: 0.8 };
 const KEYS_TH = Object.keys(TH);
 // Skylines, the same every run (a fixed seed).
 let seed = 7;
@@ -128,6 +132,11 @@ const CSS = `
 #pth-game .prun-opt .pk{margin:0}
 #pth-game .prun-opt b{font:600 12px/1.1 'Inter',system-ui,sans-serif}
 #pth-game .prun-opt em{font:700 12px 'Inconsolata',monospace;font-style:normal;color:#d8b25a}
+#pth-game .prun-opt .prun-lvl{display:flex;align-items:center;gap:3px;font:700 11px 'Inconsolata',monospace;color:#e8b84a}
+#pth-game .prun-opt .prun-lvl i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18)}
+#pth-game .prun-opt .prun-lvl i.on{background:#e0573f}
+#pth-game .prun-opt .prun-lvl i.on.e{background:#5fbf6a}
+#pth-game .prun-opt .prun-lvl b{margin-left:4px;font:inherit}
 #pth-game .prun-opt small{font:500 10px/1.1 'Inter',system-ui,sans-serif;color:#9bb0a3;letter-spacing:.02em}
 /* Touch pad as in the draft: ◀ NITRO ▶ under the stage; in landscape ◀ on the left, NITRO and ▶ on the right. */
 #pth-game.prun-pad .pg-pad button[data-a="duck"]{display:none}
@@ -196,7 +205,7 @@ export function create(shell) {
   function addSeg(curve, y) {
     const n = segs.length;
     segs.push({ i: n, p1: { w: { z: n * SEG, y: lastY() }, c: {}, s: {} }, p2: { w: { z: (n + 1) * SEG, y }, c: {}, s: {} },
-      curve, sprites: [], clip: 0, stage: buildStage, f: 0, m: 0, gk: -1, mEnd: -1, g: null, T: null, Tp: null });
+      curve, dy: y - lastY(), sprites: [], clip: 0, stage: buildStage, f: 0, m: 0, gk: -1, mEnd: -1, g: null, T: null, Tp: null });
   }
   function addRoad(en, ho, le, cu, hill) {
     const y0 = lastY(), y1 = y0 + hill, tot = Math.max(1, en + ho + le); let k = 0;
@@ -205,20 +214,26 @@ export function create(shell) {
     for (let i = 0; i < ho; i++) addSeg(cu, Y());
     for (let i = 0; i < le; i++) addSeg(ease(cu, 0, i / le), Y());
   }
+  // The track (web.64, narmod: « left an easier road, right a harder one —
+  // all rights, the hardest, and it pays more »). Built as a skeleton (the
+  // stages' lengths, the forks, the finish), each stage then shaped by a
+  // template: its bends, hills and chips. A fork's two roads have their
+  // templates ready before the fork; the one the car heads for is laid out
+  // (the first 60 segments are a straight either way, so what is seen from
+  // the fork does not change), and the gate makes it final.
+  //   lvl[k]: stage k's difficulty, 0 … 5 — the number of rights taken so far.
+  let stageStart = [], tmpl = [], applied = [], lvl = [0];
+  const chipVal = (k) => 10 + 5 * (lvl[k] || 0);
   function buildTrack() {
-    segs = []; cars = []; gates = []; buildStage = 0;
+    segs = []; cars = []; gates = []; buildStage = 0; stageStart = []; tmpl = []; applied = []; lvl = [0];
     addRoad(0, 40, 0, 0, 0);
     const deck = []; for (let n = 0; n < 52; n++) deck.push(n);
     for (let i = 51; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = deck[i]; deck[i] = deck[j]; deck[j] = x; }
     hole = [deck.pop(), deck.pop()];
-    for (let k = 0; k < FORKS; k++) {
-      const start = segs.length, target = stageLen(k);
-      while (segs.length - start < target) {
-        const en = 25 + Math.floor(Math.random() * 25), ho = 30 + Math.floor(Math.random() * 60);
-        // Gentle hills: the road stays in sight up to the horizon, like what stands on it.
-        const hill = clamp((Math.random() * 2 - 1) * 420 - lastY() * 0.5, -560, 560);
-        addRoad(en, ho, en, pick([0, 0, 1.5, -1.5, 2.4, -2.4, 3.2, -3.2]), hill);
-      }
+    for (let k = 0; k <= FORKS; k++) {
+      stageStart[k] = segs.length;
+      for (let i = 0; i < stageLen(k); i++) addSeg(0, lastY());
+      if (k === FORKS) break;
       // The fork: a flat straight, two branches, the gate, then the branch taken swings back to the middle.
       const f0 = segs.length; addRoad(0, 30 + 150 + MERGE + 20, 0, 0, 0);
       const gate = f0 + 180;
@@ -230,23 +245,16 @@ export function create(shell) {
       const g = { seg: gate, k, cards: [deck.pop(), deck.pop()], label: GATE_LABELS[k], picked: -1, auto: false };
       gates.push(g); segs[gate].gate = g;
     }
-    // The last stage, to the finish: as long as the others (it was a short
-    // straight, a few hundred metres after the last gate).
-    const start = segs.length;
-    while (segs.length - start < stageLen(FORKS)) {
-      const en = 25 + Math.floor(Math.random() * 25), ho = 30 + Math.floor(Math.random() * 60);
-      addRoad(en, ho, en, pick([0, 0, 1.5, -1.5, 2.4, -2.4, 3.2, -3.2]), clamp((Math.random() * 2 - 1) * 420 - lastY() * 0.5, -560, 560));
-    }
-    addRoad(20, 20, 20, 0, -lastY() * 0.6); addRoad(0, 80, 0, 0, 0);
+    addRoad(0, 100, 0, 0, 0);
     finishSeg = segs.length - 20; addRoad(0, DRAW + 30, 0, 0, 0);
-    const free = (i) => segs[i] && segs[i].f === 0 && segs[i].m === 0 && !segs[i].gate;
-    for (let s = 70; s < finishSeg - 20; s += 36 + Math.floor(Math.random() * 24)) {
-      const lane = Math.floor(Math.random() * 3);
-      for (let j = 0; j < 4; j++) if (free(s + j * 4)) segs[s + j * 4].sprites.push({ t: 'chip', lane });
-    }
     for (let s = 10; s < segs.length; s += 16) segs[s].sprites.push({ t: 'side', side: Math.floor(s / 16) % 2 ? -1 : 1, v: Math.floor(s / 16) % 4 });
-    // Traffic (web.60, narmod: « more people »): twice as many cars as
-    // before, of three kinds, now and then two side by side — a gap to thread.
+    // Stage 0 from Las Vegas; the others laid out as the left road for now.
+    applyStage(0, genStage(0, 'vegas', 0));
+    for (let k = 1; k <= FORKS; k++) applyStage(k, genStage(k, null, 0));
+    prepareFork(0);
+    const free = (i) => segs[i] && segs[i].f === 0 && segs[i].m === 0 && !segs[i].gate;
+    // Traffic (web.60, narmod: « more people »): of three kinds, now and then
+    // two side by side — a gap to thread; a harder road adds its own (addTraffic).
     for (let k = 0; k < TRAFFIC; k++) {
       let z = Math.floor(120 + k * (finishSeg - 220) / TRAFFIC + Math.random() * 30);
       while (!free(z) && z < finishSeg) z++;
@@ -254,6 +262,57 @@ export function create(shell) {
       cars.push(c);
       if (k % 6 === 3) { const c2 = newCar(z, 1 - k % 2); c2.lane = (c.lane + 1 + (c.lane === 1 ? Math.floor(Math.random() * 2) : 0)) % 3; c2.v = c.v; cars.push(c2); }
     }
+  }
+  /** A stage's road: bends sharper and closer on a harder one, S-bends, hills by scene. */
+  function genStage(k, key, d) {
+    const len = stageLen(k), c = new Array(len).fill(0), dy = new Array(len).fill(0);
+    const hk = (key ? HILLS[key] : 1) * (0.8 + 0.12 * d), lim = 560 * (key ? HILLS[key] : 1);
+    const y0 = segs[stageStart[k]] ? segs[stageStart[k]].p1.w.y : 0;
+    let i = 60, y = y0, sg = Math.random() < 0.5 ? 1 : -1;
+    while (i < len) {
+      const rest = len - i;
+      let en = 20 + Math.floor(Math.random() * 25), ho = Math.floor((30 + Math.random() * 60) * (1 - 0.07 * d)), le = en;
+      if (rest < 30) { en = 0; ho = rest; le = 0; }
+      else if (en + ho + le > rest) { const f = rest / (en + ho + le); en = Math.floor(en * f); le = Math.floor(le * f); ho = rest - en - le; }
+      const straight = rest < 30 || Math.random() < 0.35 - 0.05 * d;
+      sg = Math.random() < 0.35 + 0.1 * d ? -sg : (Math.random() < 0.5 ? 1 : -1);
+      const cu = straight ? 0 : sg * ((0.8 + 0.25 * d) + Math.random() * (0.8 + 0.3 * d));
+      // Hills pulled back towards the level, the last stage's last piece back to it (the finish is flat).
+      const lastPiece = k === FORKS && i + en + ho + le >= len;
+      const hill = lastPiece ? -y : clamp((Math.random() * 2 - 1) * 420 * hk - y * 0.5, -lim - y, lim - y);
+      const n = en + ho + le, y1 = y + hill; let py = y;
+      for (let j = 0; j < n; j++) {
+        c[i + j] = j < en ? ease(0, cu, j / en) : j < en + ho ? cu : ease(cu, 0, (j - en - ho) / Math.max(1, le));
+        const yy = ease(y, y1, (j + 1) / n); dy[i + j] = yy - py; py = yy;
+      }
+      i += n; y = y1;
+    }
+    return { c, dy, d, key };
+  }
+  /** Lay a template on stage k: its bends and hills, the heights after it, its chips. */
+  function applyStage(k, t) {
+    const s0 = stageStart[k], end = s0 + t.c.length;
+    for (let j = 0; j < t.c.length; j++) { const sg = segs[s0 + j]; sg.curve = t.c[j]; sg.dy = t.dy[j]; }
+    for (let i = Math.max(1, s0); i < segs.length; i++) { const sg = segs[i]; sg.p1.w.y = segs[i - 1].p2.w.y; sg.p2.w.y = sg.p1.w.y + (sg.dy || 0); }
+    // Chips: closer together on a harder road.
+    for (let i = s0; i < end; i++) if (segs[i].sprites.length) segs[i].sprites = segs[i].sprites.filter((sp) => sp.t !== 'chip');
+    for (let i = s0 + (k ? 70 : 30); i < end - 20; i += 54 - 5 * t.d + Math.floor(Math.random() * 20)) {
+      const lane = Math.floor(Math.random() * 3);
+      for (let j = 0; j < 4; j++) if (i + j * 4 < end) segs[i + j * 4].sprites.push({ t: 'chip', lane });
+    }
+    applied[k] = t;
+  }
+  /** Fork k: the two roads of stage k + 1, left at the current level, right one harder. */
+  function prepareFork(k) {
+    if (k >= FORKS) return;
+    const d = lvl[k] || 0;
+    tmpl[k + 1] = [genStage(k + 1, branches[k][0], d), genStage(k + 1, branches[k][1], Math.min(FORKS, d + 1))];
+    applyStage(k + 1, tmpl[k + 1][0]);
+  }
+  /** A harder road brings its own traffic, out of sight ahead. */
+  function addTraffic(k, from) {
+    const n = 3 * (lvl[k] || 0), z0 = Math.max(stageStart[k], from + DRAW + 10), z1 = k < FORKS ? gates[k].seg - 200 : finishSeg - 40;
+    for (let i = 0; i < n && z1 > z0; i++) cars.push(newCar(Math.floor(z0 + Math.random() * (z1 - z0)), Math.random() < 0.5 ? 0 : 1));
   }
   let carSeq = 0;
   function newCar(z, side) {
@@ -313,9 +372,10 @@ export function create(shell) {
   const view = { hidden: 0, far: 0 };   // road segments hidden behind a crest, the farthest one drawn (tests)
 
   function reset() {
+    stageTheme = ['vegas']; branches = []; assignBranches(0);
     buildTrack();
     pos = 0; px = 0; v = 0; pv = 0; yaw = 0; turn = 0; slide = 0; lastCen = null; board = []; stack = 0; time = TIME0; nitro = 0.2; boost = false;
-    inv = 0; shake = 0; fx = []; parts = []; drift = false; slip = 0; yawVel = 0; charge = 0; mt = 0; spin = 0; curStage = 0; stageTheme = ['vegas']; branches = []; assignBranches(0);
+    inv = 0; shake = 0; fx = []; parts = []; drift = false; slip = 0; yawVel = 0; charge = 0; mt = 0; spin = 0; curStage = 0;
     hover = 0; skyFrom = 'vegas'; skyGate = -1; act = { a: '', t: 0, dur: 0, prio: 0 }; bub = { s: '', t: 0, d: 1 };
     wasBoost = false; wasOff = false; lowSaid = false; offCd = 0;
     keys.l = keys.r = keys.n = keys.b = false; pulse.l = pulse.r = pulse.n = pulse.b = 0;
@@ -355,7 +415,10 @@ export function create(shell) {
     const base = hole.concat(board), br = branches[g.k];
     prev.innerHTML = '<div class="prun-tag">' + g.label + ' · +' + EXTEND + ' s</div>' + g.cards.map((c, i) => {
       const e = evalCards(base.concat([c]));
-      return '<div class="prun-opt' + (i === hover ? ' on' : '') + '">' + cardHtml(c, 'sm') + '<b>' + esc(t(e.nameKey)) + '</b><em>×' + e.mult + '</em><small>' + (i ? '' : '◀ ') + esc(TH[br[i]].name) + (i ? ' ▶' : '') + '</small></div>';
+      const d = Math.min(FORKS, (lvl[g.k] || 0) + i);
+      let pips = ''; for (let p = 0; p < FORKS; p++) pips += '<i class="' + (p < d ? 'on' + (i ? '' : ' e') : '') + '"></i>';
+      return '<div class="prun-opt' + (i === hover ? ' on' : '') + '">' + cardHtml(c, 'sm') + '<b>' + esc(t(e.nameKey)) + '</b><em>×' + e.mult + '</em>'
+        + '<span class="prun-lvl" aria-hidden="true">' + pips + '<b>◉ +' + (10 + 5 * d) + '</b></span><small>' + (i ? '' : '◀ ') + esc(TH[br[i]].name) + (i ? ' ▶' : '') + '</small></div>';
     }).join('');
     prev.style.top = Math.round(shell.hud.offsetHeight + 4) + 'px';
     prev.hidden = false;
@@ -424,7 +487,10 @@ export function create(shell) {
     g.picked = lane; board.push(g.cards[lane]);
     const k = g.k;
     stageTheme[k + 1] = branches[k][lane]; curStage = k + 1;
-    if (k + 1 < FORKS) assignBranches(k + 1);
+    lvl[k + 1] = Math.min(FORKS, (lvl[k] || 0) + lane);
+    if (tmpl[k + 1] && applied[k + 1] !== tmpl[k + 1][lane]) applyStage(k + 1, tmpl[k + 1][lane]);
+    if (k + 1 < FORKS) { assignBranches(k + 1); prepareFork(k + 1); }
+    if (live) addTraffic(k + 1, g.seg);
     if (!live) return;
     skyFrom = stageTheme[k]; skyGate = g.seg; time += EXTEND;
     fx.push({ card: g.cards[lane], y: H * 0.6, life: 1.2 });
@@ -447,6 +513,7 @@ export function create(shell) {
     const ng = nextGate();
     // The branch the car heads for: the left or the right half of the road.
     if (ng && ps.i >= ng.seg - GATE_ZONE - 20 && ps.i <= ng.seg) hover = px < 0 ? 0 : 1;
+    if (ng && tmpl[ng.k + 1] && applied[ng.k + 1] !== tmpl[ng.k + 1][chosenLane(ng)]) applyStage(ng.k + 1, tmpl[ng.k + 1][chosenLane(ng)]);
     // Drift, continuous (web.63, narmod: « no steps — the more you turn, the
     // more you drift, more arcade »): `slip` (0 … 1) rises with how hard you
     // steer into a bend, how tight it is and how fast you go, and falls back as
@@ -550,7 +617,7 @@ export function create(shell) {
     // Chips
     for (const s of ps.sprites) {
       if (s.t === 'chip' && !s.got && Math.abs(px - g.pcs[s.lane].c) < 0.32) {
-        s.got = true; stack += 10; nitro = Math.min(1, nitro + 0.09); addFx('+10', '#e8b84a'); aceDo('hop', 0.3, null, 1);
+        const cv = chipVal(ps.stage); s.got = true; stack += cv; nitro = Math.min(1, nitro + 0.09); addFx('+' + cv, '#e8b84a'); aceDo('hop', 0.3, null, 1);
         const now = performance.now(); if (now - lastChipSnd > 90) { lastChipSnd = now; sound('notifyAction'); }
       }
     }
@@ -767,6 +834,15 @@ const carW = () => Math.min(W * 0.24, 100);
       const alt = Math.floor(s.i / 3) % 2, bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
       ctx.fillStyle = bl < 1 ? rgb(mixA(s.Tp.G[alt], s.T.G[alt], bl)) : rgb(s.T.G[alt]);
       ctx.fillRect(0, s.p2.s.y, W, s.p1.s.y - s.p2.s.y + 1);
+      const coast = s.T.coast ? bl : s.Tp && s.Tp.coast ? 1 - bl : 0;
+      if (coast > 0.02) {
+        // The coast road: a beach on the right, then the sea out to the horizon.
+        const a = s.p1.s, b = s.p2.s, gg = s.g, U = (p, u) => p.x + p.w * u, e = envR(gg);
+        ctx.globalAlpha = coast;
+        band(a.y, U(a, e + 0.2), W + 50 + U(a, e + 0.2), b.y, U(b, e + 0.2), W + 50 + U(b, e + 0.2), alt ? '#e6d3a3' : '#dcc897');
+        band(a.y, U(a, e + 0.75), W + 50 + U(a, e + 0.75), b.y, U(b, e + 0.75), W + 50 + U(b, e + 0.75), alt ? '#2f78b8' : '#2a6fae');
+        ctx.globalAlpha = 1;
+      }
       shown.push(n);
       maxy = s.p2.s.y;
     }
@@ -853,9 +929,9 @@ const carW = () => Math.min(W * 0.24, 100);
       const p = g.pcs[l], X = sx + sc * p.c * ROAD, half = sc * p.hw * 1.15 * ROAD, h = sc * 1500, top = sy - h, pw = Math.max(1.5, sc * 70);
       ctx.globalAlpha = gate.picked >= 0 && gate.picked !== l ? 0.25 : 1;
       ctx.fillStyle = '#0d1117'; ctx.fillRect(X - half - pw / 2, top, pw, h); ctx.fillRect(X + half - pw / 2, top, pw, h);
-      const bh = Math.max(4, sc * 240); ctx.fillStyle = '#e8b84a'; ctx.fillRect(X - half, top - bh * 0.2, half * 2, bh);
+      const bh = Math.max(4, sc * 240); ctx.fillStyle = l ? '#d8573f' : '#4fa760'; ctx.fillRect(X - half, top - bh * 0.2, half * 2, bh);
       if (bh > 8 && br[l]) {
-        ctx.fillStyle = '#0d1117'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#fbf7ee'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
         ctx.font = '700 ' + Math.round(bh * 0.55) + 'px Inter, system-ui, sans-serif';
         ctx.fillText(TH[br[l]].name.toUpperCase(), X, top + bh * 0.55, half * 1.9);
       }
@@ -917,6 +993,31 @@ const carW = () => Math.min(W * 0.24, 100);
       ctx.fillStyle = '#4a3424'; ctx.fillRect(X - u * 0.5, y - h * 0.2, u, h * 0.2);
       ctx.fillStyle = vv % 2 ? '#1f4a2e' : '#245636';
       for (let k = 0; k < 3; k++) { const ty = y - h * (0.2 + k * 0.25), ww = w * (1 - k * 0.25); ctx.beginPath(); ctx.moveTo(X - ww / 2, ty); ctx.lineTo(X, ty - h * 0.42); ctx.lineTo(X + ww / 2, ty); ctx.fill(); }
+    } else if (kind === 'riviera') {
+      if (side > 0) {
+        // The beach side: palms and parasols.
+        if (vv % 2) drawSide('palm', X, y, sc, vv, side);
+        else {
+          const h = u * 6, r = u * 3.2;
+          ctx.fillStyle = '#e9e4d6'; ctx.fillRect(X - u * 0.15, y - h, u * 0.3, h);
+          ctx.fillStyle = vv === 2 ? '#2f78b8' : '#c2303a'; ctx.beginPath(); ctx.moveTo(X - r, y - h + u * 0.6); ctx.quadraticCurveTo(X, y - h - u * 1.8, X + r, y - h + u * 0.6); ctx.fill();
+          ctx.fillStyle = '#f4eedf'; ctx.beginPath(); ctx.moveTo(X - r * 0.3, y - h - u * 0.6); ctx.quadraticCurveTo(X, y - h - u * 1.4, X + r * 0.3, y - h - u * 0.6); ctx.lineTo(X + r * 0.36, y - h + u * 0.45); ctx.lineTo(X - r * 0.36, y - h + u * 0.45); ctx.fill();
+        }
+      } else if (vv % 2) {
+        // Inland: an umbrella pine…
+        const h = u * 13, cw = u * 7;
+        ctx.strokeStyle = '#5a3e28'; ctx.lineWidth = Math.max(1, u * 0.8); ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(X, y); ctx.quadraticCurveTo(X - side * u * 1.5, y - h * 0.5, X - side * u * 0.6, y - h * 0.85); ctx.stroke(); ctx.lineCap = 'butt';
+        ctx.fillStyle = '#2f5e2c'; ctx.beginPath(); ctx.ellipse(X - side * u * 0.6, y - h * 0.9, cw / 2, u * 1.8, 0, 0, 7); ctx.fill();
+        ctx.fillStyle = '#3c7034'; ctx.beginPath(); ctx.ellipse(X - side * u * 0.9, y - h * 0.97, cw * 0.36, u * 1.1, 0, 0, 7); ctx.fill();
+      } else {
+        // … or a white villa under its tiled roof.
+        const w = u * 9, h = u * 5;
+        ctx.fillStyle = '#f2ece0'; ctx.fillRect(X - w / 2, y - h, w, h);
+        ctx.fillStyle = '#c4643c'; ctx.beginPath(); ctx.moveTo(X - w * 0.58, y - h); ctx.lineTo(X, y - h - u * 2.2); ctx.lineTo(X + w * 0.58, y - h); ctx.fill();
+        ctx.fillStyle = '#4a7fa8'; for (const fx2 of [-0.28, 0.12]) ctx.fillRect(X + w * fx2, y - h * 0.72, w * 0.16, h * 0.3);
+        ctx.fillStyle = '#6b4a2e'; ctx.fillRect(X - w * 0.06, y - h * 0.5, w * 0.12, h * 0.5);
+      }
     } else if (kind === 'lamp') {
       const h = u * 13, lx = X - side * u * 2.4, ly = y - h + u * 0.9;
       ctx.fillStyle = '#14161c'; ctx.fillRect(X - u * 0.3, y - h, u * 0.6, h); ctx.fillRect(X - side * u * 2.6, y - h, u * 2.6, u * 0.5);
@@ -1104,7 +1205,7 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal }; } catch (e) {}
 
   return {
     update, draw, input,

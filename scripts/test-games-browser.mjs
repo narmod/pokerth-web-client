@@ -654,22 +654,24 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   }), x));
   ok(!prGap[0] && prGap[1], label + ': the car slips between two cars side by side, and crashes into one (' + prGap.join(', ') + ')');
   // Drift: into a bend at speed, it starts; a short let-go does not break it.
-  const prBend = await pg.evaluate(() => { const R = window.__pthRun; for (let i = 100; i < 6000; i++) { let ok = true; for (let j = 0; j < 60; j++) if (Math.abs(R.curve(i + j)) < 1.2 || Math.sign(R.curve(i + j)) !== Math.sign(R.curve(i))) ok = false; if (ok) return { i, d: Math.sign(R.curve(i)) }; } return null; });
+  // In stage 0: its road is fixed (the later ones are reshaped by the forks taken).
+  const prBend = await pg.evaluate(() => { const R = window.__pthRun, end = R.game().gates[0].seg - 260; let m = 100; for (let i = 100; i < end; i++) if (Math.abs(R.curve(i)) > Math.abs(R.curve(m))) m = i; return Math.abs(R.curve(m)) > 1 ? { i: m - 2, d: Math.sign(R.curve(m)) } : null; });
   if (prBend) {
-    await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i - 4); R.setPx(0); R.setV(0.9); }, prBend);
-    const k = prBend.d > 0 ? 'ArrowRight' : 'ArrowLeft';
-    await pg.keyboard.down(k); await sleep(550);
+    // Held on the tightest bend of the stage (the car put back on it every 0.1 s).
+    await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i); R.setPx(0); R.setV(0.9); }, prBend);
+    const k = prBend.d > 0 ? 'ArrowRight' : 'ArrowLeft', hold = async (n) => { for (let t = 0; t < n; t++) { await pg.evaluate((b) => { const R = window.__pthRun; R.setPos(b.i); R.setPx(0); R.setTime(99); }, prBend); await sleep(100); } };
+    await pg.keyboard.down(k); await hold(14);
     const dr1 = await pg.evaluate(() => window.__pthRun.drift());
-    await pg.keyboard.up(k); await sleep(150);
+    await pg.keyboard.up(k); await hold(1);
     const dr2 = await pg.evaluate(() => window.__pthRun.drift());
     ok(dr1 && dr2, label + ': steering into a bend at speed starts a drift, a short let-go keeps it (' + dr1 + ', ' + dr2 + ')');
     // Mini-turbo: a drift held past the blue sparks gives a turbo when it ends.
     await pg.evaluate((b) => { const R = window.__pthRun; R.setPos(b.i - 4); R.setPx(0); R.setV(0.9); }, prBend);
     await pg.keyboard.down(k);
-    for (let t = 0; t < 20; t++) { await pg.evaluate((b) => { window.__pthRun.setPos(b.i + 2); window.__pthRun.setTime(99); }, prBend); await sleep(100); }
+    await hold(20);
     const ch = await pg.evaluate(() => window.__pthRun.charge());
     await pg.keyboard.up(k);
-    let mt = 0; for (let t = 0; t < 10 && !mt; t++) { await pg.evaluate((b) => { window.__pthRun.setPos(b.i + 2); }, prBend); await sleep(80); mt = await pg.evaluate(() => window.__pthRun.mt()); }
+    let mt = 0; for (let t = 0; t < 10 && !mt; t++) { await pg.evaluate((b) => { window.__pthRun.setPos(b.i); window.__pthRun.setPx(0); }, prBend); await sleep(80); mt = await pg.evaluate(() => window.__pthRun.mt()); }
     ok(ch > 0.9 && mt > 0, label + ': a drift held past the blue sparks ends in a turbo (charge ' + ch.toFixed(2) + ', turbo ' + mt.toFixed(2) + ' s)');
   } else ok(false, label + ': a long bend to drift in');
   // Gentle hills: along the course the road stays in sight up to the horizon.
@@ -693,6 +695,17 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(prOver.mini, label + ': the HUD\'s small map gone with the showdown');
   ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');
+  // A new run (Space on the showdown), to take every fork on the right.
+  await sleep(800); await pg.keyboard.press('Space');
+  await pg.waitForFunction(() => window.__pthRun && window.__pthRun.state() === 'run', null, { timeout: 4000 }).catch(() => {});
+  // Left an easier road, right a harder one (sharper bends, chips worth more): all rights.
+  const prLR = await pg.evaluate(async () => {
+    const R = window.__pthRun, sl = (ms) => new Promise((r) => setTimeout(r, ms)), c0 = R.stageCurves(1);
+    for (let i = 0; i < 5; i++) { const gs = R.game().gates.map((g) => g.seg); R.setTime(99); R.setPos(gs[i] - 30); R.setPx(0.5); await sl(150); R.setPx(0.5); R.setPos(gs[i] - 2); await sl(300); }
+    return { lvl: R.lvl(), c0, c5: R.stageCurves(5), v0: R.chipVal(0), v5: R.chipVal(5) };
+  });
+  ok(prLR.lvl.join() === '0,1,2,3,4,5' && prLR.c5 > prLR.c0 && prLR.v5 > prLR.v0, label + ': all rights: harder each time, sharper bends, richer chips (levels ' + prLR.lvl.join('') + ', bends ' + prLR.c0.toFixed(1) + ' → ' + prLR.c5.toFixed(1) + ', chips ' + prLR.v0 + ' → ' + prLR.v5 + ')');
+  await pg.keyboard.press('Escape'); await sleep(300);   // pause the new run (the next Escape leaves)
   await pg.keyboard.press('Escape'); await sleep(300);
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .gm-card') && !document.querySelector('#pth-game-ace.prun-back') && !document.querySelector('#pth-game .prun-prev')), label + ': back on the arcade page, the car and its Ace gone');
   // ── Poker Drop: against the Ace, a drop falls to the bottom, the Ace answers ──

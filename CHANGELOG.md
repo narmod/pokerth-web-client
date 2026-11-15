@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Run: easy left, hard right; truer scenes** (`web.64`, narmod: « left easier, right harder at each fork — all
+  rights the hardest, and it pays more; Saint-Tropez is a desert, it should be the Côte d'Azur; climbs and descents in
+  the mountains ») — `poker-run.mjs`: the track is a skeleton (`stageStart`, forks, finish) whose stages are shaped
+  by templates (`genStage(k, scene, level)`: curve magnitude `0.8 + 0.25d … 1.6 + 0.55d`, fewer straights, shorter
+  holds, more S-bends as the level rises; hills by scene × `HILLS`, Chamonix 2.6). A fork's two templates are made
+  ready (`prepareFork`), the one the car heads for is laid out (`applyStage`: bends, heights relaid, chips denser),
+  the gate makes it final and sets `lvl[k + 1] = lvl[k] + (right ? 1 : 0)`; a harder road adds traffic ahead
+  (`addTraffic`, 3 × level) and pays `chipVal = 10 + 5 × level`. Each template starts with 60 straight segments so
+  what is seen from the fork does not change. Preview: five pips and the chip value; gate arches green/red.
+  `TH.tropez`: garrigue ground, `coast` (beach and sea bands right of the road), `riviera` roadside (umbrella pines,
+  villas inland; palms, parasols on the beach). `prRules` gains a sentence on left/right in all 83 languages.
 - **Poker Run: a continuous drift, a car with some play** (`web.63`, narmod: « the rear stays stuck, give it some play;
   the drift goes in steps, it should be continuous — the more you turn, the more you drift ») — `poker-run.mjs`: the
   on/off drift (hold 0.3 s, let-go timer, hop) is replaced by `slip` (0 … 1), eased towards a target set by steering
