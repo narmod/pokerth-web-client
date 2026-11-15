@@ -457,6 +457,32 @@ console.log('Ace Dash: the long run, the score, the modes');
   ok(TP.powerFor(5) === '' && TP.powerFor(9) === 'joker' && ['dealer', 'shuffle'].includes(TP.powerFor(6)), 'Tapis!: a group of 6 wins a Dealer or a Shuffle, 9 a Joker');
   ok(TP.castFamily(1) === 'suits' && TP.castFamily(2) === 'suits' && TP.castFamily(3) === 'figures' && TP.castFamily(4) === 'figures' && TP.castFamily(5) === 'suits' && TP.castFamily(8) === 'figures' && TP.castFamily(20) === 'figures' && TP.castFamily(21) === 'mixed',
     'Tapis!: the Suits at levels 1-2, the Figures at 3-4, two by two, all mixed from 21');
+  {
+    const C = (k, o) => Object.assign({ k, off: 0 }, o || {}), W = TP.WILD, K = TP.CARD;
+    const MULT_ = (await import('../public/modules/games/poker-hand.mjs')).MULT;
+    const kit = TP.levelKit;
+    ok(kit(1).cards === 0 && kit(2).cards === 2 && kit(2).wild === 0 && kit(3).wild === 1 && !kit(4).dealer && kit(5).dealer && kit(8).seals === 0 && kit(9).seals === 2 && kit(12).rise === 0 && kit(13).rise === 14 && kit(40).rise === 8,
+      'Tapis!: what each level brings (cards 2, Joker chip 3, Dealer 5, seals 9, rising rows 13)');
+    ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
+    const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
+    const grp = TP.groupAt(g1, 0, 0);
+    ok(grp.length === 4 && TP.anyMove(g1), 'Tapis!: a Joker chip goes with the colour around it (0,0 + 2 Joker chips + 0,2: ' + grp.length + ')');
+    ok(TP.groupAt(g1, 2, 1).length === 1 && TP.groupAt(g1, 2, 0).length === 1, 'Tapis!: a card or a sealed chip never joins a group');
+    ok(TP.groupPay(g1, grp).pts === (5 + 50 + 50 + 5) * MULT_[TP.handOf(4)], 'Tapis!: a Joker chip pays 50 in its group');
+    const fr = TP.freedBy(g1, TP.groupAt(g1, 1, 0));
+    ok(fr.cards.length === 1 && fr.seals.length === 1 && TP.freedBy(g1, [[0, 0]]).cards.length === 0, 'Tapis!: a group frees the card and breaks the seal next to it');
+    const g2 = [[C(K, { card: 3 })]];
+    ok(TP.recaveRow(g2, 3, () => 0.1) === 2 && g2[0].length === 3 && g2[0][0].k === g2[0][1].k && TP.anyMove(g2), 'Tapis!: the recave under a lone card brings a pair');
+    const g3 = [[C(0), C(1)], [C(2)], []];
+    ok(TP.riseRow(g3, 3, 2) === 1 && g3[0].length === 2 && g3[1].length === 2 && g3[2].length === 0, 'Tapis!: a rising row, not over the top nor in an empty column');
+    let cards = 0, wild = 0, seals = 0, ok10 = true;
+    for (let i = 0; i < 20; i++) {
+      const gr = TP.dealRound(10, 8, 12);
+      gr.forEach((col) => { if (col[col.length - 1].k === K || col[col.length - 1].seal) ok10 = false; col.forEach((b) => { if (b.k === K) cards++; if (b.k === W) wild++; if (b.seal) seals++; }); });
+      if (!TP.anyMove(gr)) ok10 = false;
+    }
+    ok(ok10 && cards === 80 && wild === 40 && seals === 40, 'Tapis!: level 10 deals 4 cards, 2 Joker chips, 2 seals, never on top, always a move (' + cards + '/' + wild + '/' + seals + ')');
+  }
   const CS = await import('../public/modules/games/cast.mjs');
   const svgs = CS.KINDS.map((k) => CS.castSvg(k));
   ok(CS.KINDS.length === 9 && CS.SUITS.length === 4 && CS.FIGURES.length === 4 && svgs.every((x) => /^<svg viewBox="0 0 100 120"/.test(x) && /cs-armL/.test(x) && /e-open/.test(x) && /m-smile/.test(x) && /fx-sweat/.test(x))

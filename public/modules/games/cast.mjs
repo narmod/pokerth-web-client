@@ -11,6 +11,7 @@
 // (pose, mood, fx, place, fade, show, remove), plus:
 //   look(dx, dy)   the eyes follow a point (dx, dy in −1 … 1)
 //   clip(u)        hide what is below sprite row u (0 … 120): his body in a hole
+//   badge(on)      the Dealer button in his right hand
 // Sprite: 100 × 120, his feet at (50, 116). Poses: idle, balance, air, clap,
 // wave, ko. Moods: smile, jump, yay, wink, grin, dizzy, scared (sweat), ko,
 // love — the « mc-m-* » names of aceActor are accepted too. « Reduce
@@ -42,7 +43,7 @@ const CSS = `
 .cs.cs-m-dizzy .e-spiral,.cs.cs-m-dizzy .m-wavy,.cs.cs-m-dizzy .fx-stars,
 .cs.cs-m-scared .e-big,.cs.cs-m-scared .m-o,.cs.cs-m-scared .fx-sweat,
 .cs.cs-m-ko .e-x,.cs.cs-m-ko .m-flat,
-.cs.cs-m-love .e-heart,.cs.cs-m-love .m-smile,.cs.cs-sweat .fx-sweat{display:inline}
+.cs.cs-m-love .e-heart,.cs.cs-m-love .m-smile,.cs.cs-sweat .fx-sweat,.cs.cs-dealer .fx-dealer{display:inline}
 .cs.idle .cs-body{animation:csBreath 1.7s ease-in-out infinite alternate}
 .cs.balance .cs-armL{transform:rotate(58deg)}.cs.balance .cs-armR{transform:rotate(-58deg)}
 .cs.balance .cs-all{animation:csSway .7s ease-in-out infinite alternate}
@@ -162,7 +163,9 @@ export function castSvg(kind) {
   const body = w.body ? w.body() : (BODY[kind] || BODY.spade)();
   const glove = (x, y) => '<circle cx="' + x + '" cy="' + y + '" r="5" fill="#fff" stroke="' + INK + '" stroke-width="1.8"/>';
   const armL = '<g class="cs-armL"><path d="M30 66 L19 80" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' + glove(18, 81) + '</g>';
-  const armR = '<g class="cs-armR"><path d="M70 66 L81 80" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' + glove(82, 81) + '</g>';
+  const dealer = '<g class="v fx-dealer"><circle cx="86" cy="86" r="8.5" fill="#fbf7ee" stroke="' + INK + '" stroke-width="1.6"/><circle cx="86" cy="86" r="6" fill="none" stroke="#c9a23a" stroke-width=".9"/>'
+    + '<text x="86" y="89.4" text-anchor="middle" font-size="9.5" font-weight="800" font-family="Inter,system-ui,sans-serif" fill="' + INK + '">D</text></g>';
+  const armR = '<g class="cs-armR"><path d="M70 66 L81 80" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>' + glove(82, 81) + dealer + '</g>';
   const legs = '<g class="cs-legL"><path d="M44 89 L42 110" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="38.5" cy="112" rx="7" ry="4" fill="#24262b"/></g>'
     + '<g class="cs-legR"><path d="M56 89 L58 110" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="61.5" cy="112" rx="7" ry="4" fill="#24262b"/></g>';
   const stars = '<g class="v fx-stars"><path d="M34 22 l1.6 3.4 3.6 .5 -2.6 2.5 .6 3.6 -3.2 -1.7 -3.2 1.7 .6 -3.6 -2.6 -2.5 3.6 -.5 Z" fill="#f5c518"/>'
@@ -203,6 +206,8 @@ export function castActor(layer, kind, id) {
       const c = 'cs-m-' + String(m).replace(/^mc-m-/, '');
       if (c !== moodNow) { root.classList.remove(moodNow); root.classList.add(c); moodNow = c; }
     },
+    /** The Dealer button in his hand (Tapis!, from level 5). */
+    badge(on) { root.classList.toggle('cs-dealer', !!on); },
     /** Sweat drops on (his stack nearly gone, the clock nearly out). */
     sweat(on) { root.classList.toggle('cs-sweat', !!on); },
     /** The eyes towards (dx, dy), each in −1 … 1. */

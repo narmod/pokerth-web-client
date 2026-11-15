@@ -15,6 +15,20 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Tapis!: the levels** (`web.80`, push 3 of `claude/CONCEPTION_TAPIS.md`) — Ace Runner's venues behind the board
+  (`drawScenery`, a veil over it), a new one every 4 levels with its name in the banner and a fade, from day to
+  night along its levels (`venueAt`, `dayOfLevel`). What each level brings (`levelKit`, `tapis-rules.mjs`): cards
+  in the stacks from 2 (`CARD` cells, rank and suit on a cream chip; a group going next to one — or a power taking
+  it — sends it flying to the hand of 5 drawn in the HUD's middle; 5 cards pay 100 × level × the hand's
+  multiplier, `evalCards`; the best hand is shown on the end screen), Joker chips from 3 (`WILD`, with every
+  colour, 50), the Dealer button in a friend's hand from 5 (`castActor().badge`; first into his hole: ×2), sealed
+  chips from 9 (steel veil and padlock; never in a group until a group next to them breaks the seal,
+  `freedBy`), rows rising from the felt from 13 (`riseRow`, every 14 s down to 8 s). The first time, the Ace says
+  what is new (`tpNewCards`, `tpNewWild`, `tpNewDealer`, `tpNewSeal`, `tpNewRise`, 83 catalogues). The recave
+  under a lone card or seal brings a pair; the Shuffle keeps cards and seals in place. `test-games.mjs` +8,
+  `test-games-browser.mjs` +1 per screen.
+
 ### Changed
 - **Bands that hid the play** (`web.78`, narmod: « in Ace Dash and Poker Run you can't see anything ») — Ace Dash:
   `drawBanner` at `HOR − 20` (34 px, 17 px type) over the scenery instead of a third of the height, where it covered

@@ -162,11 +162,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await shot(pg, label + '-tapis');
   // web.77: an emptied column goes once its friend is in his hole, the others close up
   const tpc = await pg.evaluate(async () => {
-    const T = window.__pthTapis, G = T.run(), n0 = G.cols, keep = G.grid[2];
-    G.grid[1].splice(0); G.grid[3].splice(0);
+    const T = window.__pthTapis, G = T.run(), keep = G.grid[2];
+    const n0 = G.cols - G.grid.filter((col) => !col.length).length;      // a column the first move may have emptied goes too
+    const nonEmpty = G.grid.filter((col) => col.length && col !== keep);
+    nonEmpty[0].splice(0); nonEmpty[1].splice(0);
     await new Promise((r) => setTimeout(r, 3500));
     const L = G.xs, step = L.length > 1 ? L[1] - L[0] : 0;
-    return { n0, n: G.cols, same: G.grid[1] === keep, actors: document.querySelectorAll('#pth-game .pg-layer > div[id^="pth-game-tp"]').length,
+    return { n0, n: G.cols, same: G.grid.includes(keep) && keep.length > 0, actors: document.querySelectorAll('#pth-game .pg-layer > div[id^="pth-game-tp"]').length,
       even: L.every((x, i) => i === 0 || Math.abs(x - L[i - 1] - step) < 0.5) };
   });
   ok(tpc.n === tpc.n0 - 2 && tpc.same && tpc.actors === tpc.n && tpc.even, label + ': Tapis!: two emptied columns go, the others close up (' + tpc.n0 + ' → ' + tpc.n + ')');
@@ -182,6 +184,28 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     return { rows: G.grid.map((col) => col.length), lost: t0 - G.timeLeft };
   });
   ok(tpr.rows.every((n) => n === 2) && tpr.lost >= 4.5, label + ': Tapis!: no pair left, a Joker in hand or not: the dealer tops up a row (' + tpr.rows.join(',') + ', −' + Math.round(tpr.lost) + ' s)');
+  // web.78: level 10 — a new venue, cards, Joker chips, seals, the Dealer button in a friend's hand; a card freed flies to the hand
+  const tpl = await pg.evaluate(async () => {
+    const T = window.__pthTapis, G = T.run();
+    T.level(10);
+    const all = [].concat(...G.grid), kit = { cards: all.filter((b) => b.k === -1).length, wild: all.filter((b) => b.k === 5).length, seals: all.filter((b) => b.seal).length };
+    await new Promise((r) => setTimeout(r, 1500));
+    let freed = false;
+    for (let c = 0; c < G.grid.length && !freed; c++) for (let r = 0; r < G.grid[c].length && !freed; r++) {
+      if (G.grid[c][r].k !== -1) continue;
+      for (const [x, y] of [[c - 1, r], [c + 1, r], [c, r - 1], [c, r + 1]]) {
+        const b = G.grid[x] && G.grid[x][y];
+        if (!b || b.k < 0 || b.seal) continue;
+        const k = b.k, nb = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].some(([p, q]) => G.grid[p] && G.grid[p][q] && G.grid[p][q].k >= 0 && !G.grid[p][q].seal && (G.grid[p][q].k === k || G.grid[p][q].k === 5 || k === 5));
+        if (nb) { T.act(x, y); freed = true; break; }
+      }
+    }
+    await new Promise((r) => setTimeout(r, 900));
+    return { venue: G.venue, cards: kit.cards, wild: kit.wild, seals: kit.seals,
+      dealer: document.querySelectorAll('#pth-game .pg-layer .cs.cs-dealer').length, freed, hand: G.hand.length };
+  });
+  ok(tpl.venue === 2 && tpl.cards === 4 && tpl.wild === 2 && tpl.seals === 2 && tpl.dealer === 1 && (!tpl.freed || tpl.hand >= 1),
+    label + ': Tapis!: level 10 — the cruise, 4 cards, 2 Joker chips, 2 seals, the Dealer button; a freed card goes to the hand (' + JSON.stringify(tpl) + ')');
   await pg.evaluate(() => window.__pthTapis.timeUp());
   const tpo = await endInfo(pg, 8000);
   ok(tpo.on && tpo.title === 'Tapis !' && tpo.btns.length === 2, label + ': Tapis!: the clock runs out, the end screen (' + tpo.score + ')');

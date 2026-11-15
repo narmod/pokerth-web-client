@@ -34,13 +34,23 @@
 //             a low stack, squash when it drops under them, clap when a
 //             neighbour falls, jump in with joy, then pop their head out of
 //             the hole to wave before they go; dizzy at a Shuffle, KO at the end.
-// The venues, the other modes and the Duel come in the next pushes.
+//   Levels    (push 3, web.78) a venue of the runner's scenery every 4
+//             levels, from day to night along them (venueAt, dayOfLevel); what
+//             each level brings (levelKit): cards in the stacks (a group going
+//             next to one sends it to the hand of 5 at the top; 5 cards: the
+//             hand pays 100 × level × its multiplier), Joker chips (every
+//             colour), the Dealer button in a friend's hand (first in his hole:
+//             ×2), sealed chips (a group next to one breaks the seal), rows
+//             rising from the felt. Each new thing has its word the first time.
+// The other modes and the Duel come in the next pushes.
 // ═══════════════════════════════════════════════════════════════════
 
-import { NAME_KEYS } from './poker-hand.mjs';
+import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, RECAVE_S, blindsAt, groupPay, groupAt, anyMove,
-  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor, castFamily } from './tapis-rules.mjs';
-import { fmt, rr } from './common.mjs';
+  removeCells, colorCells, crossCells, shuffleGrid, recaveRow, dealRound, chipsLeft, powerFor, castFamily,
+  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow } from './tapis-rules.mjs';
+import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
+import { drawScenery, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { endScreen, barsHtml } from './end.mjs';
@@ -106,7 +116,7 @@ export function create(shell) {
     if (G) G.chars.forEach((ch) => ch.ace.remove());   // the friends of the title's board
     G = { lv: 1, score: 0, cols: colsFor(shell.W), grid: [], chars: [], inv: { joker: 0, dealer: 0, shuffle: 1 }, armed: '',
       cursor: { c: 0, r: 0, bar: -1 }, showCursor: false, inTotal: 0, bestCat: -1, rounds: [], fx: [], parts: [], say: null, banner: null,
-      timeLeft: 0, timeMax: 1, lastTick: 0 };
+      timeLeft: 0, timeMax: 1, lastTick: 0, venue: 0, prevVenue: 0, venueT: 1, hand: [], handFull: null, bestHand: null, flying: [], riseT: 0 };
   }
   function newRound() {
     G.chars.forEach((ch) => ch.ace.remove());
@@ -124,8 +134,13 @@ export function create(shell) {
     const kinds = castFor(G.lv, G.cols);
     G.chars = G.grid.map((_, c) => {
       const ace = castActor(shell.layer, kinds[c], 'pth-game-tp' + c);
-      return { ace, kind: kinds[c], st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', lastY: -60, moving: false, sweat: false };
+      return { ace, kind: kinds[c], st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', lastY: -60, moving: false, sweat: false, dealer: false, double: false };
     });
+    // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
+    G.kit = levelKit(G.lv); G.riseT = 0; G.firstIn = false;
+    if (G.kit.dealer) { const d = G.chars[Math.floor(Math.random() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
+    const v = venueAt(G.lv);
+    if (v !== G.venue) { G.prevVenue = G.venue; G.venue = v; G.venueT = 0; }
     renderHud();
   }
   function renderHud() {
@@ -165,8 +180,7 @@ export function create(shell) {
     }
     const pay = groupPay(G.grid, grp), L = geom();
     const top = grp.reduce((m, [x, y]) => (y > m[1] ? [x, y] : m), grp[0]);
-    burstCells(L, grp);
-    removeCells(G.grid, grp);
+    takeCells(L, grp);
     G.score += pay.pts;
     if (pay.cat > G.bestCat) G.bestCat = pay.cat;
     G.fx.push({ s: t(NAME_KEYS[pay.cat]) + '  +' + fmt(pay.pts), x: colX(L, top[0]), y: chipY(L, top[0], Math.min(top[1], G.grid[top[0]].length)) - L.bh * 2, t: 0, life: 1.2, big: grp.length >= 5 });
@@ -183,9 +197,7 @@ export function create(shell) {
     if (!cells.length || G.inv[p] <= 0) return;
     G.inv[p]--;
     const L = geom();
-    burstCells(L, cells);
-    removeCells(G.grid, cells);
-    G.score += cells.length * 30 * G.lv;
+    G.score += takeCells(L, cells) * 30 * G.lv;
     sound('notifyAllIn');
     renderHud(); afterMove();
   }
@@ -222,6 +234,40 @@ export function create(shell) {
       afterMove();
     }, 650);
   }
+  /**
+   * Takes `cells` out with what they set free: the cards next to them (and
+   * any card among them) fly to the hand, the seals next to them break.
+   * Returns the number of chips taken.
+   */
+  function takeCells(L, cells) {
+    const fr = freedBy(G.grid, cells);
+    for (const [c, r] of fr.seals) {
+      const b = G.grid[c][r]; b.seal = false; b.pop = 0.4;
+      const x = colX(L, c), y = chipY(L, c, r) - L.bh / 2;
+      for (let i = 0; i < 8; i++) { const a = Math.random() * 7; G.parts.push({ x, y, vx: Math.cos(a) * 50, vy: Math.sin(a) * 50 - 40, t: 0, life: 0.6, c: '#c3ccd6', r: 1.6, rot: 0 }); }
+    }
+    if (fr.seals.length) sound('notifyTick');
+    const chips = cells.filter(([c, r]) => G.grid[c][r].k >= 0);
+    const cards = cells.filter(([c, r]) => G.grid[c][r].k === CARD).concat(fr.cards);
+    for (const [c, r] of cards) G.flying.push({ n: G.grid[c][r].card, x: colX(L, c), y: chipY(L, c, r) - L.bh / 2, t: 0 });
+    if (cards.length) sound('notifyCard');
+    burstCells(L, chips);
+    removeCells(G.grid, chips.concat(cards));
+    return chips.length;
+  }
+  /** A card has reached the hand; 5 cards: the hand pays and starts again. */
+  function addCard(n) {
+    G.hand.push(n);
+    if (G.hand.length < 5) return;
+    const e = evalCards(G.hand), cat = Math.max(0, e.cat), pts = 100 * G.lv * MULT[cat];
+    G.score += pts; renderHud();
+    G.handFull = { cards: G.hand.slice(), best: e.best || [], name: t(NAME_KEYS[cat]), t: 0 };
+    if (!G.bestHand || cat > G.bestHand.cat) G.bestHand = { cards: G.hand.slice(), best: e.best || [], cat };
+    G.hand = [];
+    const L = geom();
+    G.fx.push({ s: '🂠 ' + t(NAME_KEYS[cat]) + '  +' + fmt(pts), x: L.W / 2, y: TOP + 34, t: 0, life: 1.8, big: true });
+    sound(cat >= 2 ? 'notifyBigWin' : 'notifyAllIn');
+  }
   function burstCells(L, cells) {
     for (const [c, r] of cells) {
       const b = G.grid[c][r], ch = CHIPS[b.k], x = colX(L, c), y = chipY(L, c, r) - L.bh / 2;
@@ -244,7 +290,11 @@ export function create(shell) {
       if (state !== 'clear') return;
       G.lv++; G.inv.shuffle++;
       newRound(); state = 'run'; sound('notifyBlindsUp');
-      G.banner = { s: t('arLevel') + ' ' + G.lv, s2: t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : ''), t: 0, life: 1.8 };
+      const lvLine = t('arLevel') + ' ' + G.lv + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : '');
+      G.banner = G.venueT < 1 ? { s: t(VENUES[G.venue]), s2: lvLine, t: 0, life: 2.4 }
+        : { s: t('arLevel') + ' ' + G.lv, s2: t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : ''), t: 0, life: 1.8 };
+      const news = KIT_FROM.find(([, from]) => from === G.lv);
+      if (news) say(t(news[2]));
     }, 2400);
   }
   function timeUp() {
@@ -270,6 +320,8 @@ export function create(shell) {
     endScreen(shell, {
       title: t('tpName'), sub: t('tpClassic') + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }),
       hero: '<div style="font-size:40px;line-height:1">🕳️</div>', score, prev,
+      cards: G.bestHand ? G.bestHand.cards : [], dim: G.bestHand ? G.bestHand.cards.filter((c) => G.bestHand.best.indexOf(c) < 0) : [],
+      hand: G.bestHand ? t(NAME_KEYS[G.bestHand.cat]) : '',
       calc: [[t('arLevel'), G.lv], [t('tpIn'), G.inTotal], [t('gmBestHand'), best]],
       levels: { title: t('arLevel'), right: String(G.lv), html: barsHtml(G.rounds.map((r) => ({ h: 0.12 + 0.88 * r.done, cls: r.done >= 1 ? 'gold' : r.done < 0.2 ? 'no' : '' }))) },
       stats: [[fmt(score), t('hcScore')], [G.lv, t('arLevel')], [G.inTotal, '🕳️']],
@@ -358,6 +410,16 @@ export function create(shell) {
       if (G.timeLeft < 10 && s !== G.lastTick) { G.lastTick = s; sound(s <= 3 ? 'notifyTickFinal' : 'notifyTick'); }
       if (G.timeLeft <= 0) { G.timeLeft = 0; timeUp(); }
     }
+    if (state === 'run' && G.kit && G.kit.rise) {     // a row comes up from the felt now and then
+      G.riseT += dt;
+      if (G.riseT >= G.kit.rise) {
+        G.riseT = 0;
+        if (riseRow(G.grid, colorsAt(G.lv), G.maxRows + 1)) { sound('notifyCard'); G.grid.forEach((col) => { if (col[0]) col[0].pop = 0.4; }); }
+      }
+    }
+    if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.2);
+    for (let i = G.flying.length - 1; i >= 0; i--) { const f = G.flying[i]; f.t += dt; if (f.t >= 0.6) { G.flying.splice(i, 1); addCard(f.n); } }
+    if (G.handFull) { G.handFull.t += dt; if (G.handFull.t > 1.8) G.handFull = null; }
     hTime.style.width = (100 * Math.max(0, G.timeLeft) / G.timeMax) + '%';
     hTimeBox.classList.toggle('low', state === 'run' && G.timeLeft < 10);
     // The friends: their face and pose from the game, their eyes on the lit chip.
@@ -372,6 +434,10 @@ export function create(shell) {
       if (ch.st === 'top') {
         if (!col.length) {
           ch.st = 'fall'; ch.vy = -140; setPose(ch, 'air'); setMood(ch, 'yay'); ch.ace.sweat(false); fell = true;
+          if (!G.firstIn && state === 'run') {     // the first one in: with the Dealer button, ×2; the button goes
+            G.firstIn = true; ch.double = ch.dealer;
+            G.chars.forEach((o) => { if (o !== ch && o.dealer) { o.dealer = false; o.ace.badge(false); } });
+          }
         } else {
           ch.y = chipY(L, c, col.length - 1) - L.bh;
           // his stack has just come down under him: a little squash
@@ -400,9 +466,10 @@ export function create(shell) {
           ch.y = L.base; ch.st = 'sink'; ch.sink = 0; setPose(ch, 'idle');
           sound('notifyCard');
           if (state === 'run') {
-            const pay = inPay(G.lv);
+            const pay = inPay(G.lv) * (ch.double ? 2 : 1);
             G.score += pay; G.inTotal++; renderHud();
-            G.fx.push({ s: t('tpIn') + ' +' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true });
+            G.fx.push({ s: (ch.double ? 'Dealer ×2  ' : t('tpIn') + ' ') + '+' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true, big: ch.double });
+            if (ch.double) { ch.dealer = false; ch.ace.badge(false); sound('notifyAllIn'); }
           }
           for (let i = 0; i < 14; i++) { const a = -Math.PI * Math.random(); G.parts.push({ x: colX(L, c), y: L.base, vx: Math.cos(a) * 60, vy: Math.sin(a) * 90, t: 0, life: 0.7, c: i % 2 ? '#f5c518' : '#fbf7ee', r: 2, rot: 0 }); }
         }
@@ -438,8 +505,29 @@ export function create(shell) {
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
-  const bokeh = Array.from({ length: 22 }, (_, i) => ({ x: Math.random(), y: Math.random() * 0.5, r: 5 + Math.random() * 18, c: ['#f5c518', '#ff6a4a', '#8a6aff', '#4ac8ff'][i % 4], s: Math.random() * 6 }));
-  function drawChip(g, L, x, yb, k, hl, sc, top) {
+  const img = imageCache();
+  /** Slot i of the hand of 5, in the middle of the HUD's line. */
+  function handSlot(L, i) {
+    const room = Math.max(60, Math.min(150, L.W - 110)), w = Math.min(18, room / 5.6), h = w * 1.4;
+    return { x: L.W / 2 + (i - 2) * (w + 3), y: 21, w, h };
+  }
+  /** A card standing in a stack: a cream « card chip », the card's rank and suit on its side. */
+  function drawCardCell(g, L, x, yb, n, hl, sc) {
+    const { bh, ry } = L, w = L.rx * (sc || 1);
+    g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.closePath();
+    g.fillStyle = '#f2ebda'; g.fill(); g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = 1; g.stroke();
+    g.fillStyle = '#2f4f9e'; g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 0.8; g.beginPath(); g.ellipse(x, yb - bh, w * 0.7, ry * 0.7, 0, 0, 7); g.stroke();
+    g.fillStyle = isRed(n) ? '#c62828' : '#141414'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '800 ' + Math.max(6, bh * 0.62).toFixed(1) + 'px Inter, system-ui, sans-serif';
+    g.fillText(RANKS[n % 13] + SUIT_SIGNS[Math.floor(n / 13)], x, yb - bh * 0.48 + ry * 0.2);
+    g.strokeStyle = 'rgba(245,197,24,' + (0.5 + 0.3 * Math.sin(time * 4)).toFixed(2) + ')'; g.lineWidth = 1.4;
+    g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.stroke();
+    if (hl) { g.fillStyle = 'rgba(255,250,220,.25)'; g.fill(); }
+  }
+  function drawChip(g, L, x, yb, b, hl, sc, top) {
+    const k = b.k;
+    if (k === CARD) { drawCardCell(g, L, x, yb, b.card, hl, sc); return; }
     const { bh, ry } = L, ch = CHIPS[k], w = L.rx * (sc || 1);
     // the side, with a dark seam at the bottom
     g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.closePath();
@@ -455,14 +543,31 @@ export function create(shell) {
     g.beginPath(); g.arc(x, yb - bh * 0.5 + ry * 0.15, r, 0, 7); g.fill();
     g.fillStyle = ch.side; g.font = '700 ' + (r * 1.5).toFixed(1) + 'px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText(ch.suit, x, yb - bh * 0.5 + ry * 0.2);
-    // the top
-    g.fillStyle = ch.top; g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();
+    // the top (the Joker chip's in the four colours)
+    if (k === WILD) {
+      const tg = g.createLinearGradient(x - w, 0, x + w, 0);
+      ['#d23a30', '#2f6bd0', '#27a058', '#33363c', '#9a5ae0'].forEach((c2, i) => { tg.addColorStop(i / 4, c2); });
+      g.fillStyle = tg;
+    } else g.fillStyle = ch.top;
+    g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();
     g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1; g.beginPath(); g.ellipse(x, yb - bh, w - 0.5, ry - 0.5, 0, Math.PI, 0); g.stroke();
     if (top) {
       g.strokeStyle = ch.mark; g.lineWidth = Math.max(1, w * 0.06); g.setLineDash([w * 0.16, w * 0.12]);
       g.beginPath(); g.ellipse(x, yb - bh, w * 0.66, ry * 0.66, 0, 0, 7); g.stroke(); g.setLineDash([]);
       g.fillStyle = ch.mark; g.font = '800 ' + Math.max(6, ry * 1.05).toFixed(1) + 'px Inter, system-ui, sans-serif';
       g.fillText(String(ch.v), x, yb - bh + 0.5);
+    }
+    if (b.seal) {                     // locked: a steel veil, two straps and a big padlock on its side
+      g.save();
+      g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.ellipse(x, yb - bh, w, ry, 0, 0, Math.PI, true);
+      g.fillStyle = 'rgba(150,160,172,.45)'; g.fill();
+      g.fillStyle = '#b8c1cc';
+      g.fillRect(x - w, yb - bh * 0.78, w * 2, bh * 0.13); g.fillRect(x - w, yb - bh * 0.3, w * 2, bh * 0.13);
+      const lw = Math.max(7, bh * 0.78), ly = yb - bh * 0.62;
+      g.strokeStyle = '#3d444c'; g.lineWidth = Math.max(1.6, lw * 0.16); g.beginPath(); g.arc(x, ly, lw * 0.3, Math.PI, 0); g.stroke();
+      g.fillStyle = '#d8b25a'; rr(g, x - lw / 2, ly, lw, lw * 0.68, 2); g.fill(); g.strokeStyle = '#5a4210'; g.lineWidth = 1; g.stroke();
+      g.fillStyle = '#3a2a08'; g.beginPath(); g.arc(x, ly + lw * 0.3, lw * 0.1, 0, 7); g.fill();
+      g.restore();
     }
     if (hl) {
       g.fillStyle = 'rgba(255,250,220,' + (0.28 + 0.16 * Math.sin(time * 10)).toFixed(2) + ')';
@@ -472,17 +577,18 @@ export function create(shell) {
   function draw(g) {
     if (!G) return;
     const L = geom(), W = L.W;
-    // The club at night: velvet, blurred lights, a spot from above.
-    const bg = g.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#0d1630'); bg.addColorStop(0.6, '#1b1240'); bg.addColorStop(1, '#0b0716');
-    g.fillStyle = bg; g.fillRect(0, 0, W, H);
-    for (const b of bokeh) { g.globalAlpha = (shell.reduced ? 0.2 : 0.16 + 0.08 * Math.sin(time * 1.3 + b.s)); g.fillStyle = b.c; g.beginPath(); g.arc(b.x * W, b.y * H, b.r, 0, 7); g.fill(); }
-    g.globalAlpha = 1;
+    // The venue (Ace Runner's scenery), from day to night along its levels; a veil so the chips stand out.
+    const ty = L.base - L.ry * 2.4;
+    const o = { w: W, gy: ty - 5, scroll: 300, p: dayOfLevel(G.lv), now: time, reduced: shell.reduced, C: ink(!!(shell.theme && shell.theme.light)) };
+    if (G.venueT < 1) {
+      drawScenery(g, Object.assign({}, o, { venue: G.prevVenue }));
+      g.globalAlpha = G.venueT; drawScenery(g, Object.assign({}, o, { venue: G.venue })); g.globalAlpha = 1;
+    } else drawScenery(g, Object.assign({}, o, { venue: G.venue }));
+    g.fillStyle = 'rgba(12,10,26,.4)'; g.fillRect(0, 0, W, ty);
     const sp = g.createRadialGradient(W / 2, -H * 0.2, 10, W / 2, H * 0.3, H);
     sp.addColorStop(0, 'rgba(255,240,190,.24)'); sp.addColorStop(1, 'rgba(255,240,190,0)');
     g.fillStyle = sp; g.fillRect(0, 0, W, H);
     // The felt and its holes.
-    const ty = L.base - L.ry * 2.4;
     const fe = g.createLinearGradient(0, ty, 0, H); fe.addColorStop(0, '#1f8a4c'); fe.addColorStop(1, '#0c3f22');
     g.fillStyle = fe; g.fillRect(0, ty, W, H - ty);
     g.fillStyle = '#5a361c'; g.fillRect(0, ty - 5, W, 6); g.fillStyle = '#d8b25a'; g.fillRect(0, ty - 6, W, 1.2);
@@ -516,7 +622,7 @@ export function create(shell) {
       const x = colX(L, c), col = G.grid[c];
       for (let r = 0; r < col.length; r++) {
         const b = col[r], sx = b.shake > 0 ? Math.sin(time * 70) * 2.5 : (r % 3 === 1 ? 0.8 : r % 3 === 2 ? -0.6 : 0);
-        drawChip(g, L, x + sx, chipY(L, c, r), b.k, hl.has(c + ',' + r), b.pop > 0 ? 1 + b.pop * 0.35 : 1, r === col.length - 1);
+        drawChip(g, L, x + sx, chipY(L, c, r), b, hl.has(c + ',' + r), b.pop > 0 ? 1 + b.pop * 0.35 : 1, r === col.length - 1);
       }
     }
     // The cursor (keys, pad, remote).
@@ -531,6 +637,25 @@ export function create(shell) {
       const yb = Math.max(TOP + 8, chipY(L, preview.c, preview.r) - L.bh - L.ry - 8), x = Math.max(tw / 2 + 4, Math.min(W - tw / 2 - 4, colX(L, preview.c)));
       rr(g, x - tw / 2, yb - 9, tw, 18, 9); g.fillStyle = 'rgba(8,14,22,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.7)'; g.lineWidth = 1; g.stroke();
       g.fillStyle = '#f5d77a'; g.fillText(preview.s, x, yb, tw - 10);
+    }
+    // The hand of 5 at the top (from level 2), and the cards flying to it.
+    if (state !== 'title' && (G.lv >= 2 || G.hand.length || G.handFull || G.flying.length)) {
+      const shown = G.handFull ? G.handFull.cards : G.hand;
+      for (let i = 0; i < 5; i++) {
+        const sl = handSlot(L, i), n = shown[i];
+        g.save(); g.translate(sl.x, sl.y);
+        if (n == null) { rr(g, -sl.w / 2, -sl.h / 2, sl.w, sl.h, 2.5); g.strokeStyle = 'rgba(245,240,227,.35)'; g.setLineDash([2.5, 2]); g.lineWidth = 1; g.stroke(); g.setLineDash([]); }
+        else {
+          if (G.handFull && G.handFull.best.indexOf(n) >= 0) { g.shadowColor = '#f5c518'; g.shadowBlur = 8; }
+          drawFace(g, img, n, sl.w, sl.h);
+        }
+        g.restore();
+      }
+    }
+    for (const f of G.flying) {
+      const sl = handSlot(L, Math.min(4, G.hand.length + G.flying.indexOf(f))), k = Math.min(1, f.t / 0.6), e = k * k * (3 - 2 * k);
+      const x = f.x + (sl.x - f.x) * e, y = f.y + (sl.y - f.y) * e - Math.sin(k * Math.PI) * 30, sc = 1.6 - 0.6 * e;
+      g.save(); g.translate(x, y); g.rotate((1 - e) * 0.6); drawFace(g, img, f.n, sl.w * sc, sl.h * sc); g.restore();
     }
     // The friends (DOM actors): feet on their stack, falling, or in their hole (what is below the felt hidden).
     const s = L.cw * 0.0125;
@@ -598,7 +723,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { G.timeLeft = 0.01; } } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',

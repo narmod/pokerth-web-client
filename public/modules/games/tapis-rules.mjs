@@ -16,6 +16,12 @@
 //             pays the sum of its chips' values × that hand's multiplier.
 //   Recave    no group left: the dealer pushes a row in from the felt, made
 //             of pairs (recaveRow) — the player is never stuck.
+//   Levels    (push 3, web.78, levelKit) cards in the stacks from level 2
+//             ({ k: CARD, card }: a group going next to one sets it free, into
+//             the hand of 5); Joker chips from 3 (WILD, with every colour);
+//             the Dealer button on a friend from 5; sealed chips from 9 ({ seal }:
+//             no group until a group next to it breaks the seal); rows rising
+//             from the felt from 13 (riseRow). A venue every 4 levels (venueAt).
 // ═══════════════════════════════════════════════════════════════════
 
 import { MULT } from './poker-hand.mjs';
@@ -27,7 +33,34 @@ export const CHIPS = [
   { id: 'green', top: '#27a058', side: '#115a2e', mark: '#f7f1e3', suit: '♣', v: 25 },
   { id: 'black', top: '#33363c', side: '#121316', mark: '#e3c06a', suit: '♠', v: 100 },
   { id: 'purple', top: '#9a5ae0', side: '#542a8f', mark: '#f7f1e3', suit: '★', v: 500 },
+  { id: 'wild', top: '#f5f0e3', side: '#b8902e', mark: '#141414', suit: 'J', v: 50 },
 ];
+/** The Joker chip (CHIPS[WILD]): it goes with every colour (from level 3). */
+export const WILD = 5;
+/** A card in a stack: { k: CARD, card: n }; it goes to the hand when a group next to it goes (from level 2). */
+export const CARD = -1;
+
+/**
+ * What a blind level brings (claude/CONCEPTION_TAPIS.md § 6): cards in the
+ * stacks, Joker chips, the Dealer button on a friend, sealed chips, rows
+ * coming up from the felt (seconds between two, 0 for none).
+ */
+export function levelKit(lv) {
+  lv = Math.max(1, lv);
+  return {
+    cards: lv < 2 ? 0 : lv < 5 ? 2 : lv < 10 ? 3 : 4,
+    wild: lv < 3 ? 0 : lv < 9 ? 1 : 2,
+    dealer: lv >= 5,
+    seals: lv < 9 ? 0 : Math.min(8, 2 + Math.floor((lv - 9) / 2)),
+    rise: lv < 13 ? 0 : Math.max(8, 14 - (lv - 13) * 0.5),
+  };
+}
+/** The level each new thing first comes at (for its word the first time). */
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise']];
+/** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
+export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
+/** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
+export const dayOfLevel = (lv) => [0.5, 0.71, 0.8, 0.93][(Math.max(1, lv) - 1) % 4];
 
 /** Colours on the board at blind level `lv`: 3, a 4th from level 5, a 5th from 13. */
 export const colorsAt = (lv) => (lv >= 13 ? 5 : lv >= 5 ? 4 : 3);
@@ -61,35 +94,71 @@ export function handOf(n) {
 /** What a group pays: the sum of its values × its hand's multiplier. */
 export function groupPay(grid, cells) {
   let sum = 0;
+  cells = cells.filter(([c, r]) => grid[c][r].k >= 0);
   for (const [c, r] of cells) sum += CHIPS[grid[c][r].k].v;
   const cat = handOf(cells.length);
   return { cat, pts: cat < 0 ? 0 : sum * MULT[cat] };
 }
 
-/** The chips of one colour touching the chip at column c, row r (itself included). */
-export function groupAt(grid, c, r) {
-  if (!grid[c] || !grid[c][r]) return [];
-  const k = grid[c][r].k, seen = new Set([c + ',' + r]), out = [[c, r]], todo = [[c, r]];
+const NB = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+/** Can this cell join a group (a chip, not sealed)? */
+const free = (b) => !!b && b.k >= 0 && !b.seal;
+/** Do two free chips go together (same colour, or one of them a Joker chip)? */
+const goes = (a, b) => free(a) && free(b) && (a.k === b.k || a.k === WILD || b.k === WILD);
+/** The chips of colour k (and Joker chips) touching (c, r), from it. */
+function flood(grid, c, r, k) {
+  const seen = new Set([c + ',' + r]), out = [[c, r]], todo = [[c, r]];
   while (todo.length) {
     const [x, y] = /** @type {number[]} */ (todo.pop());
-    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-      const nx = x + dx, ny = y + dy, key = nx + ',' + ny;
-      if (seen.has(key) || !grid[nx] || !grid[nx][ny] || grid[nx][ny].k !== k) continue;
+    for (const [dx, dy] of NB) {
+      const nx = x + dx, ny = y + dy, key = nx + ',' + ny, b = grid[nx] && grid[nx][ny];
+      if (seen.has(key) || !free(b) || (b.k !== k && b.k !== WILD)) continue;
       seen.add(key); out.push([nx, ny]); todo.push([nx, ny]);
     }
   }
   return out;
+}
+/**
+ * The chips of one colour touching the chip at column c, row r (itself
+ * included), Joker chips with them; from a Joker chip, the biggest group of a
+ * colour it touches (or the Joker chips together). Cards and sealed chips
+ * never join.
+ */
+export function groupAt(grid, c, r) {
+  const b = grid[c] && grid[c][r];
+  if (!free(b)) return b ? [[c, r]] : [];
+  if (b.k !== WILD) return flood(grid, c, r, b.k);
+  let best = flood(grid, c, r, WILD);
+  const ks = new Set();
+  best.forEach(([x, y]) => NB.forEach(([dx, dy]) => { const o = grid[x + dx] && grid[x + dx][y + dy]; if (free(o) && o.k !== WILD) ks.add(o.k); }));
+  for (const k of ks) { const g = flood(grid, c, r, k); if (g.length > best.length) best = g; }
+  return best;
 }
 /** Is there a group of 2 or more anywhere? */
 export function anyMove(grid) {
   for (let c = 0; c < grid.length; c++) {
     const col = grid[c];
     for (let r = 0; r < col.length; r++) {
-      if (col[r + 1] && col[r + 1].k === col[r].k) return true;
-      if (grid[c + 1] && grid[c + 1][r] && grid[c + 1][r].k === col[r].k) return true;
+      if (goes(col[r], col[r + 1])) return true;
+      if (grid[c + 1] && goes(col[r], grid[c + 1][r])) return true;
     }
   }
   return false;
+}
+/**
+ * What a group going sets free next to it (before it goes): the cards
+ * touching it (they go too, into the hand) and the sealed chips touching it
+ * (their seal breaks). Returns { cards: [[c, r]], seals: [[c, r]] }.
+ */
+export function freedBy(grid, cells) {
+  const inSet = new Set(cells.map(([c, r]) => c + ',' + r)), seen = new Set(), cards = [], seals = [];
+  for (const [c, r] of cells) for (const [dx, dy] of NB) {
+    const x = c + dx, y = r + dy, key = x + ',' + y, b = grid[x] && grid[x][y];
+    if (!b || inSet.has(key) || seen.has(key)) continue;
+    seen.add(key);
+    if (b.k === CARD) cards.push([x, y]); else if (b.seal) seals.push([x, y]);
+  }
+  return { cards, seals };
 }
 /** Takes `cells` out; the chips above fall (their off grows by the rows they drop). */
 export function removeCells(grid, cells) {
@@ -104,6 +173,7 @@ export function removeCells(grid, cells) {
 /** The chips a Joker takes: every chip of colour k. */
 export function colorCells(grid, k) {
   const out = [];
+  if (k === CARD) return out;
   grid.forEach((col, c) => col.forEach((b, r) => { if (b.k === k) out.push([c, r]); }));
   return out;
 }
@@ -117,10 +187,10 @@ export function crossCells(grid, c, r) {
 /** Every colour dealt again (the Shuffle), the columns keeping their heights. */
 export function shuffleGrid(grid, rnd = Math.random) {
   const ks = [];
-  grid.forEach((col) => col.forEach((b) => ks.push(b.k)));
+  grid.forEach((col) => col.forEach((b) => { if (b.k >= 0) ks.push(b.k); }));
   for (let j = ks.length - 1; j > 0; j--) { const x = Math.floor(rnd() * (j + 1)); const t = ks[j]; ks[j] = ks[x]; ks[x] = t; }
   let i = 0;
-  grid.forEach((col) => col.forEach((b) => { b.k = ks[i++]; }));
+  grid.forEach((col) => col.forEach((b) => { if (b.k >= 0) b.k = ks[i++]; }));
 }
 /**
  * The dealer's recave: a chip pushed in under every column still standing,
@@ -134,13 +204,30 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
   const ks = new Map();
   for (let i = 0; i < live.length;) {
     if (live[i + 1] === live[i] + 1) { const k = Math.floor(rnd() * nColors); ks.set(live[i], k); ks.set(live[i + 1], k); i += 2; }
-    else { ks.set(live[i], grid[live[i]][0].k); i += 1; }
+    else { const b = grid[live[i]][0]; ks.set(live[i], free(b) && b.k !== WILD ? b.k : -2 - Math.floor(rnd() * nColors)); i += 1; }
   }
+  let n = 0;
   for (const c of live) {
-    grid[c].forEach((b) => { b.off -= 1; });
-    grid[c].unshift({ k: ks.get(c), off: -1 });
+    let k = ks.get(c);
+    const two = k <= -2;                       // alone over a card or a seal: a pair of its own
+    if (two) k = -2 - k;
+    const m = two ? 2 : 1;
+    grid[c].forEach((b) => { b.off -= m; });
+    for (let j = 0; j < m; j++) grid[c].unshift({ k, off: -m });
+    n += m;
   }
-  return live.length;
+  return n;
+}
+/** A row of chips of any colour pushed in under every column lower than maxH (the felt rising). Returns the chips added. */
+export function riseRow(grid, nColors, maxH, rnd = Math.random) {
+  let n = 0;
+  grid.forEach((col) => {
+    if (!col.length || col.length >= maxH) return;
+    col.forEach((b) => { b.off -= 1; });
+    col.unshift({ k: Math.floor(rnd() * nColors), off: -1 });
+    n++;
+  });
+  return n;
 }
 /**
  * A new round: `cols` columns, heights growing with the level (up to
@@ -162,6 +249,18 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
     }
     grid.push(col);
   }
+  // What the level brings: cards (face up, no two the same), Joker chips, sealed chips — never a column's top.
+  const kit = levelKit(lv), spots = [];
+  grid.forEach((col, c) => col.forEach((_, r) => { if (r < col.length - 1) spots.push([c, r]); }));
+  const pick = () => (spots.length ? spots.splice(Math.floor(rnd() * spots.length), 1)[0] : null);
+  const deck = [];
+  for (let i = 0; i < kit.cards; i++) {
+    const at = pick(); if (!at) break;
+    let card; do card = Math.floor(rnd() * 52); while (deck.includes(card));
+    deck.push(card); grid[at[0]][at[1]] = { k: CARD, card, off: 0 };
+  }
+  for (let i = 0; i < kit.wild; i++) { const at = pick(); if (at) grid[at[0]][at[1]].k = WILD; }
+  for (let i = 0; i < kit.seals; i++) { const at = pick(); if (at) grid[at[0]][at[1]].seal = true; }
   if (!anyMove(grid)) recaveRow(grid, n, rnd);
   return grid;
 }
