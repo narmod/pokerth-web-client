@@ -479,7 +479,7 @@ console.log('Ace Dash: the long run, the score, the modes');
     const g2 = [[C(K, { card: 3 })]];
     ok(TP.recaveRow(g2, 3, () => 0.1) === 2 && g2[0].length === 3 && g2[0][0].k === g2[0][1].k && TP.anyMove(g2), 'Tapis!: the recave under a lone card brings a pair');
     const g3 = [[C(0), C(1)], [C(2)], []];
-    ok(TP.riseRow(g3, 3, 2) === 2 && g3[0].length === 2 && g3[1].length === 2 && g3[2].length === 1, 'Tapis!: a rising row, not over the top, an empty column too');
+    ok(TP.riseRow(g3, 3, 2) === 1 && g3[0].length === 2 && g3[1].length === 2 && g3[2].length === 0, 'Tapis!: a rising row, not over the top nor in an empty column');
     let cards = 0, wild = 0, seals = 0, ok10 = true;
     for (let i = 0; i < 20; i++) {
       const gr = TP.dealRound(10, 8, 12);

@@ -30,12 +30,13 @@
 //             each chip's points written on it as it goes (tierOf)
 //   Spirits   round won: each friend's spirit flies up out of his hole,
 //             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
-//   Columns   as in Monster Madness (narmod web.86, « B », after the arcade
-//             video): they never move; an emptied column stays, its friend in
-//             his hole (a little grave on the felt), and the dealer's or the
-//             felt's rows come up under it too. The round is won when every
-//             friend is in his hole; the board left empty too: « Table
-//             cleared! » and the clean-sweep bonus. (web.77-85 closed them up.)
+//   Columns   as in Monster Madness (narmod, the arcade video at 0:56-1:08,
+//             web.90): an emptied column goes once its friend is in his hole,
+//             and the others close up in the middle; « No more moves! » brings
+//             the table back to its full width (columns without a friend on
+//             each side, over the graves) with 2-3 rows under all of them.
+//             The round is won when every friend is in his hole, chips may be
+//             left; the board empty too: « Table cleared! » and the bonus.
 //   Input     touch: a first touch lights the group and its hand, a second
 //             touch on it takes it (Monster Madness' « double touch », web.86);
 //             mouse: hover shows it, a click takes it; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
@@ -159,17 +160,20 @@ export function create(shell) {
   const chipY = (L, c, r) => L.base - (r + (G.grid[c][r] ? G.grid[c][r].off : 0)) * L.bh;
 
   // ── A round ───────────────────────────────────────────────────────
+  /** A column with no friend on it (put back by « No more moves! »): its hole is a grave already. */
+  const NOOP = { pose() {}, mood() {}, sweat() {}, look() {}, fx() {}, place() {}, clip() {}, show() {}, fade() {}, remove() {}, badge() {} };
+  const noFriend = () => ({ ace: NOOP, none: true, st: 'in', y: 0, kind: '' });
   function newGame() {
-    if (G) G.chars.forEach((ch) => ch.ace.remove());   // the friends of the title's board
+    if (G) (G.all || []).forEach((ch) => ch.ace.remove());   // the friends of the title's board
     G = { lv: 1, score: 0, cols: colsFor(shell.W), grid: [], chars: [], inv: { joker: 0, dealer: 0, shuffle: 1 }, armed: '',
       cursor: { c: 0, r: 0, bar: -1 }, showCursor: false, inTotal: 0, bestCat: -1, rounds: [], fx: [], parts: [], say: null, banner: null,
       timeLeft: 0, timeMax: 1, lastTick: 0, venue: 0, prevVenue: 0, venueT: 1, hand: [], handFull: null, bestHand: null, flying: [], riseT: 0 };
   }
   function newRound() {
-    G.chars.forEach((ch) => ch.ace.remove());
+    (G.all || []).forEach((ch) => ch.ace.remove());
     G.cols0 = G.cols = colsFor(shell.W);
     const L = geom();
-    G.xs = null; G.picked = null;
+    G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c)); G.closing = []; G.picked = null;
     G.maxRows = rowsFor(L);
     if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
     // Madness starts lower (room for the rows to come); Zen has no seals.
@@ -184,8 +188,9 @@ export function create(shell) {
     const kinds = castFor(G.lv, G.cols, R);
     G.chars = G.grid.map((_, c) => {
       const ace = castActor(shell.layer, kinds[c], 'pth-game-tp' + c);
-      return { ace, kind: kinds[c], st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', lastY: -60, moving: false, sweat: false, dealer: false, double: false };
+      return { ace, kind: kinds[c], slot: c, st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', sweat: false, dealer: false, double: false };
     });
+    G.all = G.chars.slice();                 // every friend of the round, his column gone or not (the spirits)
     // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
     G.kit = levelKit(G.lv); G.riseT = 0; G.firstIn = false; G.recaved = false;
     if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; }
@@ -317,6 +322,14 @@ export function create(shell) {
       if (state !== 'run' || !chipsLeft(G.grid) || anyMove(G.grid)) return;
       if (G.chars.some((ch) => ch.st === 'fall' || ch.st === 'sink')) { afterMove(); return; }   // a friend still on his way down
       if (mode === 'folie') { G.riseT = G.kit.rise; return; }              // Madness: the next row comes up at once
+      // The table back to its full width: columns without a friend, one on each side in turn (the video at 1:05).
+      while (G.cols < G.cols0) {
+        const right = (G.cols0 - G.cols) % 2 === 1, i = right ? G.cols : 0;
+        G.grid.splice(i, 0, []); G.chars.splice(i, 0, noFriend()); G.xs.splice(i, 0, null); G.cols++;
+        if (!right) G.cursor.c++;
+      }
+      const L = geom();
+      G.xs = G.xs.map((x, c) => (x == null ? colAim(L, c) : x));
       const n = refillRows(G.grid, colorsAt(G.lv), R);
       G.grid.forEach((col) => col.slice(0, n).forEach((b) => { b.pop = 0.5; }));
       G.recaved = true;
@@ -377,7 +390,8 @@ export function create(shell) {
     G.score += bonus + clean;
     G.rounds.push({ lv: G.lv, done: 1 });
     // Every friend's spirit comes out of his hole and flies up, one after the other, with a bonus (Monster Madness).
-    G.chars.forEach((ch, i) => { ch.st = 'spirit'; ch.spT = -0.15 - i * 0.12; ch.spPaid = false; });
+    const x0 = (L.W - L.cw * G.cols0) / 2;
+    G.all.forEach((ch, i) => { ch.st = 'spirit'; ch.spT = -0.15 - i * 0.12; ch.spPaid = false; ch.spX = x0 + L.cw * (ch.slot + 0.5); });
     renderHud(); sound('notifyBigWin');
     G.banner = { s: t(left === 0 ? 'tpClear' : 'tpAllIn'), s2: duel() ? '' : '+' + fmt(bonus) + (clean ? ' · ' + t('tpClean') + ' +' + fmt(clean) : ''), t: 0, life: 2.2 };
     for (let i = 0; i < 90; i++) G.parts.push({ x: Math.random() * L.W, y: -10 - Math.random() * 120, vx: (Math.random() - 0.5) * 40, vy: 40 + Math.random() * 80, t: 0, life: 2.4, c: ['#f5c518', '#d23a30', '#2f6bd0', '#27a058', '#fbf7ee'][i % 5], r: 3 + Math.random() * 3, rot: Math.random() * 6, conf: true });
@@ -657,7 +671,7 @@ export function create(shell) {
     });
     if (fell) G.chars.forEach((o) => { if (o.st === 'top') o.clapUntil = time + 1.1; });
     // The spirits of the round won: up from the holes, see-through, a bonus each (not in the Duel).
-    G.chars.forEach((ch, c) => {
+    G.all.forEach((ch) => {
       if (ch.st !== 'spirit') return;
       ch.spT += dt;
       if (ch.spT < 0) return;
@@ -665,15 +679,28 @@ export function create(shell) {
         ch.spPaid = true; ch.ace.show(true); ch.ace.clip(null); ch.ace.pose('air'); ch.ace.mood('yay'); ch.ace.sweat(false);
         const pay = duel() ? 0 : SPIRIT_PAY * G.lv;
         if (pay) { G.score += pay; renderHud(); }
-        G.fx.push({ s: pay ? '+' + fmt(pay) : '✦', x: colX(L, c), y: L.base - L.cw * 1.4, t: 0, life: 1.1, green: true });
+        G.fx.push({ s: pay ? '+' + fmt(pay) : '✦', x: ch.spX, y: L.base - L.cw * 1.4, t: 0, life: 1.1, green: true });
         sound('notifyTick');
       }
       ch.y = L.base - ch.spT * 150;
       ch.ace.fade(Math.max(0, 0.75 * (1 - ch.spT / 1.1)));
       if (ch.spT > 1.1) { ch.st = 'gone'; ch.ace.show(false); }
     });
-    // Every friend in his hole: the round is won (chips may be left in the emptied columns).
-    if (state === 'run' && G.chars.length && G.chars.every((ch) => ch.st === 'in')) roundClear();
+    // A column emptied, its friend in his hole (or none on it): it goes, the hole closes, the others close up in the middle.
+    for (let c = G.cols - 1; c >= 0; c--) {
+      if (G.grid[c].length || G.chars[c].st !== 'in') continue;
+      G.closing.push({ x: colX(L, c), t: 0 });
+      G.grid.splice(c, 1); G.chars.splice(c, 1); G.xs.splice(c, 1); G.cols--;
+      if (G.cursor.c > c || G.cursor.c >= G.cols) G.cursor.c = Math.max(0, G.cursor.c - 1);
+      hover = null; G.picked = null;
+    }
+    {
+      const L2 = geom();
+      for (let c = 0; c < G.cols; c++) { const a = colAim(L2, c); G.xs[c] += (a - G.xs[c]) * Math.min(1, dt * 7); if (Math.abs(a - G.xs[c]) < 0.05) G.xs[c] = a; }
+      for (let i = G.closing.length - 1; i >= 0; i--) { G.closing[i].t += dt; if (G.closing[i].t > 0.4) G.closing.splice(i, 1); }
+    }
+    // Every friend in his hole: the round is won (chips may be left in columns without a friend).
+    if (state === 'run' && G.chars.every((ch) => ch.st === 'in')) roundClear();
     for (let i = G.parts.length - 1; i >= 0; i--) { const p = G.parts[i]; p.t += dt; if (p.t > p.life) { G.parts.splice(i, 1); continue; } p.vy += (p.conf ? 30 : 420) * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 7; }
     for (let i = G.fx.length - 1; i >= 0; i--) { G.fx[i].t += dt; if (G.fx[i].t > G.fx[i].life) G.fx.splice(i, 1); }
     if (G.say) { G.say.t += dt; if (G.say.t > 2.8) G.say = null; }
@@ -782,6 +809,11 @@ export function create(shell) {
         g.fillText('RIP', x, hy - hh * 0.5);
       }
     }
+    for (const h of G.closing || []) {   // a hole closing behind its friend
+      const k = 1 - h.t / 0.4;
+      g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * 1.12 * k, L.ry * 1.25 * k, 0, 0, 7); g.fill();
+      g.fillStyle = '#3a2614'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * k, L.ry * 1.1 * k, 0, 0, 7); g.fill();
+    }
     // Madness: the red line no stack may pass.
     if (mode === 'folie' && state !== 'title' && G.cols) {
       const ly = L.base - G.maxRows * L.bh - L.ry, near = G.grid.some((col) => col.length >= G.maxRows - 1);
@@ -846,11 +878,12 @@ export function create(shell) {
     // The friends (DOM actors): feet on their stack, falling, or in their hole (what is below the felt hidden).
     const s = L.cw * 0.0125;
     G.chars.forEach((ch, c) => {
-      if (ch.st === 'in' || ch.st === 'gone' || (ch.st === 'spirit' && ch.spT < 0)) return;
+      if (ch.none || ch.st === 'in' || ch.st === 'gone' || ch.st === 'spirit') return;
       const y = ch.st === 'top' ? ch.y - L.ry * 0.3 : ch.y;
       ch.ace.place(colX(L, c), y, s, shell.k);
       ch.ace.clip(ch.st === 'sink' ? 116 - (ch.y - L.base) / s : null);
     });
+    (G.all || []).forEach((ch) => { if (ch.st === 'spirit' && ch.spT >= 0) ch.ace.place(ch.spX, ch.y, s, shell.k); });
     // The powers' pills.
     if (state !== 'title') {
       const PILL_W = pillW(W), ix = PILL_W < 50 ? 9 : 12;
@@ -919,7 +952,7 @@ export function create(shell) {
       shell.stage.removeEventListener('pointermove', onMove);
       shell.stage.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('pointerdown', onDown, true);
-      if (G) G.chars.forEach((ch) => ch.ace.remove());
+      if (G) (G.all || []).forEach((ch) => ch.ace.remove());
     },
   };
 }

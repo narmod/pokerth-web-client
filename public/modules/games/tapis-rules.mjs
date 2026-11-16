@@ -232,7 +232,8 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
  * So the help is never undone (one row under a lone stack used to be eaten by
  * the very pair it made): under a stack, the new chip touching it takes the
  * colour of its bottom chip — the group reaches into the old stack; an empty
- * column copies its neighbour's new chips row by row — pairs side by side.
+ * column (put back to bring the table to its full width) copies its
+ * neighbour's new chips row by row — pairs side by side.
  * Returns the rows added.
  */
 export function refillRows(grid, nColors, rnd = Math.random) {
@@ -259,11 +260,11 @@ export function refillRows(grid, nColors, rnd = Math.random) {
   if (!anyMove(grid) && grid[0] && grid[0].length > 1) grid[0][0].k = grid[0][1].k;   // never stuck
   return n;
 }
-/** A row of chips of any colour pushed in under every column lower than maxH, an empty one too (the felt rising). Returns the chips added. */
+/** A row of chips of any colour pushed in under every column still standing lower than maxH (the felt rising). Returns the chips added. */
 export function riseRow(grid, nColors, maxH, rnd = Math.random) {
   let n = 0;
   grid.forEach((col) => {
-    if (col.length >= maxH) return;
+    if (!col.length || col.length >= maxH) return;
     col.forEach((b) => { b.off -= 1; });
     col.unshift({ k: Math.floor(rnd() * nColors), off: -1 });
     n++;

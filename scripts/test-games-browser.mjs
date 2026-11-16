@@ -160,15 +160,17 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(tps.state === 'run' && tps.cols >= 6 && tps.actors === tps.cols && tps.n >= 2 && tps.gained > 0, label + ': Tapis!: Space starts, a friend on every column, a group taken pays (' + tps.n + ' chips, +' + tps.gained + ', ' + tps.state + ', ' + tps.actors + '/' + tps.cols + ')');
   await shot(pg, label + '-tapis');
-  // web.86 (Monster Madness): an emptied column stays, its friend in his hole; the columns never move
+  // web.89 (Monster Madness, the video at 0:56-1:08): an emptied column goes once its friend is in his hole, the others close up
   const tpc = await pg.evaluate(async () => {
-    const T = window.__pthTapis, G = T.run(), n0 = G.cols, xs = G.grid.map((_, c) => T.screenOf(c, 0).x);
+    const T = window.__pthTapis, G = T.run(), n0 = G.cols - G.grid.filter((col) => !col.length).length;
     const idx = G.grid.map((col, c) => c).filter((c) => G.grid[c].length && G.chars[c].st === 'top').slice(0, 2);
+    const gone = idx.map((c) => G.chars[c]);
     idx.forEach((c) => G.grid[c].splice(0));
     await new Promise((r) => setTimeout(r, 3500));
-    return { n0, n: G.cols, in: idx.every((c) => G.chars[c].st === 'in'), still: G.grid.every((_, c) => Math.abs(T.screenOf(c, 0).x - xs[c]) < 0.5), state: T.state() };
+    const xs = G.grid.map((_, c) => T.screenOf(c, 0).x), step = xs.length > 1 ? xs[1] - xs[0] : 0;
+    return { n0, n: G.cols, in: gone.every((ch) => ch.st === 'in' && !G.chars.includes(ch)), even: xs.every((x, i) => i === 0 || Math.abs(x - xs[i - 1] - step) < 0.5), state: T.state() };
   });
-  ok(tpc.n === tpc.n0 && tpc.in && tpc.still && tpc.state === 'run', label + ': Tapis!: two emptied columns stay, their friends in their holes, nothing moves (' + JSON.stringify(tpc) + ')');
+  ok(tpc.n === tpc.n0 - 2 && tpc.in && tpc.even && tpc.state === 'run', label + ': Tapis!: two emptied columns go once their friends are in their holes, the others close up (' + JSON.stringify(tpc) + ')');
   // web.86: the double touch — a first touch lights the group, a second takes it (a mouse click takes it at once)
   const tpdt = await pg.evaluate(async () => {
     const T = window.__pthTapis, G = T.run();
@@ -197,9 +199,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     T.act(0, 0);                               // a lone chip: nothing, the check runs
     window.__pthTapis.check && window.__pthTapis.check();
     await new Promise((r) => setTimeout(r, 2800));      // (it waits for a friend still going into his hole)
-    return { rows: G.grid.map((col) => col.length), lost: t0 - G.timeLeft };
+    return { rows: G.grid.map((col) => col.length), lost: t0 - G.timeLeft, full: G.cols === G.cols0, none: G.chars.filter((ch) => ch.none).length };
   });
-  ok(tpr.rows.every((n) => n >= 3 && n <= 4 && n === tpr.rows[0]) && tpr.lost < 4, label + ': Tapis!: no pair left, a Joker in hand or not: the dealer tops up a row under every column, no time taken (' + tpr.rows.join(',') + ', ' + tpr.lost.toFixed(1) + ' s)');
+  ok(tpr.full && tpr.none >= 2 && tpr.rows.every((n) => n >= 2 && n <= 4) && tpr.lost < 4, label + ': Tapis!: no pair left, a Joker in hand or not: the table back to its full width, 2-3 rows under every column, no time taken (' + tpr.rows.join(',') + ', ' + tpr.none + ' without a friend, ' + tpr.lost.toFixed(1) + ' s)');
   // web.78: level 10 — a new venue, cards, Joker chips, seals, the Dealer button in a friend's hand; a card freed flies to the hand
   const tpl = await pg.evaluate(async () => {
     const T = window.__pthTapis, G = T.run();

@@ -15,6 +15,17 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Tapis!: the columns close up again, as on the arcade machine** (`web.90`, narmod: the video at 0:56-1:08, looked
+  at again with the moon as a fixed point) — web.86 had read the video wrong (« columns never move »). An emptied
+  column now goes once its friend is in his hole and the others close up in the middle (`G.xs` eases them, the
+  hole closes); « No more moves! » first brings the table back to its full width (`cols0`): columns without a
+  friend (`noFriend`, a grave for a hole) are put back on each side in turn, then `refillRows` brings its 2-3 rows
+  under all of them (the video at 1:05). The round is won when every friend is in his hole, chips may be left in
+  columns without a friend; the board empty too: « Table cleared! » and the bonus. The spirits fly up from the
+  graves of the full table (`G.all`, `slot`). `riseRow` skips an empty column again. Tests: the columns close up,
+  the refill brings the table back to its full width.
+
 ### Changed
 - **Poker Drop looks like Connect Four** (`web.89`, narmod: « more like the real Connect Four's board », his pick
   « B » of the mock-ups) — `pokerdrop.mjs`: `frame()` a blue plastic frame (gradient, drop shadow, a light along the
