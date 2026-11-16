@@ -171,7 +171,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     return { n0, n: G.cols, in: gone.every((ch) => ch.st === 'in' && !G.chars.includes(ch)), even: xs.every((x, i) => i === 0 || Math.abs(x - xs[i - 1] - step) < 0.5), state: T.state() };
   });
   ok(tpc.n === tpc.n0 - 2 && tpc.in && tpc.even && tpc.state === 'run', label + ': Tapis!: two emptied columns go once their friends are in their holes, the others close up (' + JSON.stringify(tpc) + ')');
-  // web.86: the double touch — a first touch lights the group, a second takes it (a mouse click takes it at once)
+  // web.92: one touch takes the group (the double touch of web.86 is gone)
   const tpdt = await pg.evaluate(async () => {
     const T = window.__pthTapis, G = T.run();
     let at = null;
@@ -185,11 +185,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     const n0 = G.grid.reduce((a, col) => a + col.length, 0);
     touch(); await new Promise((r) => setTimeout(r, 150));
     const n1 = G.grid.reduce((a, col) => a + col.length, 0), picked = !!T.picked();
-    touch(); await new Promise((r) => setTimeout(r, 150));
-    const n2 = G.grid.reduce((a, col) => a + col.length, 0);
-    return { at, n0, n1, n2, picked };
+    return { at, n0, n1, picked };
   });
-  ok(tpdt.at && tpdt.n1 === tpdt.n0 && tpdt.picked && tpdt.n2 < tpdt.n1, label + ': Tapis!: double touch — the first touch lights the group, the second takes it (' + JSON.stringify(tpdt) + ')');
+  ok(tpdt.at && tpdt.n1 < tpdt.n0 && !tpdt.picked, label + ': Tapis!: one touch takes the group (' + JSON.stringify(tpdt) + ')');
   // never stuck: no pair left → the dealer tops up with a row of chips
   const tpr = await pg.evaluate(async () => {
     const T = window.__pthTapis, G = T.run();

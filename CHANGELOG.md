@@ -16,6 +16,9 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Tapis!: one touch takes a group** (`web.92`, narmod) — the double touch of `web.86` (Monster Madness'
+  « double touch connected tombstones ») felt clumsy on a phone: a single touch now takes the group, as a mouse
+  click does; the rules' last line is back to « Tap a chip… » in all 83 catalogues.
 - **Tapis!: « Couché ! » instead of « RIP »** (`web.91`, narmod) — when a friend lands in his hole, a little wooden
   sign « Folded! » (`tpFolded`, the poker word: he has folded) pops up by the hole, sways, with a few « z » above it,
   and goes after `SIGN_S` (2.4 s), drawn over the chips and under the friends; the « RIP » headstone is gone.

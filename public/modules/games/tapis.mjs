@@ -37,8 +37,8 @@
 //             each side, over the graves) with 2-3 rows under all of them.
 //             The round is won when every friend is in his hole, chips may be
 //             left; the board empty too: « Table cleared! » and the bonus.
-//   Input     touch: a first touch lights the group and its hand, a second
-//             touch on it takes it (Monster Madness' « double touch », web.86);
+//   Input     one touch takes the group (the double touch of web.86 was
+//             dropped in web.92: a single touch is handier on a phone);
 //             mouse: hover shows it, a click takes it; or the cursor: ← → ↑ ↓ (keys, D-pad, TV remote),
 //             Space / Enter / A takes the lit group
 //   Friends   the cast of cast.mjs (push 2, web.76): the Suits at levels 1-2,
@@ -506,17 +506,7 @@ export function create(shell) {
       if (p >= 0) { power(POWERS[p]); return; }
       const cell = cellAt(L, info.x, info.y);
       if (!cell) { G.picked = null; return; }
-      if (lastPtr !== 'touch' && lastPtr !== 'pen') { G.picked = null; act(cell[0], cell[1]); return; }
-      // Touch (Monster Madness' double touch): the first touch lights the group, a touch on it again takes it.
-      if (G.picked && G.grid[G.picked[0]] && G.grid[G.picked[0]][G.picked[1]]) {
-        const [pc, pr] = G.picked;
-        const lit = G.armed === 'joker' ? colorCells(G.grid, G.grid[pc][pr].k) : G.armed === 'dealer' ? crossCells(G.grid, pc, pr) : groupAt(G.grid, pc, pr);
-        if (lit.length > 1 && lit.some(([x, y]) => x === cell[0] && y === cell[1])) { G.picked = null; act(pc, pr); return; }
-      }
-      const grp = G.armed ? [cell, cell] : groupAt(G.grid, cell[0], cell[1]);
-      if (grp.length < 2) { G.picked = null; act(cell[0], cell[1]); return; }   // a lone chip: it shakes, as before
-      G.picked = cell; sound('notifyTick');
-      if (!G.say || G.say.s !== t('tpTapAgain')) say(t('tpTapAgain'));
+      G.picked = null; act(cell[0], cell[1]);   // one touch or one click takes the group (web.92: no more double touch)
       return;
     }
     const cur = G.cursor;
@@ -545,9 +535,6 @@ export function create(shell) {
     if (hover) G.showCursor = false;
   };
   const onLeave = () => { hover = null; };
-  let lastPtr = 'mouse';
-  const onDown = (e) => { lastPtr = e.pointerType || 'mouse'; };
-  window.addEventListener('pointerdown', onDown, true);
   shell.stage.addEventListener('pointermove', onMove);
   shell.stage.addEventListener('pointerleave', onLeave);
 
@@ -966,7 +953,6 @@ export function create(shell) {
       clearTimeout(timer); clearTimeout(check);
       shell.stage.removeEventListener('pointermove', onMove);
       shell.stage.removeEventListener('pointerleave', onLeave);
-      window.removeEventListener('pointerdown', onDown, true);
       if (G) (G.all || []).forEach((ch) => ch.ace.remove());
     },
   };
