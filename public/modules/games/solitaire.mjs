@@ -21,6 +21,7 @@
 import { evalCards, rankOf, suitOf } from './poker-hand.mjs';
 import { SCORE, N, LINES, dayKey, dealFor } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
+import { drawBackCard, countBadge } from './ui.mjs';
 import { titleScreen } from './title.mjs';
 import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, barsHtml } from './end.mjs';
@@ -44,6 +45,8 @@ function drawOf(cards) {
   return '';
 }
 
+/** The pile's thickness: a card back drawn per 4 cards under the one to place (24 → 6 … 1 → 1, none at 0). */
+export const pileLayers = (under) => Math.max(0, Math.min(6, Math.ceil(under / 4)));
 export function create(shell) {
   const { t, esc, sound } = shell;
   const img = imageCache();
@@ -317,11 +320,13 @@ export function create(shell) {
         g.save(); g.globalAlpha = 0.35 + 0.15 * Math.sin(time * 5); g.translate(c.x, c.y); drawFace(g, img, G.cards[G.i], CW, CH); g.restore();
       }
     }
-    // The card to place, big, and the pile.
+    // The card to place, big, on the pile (web.114, narmod): the player's card backs, thinner as it empties
+    // (a layer per 4 cards under it), and the cards left to place on a badge, as Higher or Lower's shoe.
     const px = L.panelX, py = L.top + 40;
     if (G.i < 25 && !onTitle()) {
-      for (let k = Math.min(3, 24 - G.i); k > 0; k--) { rr(g, px - 27 + k * 1.5, py - 38 - k * 1.5, 54, 76, 5); g.fillStyle = '#b3261e'; g.fill(); g.strokeStyle = '#141414'; g.lineWidth = 1; g.stroke(); }
+      for (let k = pileLayers(24 - G.i); k > 0; k--) drawBackCard(g, img, px + k * 1.5, py - k * 1.5, 54, 76);
       if (!G.fly) { g.save(); g.translate(px, py); drawFace(g, img, G.cards[G.i], 54, 76); g.restore(); }
+      countBadge(g, px + 27 - 4, py + 38 - 4, 25 - G.i);
     }
     if (G.fly) {
       const f = G.fly, k = 1 - Math.pow(1 - Math.min(1, f.t), 3);

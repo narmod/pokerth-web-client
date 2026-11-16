@@ -41,7 +41,7 @@
 import { rankOf, evalCards, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
-import { felt, drawBackCard, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
+import { felt, drawBackCard, countBadge, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { titleScreen } from './title.mjs';
 import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
@@ -567,12 +567,7 @@ export function create(shell) {
     const x = l.shoeX, y = l.shoeY, w = l.sw, h = l.sh;
     for (let k = 4; k >= 1; k--) drawBackCard(g, img, x + k * 1.5, y - k * 1.5, w, h);
     drawBackCard(g, img, x, y, w, h);
-    const bx = x + w / 2 - 4, by = y + h / 2 - 4, txt = String(G.shoe.length);
-    g.save(); g.font = '700 10px Inconsolata, monospace';
-    const bw = Math.max(20, g.measureText(txt).width + 10);
-    rr(g, bx - bw / 2, by - 9, bw, 18, 9); g.fillStyle = 'rgba(11,18,16,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.6)'; g.lineWidth = 1; g.stroke();
-    g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, bx, by + 0.5);
-    g.restore();
+    countBadge(g, x + w / 2 - 4, y + h / 2 - 4, G.shoe.length);
   }
   function draw(g) {
     const l = L(), W = l.W;

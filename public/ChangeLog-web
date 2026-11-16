@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.113 (current series):
+2026-11-16 version 2.1.11-web.114 (current series):
+- improvement: Poker Solitaire — the pile shows how many cards are left to place on a small badge, as in Higher or Lower, and is drawn with your card backs, thinner as it empties
+
+2026-11-16 version 2.1.11-web.113:
 - new: Poker Run — a speedometer in the top band: your speed in km/h with a bar, and next to it the nitro left, both orange while the nitro burns; the old nitro meter at the bottom of the road is gone
 
 2026-11-16 version 2.1.11-web.112:

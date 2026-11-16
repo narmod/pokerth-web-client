@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Solitaire: the cards left on the pile** (`web.114`, narmod: mock-up « A ») — the badge of Higher or
+  Lower's shoe, now `ui.mjs` `countBadge()` (used by both), at the pile's bottom-right corner: the cards left to place,
+  the one showing included (25 − placed). The pile is drawn with the player's card backs (`drawBackCard`) instead of
+  plain red rectangles, and thins out as it empties: `pileLayers(under)` = a back per 4 cards under the card shown, 6 at
+  most.
 - **Poker Run: speed and nitro in the band** (`web.113`, narmod: layout « D » of the mock-ups) — two more
   columns after Chips · Time · Level: `KM/H` (`kmhOf`: 240 at top speed, ≈ 350 with the nitro; its bar full at
   `KMH_DIAL` = 360) and `NITRO` (the % left, an orange bar), both orange while it burns; written only when a value

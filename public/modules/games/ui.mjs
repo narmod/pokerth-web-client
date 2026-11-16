@@ -19,6 +19,19 @@ export function felt(g, W, H, light) {
   g.fillStyle = bg; g.fillRect(0, 0, W, H);
 }
 
+/**
+ * The cards left on a pile: a small dark badge, gold figures, centred on (x, y) — near a pile's bottom-right
+ * corner (Higher or Lower's shoe, Poker Solitaire's pile, web.114).
+ */
+export function countBadge(g, x, y, n) {
+  const txt = String(n);
+  g.save(); g.font = '700 10px Inconsolata, monospace';
+  const bw = Math.max(20, g.measureText(txt).width + 10);
+  rr(g, x - bw / 2, y - 9, bw, 18, 9); g.fillStyle = 'rgba(11,18,16,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.6)'; g.lineWidth = 1; g.stroke();
+  g.fillStyle = '#f5d77a'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, x, y + 0.5);
+  g.restore();
+}
+
 /** A card back centred on (x, y): the player's back image, else the red pattern. */
 export function drawBackCard(g, img, x, y, w, h) {
   const im = img(backUrl());
