@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.90 (current series):
+2026-11-16 version 2.1.11-web.91 (current series):
+- improvement: Tapis! — when a character falls into his hole, a little « Folded! » sign pops up next to it, as at the poker table
+
+2026-11-16 version 2.1.11-web.90:
 - bugfix: Tapis! — as on the arcade machine, an emptied stack goes once its character is in his hole and the others close up in the middle; « No more moves! » brings the table back to its full width, with new stacks on each side
 
 2026-11-16 version 2.1.11-web.89:

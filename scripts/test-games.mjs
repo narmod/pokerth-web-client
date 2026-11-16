@@ -86,7 +86,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'arAgain', 'arPause', 'arDistance', 'arLevel', 'arBlinds', 'arQuit', 'ach_runner', 'ach_runner_d',
   'hcName', 'hcHint', 'hcFloors', 'hcScore', 'hcPerfect', 'hcSteady', 'hcCollapse', 'hcAgain', 'hcModeFreeD', 'hcModeDailyD', 'hcModeZen', 'hcModeZenD', 'hcGlue', 'hcWind', 'hcBump', 'hcGoalMet', 'hcGold', 'hcHold', 'gmPick',
   'tpName', 'tpHint', 'tpRules', 'tpClassic', 'tpClassicD', 'tpAlone', 'tpWon', 'tpJoker', 'tpDealer', 'tpShuffle', 'tpArmed', 'tpRecave', 'tpClear', 'tpClean', 'tpBlinds', 'tpIn', 'gmKindEgg',
-  'tpNewCards', 'tpNewWild', 'tpNewDealer', 'tpNewSeal', 'tpNewRise', 'tpFolie', 'tpFolieD', 'tpZenD', 'tpOver', 'tpDuelD', 'ach_tapis', 'ach_tapis_d', 'tpAllIn', 'tpTapAgain', 'tpNoMoves',
+  'tpNewCards', 'tpNewWild', 'tpNewDealer', 'tpNewSeal', 'tpNewRise', 'tpFolie', 'tpFolieD', 'tpZenD', 'tpOver', 'tpDuelD', 'ach_tapis', 'ach_tapis_d', 'tpAllIn', 'tpTapAgain', 'tpNoMoves', 'tpFolded',
   'psName', 'psHint', 'psDaily', 'psFree', 'psCards', 'psFlushDraw', 'psStraightDraw', 'psBestLine', 'psAgain', 'ach_solitaire', 'ach_solitaire_d',
   'gmPlay', 'gmRules', 'gmIntro', 'arRules', 'hcRules', 'psRules',
   'vpName', 'vpHint', 'vpDeal', 'vpDraw', 'vpHeld', 'vpCredits', 'vpHands', 'vpJacks', 'vpDouble', 'vpCollect', 'vpPick', 'vpRules', 'vpVarJacks', 'vpVarBonus', 'vpVarDeuces', 'vpVarJoker', 'vpVarJacksD', 'vpVarBonusD', 'vpVarDeucesD', 'vpVarJokerD', 'vpKings', 'vpFiveKind', 'vpWildRoyal', 'vpFourDeuces', 'vpFourAces', 'vpFour2to4', 'vpFour5toK', 'vpCashOut', 'ach_videopoker', 'ach_videopoker_d',

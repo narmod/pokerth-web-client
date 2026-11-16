@@ -102,7 +102,8 @@ export const MODES = [
 export const ZEN_ROUNDS = 5;
 export const DUEL_ROUNDS = 3, TURN_S = 10;
 export const TROPHY_LV = 5;
-export const SPIRIT_PAY = 100;            // × level: each friend's spirit at the round's end (Monster Madness: 1 000 a monster)              // « Table rase »: from this level
+export const SPIRIT_PAY = 100;
+const SIGN_S = 2.4;                        // « Couché ! » stays this long by his hole            // × level: each friend's spirit at the round's end (Monster Madness: 1 000 a monster)              // « Table rase »: from this level
 const HANDOVER_S = 0.9;                     // a move made: the turn passes once its chips and cards have landed
 const P_COLOR = ['#e8b84a', '#7fc8ff'];     // player 1 gold, player 2 blue (as in Poker Drop)
 /** Madness: seconds between two rising rows at level lv. */
@@ -173,7 +174,7 @@ export function create(shell) {
     (G.all || []).forEach((ch) => ch.ace.remove());
     G.cols0 = G.cols = colsFor(shell.W);
     const L = geom();
-    G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c)); G.closing = []; G.picked = null;
+    G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c)); G.closing = []; G.signs = []; G.picked = null;
     G.maxRows = rowsFor(L);
     if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
     // Madness starts lower (room for the rows to come); Zen has no seals.
@@ -649,6 +650,7 @@ export function create(shell) {
         ch.vy += 1300 * dt; ch.y += ch.vy * dt;
         if (ch.y >= L.base) {
           ch.y = L.base; ch.st = 'sink'; ch.sink = 0; setPose(ch, 'idle');
+          G.signs.push({ x: colX(L, c), t: 0 });    // « Couché ! » (folded) — a little sign planted by his hole (narmod, instead of « RIP »)
           sound('notifyCard');
           if (state === 'run') {
             const pay = inPay(G.lv) * (ch.double ? 2 : 1);
@@ -698,6 +700,7 @@ export function create(shell) {
       const L2 = geom();
       for (let c = 0; c < G.cols; c++) { const a = colAim(L2, c); G.xs[c] += (a - G.xs[c]) * Math.min(1, dt * 7); if (Math.abs(a - G.xs[c]) < 0.05) G.xs[c] = a; }
       for (let i = G.closing.length - 1; i >= 0; i--) { G.closing[i].t += dt; if (G.closing[i].t > 0.4) G.closing.splice(i, 1); }
+      for (let i = G.signs.length - 1; i >= 0; i--) { G.signs[i].t += dt; if (G.signs[i].t > SIGN_S) G.signs.splice(i, 1); }
     }
     // Every friend in his hole: the round is won (chips may be left in columns without a friend).
     if (state === 'run' && G.chars.every((ch) => ch.st === 'in')) roundClear();
@@ -800,14 +803,6 @@ export function create(shell) {
       g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.12, L.ry * 1.25, 0, 0, 7); g.fill();
       const hg = g.createRadialGradient(x, L.base + L.ry * 0.3, 1, x, L.base, L.rx); hg.addColorStop(0, buried ? '#3a2614' : '#000'); hg.addColorStop(1, buried ? '#5a3a1c' : '#1a1208');
       g.fillStyle = hg; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.02, L.ry * 1.1, 0, 0, 7); g.fill();
-      if (buried && !G.grid[c].length) {   // his little grave: a mound and a headstone in the colour of his suit
-        g.fillStyle = '#6b4824'; g.beginPath(); g.ellipse(x, L.base - L.ry * 0.2, L.rx * 0.8, L.ry * 0.75, 0, Math.PI, 0); g.fill();
-        const hw = L.rx * 0.5, hh = L.bh * 1.1, hy = L.base - L.ry * 0.3;
-        g.fillStyle = '#8f98a3'; g.beginPath(); g.moveTo(x - hw / 2, hy); g.lineTo(x - hw / 2, hy - hh + hw / 2); g.arc(x, hy - hh + hw / 2, hw / 2, Math.PI, 0); g.lineTo(x + hw / 2, hy); g.closePath(); g.fill();
-        g.strokeStyle = 'rgba(0,0,0,.4)'; g.lineWidth = 0.8; g.stroke();
-        g.fillStyle = '#3d444c'; g.font = '800 ' + Math.max(4, hw * 0.42).toFixed(1) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-        g.fillText('RIP', x, hy - hh * 0.5);
-      }
     }
     for (const h of G.closing || []) {   // a hole closing behind its friend
       const k = 1 - h.t / 0.4;
@@ -856,6 +851,26 @@ export function create(shell) {
       rr(g, x - tw / 2, yb - 9, tw, 18, 9); g.fillStyle = 'rgba(8,14,22,.85)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.7)'; g.lineWidth = 1; g.stroke();
       g.fillStyle = '#f5d77a'; g.fillText(preview.s, x, yb, tw - 10);
     }
+    // « Couché ! »: a wooden sign pops up by the hole of a friend who has just gone in, sways, a few « z » above it, then goes.
+    for (const sg of G.signs || []) {
+      const k = sg.t, up = Math.min(1, k / 0.25), out = k > SIGN_S - 0.4 ? (SIGN_S - k) / 0.4 : 1, a = Math.max(0, Math.min(1, out));
+      const label = t('tpFolded');
+      g.save(); g.globalAlpha = a;
+      g.font = '800 ' + Math.max(6, L.cw * 0.2).toFixed(1) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      const tw = g.measureText(label).width, pw = tw + L.cw * 0.22, ph = L.cw * 0.34, px = Math.max(pw / 2 + 2, Math.min(W - pw / 2 - 2, sg.x + L.cw * 0.42));
+      const postH = L.cw * 1.15 * (0.4 + 0.6 * up), py = L.base - postH;
+      g.translate(px, L.base); g.rotate((shell.reduced ? 0 : Math.sin(k * 5) * 0.06) * (1 - Math.min(1, k / 1.6)));
+      g.fillStyle = '#6b4824'; g.fillRect(-L.cw * 0.035, -postH, L.cw * 0.07, postH);
+      g.translate(0, -postH);
+      rr(g, -pw / 2, -ph / 2, pw, ph, ph * 0.25); g.fillStyle = '#c99a5b'; g.fill(); g.lineWidth = 1.2; g.strokeStyle = '#5a3a1c'; g.stroke();
+      g.fillStyle = '#3a2614'; g.fillText(label, 0, 0.5);
+      if (k > 0.5 && !shell.reduced) {      // asleep: z z
+        g.fillStyle = 'rgba(251,247,238,' + (0.8 * a).toFixed(2) + ')'; g.font = '800 ' + Math.max(5, L.cw * 0.16).toFixed(1) + 'px Inter, system-ui, sans-serif';
+        for (let j = 0; j < 2; j++) { const z = ((k - 0.5) * 0.7 + j * 0.5) % 1; g.fillText('z', pw * 0.3 + z * L.cw * 0.25, -ph * 0.6 - z * L.cw * 0.5); }
+      }
+      g.restore();
+    }
+    g.globalAlpha = 1;
     // The hand of 5 at the top (from level 2), and the cards flying to it.
     if (state !== 'title' && (G.lv >= 2 || G.hand.length || G.handFull || G.flying.length)) {
       const shown = G.handFull ? G.handFull.cards : G.hand;

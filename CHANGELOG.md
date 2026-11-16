@@ -15,6 +15,12 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Tapis!: « Couché ! » instead of « RIP »** (`web.91`, narmod) — when a friend lands in his hole, a little wooden
+  sign « Folded! » (`tpFolded`, the poker word: he has folded) pops up by the hole, sways, with a few « z » above it,
+  and goes after `SIGN_S` (2.4 s), drawn over the chips and under the friends; the « RIP » headstone is gone.
+  `tpFolded` in the 83 catalogues.
+
 ### Fixed
 - **Tapis!: the columns close up again, as on the arcade machine** (`web.90`, narmod: the video at 0:56-1:08, looked
   at again with the moon as a fixed point) — web.86 had read the video wrong (« columns never move »). An emptied
