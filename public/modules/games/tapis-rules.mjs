@@ -13,8 +13,9 @@
 //             below — rows are counted from the felt) leave together; a lone
 //             chip cannot.
 //   Hand      a group is named after a poker hand by its size (handOf) and
-//             pays the sum of its chips' values × that hand's multiplier,
-//             its 5th to 8th chips counting ×2, from its 9th ×5 (tierOf, web.88).
+//             pays the sum of its chips' values × that hand's multiplier
+//             (handMult: ×1.25 a pair … ×3.25 a royal, web.93),
+//             its 5th to 8th chips counting ×2, from its 9th ×3 (tierOf).
 //   Recave    no group left: the dealer pushes a row in from the felt, made
 //             of pairs (recaveRow) — the player is never stuck.
 //   Levels    (push 3, web.78, levelKit) cards in the stacks from level 2
@@ -24,8 +25,6 @@
 //             no group until a group next to it breaks the seal); rows rising
 //             from the felt from 13 (riseRow). A venue every 4 levels (venueAt).
 // ═══════════════════════════════════════════════════════════════════
-
-import { MULT } from './poker-hand.mjs';
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value. */
 export const CHIPS = [
@@ -65,15 +64,18 @@ export const dayOfLevel = (lv) => [0.5, 0.71, 0.8, 0.93][(Math.max(1, lv) - 1) %
 
 /** Colours on the board at blind level `lv`: 3, a 4th from level 5, a 5th from 13. */
 export const colorsAt = (lv) => (lv >= 13 ? 5 : lv >= 5 ? 4 : 3);
-/** Seconds a chip is worth on the clock: 1.1 at first, down to 0.8. */
-export const perChipAt = (lv) => Math.max(0.8, 1.1 - 0.02 * (Math.max(1, lv) - 1));
-/** The round's clock for `total` chips at level `lv` (45 s at least). */
-export const timeFor = (total, lv) => Math.max(45, Math.round(total * perChipAt(lv)));
-/** A character in its hole pays this; the round's leftover seconds pay TIME_PAY each. */
-export const inPay = (lv) => 250 * Math.max(1, lv);
+/** Seconds a chip is worth on the clock: 0.9 at first, down to 0.7 (web.93, narmod: « a bit harder »; was 1.1 → 0.8). */
+export const perChipAt = (lv) => Math.max(0.7, 0.9 - 0.015 * (Math.max(1, lv) - 1));
+/**
+ * The round's clock for `total` chips at level `lv`: 35 s at least, 12 % more
+ * for each colour past 3 (more colours, more moves: level 13 is no wall).
+ */
+export const timeFor = (total, lv) => Math.max(35, Math.round(total * perChipAt(lv) * (1 + 0.12 * (colorsAt(lv) - 3))));
+/** A character in its hole pays this (web.93: 100 × level, was 250); the round's leftover seconds pay TIME_PAY each. */
+export const inPay = (lv) => 100 * Math.max(1, lv);
 export const TIME_PAY = 10;
 /** A round left without a single chip (the « Table rase »). */
-export const cleanPay = (lv) => 1000 * Math.max(1, lv);
+export const cleanPay = (lv) => 500 * Math.max(1, lv);
 /** Seconds a recave costs. */
 export const RECAVE_S = 5;
 /** The blinds shown for a level (as in the other games: 10/20, 20/40…). */
@@ -92,18 +94,24 @@ export function handOf(n) {
   if (n >= 10) return 9;
   return [1, 3, 4, 5, 6, 7, 8, 8][n - 2];
 }
+/**
+ * A group's hand multiplier (web.93, narmod: « the score gets very high fast »):
+ * ×1.25 a pair up to ×3.25 a royal — the poker multipliers (×2 … ×50) on top
+ * of the tiers made one big group worth more than a whole round.
+ */
+export const handMult = (cat) => (cat < 0 ? 0 : 1 + cat / 4);
 /** What a group pays: the sum of its values × its hand's multiplier. */
 export function groupPay(grid, cells) {
   cells = cells.filter(([c, r]) => grid[c][r].k >= 0);
   const cat = handOf(cells.length);
   if (cat < 0) return { cat, pts: 0, each: [] };
-  // each chip: its value × its rank's tier (the 5th to 8th count ×2, from the 9th ×5 — Monster Madness'
-  // 100 / 250 / 500 a block in a big group, web.88) × the group's hand
-  const each = cells.map(([c, r], i) => CHIPS[grid[c][r].k].v * tierOf(i) * MULT[cat]);
+  // each chip: its value × its rank's tier (the 5th to 8th count ×2, from the 9th ×3 — Monster Madness'
+  // 100 / 250 / 500 a block in a big group, web.88; ×5 until web.93) × the group's hand
+  const each = cells.map(([c, r], i) => Math.round(CHIPS[grid[c][r].k].v * tierOf(i) * handMult(cat)));
   return { cat, pts: each.reduce((a, b) => a + b, 0), each };
 }
-/** A chip's tier by its rank in its group (0 the touched one): ×1 up to the 4th, ×2 to the 8th, ×5 beyond. */
-export const tierOf = (i) => (i < 4 ? 1 : i < 8 ? 2 : 5);
+/** A chip's tier by its rank in its group (0 the touched one): ×1 up to the 4th, ×2 to the 8th, ×3 beyond. */
+export const tierOf = (i) => (i < 4 ? 1 : i < 8 ? 2 : 3);
 
 const NB = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 /** Can this cell join a group (a chip, not sealed)? */
@@ -285,8 +293,9 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
     for (let r = 0; r < h; r++) {
       let k = Math.floor(rnd() * n);
       const x = rnd();
-      if (r > 0 && x < 0.26) k = col[r - 1].k;
-      else if (c > 0 && grid[c - 1][r] && x < 0.46) k = grid[c - 1][r].k;
+      // a little clustering so groups exist — less than until web.93 (0.26 / 0.46): fewer giant groups
+      if (r > 0 && x < 0.2) k = col[r - 1].k;
+      else if (c > 0 && grid[c - 1][r] && x < 0.38) k = grid[c - 1][r].k;
       col.push({ k, off: 0 });
     }
     grid.push(col);

@@ -408,6 +408,13 @@ console.log('Ace Runner: the climb, the venues, the score');
   ok(d1 && d2 === false && mem.get('pth_game_best_ace-dash') === '321' && mem.get('pth_game_played_ace-dash') === '1', 'old Ace Dash record cleared once, the new one kept, the game marked as played');
   mem.delete('pth_game_best_ace-dash');
   ok(reg.playedGames(new Set()).has('ace-dash'), 'playedGames(): Ace Dash still counts as played after the reset');
+  // Tapis! (web.93): its records restart once (Classic, Madness / Zen, Daily), the game stays played.
+  mem.delete(reg.TP_SCORE_KEY); mem.set('pth_game_best_tapis', '900000'); mem.set('pth_tp_best', '{"zen":5}'); mem.set('pth_tp_daily', '{"s":7}');
+  const tp1 = reg.resetTapisRecord();
+  mem.set('pth_game_best_tapis', '4321');
+  const tp2 = reg.resetTapisRecord();
+  ok(tp1 && tp2 === false && mem.get('pth_game_best_tapis') === '4321' && !mem.has('pth_tp_best') && !mem.has('pth_tp_daily') && mem.get('pth_game_played_tapis') === '1',
+    'old Tapis! records cleared once (all modes), the new one kept, the game marked as played');
   delete globalThis.localStorage;
 }
 
@@ -441,8 +448,11 @@ console.log('Ace Dash: the long run, the score, the modes');
     'Tapis!: a group is the chips of one colour touching across and up (3 reds), a lone chip is alone');
   ok(TP.handOf(1) === -1 && TP.handOf(2) === 1 && TP.handOf(3) === 3 && TP.handOf(4) === 4 && TP.handOf(5) === 5 && TP.handOf(6) === 6 && TP.handOf(7) === 7 && TP.handOf(8) === 8 && TP.handOf(9) === 8 && TP.handOf(10) === 9 && TP.handOf(30) === 9,
     'Tapis!: a group is named by its size — pair, trips, straight, flush, full house, quads, straight flush (8), royal (10)');
-  ok(TP.groupPay(g1, TP.groupAt(g1, 0, 0)).pts === 15 * 4 && TP.groupPay(mk([[3, 3]]), [[0, 0], [0, 1]]).pts === 200 * 2,
-    'Tapis!: a group pays its chips\' values × its hand (3 × 5 × brelan 4; a pair of 100s: 400)');
+  ok(TP.groupPay(g1, TP.groupAt(g1, 0, 0)).pts === 27 && TP.groupPay(mk([[3, 3]]), [[0, 0], [0, 1]]).pts === 250,
+    'Tapis!: a group pays its chips\' values × its hand (3 reds × 5 × trips 1.75, rounded a chip: 3 × 9; a pair of 100s × 1.25: 250)');
+  ok(TP.handMult(1) === 1.25 && TP.handMult(9) === 3.25 && TP.tierOf(3) === 1 && TP.tierOf(4) === 2 && TP.tierOf(8) === 3
+    && TP.groupPay(mk([Array(12).fill(3)]), TP.groupAt(mk([Array(12).fill(3)]), 0, 0)).pts === (4 * 100 + 4 * 200 + 4 * 300) * 3.25,
+    'Tapis!: gentler since web.93 — ×1.25 a pair to ×3.25 a royal, chips ×1 / ×2 / ×3 (12 blacks: 7 800, was 160 000)');
   const g2 = mk([[0, 0, 1, 2], [2]]);
   TP.removeCells(g2, [[0, 0], [0, 1]]);
   ok(g2[0].length === 2 && g2[0][0].k === 1 && g2[0][0].off === 2 && g2[0][1].off === 2 && g2[1][0].off === 0, 'Tapis!: the chips above a group fall the rows it leaves');
@@ -451,8 +461,9 @@ console.log('Ace Dash: the long run, the score, the modes');
   TP.recaveRow(g3, 3, () => 0.5); TP.recaveRow(g3b, 3, () => 0.5);
   ok(g3[0].length === 3 && g3[0][0].k === g3[1][0].k && g3[2].length === 1 && g3[2][0].k === g3[3][0].k && g3[0][1].off === -1 && TP.anyMove(g3) && g3b[2][0].k === 2,
     'Tapis!: the recave pushes in a row of pairs under every column, an empty one too (neighbours share a colour, a lone column its own)');
-  ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 45 && TP.timeFor(100, 1) === 110 && TP.timeFor(100, 30) === 80,
-    'Tapis!: 3 colours, a 4th at level 5, a 5th at 13; 1.1 s a chip down to 0.8 s, 45 s at least');
+  ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 35 && TP.timeFor(100, 1) === 90 && TP.timeFor(100, 5) === 94 && TP.timeFor(100, 30) === 87,
+    'Tapis!: 3 colours, a 4th at level 5, a 5th at 13; 0.9 s a chip down to 0.7 s, +12 % a colour past 3, 35 s at least');
+  ok(TP.inPay(3) === 300 && TP.cleanPay(3) === 1500, 'Tapis!: a character in his hole pays 100 × level, a cleared table 500 × level');
   const R = (await import('../public/modules/games/deal.mjs')).rng('tapis-test'), d = TP.dealRound(1, 6, 12, R);
   ok(d.length === 6 && d.every((c) => c.length >= 2 && c.length <= 13) && TP.anyMove(d) && d.every((c) => c.every((b) => b.k < 3)), 'Tapis!: a round deals 6 columns of 3 colours with a move to play');
   ok(TP.crossCells(mk([[0, 1, 2], [1, 1], [2]]), 0, 1).length === 4 && TP.colorCells(mk([[0, 1], [1, 0]]), 1).length === 2, 'Tapis!: the Dealer takes a row and a column, the Joker a colour');
@@ -461,7 +472,6 @@ console.log('Ace Dash: the long run, the score, the modes');
     'Tapis!: the Suits at levels 1-2, the Figures at 3-4, two by two, all mixed from 21');
   {
     const C = (k, o) => Object.assign({ k, off: 0 }, o || {}), W = TP.WILD, K = TP.CARD;
-    const MULT_ = (await import('../public/modules/games/poker-hand.mjs')).MULT;
     const kit = TP.levelKit;
     ok(kit(1).cards === 0 && kit(2).cards === 2 && kit(2).wild === 0 && kit(3).wild === 1 && !kit(4).dealer && kit(5).dealer && kit(8).seals === 0 && kit(9).seals === 2 && kit(12).rise === 0 && kit(13).rise === 14 && kit(40).rise === 8,
       'Tapis!: what each level brings (cards 2, Joker chip 3, Dealer 5, seals 9, rising rows 13)');
@@ -470,10 +480,10 @@ console.log('Ace Dash: the long run, the score, the modes');
     const grp = TP.groupAt(g1, 0, 0);
     ok(grp.length === 4 && TP.anyMove(g1), 'Tapis!: a Joker chip goes with the colour around it (0,0 + 2 Joker chips + 0,2: ' + grp.length + ')');
     ok(TP.groupAt(g1, 2, 1).length === 1 && TP.groupAt(g1, 2, 0).length === 1, 'Tapis!: a card or a sealed chip never joins a group');
-    ok(TP.groupPay(g1, grp).pts === (5 + 50 + 50 + 5) * MULT_[TP.handOf(4)], 'Tapis!: a Joker chip pays 50 in its group');
+    ok(TP.groupPay(g1, grp).pts === (5 + 50 + 50 + 5) * TP.handMult(TP.handOf(4)), 'Tapis!: a Joker chip pays 50 in its group');
     const g9 = [Array.from({ length: 9 }, () => C(0))], p9 = TP.groupPay(g9, TP.groupAt(g9, 0, 0));
-    ok(p9.pts === (4 * 5 + 4 * 5 * 2 + 5 * 5) * MULT_[TP.handOf(9)] && p9.each.length === 9 && p9.each[8] === 25 * MULT_[TP.handOf(9)] && TP.tierOf(3) === 1 && TP.tierOf(4) === 2 && TP.tierOf(8) === 5,
-      'Tapis!: in a big group the 5th to 8th chips count ×2, from the 9th ×5 (Monster Madness\' 100 / 250 / 500)');
+    ok(p9.pts === (4 * 5 + 4 * 5 * 2 + 5 * 3) * TP.handMult(TP.handOf(9)) && p9.each.length === 9 && p9.each[8] === 15 * TP.handMult(TP.handOf(9)) && TP.tierOf(3) === 1 && TP.tierOf(4) === 2 && TP.tierOf(8) === 3,
+      'Tapis!: in a big group the 5th to 8th chips count ×2, from the 9th ×3 (Monster Madness\' 100 / 250 / 500; ×5 until web.93)');
     const fr = TP.freedBy(g1, TP.groupAt(g1, 1, 0));
     ok(fr.cards.length === 1 && fr.seals.length === 1 && TP.freedBy(g1, [[0, 0]]).cards.length === 0, 'Tapis!: a group frees the card and breaks the seal next to it');
     const g2 = [[C(K, { card: 3 })]];

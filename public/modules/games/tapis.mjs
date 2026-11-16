@@ -26,7 +26,7 @@
 //             stuck; « No more moves! » in big, no time taken (web.86)
 //   Drops     (web.88) his stack comes down: he drops after it a moment
 //             later, the Joker floating down like the arcade's ghost; a group
-//             pays more for its 5th to 8th chips (×2) and from its 9th (×5),
+//             pays more for its 5th to 8th chips (×2) and from its 9th (×3),
 //             each chip's points written on it as it goes (tierOf)
 //   Spirits   round won: each friend's spirit flies up out of his hole,
 //             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
@@ -919,7 +919,7 @@ export function create(shell) {
       const fw = g.measureText(f.s).width, fit = Math.min(1, (W - 8) / Math.max(1, fw));
       g.save(); g.translate(Math.max(fw * fit / 2 + 4, Math.min(W - fw * fit / 2 - 4, f.x)), f.y - p * 26); g.scale(sc * fit, sc * fit);
       g.lineWidth = 3.5; g.strokeStyle = '#141414'; g.strokeText(f.s, 0, 0);
-      g.fillStyle = f.green ? '#7ee2a0' : f.big || f.tier >= 5 ? '#f5d77a' : f.tier === 2 ? '#ffd9a0' : '#fbf7ee'; g.fillText(f.s, 0, 0);
+      g.fillStyle = f.green ? '#7ee2a0' : f.big || f.tier >= 3 ? '#f5d77a' : f.tier === 2 ? '#ffd9a0' : '#fbf7ee'; g.fillText(f.s, 0, 0);
       g.restore();
     }
     g.globalAlpha = 1;

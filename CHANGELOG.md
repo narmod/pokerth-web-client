@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Tapis!: scores toned down, a little harder** (`web.93`, narmod: « the score gets very high fast; 10 levels a bit
+  easy ») — the poker multipliers (×2 … ×50) stacked on the chip tiers (×1 / ×2 / ×5) made one big group worth more
+  than a round (≈ 1.1 M after 10 levels in a simulation, 85 % from groups). Now `handMult` ×1.25 (pair) … ×3.25
+  (royal), tiers ×1 / ×2 / ×3, `inPay` 100 × level (was 250), `cleanPay` 500 × level (was 1 000): ≈ 200 k after 10
+  levels. Harder: less colour clustering in `dealRound` (0.20 / 0.38, was 0.26 / 0.46: biggest group ≈ 13 chips
+  instead of 16), clock 0.9 s a chip down to 0.7 (was 1.1 → 0.8), 35 s at least (was 45), +12 % a colour past 3 so
+  level 13 is no wall: ≈ 20 s to spare a round instead of ≈ 33. Records restart once per device
+  (`resetTapisRecord`, `pth_tp_score2`); the rules' « ×5 » is « ×3 » in all 83 catalogues.
 - **Tapis!: one touch takes a group** (`web.92`, narmod) — the double touch of `web.86` (Monster Madness'
   « double touch connected tombstones ») felt clumsy on a phone: a single touch now takes the group, as a mouse
   click does; the rules' last line is back to « Tap a chip… » in all 83 catalogues.

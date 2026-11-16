@@ -53,6 +53,21 @@ export function resetDashRecord() {
   } catch (e) { return false; }
 }
 resetDashRecord();
+// Tapis!'s score changed (web.93, narmod: « the score gets very high fast »:
+// gentler hand multipliers, ×3 instead of ×5 from a group's 9th chip, less for a
+// character in his hole): its records restart (Classic, Madness, Zen, Daily),
+// once per device; a device that had played it keeps it as played.
+export const TP_SCORE_KEY = 'pth_tp_score2';
+export function resetTapisRecord() {
+  try {
+    if (localStorage.getItem(TP_SCORE_KEY)) return false;
+    if ((parseInt(localStorage.getItem('pth_game_best_tapis') || '0', 10) || 0) > 0) localStorage.setItem('pth_game_played_tapis', '1');
+    ['pth_game_best_tapis', 'pth_tp_best', 'pth_tp_daily'].forEach((k) => localStorage.removeItem(k));
+    localStorage.setItem(TP_SCORE_KEY, '1');
+    return true;
+  } catch (e) { return false; }
+}
+resetTapisRecord();
 
 export const HOME = 'arcade';
 // The « Mini-games » mode (design note claude/CONCEPTION_MODE_ARCADE.md,

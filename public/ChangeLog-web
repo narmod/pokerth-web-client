@@ -1,4 +1,8 @@
-2026-11-16 version 2.1.11-web.92 (current series):
+2026-11-16 version 2.1.11-web.93 (current series):
+- improvement: Tapis! — fairer scores: a big group no longer pays more than a whole round (the hand multiplies a group by ×1.25 to ×3.25, chips count ×3 from the 9th instead of ×5); a character in his hole pays 100 × the level, a cleared table 500 × the level. Tapis! records start again from zero
+- improvement: Tapis! — a little harder: fewer giant groups of one colour and a tighter clock (0.9 s a chip, a little more with each new colour)
+
+2026-11-16 version 2.1.11-web.92:
 - improvement: Tapis! — on a phone or tablet, one touch now takes a group (no more double touch)
 
 2026-11-16 version 2.1.11-web.91:
