@@ -427,6 +427,9 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(tpd.t0 === 0 && tpd.s1 > 0 && tpd.t1 === 1 && tpd.s2now === 0 && tpd.p1 >= tpd.s1 && /1/.test(tpd.hud) && tpd.t2 === 0 && /1|2|!/.test(tpd.end),
     label + ': Tapis!: Duel — a move passes the turn to player 2 (player 1 keeps his ' + tpd.s1 + '), a slow turn passes back, the end names the winner (' + JSON.stringify(tpd) + ')');
+  // web.107: the canvas is opaque and as sharp as the screen (this machine keeps up: no step down).
+  const qa = await pg.evaluate(() => { const c = document.querySelector('#pth-game .pg-stage canvas'); return { alpha: c.getContext('2d').getContextAttributes().alpha, ratio: +(c.width / c.getBoundingClientRect().width).toFixed(2), dpr: Math.min(2, devicePixelRatio) }; });
+  ok(qa.alpha === false && Math.abs(qa.ratio - qa.dpr) < 0.05, label + ': the game canvas: opaque, at the screen\'s sharpness (' + JSON.stringify(qa) + ')');
   await hofCheck(pg, label, 'tapis', '__pthTapis', ['classic', 'folie', 'daily', 'zen'], () => { const T = window.__pthTapis; T.start('classic'); T.run().score = 12345; T.timeUp(); });
   await pg.evaluate(() => window.__pthTapis.start('classic'));
   await pg.evaluate(() => window.__pthTapis.timeUp());

@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games: smoother rendering, lot 1 of the audit** (`web.107`, narmod; `claude/AUDIT_PERF_MINIJEUX_2026-11-16.md`) —
+  `games/quality.mjs` (pure, tested): the canvas starts at the screen's own sharpness (DPR ≤ 2) and steps down
+  (1.75, 1.5, 1.25, 1; never below 1) only after two slow windows of 1.5 s (> 30 % of draws late; one window at
+  > 70 %); the ratio is kept per game (`pth_gm_q`) and retried one step higher the next time. The refresh is read
+  from the quick end of the rAF ticks (at most 60 Hz's; a steady 30 Hz battery saver is not taken for slowness).
+  `shell.mjs`: on 120/144/165/240 Hz screens one frame out of `frameStep()` is drawn (60-82 a second; the games
+  follow `dt`); `windowOver()` (getComputedStyle on ~36 windows) 4 times a second instead of every frame; the game
+  canvas is opaque (`alpha:false`; every game paints its whole background, checked in every state). `cast.mjs`
+  and the Ace (`common.mjs`) write `transform` / `clip-path` / `opacity` only when they change. Headless Chromium
+  (software canvas, the worst case), DPR 2, first visit: Tapis! 23 → 41 i/s, Poker Run 34 → 41, Ace Dash 38 → 43,
+  Video Poker 29 → 33; next visit (the kept ratio): 49 / 44 / 54 / 45. `scripts/perf-games.mjs` measures it.
 - **Ranking › Mini-games: unlocked games only** (`web.106`, narmod) — `hofGames()` keeps the games open on this
   device (`currentState()`: trophies, a game played before, the secret word; the House of Cards once found); with
   none, `hofTabOn()` hides the tab.

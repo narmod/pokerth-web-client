@@ -199,6 +199,8 @@ export function castActor(layer, kind, id) {
   let poseNow = 'idle', moodNow = 'cs-m-smile';
   const part = (c) => /** @type {HTMLElement|null} */ (root.querySelector('.' + c));
   const play = (c, frames, ms) => { const el = part(c); if (!el || !el.animate || reduced()) return; try { el.animate(frames, { duration: ms, easing: 'ease-out' }); } catch (e) {} };
+  // Written only when they change (web.107: they were set at every frame, the browser restyling them each time).
+  let lookNow = '', placeNow = '', clipNow = '', fadeNow = '';
   return {
     kind,
     pose(p) { if (p !== poseNow) { root.classList.remove(poseNow); root.classList.add(p); poseNow = p; } },
@@ -213,6 +215,8 @@ export function castActor(layer, kind, id) {
     /** The eyes towards (dx, dy), each in −1 … 1. */
     look(dx, dy) {
       const t = 'translate(' + (Math.max(-1, Math.min(1, dx)) * 1.6).toFixed(2) + 'px,' + (Math.max(-1, Math.min(1, dy)) * 1.4).toFixed(2) + 'px)';
+      if (t === lookNow) return;
+      lookNow = t;
       pups.forEach((p) => { p.style.transform = t; });
     },
     fx(kind2) {
@@ -222,12 +226,13 @@ export function castActor(layer, kind, id) {
     },
     /** Feet at world (x, y), sprite scale s (world units per sprite unit), world → CSS k. */
     place(x, y, s, k, rot) {
-      box.style.transform = 'translate(' + (x * k - 50) + 'px,' + (y * k - 116) + 'px) scale(' + s * k + ')' + (rot ? ' rotate(' + rot + 'deg)' : '');
+      const t = 'translate(' + (x * k - 50).toFixed(1) + 'px,' + (y * k - 116).toFixed(1) + 'px) scale(' + (s * k).toFixed(4) + ')' + (rot ? ' rotate(' + (+rot).toFixed(1) + 'deg)' : '');
+      if (t !== placeNow) { placeNow = t; box.style.transform = t; }
     },
     /** Hide what is below sprite row u (null: nothing hidden). */
-    clip(u) { box.style.clipPath = u == null ? '' : 'inset(0 0 ' + Math.max(0, 120 - u).toFixed(1) + 'px 0)'; },
+    clip(u) { const c = u == null ? '' : 'inset(0 0 ' + Math.max(0, 120 - u).toFixed(1) + 'px 0)'; if (c !== clipNow) { clipNow = c; box.style.clipPath = c; } },
     show(on) { root.style.display = on ? '' : 'none'; },
-    fade(a) { box.style.opacity = a >= 1 ? '' : String(a); },
+    fade(a) { if (typeof a !== 'number' || isNaN(a)) return; const o = a >= 1 ? '' : a.toFixed(3); if (o !== fadeNow) { fadeNow = o; box.style.opacity = o; } },
     remove() { root.remove(); },
   };
 }

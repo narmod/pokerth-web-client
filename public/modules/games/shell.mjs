@@ -41,6 +41,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { arcadeStat } from './stats.mjs';
+import { frameStep, createQuality, savedCap, saveCap } from './quality.mjs';
 
 export const H = 360;
 const ROOT_ID = 'pth-game';
@@ -191,7 +192,8 @@ export function run(def, gameMod, opts = {}) {
     const play = /** @type {HTMLElement} */ (root.querySelector('.pg-play'));
     const stage = /** @type {HTMLElement} */ (root.querySelector('.pg-stage'));
     const canvas = /** @type {HTMLCanvasElement} */ (root.querySelector('canvas'));
-    const g = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
+    // Opaque (web.107): every game paints its whole background, so the browser need not blend the canvas.
+    const g = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { alpha: false }));
     const panel = /** @type {HTMLElement} */ (root.querySelector('.pg-panel'));
     const pausePanel = /** @type {HTMLElement} */ (root.querySelector('.pg-pause'));
     const pauseQuit = () => { shell.pause(false); shell.back(); };
@@ -224,6 +226,9 @@ export function run(def, gameMod, opts = {}) {
     const grants = [];
     let lastEnded = 0;
     const bestKey = () => 'pth_game_best_' + cur.id;
+    // Quality per game (web.107, quality.mjs): its own sharpness kept from last time, tried one step higher.
+    /** @type {ReturnType<typeof createQuality>|null} */
+    let quality = null, settleAt = 0;
     const shell = {
       H, W: 640, k: 1, dpr: 1,
       root, stage, canvas, g, view,
@@ -339,12 +344,15 @@ export function run(def, gameMod, opts = {}) {
     }
     function sizeCanvas(cw, ch) {
       if (!cw || !ch) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // The quality (web.107, quality.mjs): the screen's sharpness, less only if this device cannot keep up.
+      const dpr = quality ? quality.dpr : Math.min(window.devicePixelRatio || 1, 2);
       const k = ch / H, W = cw / k;
       const pw = Math.round(cw * dpr), ph = Math.round(ch * dpr);
       if (canvas.width === pw && canvas.height === ph && shell.k === k) return;
       shell.dpr = dpr; shell.k = k; shell.W = W;
       canvas.width = pw; canvas.height = ph;
+      if (quality) quality.reset();
+      settleAt = performance.now() + 1500;
       try { if (game && game.resize) game.resize(); } catch (e) {}
     }
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => layout()) : null;
@@ -360,6 +368,7 @@ export function run(def, gameMod, opts = {}) {
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
 
     let game = null;
+    const nativeDpr = () => Math.min(window.devicePixelRatio || 1, 2);
     function mount(d, mod) {
       try { if (game && game.destroy) game.destroy(); } catch (e) {}
       game = null;
@@ -368,6 +377,7 @@ export function run(def, gameMod, opts = {}) {
       shell.panel(null); shell.pause(false); padOn = true; root.classList.remove('pg-nopad');
       lanes = false; root.classList.remove('pg-lanes'); shell.padMode = null;
       cur = d; window._pthPadOwner = d.id;
+      quality = d.page ? null : createQuality(nativeDpr(), savedCap(d.id));
       if (titleEl) titleEl.textContent = d.id === opts.home ? (tr('gmTitle') || 'Mini-games') : (d.name || tr('gmTitle') || 'Mini-games');
       if (helpBtn) helpBtn.style.display = d.rulesKey ? '' : 'none';
       layout();
@@ -566,15 +576,34 @@ export function run(def, gameMod, opts = {}) {
     window.addEventListener('blur', onHide);
 
     // ── Loop ────────────────────────────────────────────────────────
-    let raf = 0, last = performance.now(), closed = false;
+    // web.107 (audit claude/AUDIT_PERF_MINIJEUX_2026-11-16.md): on a 120/144 Hz screen one frame out of
+    // frameStep() is drawn (60 to 82 a second, the games follow dt); the open windows are looked for four
+    // times a second, not at every frame (getComputedStyle on ~36 windows); the quality watches the draws.
+    let raf = 0, last = performance.now(), closed = false, prevRaf = 0, tick = 0, woAt = 0, woOver = false;
+    const vs = [];
     function frame(now) {
       if (closed) return;
-      const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+      raf = requestAnimationFrame(frame);
+      if (prevRaf) { vs.push(now - prevRaf); if (vs.length > 60) vs.shift(); }
+      prevRaf = now;
+      // The screen's refresh: the quick end of the last 60 ticks (a slow machine makes them all long, its
+      // screen is not slower for that), at most 60 Hz's, so a late draw shows as late — unless they are all
+      // steady and long (a battery saver holding the page at 30 a second: lowering the quality would not help).
+      let vsync = 1000 / 60;
+      if (vs.length >= 10) {
+        const so = vs.slice().sort((a, b) => a - b), lo = so[Math.floor(so.length * 0.1)], hi = so[Math.floor(so.length * 0.9)];
+        vsync = lo > 25 && hi < lo * 1.15 ? lo : Math.min(1000 / 60, lo);
+      }
+      const step = frameStep(vsync);
+      if (++tick % step) return;
+      const ms = now - last;
+      const dt = Math.min(0.05, Math.max(0, ms / 1000)); last = now;
       // The arcade left by another route (a disconnection, a link…): close cleanly.
       if (!screen.classList.contains('active')) { close(true); return; }
       pollPad();
       if (closed) return;
-      if (windowOver()) onHide();                  // a window opened from the header: pause
+      if (now - woAt > 250) { woAt = now; woOver = windowOver(); }
+      if (woOver) onHide();                        // a window opened from the header: pause
       try {
         if (game && !shell.paused) game.update(dt);
         if (!cur.page) {
@@ -582,7 +611,10 @@ export function run(def, gameMod, opts = {}) {
           if (game) game.draw(g);
         }
       } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }
-      raf = requestAnimationFrame(frame);
+      if (quality && !cur.page && !shell.paused && !document.hidden && now > settleAt) {
+        if (quality.frame(ms, vsync * step)) { saveCap(cur.id, quality.dpr); layout(); }
+        else if (quality.good === 3 && savedCap(cur.id) !== quality.dpr) saveCap(cur.id, quality.dpr);
+      } else if (quality) quality.reset();
     }
     raf = requestAnimationFrame(frame);
 

@@ -526,5 +526,33 @@ console.log('Ace Dash: the long run, the score, the modes');
     && new Set(svgs).size === 9, 'the cast: 9 characters (4 suits, 4 figures, the Joker), each with arms, every eye and mouth, sweat');
 }
 
+// The drawing quality (web.107, quality.mjs; audit claude/AUDIT_PERF_MINIJEUX_2026-11-16.md).
+{
+  const Q = await import('../public/modules/games/quality.mjs');
+  ok(Q.frameStep(16.7) === 1 && Q.frameStep(11.1) === 1 && Q.frameStep(8.33) === 2 && Q.frameStep(6.94) === 2 && Q.frameStep(6.06) === 2 && Q.frameStep(4.17) === 4 && Q.frameStep(33) === 1,
+    'quality: 60/90 Hz draw every frame, 120 → 60, 144 → 72, 165 → 82, 240 → 60 a second');
+  ok(Q.qualitySteps(3).join() === '2,1.75,1.5,1.25,1' && Q.qualitySteps(1.5).join() === '1.5,1.25,1' && Q.qualitySteps(1).join() === '1' && Q.qualitySteps(0.75).join() === '1',
+    'quality: the steps, the screen\'s own sharpness (≤ 2) first, never below 1');
+  const run = (q, ms, target, secs) => { let down = 0; for (let t = 0; t < secs * 1000; t += ms) if (q.frame(ms, target)) down++; return down; };
+  const fast = Q.createQuality(2);
+  ok(fast.dpr === 2 && run(fast, 16.7, 16.7, 20) === 0 && fast.dpr === 2 && fast.good > 3, 'quality: a machine that keeps up keeps the full sharpness');
+  const slow = Q.createQuality(2), half = (q, secs) => { for (let t = 0, i = 0; t < secs * 1000; i++) { const ms = i % 2 ? 26 : 16.7; t += ms; q.frame(ms, 16.7); } };
+  half(slow, 2.9);
+  const one = slow.dpr;
+  half(slow, 1.6);
+  const two = slow.dpr;
+  half(slow, 30);
+  ok(one === 2 && two === 1.75 && slow.dpr === 1, 'quality: half the draws late → one step every two windows of 1.5 s, down to 1 (' + [one, two, slow.dpr].join(' → ') + ')');
+  const crawl = Q.createQuality(2);
+  ok(run(crawl, 50, 16.7, 1.6) === 1 && crawl.dpr === 1.75, 'quality: nearly every draw late → a step after one window');
+  const spikes = Q.createQuality(2);
+  let dn = 0; for (let i = 0; i < 1200; i++) if (spikes.frame(i % 6 ? 16.7 : 30, 16.7)) dn++;
+  ok(dn === 0 && spikes.dpr === 2, 'quality: one late draw out of six (a busy moment) changes nothing');
+  ok(Q.createQuality(2, 1.25).dpr === 1.5 && Q.createQuality(2, 2).dpr === 2 && Q.createQuality(1.5, 1).dpr === 1.25 && Q.createQuality(2, 1).dpr === 1.25,
+    'quality: a game opened again tries one step above the sharpness it kept');
+  const st = Q.createQuality(2); run(st, 300, 16.7, 10);
+  ok(st.dpr === 2, 'quality: stalls (a tab switch, a load) say nothing');
+}
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

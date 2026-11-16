@@ -230,7 +230,9 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   const logoH = () => pg.evaluate(() => { const l = document.querySelector('#s-connect .card-logo'); return { h: l.getBoundingClientRect().height, fold: l.parentNode.classList.contains('login-in-mode'), game: !!document.getElementById('pth-game') }; });
   const h0 = await logoH();
   await pg.click('#login-card-arcade');
-  await sleep(150);
+  // the fold starts once the page's modules are warm (login-arcade.mjs warmFor): wait for it, not a fixed 150 ms (flaky)
+  await pg.waitForFunction(() => document.querySelector('#s-connect .card').classList.contains('login-in-mode'), null, { timeout: 4000 }).catch(() => {});
+  await sleep(120);
   const mid = await logoH();
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
   await sleep(600);

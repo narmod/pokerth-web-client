@@ -209,6 +209,7 @@ export function aceActor(layer, id = ACE_ID) {
   const box = /** @type {HTMLElement} */ (root.firstElementChild);
   const pos = /** @type {HTMLElement} */ (box.firstElementChild);
   let poseNow = 'idle', moodNow = 'mc-m-smile', king = false, holdUntil = 0, wanted = 'mc-m-smile', lookAnim = null;
+  let placeNow = '', fadeNow = '';
   const setMood = (m) => { if (m !== moodNow) { pos.classList.remove(moodNow); pos.classList.add(m); moodNow = m; } };
   const part = (c) => /** @type {HTMLElement|null} */ (pos.querySelector('.' + c));
   const reduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('reduce-fx'); } catch (e) { return false; } };
@@ -269,13 +270,15 @@ export function aceActor(layer, id = ACE_ID) {
       // Origin on the feet: they land on (x, y) whatever the scale and the tilt.
       // flip (degrees): a somersault round his middle, top towards the viewer
       // (Ace Dash's backflip, seen from behind).
-      box.style.transform = 'translate(' + (x * k - 84) + 'px,' + (y * k - 212) + 'px) scale(' + s * k + ')'
-        + (rot ? ' rotate(' + rot + 'deg)' : '')
-        + (flip ? ' translateY(-96px) perspective(520px) rotateX(' + (-flip) + 'deg) translateY(96px)' : '');
+      const t = 'translate(' + (x * k - 84).toFixed(1) + 'px,' + (y * k - 212).toFixed(1) + 'px) scale(' + (s * k).toFixed(4) + ')'
+        + (rot ? ' rotate(' + (+rot).toFixed(1) + 'deg)' : '')
+        + (flip ? ' translateY(-96px) perspective(520px) rotateX(' + (-flip).toFixed(1) + 'deg) translateY(96px)' : '');
+      // written only when it changes (web.107: at every frame the browser restyled him for nothing)
+      if (t !== placeNow) { placeNow = t; box.style.transform = t; }
     },
     show(on) { root.style.display = on ? '' : 'none'; },
     /** Opacity of the Ace (1 = normal), e.g. a blink while protected. */
-    fade(a) { box.style.opacity = a >= 1 ? '' : String(a); },
+    fade(a) { if (typeof a !== 'number' || isNaN(a)) return; const o = a >= 1 ? '' : a.toFixed(3); if (o !== fadeNow) { fadeNow = o; box.style.opacity = o; } },
     remove() { root.remove(); },
   };
 }
