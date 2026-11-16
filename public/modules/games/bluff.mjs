@@ -741,6 +741,7 @@ export function create(shell) {
   return {
     update, draw, input,
     resize() { lastL = null; cache.fill(''); renderResult(); renderBook(); },
+    calm: true,          // painted only when its drawing changes (calm.mjs, web.110)
     running: () => !onTitle() && state !== 'over',
     destroy() { clearTimeout(timer); ace.remove(); ui.remove(); },
   };

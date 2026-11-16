@@ -121,6 +121,8 @@ export function drawFloaters(g, list) {
 export function stepFloaters(list, dt) { for (let i = list.length - 1; i >= 0; i--) { list[i].t += dt; if (list[i].t > list[i].life) list.splice(i, 1); } }
 
 /** Is the player on a keyboard device (key hints on the buttons)? */
+let coarseMq;
 export function keyboardFirst() {
-  try { return !(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) { return true; }
+  // the query kept (web.110: it was made anew at every frame); its answer follows the device
+  try { if (coarseMq === undefined) coarseMq = window.matchMedia ? window.matchMedia('(pointer: coarse)') : null; return !(coarseMq && coarseMq.matches); } catch (e) { return true; }
 }

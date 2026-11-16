@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Card games painted only when their picture changes — lot 4 of the audit** (`web.110`, narmod) — `games/calm.mjs`:
+  a game returning `calm: true` (Who Wins?, Higher or Lower, Poker Solitaire, Bluff, Video Poker) draws into a recorder
+  (every `CanvasRenderingContext2D` method and property noted; `measureText`, `getLineDash` and the gradients answered
+  at once); when the calls, the canvas size, the transform, the fonts and the images are those of the last frame, the
+  canvas already shows it and nothing is painted, else the calls are played as they were — the same picture by
+  construction. A drawing changing for 30 frames in a row (a running clock) is drawn directly for a second; a call
+  that answers (`getImageData`…), a `Path2D` or a canvas that may change (not `sprites.mjs`' ones, marked `__still`)
+  turns it off for the game. Main thread on a still title (DPR 2, software canvas): ≈ 800-880 → 280-360 ms a second;
+  Higher or Lower while choosing 953 → 378. Also: `fmt()` keeps one `Intl.NumberFormat` per language, `keyboardFirst()`
+  its `matchMedia` query (both were made anew several times a frame).
 - **Poker Run and Tapis!: lot 3 of the audit** (`web.109`, narmod) — Poker Run (11 445 canvas calls a frame → about
   2 700 driving straight): consecutive far segments less than a device pixel tall together are drawn as one (same
   theme and lanes; not near the finish, a gate, a ghost road or a theme blend) — road 6 381 → 1 870 calls; the

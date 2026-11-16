@@ -699,6 +699,13 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await sleep(500);
   const tl = await pg.evaluate(() => (document.querySelector('#pth-game .gm-tile[data-m="2"]') || {}).textContent || '');
   ok(/Aujourd'hui/.test(tl), label + ': the Daily tile shows today\'s score (' + tl + ')');
+  // web.110 (calm.mjs): on its still title the canvas is painted once, then kept; the recorder never gave up.
+  const cm = await pg.evaluate(async () => {
+    const c = window.__pthCalm; if (!c) return null;
+    const s0 = Object.assign({}, c.stats); await new Promise((r) => setTimeout(r, 1200));
+    return { painted: c.stats.painted - s0.painted, kept: c.stats.kept - s0.kept, direct: c.stats.direct - s0.direct, broken: c.broken, state: window.__pthWW.state() };
+  });
+  ok(cm && !cm.broken && cm.kept > 30 && cm.painted + cm.direct < cm.kept, label + ': Who wins?: its still title is painted once and kept (' + JSON.stringify(cm) + ')');
   // The traps explained (web.35): a mistake on a counterfeited pair, the Ace explains it.
   await pg.click('#pth-game .gm-tile[data-m="1"]');
   await pg.waitForFunction(() => window.__pthWW.state() === 'ask', null, { timeout: 5000 }).catch(() => {});

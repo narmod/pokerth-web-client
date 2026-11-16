@@ -109,7 +109,17 @@ const CSS = `
 
 export const rlab = (n) => (n === JOKER ? '🃏' : RANKS[n % 13] + SUITS[suitOf(n)]);
 export const isRed = (n) => n !== JOKER && suitOf(n) < 2;
-export const fmt = (v) => { try { return v.toLocaleString(document.documentElement.lang || undefined); } catch (e) { return String(v); } };
+// One number format per language, kept (web.110: toLocaleString made one at every call, many a frame). Same text.
+const NF = new Map();
+export const fmt = (v) => {
+  try {
+    if (typeof v !== 'number') return v.toLocaleString(document.documentElement.lang || undefined);
+    const l = document.documentElement.lang || '';
+    let f = NF.get(l);
+    if (!f) { f = new Intl.NumberFormat(l || undefined); NF.set(l, f); }
+    return f.format(v);
+  } catch (e) { return String(v); }
+};
 
 /** URL of card `n`'s face in the player's deck ('' for the glyph deck). */
 export function faceUrl(n) {

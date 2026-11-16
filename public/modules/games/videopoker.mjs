@@ -642,6 +642,7 @@ export function create(shell) {
   }
 
   return {
+    calm: true,          // painted only when its drawing changes (calm.mjs, web.110)
     update, draw, input, resize: renderResult,
     running: () => state !== 'title' && state !== 'over' && state !== 'board',
     destroy() { clearTimeout(timer); ace.remove(); },

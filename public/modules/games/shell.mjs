@@ -42,6 +42,7 @@
 
 import { arcadeStat } from './stats.mjs';
 import { frameStep, createQuality, savedCap, saveCap } from './quality.mjs';
+import { createCalm } from './calm.mjs';
 
 export const H = 360;
 const ROOT_ID = 'pth-game';
@@ -229,6 +230,8 @@ export function run(def, gameMod, opts = {}) {
     // Quality per game (web.107, quality.mjs): its own sharpness kept from last time, tried one step higher.
     /** @type {ReturnType<typeof createQuality>|null} */
     let quality = null, settleAt = 0;
+    // A game that says calm: true (calm.mjs, web.110): its canvas painted only when its drawing changes.
+    let calm = null, calmOff = false;
     const shell = {
       H, W: 640, k: 1, dpr: 1,
       root, stage, canvas, g, view,
@@ -352,6 +355,7 @@ export function run(def, gameMod, opts = {}) {
       shell.dpr = dpr; shell.k = k; shell.W = W;
       canvas.width = pw; canvas.height = ph;
       if (quality) quality.reset();
+      if (calm) calm.reset();
       settleAt = performance.now() + 1500;
       try { if (game && game.resize) game.resize(); } catch (e) {}
     }
@@ -378,6 +382,7 @@ export function run(def, gameMod, opts = {}) {
       lanes = false; root.classList.remove('pg-lanes'); shell.padMode = null;
       cur = d; window._pthPadOwner = d.id;
       quality = d.page ? null : createQuality(nativeDpr(), savedCap(d.id));
+      calm = null; calmOff = false;
       if (titleEl) titleEl.textContent = d.id === opts.home ? (tr('gmTitle') || 'Mini-games') : (d.name || tr('gmTitle') || 'Mini-games');
       if (helpBtn) helpBtn.style.display = d.rulesKey ? '' : 'none';
       layout();
@@ -608,7 +613,11 @@ export function run(def, gameMod, opts = {}) {
         if (game && !shell.paused) game.update(dt);
         if (!cur.page) {
           g.setTransform(shell.dpr * shell.k, 0, 0, shell.dpr * shell.k, 0, 0);
-          if (game) game.draw(g);
+          if (game && game.calm && !calmOff) {
+            if (!calm) { calm = createCalm(); try { if (navigator.webdriver) window.__pthCalm = calm; } catch (e) {} }
+            calm.draw(g, (c) => game.draw(c));
+            if (calm.broken) calmOff = true;           // a call it cannot record: this game draws directly
+          } else if (game) game.draw(g);
         }
       } catch (e) { try { console.warn('[games]', e); } catch (e2) {} }
       if (quality && !cur.page && !shell.paused && !document.hidden && now > settleAt) {

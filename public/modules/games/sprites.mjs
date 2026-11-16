@@ -37,6 +37,7 @@ export function spriteCache(shell, max = 64) {
       else {
         const ox = Math.floor(box[0] * s) - PAD, oy = Math.floor(box[1] * s) - PAD;
         const c = document.createElement('canvas');
+        c.__still = true;          // never painted again (calm.mjs may compare it by identity)
         c.width = Math.max(1, Math.ceil((box[0] + box[2]) * s) + PAD - ox);
         c.height = Math.max(1, Math.ceil((box[1] + box[3]) * s) + PAD - oy);
         const x = /** @type {CanvasRenderingContext2D} */ (c.getContext('2d'));

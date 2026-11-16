@@ -673,6 +673,7 @@ export function create(shell) {
 
   return {
     update, draw, input, resize: renderResult,
+    calm: true,          // painted only when its drawing changes (calm.mjs, web.110)
     running: () => state === 'guess' || state === 'flip' || state === 'show',
     destroy() { clearTimeout(timer); ace.remove(); ui.remove(); },
   };

@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.109 (current series):
+2026-11-16 version 2.1.11-web.110 (current series):
+- improvement: Who Wins?, Higher or Lower, Poker Solitaire, the Ace's Bluff and Video Poker — the picture is painted again only when something in it changes: a still screen (a title, cards waiting for your choice) costs almost nothing, good for laptop and phone batteries
+
+2026-11-16 version 2.1.11-web.109:
 - improvement: Poker Run — much lighter: the far road drawn in fewer pieces, nothing done for the empty stretches, the car copied while it goes straight — about a quarter of the drawing work, same look
 - improvement: Tapis! — the room, the spotlight and the felt are one picture for the whole level when nothing in them moves
 
