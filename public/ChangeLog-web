@@ -1,4 +1,9 @@
-2026-11-16 version 2.1.11-web.110 (current series):
+2026-11-16 version 2.1.11-web.111 (current series):
+- improvement: Who Wins? — a new table: no message ever covers the cards any more (the question, the result and the Ace's words are on one line above the hands), the board in the middle with its label, smaller cards, and each hand right above its own « Left » / « Right » button
+- new: Who Wins?, TV show — the money ladder like on TV: always on the right on a computer, a strip on a phone, and on a phone the whole ladder between two questions (« Question 6, for 2 000 chips… »)
+- improvement: Who Wins?, TV show — the jokers are round medallions under the clock, struck through once used
+
+2026-11-16 version 2.1.11-web.110:
 - improvement: Who Wins?, Higher or Lower, Poker Solitaire, the Ace's Bluff and Video Poker — the picture is painted again only when something in it changes: a still screen (a title, cards waiting for your choice) costs almost nothing, good for laptop and phone batteries
 
 2026-11-16 version 2.1.11-web.109:

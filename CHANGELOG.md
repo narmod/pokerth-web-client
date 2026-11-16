@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Who Wins?: a new table and the TV ladder** (`web.111`, narmod) — chosen on mock-ups (layout « B2 »):
+  nothing is drawn over the cards any more — banners, the Ace's words, the safe level and the result go to one
+  line above the hands; the board sits in the middle with « The board, shared by both hands » above it and the pot
+  under it; each hand is right above its own answer button (« ◀ Left » / « Right ▶ », « this hand wins », or the
+  hand's name with L'As t'aide); a trap's card pushes the hands up instead of covering them. TV show: the 15-step
+  ladder (safe levels ◆, questions won ✓) is a column on the right on a computer and a strip on a phone, where the
+  whole ladder is shown between two questions (`STEP_S` = 2.6 s, a tap or Space skips; not with « Reduce
+  animations »); the jokers are round medallions under the clock (keys 1 2 3), struck through once used. 14 new
+  strings in the 83 languages.
 - **Card games painted only when their picture changes — lot 4 of the audit** (`web.110`, narmod) — `games/calm.mjs`:
   a game returning `calm: true` (Who Wins?, Higher or Lower, Poker Solitaire, Bluff, Video Poker) draws into a recorder
   (every `CanvasRenderingContext2D` method and property noted; `measureText`, `getLineDash` and the gradients answered

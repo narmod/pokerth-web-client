@@ -56,7 +56,7 @@ import { rankHand, compareHands, NAME_KEYS, rankOf } from './poker-hand.mjs';
 import { shuffled, rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
-import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
+import { felt, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 import { titleScreen } from './title.mjs';
 import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
@@ -172,6 +172,8 @@ export const LADDER = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000,
 export const SAFE = [4, 9];
 export const TV_LEVEL = [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5];
 export const TV_EXTRA = 3;
+/** The TV show's ladder between two questions on a phone (web.111), in seconds (a tap goes on). */
+export const STEP_S = 2.6;
 /** The chips you leave with after k right answers then a mistake (the last safe level passed). */
 export function keptAfter(k) { let v = 0; for (const i of SAFE) if (k > i) v = LADDER[i]; return v; }
 // The TV show's jokers: id, label key, key.
@@ -203,7 +205,6 @@ export function create(shell) {
   const { t, esc, sound } = shell;
   const img = imageCache();
   const ace = aceActor(shell.layer);
-  const btns = buttons();
   shell.touchPad(false);
   shell.hud.classList.add('on-felt');
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('hcScore')) + '</div><div class="ar-num ww-score">0</div></div>'
@@ -299,6 +300,7 @@ export function create(shell) {
     G.hof = daily() && !G.counted ? null : hofStart('whowins', mode);
     state = 'ask'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile');
+    if (stepFirst()) return;
     next();
     if (daily()) banner('📅 ' + t('wwModeDaily') + (G.counted ? '' : ' · ' + t('wwDailyPracticeShort')));
     else if (!tv()) banner(levelName(0));
@@ -341,9 +343,9 @@ export function create(shell) {
       G.out = null; G.tLeft = G.tMax;
       G.dealT = shell.reduced ? REVEAL_END : 0; G.snd = 0;
       state = shell.reduced ? 'ask' : 'deal';
-      G.fx.push({ s: '🔄', x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true });
+      G.fx.push({ s: '🔄', x: l.cx, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true });
     } else if (id === 'jace') G.hint = true;            // the hands' names, in blue under them
-    else { G.save = true; G.fx.push({ s: '🛡️', x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true }); }
+    else { G.save = true; G.fx.push({ s: '🛡️', x: l.cx, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1, gold: true, big: true }); }
     sound('notifyAction');
   }
   function answer(pick) {
@@ -369,9 +371,10 @@ export function create(shell) {
       G.won = LADDER[G.right - 1];
       const l = L();
       const safe = SAFE.indexOf(G.right - 1) >= 0, top = G.right === LADDER.length;
-      G.fx.push({ s: '💰 ' + fmt(G.won), x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.3, gold: true, big: true });
-      if (safe) G.fx.push({ s: '🛟 ' + t('wwSafe'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.8, gold: true, big: true });
-      if (top) { G.fx.push({ s: '🏆 ' + t('wwMillion'), x: shell.W / 2, y: l.boardY, t: 0, life: 2.4, gold: true, big: true }); shell.grant('whowins'); }
+      G.fx.push({ s: '💰 ' + fmt(G.won), x: L().cx, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.3, gold: true, big: true });
+      // web.111: in the line above the hands, never over the cards
+      if (safe) say('🛟 ' + t('wwSafe'), 1.8);
+      if (top) { say('🏆 ' + t('wwMillion'), 2.4); shell.grant('whowins'); }
       G.yayUntil = performance.now() + 700;
       sound(top ? 'notifyBigWin' : safe ? 'notifyWinner' : 'notifyRaise');
     } else if (G.ok) {
@@ -379,8 +382,8 @@ export function create(shell) {
       const pts = points(G.tLeft, G.streak);
       G.score += pts;
       const l = L();
-      G.fx.push({ s: '+' + pts, x: shell.W / 2, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.1, gold: true, big: G.streak >= FEVER_STREAK });
-      if (G.streak === FEVER_STREAK) G.fx.push({ s: '🔥 ' + t('wwFever'), x: shell.W / 2, y: l.boardY, t: 0, life: 1.6, gold: true, big: true });
+      G.fx.push({ s: '+' + pts, x: L().cx, y: l.boardY - l.ch / 2 - 16, t: 0, life: 1.1, gold: true, big: G.streak >= FEVER_STREAK });
+      if (G.streak === FEVER_STREAK) say('🔥 ' + t('wwFever'), 1.6);
       G.yayUntil = performance.now() + 700;
       sound(G.streak === FEVER_STREAK ? 'notifyBigWin' : G.streak >= 3 ? 'notifyRaise' : 'notifyAction');
     } else {
@@ -390,7 +393,6 @@ export function create(shell) {
       G.streak = 0;
       if (!shell.reduced) G.shake = 0.4;
       G.koUntil = performance.now() + 900;
-      if (pick == null) say(t('wwTooSlow'));
       sound('notifyFold');
       // A trap: the Ace explains it.
       const trap = trapOf(q);
@@ -404,8 +406,21 @@ export function create(shell) {
   function goOn() {
     if (state !== 'shown') return;
     clearTimeout(timer);
-    if (G.lives <= 0 || (tv() && G.right >= LADDER.length) || (daily() && G.n >= DAILY_HANDS)) finish(); else next();
+    if (G.lives <= 0 || (tv() && G.right >= LADDER.length) || (daily() && G.n >= DAILY_HANDS)) finish();
+    else if (!stepFirst()) next();
   }
+  /**
+   * The TV show on a phone (web.111): before each question the whole ladder, the Ace announcing it (« Question 6,
+   * for 2 000 chips… »), as on TV — instead of a banner over the cards. STEP_S, or a tap / Space. On a computer the
+   * ladder is always there, on the right: the question is announced in the message line.
+   */
+  function stepFirst() {
+    if (!tv() || shell.reduced || !L().phone) return false;
+    state = 'step'; G.stepT = 0; G.q = null; G.say = null; G.ban = null;
+    renderHud(); sound('notifyCard');
+    return true;
+  }
+  function stepDone() { if (state === 'step') { state = 'ask'; next(); } }
   function finish() {
     state = 'over';
     shell.ended();
@@ -483,44 +498,83 @@ export function create(shell) {
   }
 
   // ── Layout (world px) ─────────────────────────────────────────────
+  // web.111 (B2, narmod 2026-11-16, canvas « Qui gagne ? — maquettes »): the board in the middle of the felt,
+  // each hand right above its own answer button (« ◀ Left / Right ▶ — this hand wins »), the question in a line
+  // of its own above the hands — the messages (a new level, the Ace's words, the result) take that line, never
+  // the cards' place. The TV show: its jokers round, under the clock; its ladder folded into a strip of 15 steps
+  // on a phone, a column on the right on a computer.
+  const mctx = (() => { try { return document.createElement('canvas').getContext('2d'); } catch (e) { return null; } })();
+  /** The trap's card (its size depends on its text): at the bottom of the felt, the hands moved up over it. */
+  function trapBox(W, cx, narrow) {
+    const fs = narrow ? 7.5 : 12, lh = narrow ? 9.5 : 16, pad = narrow ? 7 : 12;
+    const w = Math.min(W - 16, 460), x = cx - w / 2;
+    let lines = [];
+    if (G && G.trap) {
+      const body = t(TRAP_KEYS[G.trap]);
+      if (mctx) { mctx.font = '500 ' + fs + 'px Inter, system-ui, sans-serif'; lines = wrapLines((s2) => mctx.measureText(s2).width, body, w - 2 * pad).slice(0, 5); }
+      else lines = [body];
+    }
+    return { fs, lh, pad, w, x, lines, h: pad * 2 + lh * (lines.length + 2) };
+  }
   function L() {
     const W = shell.W, H = shell.H;
     let top = 46;
     try { top = Math.max(40, shell.hud.offsetHeight / (shell.k || 1) + 6); } catch (e) {}
-    const narrow = W < 470;
-    const gap = 5;
-    const btnH = 32, btnY = H - btnH / 2 - 10;
-    if (narrow) {
-      const cw = Math.min(46, (W - 16 - 4 * gap) / 5), ch = cw * 1.4;
-      const hcw = Math.min(54, (W / 2 - 24 - gap) / 2), hch = hcw * 1.4;
-      const barY = top + 4;
-      const total = ch + 34 + hch + 24, room = (mode === 'tv' ? btnY - btnH / 2 - 16 : H - 16) - (top + 18);
-      const boardY = top + 18 + Math.max(0, (room - total) / 2) + ch / 2;
-      const handY = boardY + ch / 2 + 34 + hch / 2;
-      return { W, H, narrow, top, gap, cw, ch, hcw, hch, barY, boardY, handY, ax: W / 4, bx: (3 * W) / 4, btnY, btnH };
-    }
-    const hcw = Math.min(56, W * 0.075), hch = hcw * 1.4;
-    const side = 2 * hcw + gap + 24;
-    const cw = Math.min(58, (W - 2 * side - 16 - 4 * gap) / 5), ch = cw * 1.4;
-    const barY = top + 4;
-    const boardY = Math.max(top + 30 + ch / 2, (top + btnY) / 2 - 16);
-    return { W, H, narrow, top, gap, cw, ch, hcw, hch, barY, boardY, handY: boardY, ax: side / 2 + 4, bx: W - side / 2 - 4, btnY, btnH };
+    const narrow = W < 470, play = !onTitle() && !!G;
+    // A phone, by its real width (a big square screen is « narrow » in the world, not a phone).
+    const phone = W * (shell.k || 1) < 600;
+    const isTv = tv() && play;
+    // The TV ladder: a column on the right on a computer (the game keeps the rest), a strip on a phone.
+    const ladW = isTv && !narrow ? Math.min(180, Math.max(132, W * 0.2)) : 0;
+    const GW = W - (ladW ? ladW + 16 : 0), cx = GW / 2;
+    const gap = narrow ? 4 : 6;
+    let y = top + 2;
+    const stripY = y, stripH = isTv && narrow ? 30 : 0;
+    if (stripH) y += stripH + 6;
+    const barY = y + 1;
+    y = barY + 6 + (narrow ? 7 : 10);
+    const jr = narrow ? 12 : 14, jokY = isTv ? y + jr : 0, jokGap = narrow ? 58 : 84;
+    if (isTv) y = jokY + jr + (narrow ? 13 : 16);
+    // The bottom: the two answer buttons, each hand right above its own.
+    const colGap = narrow ? 8 : 24, colW = narrow ? (GW - 16 - colGap) / 2 : Math.min(160, (GW - 40 - colGap) / 2);
+    const ax = cx - colGap / 2 - colW / 2, bx = cx + colGap / 2 + colW / 2;
+    const btnH = narrow ? 34 : 36, btnY = H - 8 - btnH / 2;
+    const hcw = Math.min(narrow ? 38 : 40, (colW - 20 - gap) / 2), hch = hcw * 1.4;
+    const tb = state === 'shown' && G && G.trap ? trapBox(GW, cx, narrow) : null;
+    const handsBottom = tb ? H - 8 - tb.h - (narrow ? 16 : 24) : btnY - btnH / 2 - 8;
+    const handY = handsBottom - 8 - hch / 2;
+    const sub = !narrow;
+    const promptY = handY - hch / 2 - 8 - (narrow ? 10 : 14) - (sub ? 14 : 0), promptSubY = promptY + 15;
+    // The board: in the middle of what is left, its label above (when there is room), the pot under it.
+    const potR = narrow ? 6 : 7, lab = !narrow || H - top > 330;
+    const room = promptY - (narrow ? 10 : 14) - y;
+    let cw = Math.min(narrow ? 40 : 46, (GW - 16 - 4 * gap) / 5);
+    cw = Math.max(18, Math.min(cw, (room - (lab ? 16 : 0) - potR * 2 - 10) / 1.4));
+    const ch = cw * 1.4;
+    const block = (lab ? 16 : 0) + ch + potR * 2 + 10;
+    const blockTop = y + Math.max(0, (room - block) / 2);
+    const boardY = blockTop + (lab ? 16 : 0) + ch / 2;
+    return { W, H, GW, cx, narrow, phone, top, gap, cw, ch, hcw, hch, barY, boardY, labY: boardY - ch / 2 - 9, lab, potY: boardY + ch / 2 + potR + 6, potR,
+      handY, ax, bx, colW, btnY, btnH, promptY, promptSubY, sub, stripY, stripH, jokY, jr, jokGap, ladW, isTv, tb };
   }
   const handXs = (l, cx) => [cx - (l.hcw + l.gap) / 2, cx + (l.hcw + l.gap) / 2];
+  /** A tap on a hand, or on the answer button under it: 1 (left), -1 (right), null. */
   function handAt(l, x, y) {
-    if (Math.abs(y - l.handY) > l.hch / 2 + 16) return null;
-    if (Math.abs(x - l.ax) <= l.hcw + l.gap + 10) return 1;
-    if (Math.abs(x - l.bx) <= l.hcw + l.gap + 10) return -1;
+    const inCol = (c) => Math.abs(x - c) <= l.colW / 2 + 4;
+    const onHand = Math.abs(y - l.handY) <= l.hch / 2 + 12, onBtn = Math.abs(y - l.btnY) <= l.btnH / 2 + 4;
+    if (!onHand && !onBtn) return null;
+    if (inCol(l.ax)) return 1;
+    if (inCol(l.bx)) return -1;
     return null;
   }
-  function layoutButtons(l) {
-    btns.reset();
-    // The TV show's jokers, the bottom row.
-    if (tv() && (state === 'ask' || state === 'deal')) {
-      const w = Math.min(104, (l.W - 32) / 3), y = l.btnY;
-      JOKERS.forEach(([id, key, k], i) =>
-        btns.add({ id, x: l.W / 2 + (i - 1) * (w + 8), y, w, h: 28, label: t(key), kind: id === 'jsave' && G.save ? 'ghost' : 'gold', key: k, off: !G.jok[id] || state !== 'ask' }));
-    }
+  /** The TV show's jokers (round, under the clock): [{ id, key, k, x, y, r }]. */
+  function jokerSpots(l) {
+    if (!l.isTv) return [];
+    return JOKERS.map(([id, key, k], i) => ({ id, key, k, x: l.cx + (i - 1) * l.jokGap, y: l.jokY, r: l.jr }));
+  }
+  function jokerAt(l, x, y) {
+    const j = jokerSpots(l).find((s2) => Math.hypot(x - s2.x, y - s2.y) <= s2.r + 6);
+    return j ? j.id : null;
   }
 
   // ── Input ─────────────────────────────────────────────────────────
@@ -538,13 +592,14 @@ export function create(shell) {
     // The result: Space plays again.
     if (state === 'over') { if (a === 'jump' && info.x == null) act('again'); return; }
     if (state === 'shown') { if (a === 'jump' && time - G.shownAt > 0.4) goOn(); return; }
+    // The TV show, between two questions (a phone): the ladder; a tap or Space deals the question.
+    if (state === 'step') { if (a === 'jump' || info.x != null) stepDone(); return; }
     // During the deal: a tap or a key turns the rest of the board over.
     if (state === 'deal') { revealed(); return; }
     const l = L();
-    layoutButtons(l);
     if (info.x != null) {
-      const id = btns.hit(info.x, info.y);
-      if (JOKERS.some((j) => j[0] === id)) { joker(id); return; }
+      const id = jokerAt(l, info.x, info.y);
+      if (id) { joker(id); return; }
       const h = handAt(l, info.x, info.y);
       if (h != null) answer(h);
       return;
@@ -564,6 +619,7 @@ export function create(shell) {
     if (G.say) { G.say.t += dt; if (G.say.t > G.say.life) G.say = null; }
     if (G.shake > 0) G.shake = Math.max(0, G.shake - dt);
     if (G.fly) G.fly.t += dt;
+    if (state === 'step') { G.stepT += dt; if (G.stepT >= STEP_S) stepDone(); }
     if (state === 'deal') {
       G.dealT += dt;
       // A card sound for the flop, the turn, the river.
@@ -608,10 +664,10 @@ export function create(shell) {
     g.beginPath(); g.arc(x, y, r * 0.42, 0, Math.PI * 2); g.fillStyle = c; g.fill();
     g.lineWidth = 1; g.strokeStyle = 'rgba(0,0,0,.45)'; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke();
   }
-  /** Where the pot sits: under the board (phone: between the board and the hands). */
-  const potAt = (l) => (l.narrow ? { x: l.W / 2, y: (l.boardY + l.ch / 2 + l.handY - l.hch / 2) / 2 + 4 } : { x: l.W / 2, y: l.boardY + l.ch / 2 + 30 });
+  /** Where the pot sits: under the board. */
+  const potAt = (l) => ({ x: l.cx, y: l.potY });
   function drawPot(g, l) {
-    const P = potAt(l), r = l.narrow ? 7 : 8;
+    const P = potAt(l), r = l.potR;
     const ease = (u) => 1 - Math.pow(1 - Math.min(1, Math.max(0, u)), 3);
     const n = G.fly ? G.fly.n : G.pot;
     for (let i = 0; i < n; i++) {
@@ -627,20 +683,14 @@ export function create(shell) {
       chip(g, x, y, r, i);
     }
   }
-  /** The Ace explains the trap: a card at the bottom of the felt. */
+  /** The Ace explains the trap: a card at the bottom of the felt — the hands have moved up above it. */
   function drawTrap(g, l) {
-    // Sizes in world px: the phone's world is scaled up, the text kept small.
-    const fs = l.narrow ? 7.5 : 12, lh = l.narrow ? 9.5 : 16, pad = l.narrow ? 7 : 12;
-    const left = l.narrow ? 8 : 14, w = Math.min(l.W - left - 8, 460), x = l.narrow ? left : (l.W - w) / 2;
-    const title = '🪤 ' + t('wwTrap'), body = t(TRAP_KEYS[G.trap]);
+    const b = l.tb || trapBox(l.GW, l.cx, l.narrow), { fs, lh, pad, w, x, lines, h } = b, y = l.H - h - 6;
     g.save();
-    g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
-    const lines = wrapLines((s2) => g.measureText(s2).width, body, w - 2 * pad).slice(0, 5);
-    const h = pad * 2 + lh * (lines.length + 2), y = l.H - h - 6;
     rr(g, x, y, w, h, l.narrow ? 8 : 12); g.fillStyle = 'rgba(245,240,227,.97)'; g.fill();
     g.strokeStyle = '#d8b25a'; g.lineWidth = 1.5; g.stroke();
     g.textAlign = 'left'; g.textBaseline = 'top';
-    g.fillStyle = '#8a5a00'; g.font = '700 ' + fs + 'px Inter, system-ui, sans-serif'; g.fillText(title, x + pad, y + pad);
+    g.fillStyle = '#8a5a00'; g.font = '700 ' + fs + 'px Inter, system-ui, sans-serif'; g.fillText('🪤 ' + t('wwTrap'), x + pad, y + pad);
     g.fillStyle = '#1d222b'; g.font = '500 ' + fs + 'px Inter, system-ui, sans-serif';
     lines.forEach((ln, i) => g.fillText(ln, x + pad, y + pad + lh * (i + 1)));
     // The game waits: « Continue ▶ » (a tap anywhere, Space).
@@ -649,93 +699,215 @@ export function create(shell) {
     g.fillText(t('continueBtn'), x + w - pad, y + pad + lh * (lines.length + 1));
     g.restore();
   }
+  /** The line above the hands: a message for a while (a level, the Ace's words), else the question or the result. */
+  function drawPrompt(g, l) {
+    const q = G.q, shown = state === 'shown' || state === 'over';
+    let main = '', sub2 = '', col = '#f5f0e3', a = 1, cinzel = false;
+    const msg = G.say || (G.ban && !shown ? G.ban : null);
+    if (msg) {
+      a = Math.max(0, Math.min(1, msg.t / 0.2, (msg.life - msg.t) / 0.4));
+      main = msg.s; col = '#f5d77a'; cinzel = msg === G.ban;
+    } else if (shown && q) {
+      if (G.ok) { main = '✓ ' + t('wwGood'); col = '#9fe3b0'; }
+      else { main = '✗ ' + (G.answer == null ? t('wwTooSlow') : t('wwMiss')) + ' · ' + t(q.win === 1 ? 'wwWasL' : 'wwWasR'); col = '#ffb0a8'; }
+    } else {
+      main = t('wwAsk'); if (l.sub) sub2 = t('wwAskSub');
+    }
+    g.save(); g.globalAlpha = a; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col;
+    fitFont(g, main, l.GW - 20, l.narrow ? 11 : 14, 800, cinzel ? 'Cinzel, Georgia, serif' : 'Inter, system-ui, sans-serif');
+    g.fillText(main, l.cx, l.promptY);
+    if (sub2) {
+      g.globalAlpha = a * 0.75; g.fillStyle = '#f5f0e3';
+      fitFont(g, sub2, l.GW - 20, 10, 500);
+      g.fillText(sub2, l.cx, l.promptSubY);
+    }
+    g.restore();
+  }
+  /** An answer button, right under its hand: « ◀ Left » / « Right ▶ », and « this hand wins » (or the Ace's hint). */
+  function answerBtn(g, l, side) {
+    const x = side === 1 ? l.ax : l.bx, y = l.btnY, w = l.colW, h = l.btnH, off = state !== 'ask' || (tv() && G.out === side);
+    g.save(); g.globalAlpha = off ? 0.5 : 1;
+    rr(g, x - w / 2, y - h / 2 + 2, w, h, Math.min(12, h * 0.3)); g.fillStyle = 'rgba(0,0,0,.28)'; g.fill();
+    rr(g, x - w / 2, y - h / 2, w, h, Math.min(12, h * 0.3));
+    const gr = g.createLinearGradient(0, y - h / 2, 0, y + h / 2); gr.addColorStop(0, '#ffd27a'); gr.addColorStop(1, '#d8a93e');
+    g.fillStyle = gr; g.fill();
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#1b1408';
+    const label = side === 1 ? '◀ ' + t('wwLeft') : t('wwRight') + ' ▶';
+    fitFont(g, label, w - 12, l.narrow ? 12 : 14, 800);
+    g.fillText(label, x, y - h * 0.16);
+    const hint = tv() && G.hint && G.q ? t(NAME_KEYS[(side === 1 ? G.q.ra : G.q.rb).cat]) : '';
+    const sub2 = hint || t('wwThisWins') + (keyboardFirst() && !l.narrow ? '  ' + (side === 1 ? '←' : '→') : '');
+    g.fillStyle = hint ? '#1d3f9a' : 'rgba(27,20,8,.72)';
+    fitFont(g, sub2, w - 12, l.narrow ? 7.5 : 9, hint ? 800 : 600);
+    g.fillText(sub2, x, y + h * 0.24);
+    g.restore();
+  }
+  const JOKER_ICON = { jswap: '⇄', jace: '?', jsave: '♥' };
+  /** The TV show's jokers, round medallions under the clock; one used is greyed and struck through. */
+  function drawJokers(g, l) {
+    for (const j of jokerSpots(l)) {
+      const used = !G.jok[j.id], live = state === 'ask' && !used;
+      g.save();
+      g.beginPath(); g.arc(j.x, j.y, j.r + 3, 0, Math.PI * 2); g.fillStyle = 'rgba(42,31,92,.35)'; g.fill();
+      g.beginPath(); g.arc(j.x, j.y, j.r, 0, Math.PI * 2);
+      if (used) g.fillStyle = 'rgba(20,20,30,.55)';
+      else { const rg = g.createRadialGradient(j.x - j.r * 0.3, j.y - j.r * 0.35, 1, j.x, j.y, j.r); rg.addColorStop(0, '#4a3a8c'); rg.addColorStop(0.55, '#2a1f5c'); rg.addColorStop(1, '#160f36'); g.fillStyle = rg; }
+      g.fill();
+      g.lineWidth = l.narrow ? 1.6 : 2.2; g.strokeStyle = used ? 'rgba(216,178,90,.35)' : '#f5d77a'; g.stroke();
+      g.globalAlpha = used ? 0.4 : live ? 1 : 0.7;
+      g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '800 ' + Math.round(j.r * 1.05) + 'px Inter, system-ui, sans-serif';
+      g.fillText(JOKER_ICON[j.id], j.x, j.y + 0.5);
+      g.globalAlpha = 1;
+      if (used) { g.strokeStyle = '#e2554a'; g.lineWidth = l.narrow ? 2 : 3; g.lineCap = 'round'; g.beginPath(); g.moveTo(j.x - j.r * 0.7, j.y + j.r * 0.5); g.lineTo(j.x + j.r * 0.7, j.y - j.r * 0.5); g.stroke(); }
+      if (keyboardFirst() && !l.narrow) {
+        g.beginPath(); g.arc(j.x + j.r * 0.78, j.y + j.r * 0.78, 7, 0, Math.PI * 2); g.fillStyle = '#fbf7ee'; g.fill();
+        g.fillStyle = '#1b1408'; g.font = '800 9px Inconsolata, monospace'; g.fillText(j.k, j.x + j.r * 0.78, j.y + j.r * 0.78 + 0.5);
+      }
+      g.globalAlpha = used ? 0.45 : 0.9; g.fillStyle = '#f5f0e3';
+      fitFont(g, t(j.key), l.jokGap - 6, l.narrow ? 7 : 10, 700);
+      g.fillText(t(j.key), j.x, j.y + j.r + (l.narrow ? 7 : 10));
+      g.restore();
+    }
+  }
+  /** The ladder's state: the question asked (index), the chips assured. */
+  const ladderAt = () => Math.min(G.right, LADDER.length - 1);
+  /** A phone: the ladder folded into a strip — the question, its chips, what is assured, 15 steps. */
+  function drawStrip(g, l) {
+    const x = 8, w = l.GW - 16, y = l.stripY, h = l.stripH, cur = ladderAt();
+    g.save();
+    rr(g, x, y, w, h, 7); g.fillStyle = 'rgba(8,14,12,.55)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.55)'; g.lineWidth = 0.8; g.stroke();
+    g.textBaseline = 'middle'; g.textAlign = 'left';
+    g.fillStyle = '#f5d77a'; g.font = '700 9px Cinzel, Georgia, serif';
+    const q = t('wwQuestion', { n: cur + 1 }); g.fillText(q, x + 7, y + 9);
+    const qw = g.measureText(q).width;
+    g.fillStyle = '#ffffff'; g.font = '800 9.5px Inconsolata, monospace'; g.fillText(fmt(LADDER[cur]), x + 12 + qw, y + 9);
+    g.textAlign = 'right'; g.fillStyle = 'rgba(245,240,227,.75)';
+    const as = t('wwAssured', { n: fmt(keptAfter(cur)) }) + ' ◆';
+    fitFont(g, as, w * 0.42, 7, 600); g.fillText(as, x + w - 7, y + 9);
+    const sw = (w - 14 - 14 * 2) / 15;
+    for (let i = 0; i < LADDER.length; i++) {
+      const sx = x + 7 + i * (sw + 2), now = i === cur, hh = now ? 7 : 4.5, sy = y + h - 9 - hh / 2;
+      rr(g, sx, sy, sw, hh, 1.5);
+      g.fillStyle = i < cur ? '#9fe3b0' : now ? '#f5d77a' : 'rgba(255,255,255,.18)'; g.fill();
+      if (SAFE.indexOf(i) >= 0) { g.strokeStyle = '#ffffff'; g.lineWidth = 1; g.stroke(); }
+    }
+    g.restore();
+  }
+  /** The whole ladder: 15 rows, the million on top; the question asked in gold, the ones won ✓, the safe levels ◆. */
+  function drawLadder(g, x, y, w, rowH, fs, cur) {
+    g.save();
+    const h = rowH * LADDER.length + 12;
+    rr(g, x, y, w, h, 9); g.fillStyle = 'rgba(6,12,10,.72)'; g.fill(); g.strokeStyle = 'rgba(216,178,90,.6)'; g.lineWidth = 1.2; g.stroke();
+    g.textBaseline = 'middle';
+    for (let i = LADDER.length - 1; i >= 0; i--) {
+      const ry = y + 6 + (LADDER.length - 1 - i) * rowH, mid = ry + rowH / 2, safe = SAFE.indexOf(i) >= 0, done = i < cur, now = i === cur;
+      if (now) { rr(g, x + 4, ry + 1, w - 8, rowH - 2, 5); const gr = g.createLinearGradient(x, 0, x + w, 0); gr.addColorStop(0, '#ffd27a'); gr.addColorStop(1, '#d8a93e'); g.fillStyle = gr; g.fill(); }
+      else if (safe) { rr(g, x + 4, ry + 1, w - 8, rowH - 2, 5); g.fillStyle = 'rgba(255,255,255,.07)'; g.fill(); }
+      const col = now ? '#1b1408' : safe ? '#ffffff' : done ? 'rgba(245,215,122,.45)' : '#f5d77a';
+      g.fillStyle = col; g.textAlign = 'right'; g.font = '700 ' + (fs - 1) + 'px Inconsolata, monospace';
+      g.globalAlpha = 0.8; g.fillText(String(i + 1), x + 4 + fs * 1.5, mid); g.globalAlpha = 1;
+      if (done || safe) { g.textAlign = 'center'; g.font = '700 ' + (fs - 2) + 'px Inter, system-ui, sans-serif'; g.fillStyle = now ? '#1b1408' : done ? '#9fe3b0' : '#ffffff'; g.fillText(done ? '✓' : '◆', x + 4 + fs * 2.6, mid); }
+      g.textAlign = 'right'; g.fillStyle = col; g.font = '800 ' + fs + 'px Inconsolata, monospace';
+      g.fillText(fmt(LADDER[i]), x + w - 10, mid);
+    }
+    g.restore();
+    return h;
+  }
+  function drawLegend(g, cx, y, fs) {
+    g.save(); g.textBaseline = 'middle'; g.textAlign = 'center'; g.font = '600 ' + fs + 'px Inter, system-ui, sans-serif'; g.fillStyle = 'rgba(245,240,227,.75)';
+    g.fillText('◆ ' + t('wwLadSafe') + '   ✓ ' + t('wwLadWon'), cx, y);
+    g.restore();
+  }
+  /** A phone, between two questions: the ladder, the Ace announcing the next one, « Continue ▶ ». */
+  function drawStep(g, l) {
+    const cur = ladderAt(), a = Math.min(1, G.stepT / 0.25);
+    g.save(); g.globalAlpha = a;
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#f5d77a';
+    const s2 = t('wwNextQ', { n: cur + 1, s: fmt(LADDER[cur]) });
+    fitFont(g, s2, l.W - 70, 12, 800, 'Cinzel, Georgia, serif');
+    g.fillText(s2, (l.W - 44) / 2, l.top + 6);
+    const rowH = Math.min(16, (l.H - l.top - 62) / LADDER.length), w = Math.min(l.W - 30, 170);
+    const h = drawLadder(g, (l.W - w) / 2, l.top + 20, w, rowH, Math.min(10, rowH * 0.62), cur);
+    drawLegend(g, l.W / 2, l.top + 20 + h + 9, 7);
+    g.fillStyle = '#f5f0e3'; g.globalAlpha = a * (shell.reduced ? 0.8 : 0.55 + 0.3 * Math.sin(time * 4)); g.font = '700 9px Inter, system-ui, sans-serif';
+    g.fillText(t('continueBtn'), l.W / 2, l.H - 12);
+    g.restore();
+  }
   function draw(g) {
     const l = L(), W = l.W, H = l.H;
     felt(g, W, H, shell.theme.light);
     g.save();
     // A wrong answer shakes the table.
     if (G && G.shake > 0) g.translate(Math.sin(time * 70) * 6 * (G.shake / 0.4), 0);
-    if (!onTitle() && G.q) {
+    if (G && state === 'step') drawStep(g, l);
+    else if (!onTitle() && G && G.q) {
       const q = G.q, shown = state === 'shown' || state === 'over';
       const glow = G.streak >= FEVER_STREAK ? 0.5 + 0.5 * Math.sin(time * 6) : 0;
       // Winning five: the winner's (both on a split).
       const lit = shown ? new Set(q.win >= 0 ? q.ra.best : []) : new Set();
       if (shown && q.win <= 0) q.rb.best.forEach((c) => lit.add(c));
+      if (l.stripH) drawStrip(g, l);
+      if (l.ladW) {
+        const rowH = Math.min(22, (H - l.top - 40) / LADDER.length);
+        const h = drawLadder(g, W - l.ladW - 8, l.top + 4, l.ladW, rowH, Math.min(13, rowH * 0.6), ladderAt());
+        drawLegend(g, W - 8 - l.ladW / 2, l.top + 4 + h + 10, 9);
+      }
       // The clock.
-      const bw = Math.min(W - 24 - (l.narrow ? 40 : 0), 320), bx0 = (l.narrow ? (W - 40) / 2 : W / 2) - bw / 2;
+      const bw = Math.min(l.GW - 24, 320), bx0 = l.cx - bw / 2;
       const frac = state === 'deal' ? 1 : Math.max(0, G.tLeft / G.tMax);
       rr(g, bx0, l.barY, bw, 6, 3); g.fillStyle = 'rgba(0,0,0,.3)'; g.fill();
       if (frac > 0) { rr(g, bx0, l.barY, bw * frac, 6, 3); g.fillStyle = frac > 0.5 ? '#3fae6a' : frac > 0.25 ? '#e0a33a' : '#d2453b'; g.fill(); }
-      // The board.
+      drawJokers(g, l);
+      // The board, in the middle.
+      if (l.lab) {
+        g.save(); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(245,240,227,.55)';
+        const bl = t('wwBoardLab').toUpperCase(); fitFont(g, bl, l.GW - 20, l.narrow ? 7 : 10, 700); g.fillText(bl, l.cx, l.labY); g.restore();
+      }
       for (let i = 0; i < 5; i++) {
-        const x = W / 2 + (i - 2) * (l.cw + l.gap);
+        const x = l.cx + (i - 2) * (l.cw + l.gap);
         const p = state === 'deal' ? (G.dealT - REVEAL[i]) / FLIP : 1;
         flipCard(g, q.board[i], x, l.boardY, l.cw, l.ch, p, shown && lit.has(q.board[i]), shown && !lit.has(q.board[i]), shown ? 0 : glow);
       }
       if (state !== 'over') drawPot(g, l);
-      // The two hands, their names once answered.
+      drawPrompt(g, l);
+      // The two hands, each right above its answer button; their names once answered.
       [[q.a, q.ra, l.ax, 1], [q.b, q.rb, l.bx, -1]].forEach(([hand, r, cx, side]) => {
         const xs = handXs(l, cx);
         const won = shown && (q.win === side || q.win === 0);
-        rr(g, cx - l.hcw - l.gap - 6, l.handY - l.hch / 2 - 8, 2 * l.hcw + 2 * l.gap + 12, l.hch + 16, 10);
+        const bw2 = 2 * l.hcw + l.gap + 16, bh2 = l.hch + 14;
+        rr(g, cx - bw2 / 2, l.handY - bh2 / 2, bw2, bh2, 10);
         g.fillStyle = shown ? (won ? 'rgba(216,178,90,.28)' : 'rgba(0,0,0,.22)') : 'rgba(0,0,0,.18)'; g.fill();
         if (shown && G.answer === side) { g.strokeStyle = G.ok ? '#3fae6a' : '#d2453b'; g.lineWidth = 2.5; g.stroke(); }
+        else if (!shown) { g.strokeStyle = 'rgba(245,215,122,.4)'; g.lineWidth = 1.2; g.stroke(); }
         for (let k = 0; k < 2; k++) card(g, hand[k], xs[k], l.handY, l.hcw, l.hch, shown && lit.has(hand[k]), shown && !lit.has(hand[k]));
         // Crossed out by a second chance.
         if (!shown && tv() && G.out === side) {
-          rr(g, cx - l.hcw - l.gap - 6, l.handY - l.hch / 2 - 8, 2 * l.hcw + 2 * l.gap + 12, l.hch + 16, 10);
-          g.fillStyle = 'rgba(0,0,0,.6)'; g.fill();
+          rr(g, cx - bw2 / 2, l.handY - bh2 / 2, bw2, bh2, 10); g.fillStyle = 'rgba(0,0,0,.6)'; g.fill();
           g.fillStyle = 'rgba(255,138,128,.9)'; g.font = '700 30px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
           g.fillText('✕', cx, l.handY);
         }
-        if (shown || (tv() && G.hint)) {
+        if (shown) {
           const label = t(NAME_KEYS[r.cat]);
-          g.fillStyle = won ? '#f5d77a' : shown ? 'rgba(245,240,227,.75)' : '#9fd8ff'; g.textAlign = 'center'; g.textBaseline = 'top';
-          fitFont(g, label, 2 * l.hcw + 30, 12, 700);
-          g.fillText(label, cx, l.handY + l.hch / 2 + 11);
-        } else if (keyboardFirst()) {
-          g.fillStyle = 'rgba(245,240,227,.55)'; g.textAlign = 'center'; g.textBaseline = 'top'; g.font = '700 10px Inconsolata, monospace';
-          g.fillText(side === 1 ? '←' : '→', cx, l.handY + l.hch / 2 + 11);
-        }
+          g.fillStyle = won ? '#f5d77a' : 'rgba(245,240,227,.75)'; g.textAlign = 'center'; g.textBaseline = 'top';
+          fitFont(g, label, l.colW - 6, l.narrow ? 10 : 13, 700);
+          g.fillText(label, cx, l.handY + bh2 / 2 + 5);
+        } else answerBtn(g, l, side);
       });
-      if (shown) {
-        g.font = '700 26px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-        g.fillStyle = G.ok ? '#7ee2a0' : '#ff8a80';
-        g.fillText(G.ok ? '✓' : '✗', W / 2, l.narrow ? (l.boardY + l.ch / 2 + l.handY - l.hch / 2) / 2 : l.handY + l.ch / 2 + 40);
-      }
-      layoutButtons(l);
-      btns.draw(g, keyboardFirst(), null);
       if (G.trap && (state === 'shown' || state === 'over')) drawTrap(g, l);
     }
     g.restore();
-    // The Ace, top right: he reacts to the answers (mood, pose).
+    // The Ace, top right: he reacts to the answers (mood, pose); his words go to the line above the hands.
     const s = l.narrow ? 0.17 : 0.22, ax = W - (l.narrow ? 20 : 30), ay = l.top + (l.narrow ? 0 : 18);
-    ace.place(ax, ay, s, shell.k);
-    if (G && G.say && !onTitle()) {
-      const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
-      // His bubble on his left, clear of him.
-      g.save(); g.font = '600 11px Inter, system-ui, sans-serif';
-      const tw = Math.min(170, g.measureText(G.say.s).width + 18); g.restore();
-      bubble(g, G.say.s, ax - 212 * s * 0.4 - 6 - tw / 2, ay - 212 * s * 0.45 + 30, W, a);
-    }
+    if (l.ladW) ace.place(W - l.ladW - 40, ay, s, shell.k);
+    else ace.place(ax, ay, s, shell.k);
     if (G) drawFloaters(g, G.fx);
-    // The level's banner: fades in and out on the board, never wider than the felt.
-    if (G && G.ban && !onTitle()) {
-      const l = L(), b = G.ban, a = Math.min(1, b.t / 0.25, (b.life - b.t) / 0.5);
-      g.save(); g.globalAlpha = Math.max(0, a); g.textAlign = 'center'; g.textBaseline = 'middle';
-      fitFont(g, b.s, l.W - 24, l.narrow ? 19 : 24, 700, 'Cinzel, Georgia, serif');
-      const y = l.boardY, w = Math.min(l.W - 12, g.measureText(b.s).width + 28);
-      rr(g, l.W / 2 - w / 2, y - 17, w, 34, 17); g.fillStyle = 'rgba(8,14,12,.78)'; g.fill();
-      g.strokeStyle = 'rgba(216,178,90,.7)'; g.lineWidth = 1.5; g.stroke();
-      g.fillStyle = '#f5d77a'; g.fillText(b.s, l.W / 2, y + 1);
-      g.restore();
-    }
   }
 
   return {
     calm: true,          // painted only when its drawing changes (calm.mjs, web.110)
     update, draw, input, resize: renderResult,
-    running: () => state === 'deal' || state === 'ask' || state === 'shown',
+    running: () => state === 'step' || state === 'deal' || state === 'ask' || state === 'shown',
     destroy() { clearTimeout(timer); ace.remove(); },
   };
 }
