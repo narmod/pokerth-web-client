@@ -66,12 +66,22 @@ const tok2 = H.issueToken(st, 'Narmod', T0);
 ok(sub({ names: 'account', s: 4000, token: tok2 }).name === 'Narmod' && sub({ names: 'account', s: 4000, token: 'nope', now: T0 + 700000 }).err === 'account', 'account: the name comes from the token, no token no score');
 for (let i = 0; i < 7; i++) H.issueToken(st, 'Narmod', T0 + i);
 ok(Object.values(st.tokens).filter((x) => x.n === 'Narmod').length === 5, 'five tokens a nickname at most (the oldest go)');
+// Taking one's scores back (web.97): the browser's key marks its lines (hashed), an account token its nickname's.
+const DEV = 'd'.repeat(32), DEV2 = 'e'.repeat(32);
+sub({ s: 7777, name: 'DEV', dev: DEV, now: T0 + 2000000 });
+sub({ m: 'time', ticket: H.ticket(st, 'ace-runner', 'time', T0), s: 1500, name: 'DEV', dev: DEV, now: T0 + 2010000 });
+sub({ s: 7000, name: 'OTH', dev: DEV2, now: T0 + 2020000 });
+const lineDev = st.boards['initials/ace-runner:free'].find((x) => x.n === 'DEV');
+ok(lineDev && typeof lineDev.o === 'string' && lineDev.o !== DEV && !('o' in H.view(st, 'initials', 'ace-runner', T0).boards.free[0]), 'a line keeps a hash of its browser\'s key, never the key, never shown');
+ok(H.forget(st, { dev: DEV, now: T0 }) === 2 && !st.boards['initials/ace-runner:free'].some((x) => x.n === 'DEV') && st.boards['initials/ace-runner:free'].some((x) => x.n === 'OTH') && !st.boards['initials/ace-runner:time'],
+  'forget(): the browser\'s lines go (all boards), the others stay');
+ok(H.forget(st, { dev: 'short', now: T0 }) === 0, 'forget(): no key, nothing goes');
 // Off (the default): nothing taken, nothing shown.
 ok(H.namesOf(undefined) === 'off' && H.namesOf('nope') === 'off' && sub({ names: 'off', s: 3000, name: 'OFF' }).err === 'off' && Object.keys(H.view(st, 'off', 'ace-runner', T0).boards).length === 0 && Object.keys(H.adminView(st, 'off')).length === 0,
   'off is the default: no score taken, no board shown');
 // View, admin, prune.
 const v = H.view(st, 'initials', 'ace-runner', T0);
-ok(v.names === 'initials' && v.boards.free.length === 20 && v.boards.daily.length === 1 && Array.isArray(v.boards.time) && !('at' in v.boards.free[0]), 'the public view: each mode\'s board and today\'s, no internal field');
+ok(v.names === 'initials' && v.boards.free.length === 19 && v.boards.daily.length === 1 && Array.isArray(v.boards.time) && !('at' in v.boards.free[0]), 'the public view: each mode\'s board and today\'s, no internal field');
 ok(Object.keys(H.adminView(st, 'initials')).length === 2 && H.remove(st, 'initials/ace-runner:free', 'abc') && !H.remove(st, 'initials/ace-runner:free', 'abc'), 'the admin lists a setting\'s boards and removes a line');
 H.prune(st, T0 + 10 * 86400000);
 ok(!st.boards['initials/ace-runner:daily:2026-11-16'] && st.boards['initials/ace-runner:free'], 'old daily boards go, the others stay');
@@ -118,11 +128,13 @@ try {
   ok((await post('/__hof/score', { g: 'ace-runner', m: 'time', s: 1200, ticket: s2.d.ticket, name: 'bad' })).d.error === 'banned', 'a blocked name is refused');
   const al = await (await fetch(base + '/admin/hof?names=account&token=' + TOKEN)).json();
   ok(al.ok && al.names === 'initials' && al.shown === 'account' && al.boards['account/ace-runner:free'][0].n === 'Narmod' && al.bans[0] === 'BAD', 'GET /admin/hof: any setting\'s boards, the lists');
-  const dl = await post('/admin/hof/delete', { token: TOKEN, key: 'account/ace-runner:free', name: 'narmod' });
+  const fg = await post('/__hof/forget', { dev: 'x'.repeat(20) }, { Authorization: 'Bearer ' + acct });
+  ok(fg.status === 200 && fg.d.removed === 1, 'POST /__hof/forget: the account\'s nickname lines go, even with the setting on 3 letters (' + JSON.stringify(fg.d) + ')');
+  const dl = await post('/admin/hof/delete', { token: TOKEN, key: 'initials/ace-runner:time', name: 'xyz' });
   ok(dl.status === 200 && dl.d.ok, 'POST /admin/hof/delete: the line goes');
   await new Promise((res) => setTimeout(res, 1300));
   const saved = JSON.parse(fs.readFileSync(path.join(T, 'hof.json'), 'utf8'));
-  ok(saved.boards['initials/ace-runner:time'][0].n === 'XYZ' && !saved.boards['account/ace-runner:free'], 'the boards are saved to hall-of-fame.json');
+  ok(!saved.boards['initials/ace-runner:time'] && !saved.boards['account/ace-runner:free'], 'the boards are saved to hall-of-fame.json');
   ok(JSON.parse(fs.readFileSync(path.join(T, 'cfg.json'), 'utf8')).hofNames === 'initials', 'the setting is saved in the admin config');
 } finally {
   px.kill();
@@ -132,6 +144,9 @@ try {
 const pk = fs.readFileSync(path.join(root, 'public/pokerth.js'), 'utf8');
 ok(/data\.startsWith\('HOFTOK:'\)[\s\S]{0,200}localStorage\.setItem\('pth_hof_tok'/.test(pk), 'the client keeps the HOFTOK: key on the device (pth_hof_tok)');
 const pxs = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'public/pokerth-client.html'), 'utf8');
+ok(/<select id="adv-hofopt"[^>]*>\s*<option value="ask"[^>]*>[^<]*<\/option><option value="yes"[^>]*>[^<]*<\/option><option value="no"/.test(html) && /'pth_hof_opt',/.test(pk) && /getElementById\('adv-hofopt'\)/.test(pk),
+  'Advanced options › Community: « Hall of Fame: ask me / always / never », synced with the account');
 ok(/S\.isAuthLogin && S\.chatNick\) \{ _issueSyncToken\(S\); _issueHofToken\(S\); \}/.test(pxs) && /if \(S\.hofFrame \|\| hofNames\(\) !== 'account'\) return;/.test(pxs),
   'the proxy hands the key out only after an authenticated login (as the sync token), and only while the setting is « account »');
 

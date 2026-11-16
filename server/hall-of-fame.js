@@ -17,6 +17,11 @@
 // Each setting has its own boards (narmod: « un tableau par réglage »): coming
 // back to a setting brings its scores back.
 //
+// Each line remembers who may take it back (web.97, narmod: « some people will
+// not want to take part »): the hash of a random key the browser keeps
+// (pth_hof_dev), never shown; forget() removes a player's lines — the device's,
+// and with an account token every line of that nickname.
+//
 // Boards: '<names>/<game>:<mode>' keeps the TOP best, '<names>/<game>:daily:<day>'
 // the TOP_DAY best of a daily challenge (DAYS_KEPT days kept). One line per name
 // and board (its best), so a player cannot fill a board alone.
@@ -123,6 +128,10 @@ function cleanName(names, raw, words) {
   return '';
 }
 const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+/** The owner mark of a line: a keyed hash of the browser's key (never the key itself), '' without one. */
+function ownerOf(st, dev) {
+  return typeof dev === 'string' && dev.length >= 16 && dev.length <= 64 ? crypto.createHmac('sha256', st.secret).update('dev|' + dev).digest('base64url').slice(0, 16) : '';
+}
 /** Is this name blocked by the admin (_adminConfig.hofBans)? */
 const banned = (name, bans) => Array.isArray(bans) && bans.some((b) => same(b, name));
 
@@ -170,9 +179,11 @@ function submit(st, o) {
   const b = Array.isArray(st.boards[key]) ? st.boards[key] : (st.boards[key] = []);
   const i = b.findIndex((r) => same(r.n, name));
   if (i >= 0 && now - (b[i].at || 0) < NAME_GAP_MS) return { ok: false, err: 'rate' };
-  if (i >= 0 && b[i].s >= s) { b[i].at = now; return { ok: true, key, rank: i + 1, best: b[i].s, name, improved: false }; }
+  const o2 = ownerOf(st, o.dev);
+  if (i >= 0 && b[i].s >= s) { b[i].at = now; if (o2) b[i].o = o2; return { ok: true, key, rank: i + 1, best: b[i].s, name, improved: !!o2 }; }
   if (i >= 0) b.splice(i, 1);
   const line = { n: name, s, ts: now, at: now };
+  if (o2) line.o = o2;
   let at = b.findIndex((r) => r.s < s);
   if (at < 0) at = b.length;
   if (at >= max) return { ok: true, key, rank: 0, best: s, name, improved: true };
@@ -206,6 +217,23 @@ function remove(st, key, name) {
   if (!b.length) delete st.boards[key];
   return true;
 }
+/**
+ * A player takes his scores back: every line made from this browser (dev), and
+ * with an account token every line of that nickname on the account boards.
+ * Returns how many lines went.
+ */
+function forget(st, o) {
+  const mark = ownerOf(st, o.dev), nick = o.token ? tokenName(st, o.token, o.now) : null;
+  let n = 0;
+  Object.keys(st.boards).forEach((k) => {
+    const b = st.boards[k];
+    if (!Array.isArray(b)) return;
+    const keep = b.filter((r) => !((mark && r.o === mark) || (nick && k.indexOf('account/') === 0 && same(r.n, nick))));
+    n += b.length - keep.length;
+    if (keep.length) st.boards[k] = keep; else delete st.boards[k];
+  });
+  return n;
+}
 /** Old daily boards and expired tokens go. */
 function prune(st, now) {
   const oldest = dayOf(now - DAYS_KEPT * 86400000);
@@ -214,4 +242,4 @@ function prune(st, now) {
 }
 
 module.exports = { NAMES, RANKED, GAMES, TOP, TOP_DAY, DAYS_KEPT, TOKEN_DAYS, BASE_WORDS, normalize, namesOf, dayOk, boardKey, ticket, ticketStart,
-  plausible, fold, rude, cleanName, banned, issueToken, tokenName, submit, view, adminView, remove, prune };
+  plausible, fold, rude, cleanName, banned, issueToken, tokenName, submit, view, adminView, remove, forget, prune };

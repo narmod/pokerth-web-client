@@ -542,6 +542,8 @@ function openAdvancedOptions() {
   sync('adv-tooltips', 'tooltips', true);
   try { var _nr = document.getElementById('adv-noreact'); if (_nr) _nr.checked = (localStorage.getItem('pth_react_muted') === '1'); } catch (e) {}
   try { var _dc = document.getElementById('adv-defcommunity'); if (_dc) _dc.value = (localStorage.getItem('pth_rank_src') || 'pth'); } catch (e) {}
+  // Hall of Fame des mini-jeux (modules/games/hof.mjs) : me demander / toujours / jamais.
+  try { var _ho = document.getElementById('adv-hofopt'); if (_ho) { var _hv = localStorage.getItem('pth_hof_opt'); _ho.value = (_hv === 'yes' || _hv === 'no') ? _hv : 'ask'; } } catch (e) {}
   try { _advSyncPrefs(); } catch (e) {}
   try { _advSyncContext(); } catch (e) {}
   // Réouverture sur la DERNIÈRE catégorie visitée (demande narmod 2026-07-18) —
@@ -1558,6 +1560,7 @@ var _CFG_WEB_SYNC_KEYS = [
   // Web-only sans equivalent config.xml : elles appelaient _cfgSyncMark() mais
   // n'etaient collectees par aucun canal (donc jamais synchronisees).
   'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto', 'pth_bak_auto',
+  'pth_hof_opt',   // Hall of Fame des mini-jeux : ask / yes / no (modules/games/hof.mjs)
   'pth_interface_size', 'pth_high_contrast', 'pth_browser_zoom'
 ];
 // Notes de joueur + étiquettes (modules/notes). PAS dans la liste ci-dessus :
@@ -12597,7 +12600,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.96'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.97'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

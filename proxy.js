@@ -15907,7 +15907,10 @@ const httpServer = http.createServer((req, res) => {
   // POST /__hof/start { g, m } : un ticket signé pour la partie qui commence.
   // POST /__hof/score { g, m, s, ticket, day?, name? } (+ Authorization: Bearer
   // <jeton HOFTOK> en mode compte) : le score est inscrit s'il est plausible.
-  if (reqPathOnly === '/__hof' || reqPathOnly === '/__hof/start' || reqPathOnly === '/__hof/score') {
+  // POST /__hof/forget { dev } (+ Bearer) : le joueur retire ses scores (ceux de
+  // son appareil, et avec un jeton de compte toutes les lignes de son pseudo),
+  // même quand le Hall of Fame est désactivé.
+  if (reqPathOnly === '/__hof' || reqPathOnly === '/__hof/start' || reqPathOnly === '/__hof/score' || reqPathOnly === '/__hof/forget') {
     const _hj = function (code, obj) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
     if (reqPathOnly === '/__hof') {
       if (req.method !== 'GET' && req.method !== 'HEAD') return _hj(405, { ok: false, error: 'method' });
@@ -15919,6 +15922,12 @@ const httpServer = http.createServer((req, res) => {
       if (!d) return _hj(400, { ok: false, error: 'json' });
       if (!_hofRateOk(req)) return _hj(429, { ok: false, error: 'rate' });
       const now = Date.now();
+      if (reqPathOnly === '/__hof/forget') {
+        const _ft = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
+        const gone = HOF.forget(_hof, { now: now, dev: d.dev, token: _ft ? _ft[1] : '' });
+        if (gone) saveHofSoon();
+        return _hj(200, { ok: true, removed: gone });
+      }
       if (hofNames() === 'off') return _hj(200, { ok: false, error: 'off', names: 'off' });
       if (reqPathOnly === '/__hof/start') {
         const tk = HOF.ticket(_hof, d.g, d.m, now);
@@ -15926,7 +15935,7 @@ const httpServer = http.createServer((req, res) => {
       }
       const _bt = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
       const r = HOF.submit(_hof, { now: now, names: hofNames(), g: d.g, m: d.m, s: d.s, day: d.day, ticket: d.ticket,
-        token: _bt ? _bt[1] : '', name: d.name, words: hofWords(), bans: hofBans() });
+        token: _bt ? _bt[1] : '', name: d.name, dev: d.dev, words: hofWords(), bans: hofBans() });
       if (!r.ok) return _hj(r.err === 'rate' ? 429 : r.err === 'account' ? 401 : 400, { ok: false, error: r.err });
       if (r.improved) saveHofSoon();
       const v = HOF.view(_hof, hofNames(), d.g, now);

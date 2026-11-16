@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "盡量跑得遠啲",
     "adModeDailyD": "今日大家同一條路線",
     "adModeTime": "計時賽",
-    "adModeTimeD": "60秒贏最多籌碼；每次相撞扣5秒", "arModeTimeD": "90秒盡量跑得遠啲；每次相撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：要 {s} 先上到榜", "hofLogin": "用你嘅 pokerth.net 帳戶登入一次就可以入名人堂", "hofName3": "你嘅縮寫", "hofNameFree": "你嘅暱稱", "hofBad": "呢個名唔可以用", "hofEmpty": "仲未有成績——輪到你喇！",
+    "adModeTimeD": "60秒贏最多籌碼；每次相撞扣5秒", "arModeTimeD": "90秒盡量跑得遠啲；每次相撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：要 {s} 先上到榜", "hofLogin": "用你嘅 pokerth.net 帳戶登入一次就可以入名人堂", "hofName3": "你嘅縮寫", "hofNameFree": "你嘅暱稱", "hofBad": "呢個名唔可以用", "hofEmpty": "仲未有成績——輪到你喇！", "hofAsk": "名人堂第 {r} 名！要登記你嘅成績嗎？", "hofPublic": "你嘅名、成績同日期所有玩家都會睇到。", "hofYes": "登記", "hofNo": "唔使喇", "hofRemember": "記住我嘅選擇", "hofInfo": "公開：名、成績同日期所有玩家都睇到。冇你同意唔會傳送任何嘢（{w}）。", "hofForget": "刪除我嘅成績", "hofForgetQ": "要喺名人堂刪除你所有成績嗎？之後唔會再參加（可以喺 {w} 更改）。", "hofForgot": "已刪除成績：{n}", "hofOpt": "小遊戲名人堂", "hofOptAsk": "每次問我", "hofOptYes": "總是", "hofOptNo": "從不",
     "adTime": "時間",
     "adSalto": "空翻！",
     "adStreak": "連串",

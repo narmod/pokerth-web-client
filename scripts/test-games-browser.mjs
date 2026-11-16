@@ -163,8 +163,10 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     G.obs.push({ type: 'stack', x: 120, w: 30, n: 6, h: 40, col: 0 });
   });
   await pg.waitForSelector('#pth-game .gm-hof input', { timeout: 8000 }).catch(() => {});
-  const hf1 = await pg.evaluate(() => ({ txt: (document.querySelector('#pth-game .gm-hof') || {}).textContent || '', input: !!document.querySelector('#pth-game .gm-hof input.gm-h3') }));
-  ok(hf1.input && /initiales/.test(hf1.txt), label + ': Hall of Fame: the end screen asks for 3 letters when the score gets in (' + hf1.txt + ')');
+  const hf1 = await pg.evaluate(() => ({ txt: (document.querySelector('#pth-game .gm-hof') || {}).textContent || '', input: !!document.querySelector('#pth-game .gm-hof input.gm-h3'),
+    no: !!document.querySelector('#pth-game .gm-hof .gm-hno'), rem: !!document.querySelector('#pth-game .gm-hof input.gm-hrem') }));
+  ok(hf1.input && hf1.no && hf1.rem && /N° 3 du Hall of Fame ! Inscrire ton score \?/.test(hf1.txt) && /visibles par tous/.test(hf1.txt) && hofSent.length === 0,
+    label + ': Hall of Fame: nothing sent yet — the end screen asks first (rank, what everyone will see, 3 letters, No thanks, remember my choice) (' + hf1.txt + ')');
   await pg.fill('#pth-game .gm-hof input', 'abc');
   await pg.press('#pth-game .gm-hof input', 'Enter');
   await pg.waitForFunction(() => /N° 3/.test((document.querySelector('#pth-game .gm-hof') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
@@ -173,14 +175,36 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     label + ': Hall of Fame: ABC sent with the run\'s ticket, « N° 3 », kept for next time, typing did not restart the run (' + hf2.txt + ')');
   await pg.evaluate(() => window.__pthAR.hof());
   await pg.waitForSelector('#pth-game .gm-hlist li', { timeout: 5000 }).catch(() => {});
+  ok(await pg.evaluate(() => /Public : nom, score et date visibles par tous les joueurs\. Rien n'est envoyé sans ton accord \(Options avancées › Communauté\)/.test((document.querySelector('#pth-game .gm-hinfo') || {}).textContent || '') && !!document.querySelector('#pth-game .gm-hforget')),
+    label + ': Hall of Fame: the boards say what is public and where to choose, « Retirer mes scores » is there');
   const hf3 = await pg.evaluate(() => ({ tabs: document.querySelectorAll('#pth-game .gm-htabs button').length, rows: document.querySelectorAll('#pth-game .gm-hlist li').length, me: (document.querySelector('#pth-game .gm-hlist li.me') || {}).textContent || '', st: window.__pthAR.state(), h: (document.querySelector('#pth-game .gm-endc h2') || {}).textContent }));
   ok(hf3.tabs === 3 && hf3.rows === 2 && /ABC/.test(hf3.me) && hf3.st === 'board' && /Hall of Fame/.test(hf3.h), label + ': Hall of Fame on the title: a tab per mode, the board, the player\'s line lit (' + JSON.stringify(hf3) + ')');
   await pg.click('#pth-game .gm-htabs [data-h="2"]');
   ok(await pg.evaluate(() => /Pas encore de score/.test(document.querySelector('#pth-game .gm-endc').textContent)), label + ': Hall of Fame: an empty board says so');
+  // « Remove my scores »: confirmed, sent with this browser's key, and no longer taking part.
+  let forgetBody = null;
+  await pg.route('**/__hof/forget', (r) => { forgetBody = JSON.parse(r.request().postData() || '{}'); r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, removed: 2 }) }); });
+  pg.once('dialog', (dl) => dl.accept());
+  await pg.click('#pth-game .gm-hforget');
+  await pg.waitForFunction(() => /Scores retirés : 2/.test((document.querySelector('#pth-game .gm-hmsg') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
+  const hf4 = await pg.evaluate(() => ({ msg: (document.querySelector('#pth-game .gm-hmsg') || {}).textContent || '', opt: localStorage.getItem('pth_hof_opt'), dev: localStorage.getItem('pth_hof_dev') }));
+  ok(/Scores retirés : 2/.test(hf4.msg) && hf4.opt === 'no' && forgetBody && forgetBody.dev === hf4.dev && /^[0-9a-f]{32}$/.test(hf4.dev) && hofSent[0].dev === hf4.dev,
+    label + ': Hall of Fame: « Retirer mes scores » takes them back with this browser\'s key, then « never » (' + JSON.stringify(hf4) + ')');
   await pg.keyboard.press('Escape');
   await sleep(300);
   ok(await pg.evaluate(() => window.__pthAR.state() === 'title' && !!document.querySelector('#pth-game .pg-panel.gm-title .gm-opt')), label + ': Hall of Fame: Escape goes back to the title, its 🏆 chip');
-  await pg.unroute('**/__hof/start'); await pg.unroute('**/__hof/score'); await pg.unroute('**/__hof?g=*');
+  // « Never »: the next run asks nothing, sends nothing.
+  const sentBefore = hofSent.length;
+  await pg.evaluate(async () => {
+    const A = window.__pthAR; A.start('free'); await new Promise((r) => setTimeout(r, 400));
+    const G = A.run(); G.allInUntil = 0; G.ins = false; G.safeUntil = 0; G.dist = Math.max(G.dist, 50);
+    G.obs.push({ type: 'stack', x: 120, w: 30, n: 6, h: 40, col: 0 });
+  });
+  await sleep(2500);
+  ok(await pg.evaluate(() => window.__pthAR.state() === 'over' && !((document.querySelector('#pth-game .gm-hof') || {}).textContent || '')) && hofSent.length === sentBefore,
+    label + ': Hall of Fame: « never »: nothing asked, nothing sent');
+  await pg.evaluate(() => { localStorage.removeItem('pth_hof_opt'); });
+  await pg.unroute('**/__hof/start'); await pg.unroute('**/__hof/score'); await pg.unroute('**/__hof?g=*'); await pg.unroute('**/__hof/forget');
   await sleep(800);
   await pg.keyboard.press('Space');
   await sleep(400);

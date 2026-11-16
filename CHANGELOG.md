@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: taking part is the player's choice** (`web.97`, narmod: « some people will not want to take part, be
+  more explicit ») — nothing is sent without a yes: `hofEnd` reads the board first and, when the score would get in,
+  asks « N° 7! Enter your score? » with what everyone will see (name, score, date), « Enter it / No thanks » and
+  « remember my choice ». `pth_hof_opt` = ask (default) / yes / no, also in Advanced options › Community
+  (`adv-hofopt`, synced with the account: `_CFG_WEB_SYNC_KEYS`). « Remove my scores » on the boards
+  (`POST /__hof/forget`): every score carries a random browser key (`pth_hof_dev`), kept by the server as a keyed hash
+  on its line (`o`, never shown), so all of a browser's lines — and, with an account key, its nickname's — can be taken
+  back, even while the Hall of Fame is off; then « never ». An ⓘ line on the boards, a paragraph in Ace's Help
+  (Training › Trophies, 83 languages), the privacy page and the admin's note say so. 13 keys × 83 catalogues.
 - **Mini-games Hall of Fame — Ace Runner, and « Off » by default** (`web.96`, narmod) — `games/hof.mjs`: `hofStart`
   (a ticket when a run starts), `hofEnd` (on the end screen: the rank, three letters or a nickname to type when the
   score gets in, kept in `pth_hof_name`, or « log in once with your pokerth.net account »), `hofPanel` (the boards on

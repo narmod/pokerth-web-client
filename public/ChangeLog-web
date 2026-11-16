@@ -1,4 +1,9 @@
-2026-11-16 version 2.1.11-web.96 (current series):
+2026-11-16 version 2.1.11-web.97 (current series):
+- improvement: Hall of Fame — nothing is sent without your yes: when a score would get in, you are asked first, with what everyone will see (name, score, date); « remember my choice » answers once for all
+- new: Advanced options › Community — « Mini-games Hall of Fame: ask me / always / never », synced with your account
+- new: Hall of Fame — « Remove my scores » on the 🏆 boards takes all of yours back; the boards and Ace's Help say what is public and how to choose
+
+2026-11-16 version 2.1.11-web.96:
 - new: Ace Runner — the Hall of Fame, when the server turns it on: the top 20 of each mode and the top 10 of the day of the Daily challenge, from the 🏆 on the title; at the end of a run, your rank, with your pokerth.net nickname, three letters or a nickname, as the server chooses
 
 2026-11-16 version 2.1.11-web.95:
