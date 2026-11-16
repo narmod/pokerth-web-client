@@ -313,8 +313,14 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
       rows: rows.map((x) => x.cells[1].textContent + ' ' + x.cells[2].textContent), fit: tr.every((x) => x.right <= card.right + 1), ach: document.getElementById('rk-ach-wrap').style.display };
   });
   ok(v.shown && v.label === 'Mini-jeux' && v.active === 'hof' && v.ach === 'none', 'Ranking from the mini-games page: the « Mini-jeux » tab, opened by itself (' + JSON.stringify({ label: v.label, active: v.active }) + ')');
-  ok(v.games.length === 9 && v.games[0] === 'whowins' && !v.games.includes('pokerdrop') && !v.games.includes('house') && v.modes.length === 3 && v.rows.length === 2 && /^ABC 4/.test(v.rows[0]) && v.fit,
-    'its boards: the 9 ranked games (no Poker Drop, the hidden House not found yet), a tab per mode, the top lines; the five tabs fit (' + JSON.stringify({ g: v.games.length, modes: v.modes, rows: v.rows }) + ')');
+  ok(v.games.join(',') === 'whowins,ace-runner,hilo' && v.modes.length === 3 && v.rows.length === 2 && /^ABC 4/.test(v.rows[0]) && v.fit,
+    'its boards: only the games open here (12 trophies: 3 — web.106), a tab per mode, the top lines; the five tabs fit (' + JSON.stringify({ g: v.games, modes: v.modes, rows: v.rows }) + ')');
+  // The secret word opens everything: every ranked game, the hidden House of Cards too (never Poker Drop).
+  await pg.evaluate(() => { localStorage.setItem('pth_arcade_all', '1'); window.rankingSelect('pth'); window.rankingSelect('hof'); });
+  await pg.waitForSelector('#rk-hof-wrap select', { timeout: 6000 }).catch(() => {});
+  await sleep(400);
+  const all = await pg.evaluate(() => [...document.querySelectorAll('#rk-hof-wrap select option')].map((o) => o.value));
+  ok(all.length === 10 && all.includes('house') && !all.includes('pokerdrop'), 'everything open (secret word): the 10 ranked games, the House of Cards too (' + all.join(',') + ')');
   await pg.selectOption('#rk-hof-wrap select', 'videopoker');
   await sleep(500);
   const vp = await pg.evaluate(() => [...document.querySelectorAll('#rk-hof-wrap .hofv-modes button')].map((b) => b.textContent));
@@ -323,6 +329,16 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   await sleep(300);
   ok(await pg.evaluate(() => document.getElementById('rk-hof-wrap').style.display === 'none' && document.querySelector('#ranking-modal .rk-tab.active').dataset.src === 'pth'), 'back on PokerTH, the boards hide');
   await r.ctx.close();
+}
+{
+  // web.106: no game open on this device → no Mini-games tab, even with the Hall of Fame on.
+  const { ctx, pg } = await open(393, 852, 0);
+  await pg.route('**/__hof?g=*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, names: 'initials', day: '2026-11-16', top: 20, topDay: 10, boards: {} }) }));
+  await pg.evaluate(() => window.openRankingModal());
+  await sleep(1500);
+  const t = await pg.evaluate(() => document.querySelector('#ranking-modal .rk-tab-hof').style.display);
+  ok(t === 'none', 'no game open here: no Mini-games tab in Ranking, the Hall of Fame on or not (' + t + ')');
+  await ctx.close();
 }
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));
 await b.close(); server.close();

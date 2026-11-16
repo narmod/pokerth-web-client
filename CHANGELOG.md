@@ -16,6 +16,9 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ranking › Mini-games: unlocked games only** (`web.106`, narmod) — `hofGames()` keeps the games open on this
+  device (`currentState()`: trophies, a game played before, the secret word; the House of Cards once found); with
+  none, `hofTabOn()` hides the tab.
 - **Ranking › Mini-games: the Hall of Fame in one place** (`web.105`, narmod) — a fifth tab in the Ranking window
   (`data-src="hof"`, label `gmTitle`), shown when `/__hof` answers with a setting other than `off`, selected by
   itself when the window opens from the mini-games page. `modules/games/hof-view.mjs` draws it: a game (the

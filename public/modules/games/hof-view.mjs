@@ -5,15 +5,18 @@
 // boards as the 🏆 on each game's title (hof.mjs), every game in one place:
 // a game to pick, a tab per ranked mode, the top 20 (the top 10 of the day for
 // a daily challenge). Read only: entering a score and « Remove my scores »
-// stay at the end of a run and on the game's own boards.
+// stay at the end of a run and on the game's own boards. Only the games this
+// device has opened (web.106, narmod: « no scores of games not unlocked yet »):
+// a mystery game's board would give it away.
 //
 //   hofTabOn()            is the Hall of Fame on (the admin's setting is not
-//                         'off')? false offline; the answer is kept for the session
+//                         'off', kept for the session once true) and is a game
+//                         open on this device? false offline
 //   renderHofTab(el)      draws the tab in `el` (the game chosen last time,
 //                         pth_hof_view: { g, m })
 // ═══════════════════════════════════════════════════════════════════
 
-import { GAMES, gameName, allUnlocked } from './index.mjs';
+import { GAMES, gameName, allUnlocked, currentState } from './index.mjs';
 import { hofBoards, hofAccount, hofSavedName } from './hof.mjs';
 import { fmt } from './common.mjs';
 
@@ -34,15 +37,22 @@ export const HOF_VIEW = {
   bluff: [['free', 'psFree'], ['daily', 'psDaily'], ['tourney', 'hlModeTourney']],
   house: [['free', 'psFree'], ['daily', 'psDaily'], ['zen', 'hcModeZen']],
 };
-/** The games shown, in the arcade's order; the hidden House of Cards once it is found. */
-export const hofGames = () => GAMES.filter((g) => HOF_VIEW[g.id] && (!g.bonus || allUnlocked()));
+/**
+ * The games shown, in the arcade's order: those open on this device (as on the
+ * mini-games page: trophies, a game played before, the secret word), the hidden
+ * House of Cards once it is found.
+ */
+export async function hofGames() {
+  let open = new Set();
+  try { const st = await currentState(); open = new Set(st.games.filter((x) => x.open).map((x) => x.id)); } catch (e) {}
+  return GAMES.filter((g) => HOF_VIEW[g.id] && (g.bonus ? allUnlocked() : open.has(g.id)));
+}
 
-let on = null;
-/** Is the Hall of Fame on? (one read of a board, kept for the session once it is true). */
+let on = false;
+/** Is the Hall of Fame on (one read of a board, kept for the session once true), with a game open here? */
 export async function hofTabOn() {
-  if (on) return true;
-  const v = await hofBoards('ace-runner');
-  on = !!(v && v.names && v.names !== 'off');
+  if (!(await hofGames()).length) return false;
+  if (!on) { const v = await hofBoards('ace-runner'); on = !!(v && v.names && v.names !== 'off'); }
   return on;
 }
 
@@ -70,10 +80,11 @@ function loadSel() { try { return JSON.parse(localStorage.getItem(VIEW_KEY) || '
 function saveSel(g, m) { try { localStorage.setItem(VIEW_KEY, JSON.stringify({ g, m })); } catch (e) {} }
 
 /** Draws the tab in `el`: a game, its modes, its board. */
-export function renderHofTab(el) {
+export async function renderHofTab(el) {
   if (!el) return;
   ensureCss();
-  const games = hofGames(), saved = loadSel();
+  const games = await hofGames(), saved = loadSel();
+  if (!games.length) { el.innerHTML = '<div class="rk-msg">' + esc(tr('rankingEmpty')) + '</div>'; return; }
   let g = games.some((x) => x.id === saved.g) ? saved.g : games[0].id;
   let m = '', view = null, seq = 0;
   const modesOf = (id) => HOF_VIEW[id];
