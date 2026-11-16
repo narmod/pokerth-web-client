@@ -1265,7 +1265,7 @@ export const strings = {
     "adModeFreeD": "能跑多远跑多远",
     "adModeDailyD": "今天大家同一条路线",
     "adModeTime": "计时赛",
-    "adModeTimeD": "60秒赢取最多筹码；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多远跑多远；每次碰撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：需要 {s} 才能上榜", "hofLogin": "用你的 pokerth.net 账户登录一次即可进入名人堂", "hofName3": "你的缩写", "hofNameFree": "你的昵称", "hofBad": "此名称不可用", "hofEmpty": "还没有成绩——轮到你了！", "hofAsk": "名人堂第 {r} 名！要登记你的成绩吗？", "hofPublic": "你的名字、成绩和日期将对所有玩家可见。", "hofYes": "登记", "hofNo": "不用了", "hofRemember": "记住我的选择", "hofInfo": "公开：名字、成绩和日期对所有玩家可见。未经你同意不会发送任何内容（{w}）。", "hofForget": "删除我的成绩", "hofForgetQ": "要从名人堂删除你的全部成绩吗？之后将不再参与（可在 {w} 中更改）。", "hofForgot": "已删除成绩：{n}", "hofOpt": "小游戏名人堂", "hofOptAsk": "每次询问", "hofOptYes": "总是", "hofOptNo": "从不",
+    "adModeTimeD": "60秒赢取最多筹码；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多远跑多远；每次碰撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：需要 {s} 才能上榜", "hofLogin": "用你的 pokerth.net 账户登录一次即可进入名人堂", "hofName3": "你的缩写", "hofNameFree": "你的昵称", "hofBad": "此名称不可用", "hofEmpty": "还没有成绩——轮到你了！", "hofAsk": "名人堂第 {r} 名！要登记你的成绩吗？", "hofPublic": "你的名字、成绩和日期将对所有玩家可见。", "hofYes": "登记", "hofNo": "不用了", "hofRemember": "记住我的选择", "hofInfo": "公开：名字、成绩和日期对所有玩家可见。未经你同意不会发送任何内容（{w}）。", "hofForget": "删除我的成绩", "hofForgetQ": "要从 Hall of Fame 删除你的所有分数吗？下次你上榜时，会再次询问你。", "hofRejoin": "重新参加 Hall of Fame", "hofForgot": "已删除成绩：{n}", "hofOpt": "小游戏名人堂", "hofOptAsk": "每次询问", "hofOptYes": "总是", "hofOptNo": "从不",
     "adTime": "时间",
     "adSalto": "空翻！",
     "adStreak": "连串",

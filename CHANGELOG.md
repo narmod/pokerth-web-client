@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: back in after « Remove my scores », the field above the keyboard** (`web.103`, narmod) —
+  removing one's scores now sets `pth_hof_opt` back to `ask` (the next score that gets in asks, as the first time;
+  `hofForgetQ` says so, in the 83 languages); with `no`, the boards show « Take part again » (`hofRejoin`). On a
+  phone the name's field is no longer under the keyboard: `keepVisible()` follows the visual viewport and moves the
+  end card up while the field has the focus.
 - **Hall of Fame: Poker Solitaire, the Ace's Bluff and the House of Cards** (`web.102`, narmod) — the last games:
   `solitaire` (daily, free; 1 000 whatever the time: ten lines, 100 a royal), `bluff` (free, daily, tourney;
   10 000 + 100 a second), `house` (free, daily, zen; 20 000 + 2 000 a second). Every mini-game with a score is ranked

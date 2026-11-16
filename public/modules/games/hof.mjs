@@ -29,7 +29,9 @@
 // « remember my choice »), 'yes' (sent by itself) or 'no' (nothing asked, nothing
 // sent); also in Advanced options › Community (synced with the account). Every
 // score carries a random key of this browser (pth_hof_dev, kept hashed by the
-// server), so « Remove my scores » on the boards takes them all back.
+// server), so « Remove my scores » on the boards takes them all back — and the
+// next score that gets in asks again, as the first time (web.103); a player who
+// said « never » finds « Take part again » on the boards.
 // ═══════════════════════════════════════════════════════════════════
 
 import { fmt } from './common.mjs';
@@ -82,6 +84,7 @@ const CSS = `
 #pth-game .gm-hof label{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:6px;font:600 12px 'Inter',system-ui,sans-serif;color:#cfd8d2;cursor:pointer}
 #pth-game .gm-hinfo{margin:0 4px 8px;text-align:center}
 #pth-game .gm-hforget{appearance:none;margin-top:8px;border:0;background:none;color:#ff9b8f;font:600 12px 'Inter',system-ui,sans-serif;text-decoration:underline;cursor:pointer}
+#pth-game .gm-hrejoin{appearance:none;display:block;margin:8px auto 0;border:0;border-radius:9px;padding:7px 12px;background:linear-gradient(180deg,#ffd27a,#d8a93e);color:#1b1408;font:800 12.5px 'Inter',system-ui,sans-serif;cursor:pointer}
 #pth-game .gm-hmsg{margin-top:6px;font:600 12px 'Inter',system-ui,sans-serif;color:#9fe3b0}
 #pth-game .pg-panel.gm-hofp .gm-endc{width:min(460px,100%)}
 #pth-game .gm-htabs{display:flex;gap:5px;justify-content:center;margin:10px 0 8px;flex-wrap:wrap}
@@ -101,6 +104,45 @@ function ensureCss() {
   if (document.getElementById('pth-game-hof-css')) return;
   const st = document.createElement('style'); st.id = 'pth-game-hof-css'; st.textContent = CSS;
   document.head.appendChild(st);
+}
+
+/**
+ * Keeps a field above the phone's keyboard (web.103, narmod: « the keyboard
+ * comes over the field I type my name in »): the game area is fixed, so the
+ * browser does not scroll it into view. While the field has the focus, the card
+ * moves up (or down) by what the visual viewport hides of it, then back.
+ */
+const KV = new WeakSet();
+function keepVisible(inp) {
+  const vv = window.visualViewport;
+  const card = /** @type {HTMLElement|null} */ (inp.closest('.gm-endc'));
+  if (!vv || !card || KV.has(inp)) return;
+  KV.add(inp);
+  let shift = 0, raf = 0;
+  const set = (v) => { shift = v; card.style.transform = v ? 'translateY(' + (-v) + 'px)' : ''; };
+  const upd = () => {
+    raf = 0;
+    if (!inp.isConnected || document.activeElement !== inp) return off();
+    const r = inp.getBoundingClientRect(), z = parseFloat(getComputedStyle(card).zoom || '1') || 1;
+    const top = vv.offsetTop + 8, bot = vv.offsetTop + vv.height - 12;
+    // The whole question (its buttons, « remember my choice ») when it fits, else the field.
+    const box = inp.closest('.gm-hof'), rb = box ? box.getBoundingClientRect() : r;
+    const low = rb.bottom - r.top <= bot - top ? rb.bottom : r.bottom;
+    let d = 0;
+    if (low > bot) d = low - bot;
+    else if (r.top < top) d = r.top - top;
+    if (Math.abs(d) > 1) set(Math.max(0, shift + d / z));
+  };
+  const later = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  const timers = [later, later, later].map((f, i) => setTimeout(f, 120 + i * 220));
+  function off() {
+    vv.removeEventListener('resize', later); vv.removeEventListener('scroll', later);
+    inp.removeEventListener('blur', blur); timers.forEach(clearTimeout); set(0); KV.delete(inp);
+  }
+  function blur() { setTimeout(() => { if (document.activeElement !== inp) off(); }, 60); }
+  vv.addEventListener('resize', later); vv.addEventListener('scroll', later);
+  inp.addEventListener('blur', blur);
+  later();
 }
 
 async function call(path, body, auth) {
@@ -180,6 +222,7 @@ export function hofEnd(shell, o) {
     const yes = box.querySelector('.gm-hyes'), no = box.querySelector('.gm-hno'), inp = /** @type {HTMLInputElement|null} */ (box.querySelector('.gm-hform input'));
     const rem = /** @type {HTMLInputElement|null} */ (box.querySelector('.gm-hrem'));
     if (!yes) return;
+    if (inp) inp.addEventListener('focus', () => keepVisible(inp));
     if (inp && three) inp.addEventListener('input', () => { const v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3); if (v !== inp.value) inp.value = v; });
     let busy = false;
     const go = () => {
@@ -233,6 +276,7 @@ export function hofPanel(shell, o) {
       + '<div class="gm-htabs">' + o.modes.map((x, i) => '<button type="button" data-e="tab" data-h="' + i + '" class="' + (i === sel ? 'on' : '') + '">' + esc(x.label) + '</button>').join('') + '</div>'
       + '<p class="gm-hinfo">ⓘ ' + esc(t('hofInfo', { w: t('advTitle') + ' › ' + t('advSecCommunity') })) + '</p>'
       + list + (msg ? '<div class="gm-hmsg">' + esc(msg) + '</div>' : '')
+      + (view && view.names && view.names !== 'off' && hofOpt() === 'no' ? '<button type="button" class="gm-hrejoin" data-e="rejoin">' + esc(t('hofRejoin')) + '</button>' : '')
       + (devKey(false) || hofAccount() ? '<button type="button" class="gm-hforget" data-e="forget">' + esc(t('hofForget')) + '</button>' : '')
       + '<div class="gm-ebtns"><button type="button" class="gm-eB" data-e="menu"><kbd>B</kbd>' + esc(t('gmGameMenu')) + '</button></div></div>');
     const panel = /** @type {HTMLElement|null} */ (shell.root.querySelector('.pg-panel'));
@@ -250,13 +294,19 @@ export function hofPanel(shell, o) {
       fg.addEventListener('pointerdown', (e) => e.stopPropagation());
       fg.addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!window.confirm(t('hofForgetQ', { w: t('advTitle') + ' › ' + t('advSecCommunity') }))) return;
+        if (!window.confirm(t('hofForgetQ'))) return;
         const d = await hofForget();
-        setHofOpt('no');
+        // web.103 (narmod: « once out, I can't get back in but through the options »): asked again as the first time.
+        setHofOpt('ask');
         msg = t('hofForgot', { n: d ? d.removed : 0 });
         view = (await hofBoards(o.g)) || view;
         draw(false);
       });
+    }
+    const rj = panel.querySelector('[data-e="rejoin"]');
+    if (rj) {
+      rj.addEventListener('pointerdown', (e) => e.stopPropagation());
+      rj.addEventListener('click', (e) => { e.stopPropagation(); setHofOpt('ask'); msg = ''; draw(false); });
     }
     const bk = /** @type {HTMLElement|null} */ (panel.querySelector('[data-e="menu"]'));
     if (bk) { bk.addEventListener('pointerdown', (e) => e.stopPropagation()); bk.addEventListener('click', (e) => { e.stopPropagation(); back(); }); }

@@ -1,4 +1,8 @@
-2026-11-16 version 2.1.11-web.102 (current series):
+2026-11-16 version 2.1.11-web.103 (current series):
+- bugfix: Hall of Fame — on a phone, the keyboard no longer hides the field where you type your name: the window moves up while you type
+- improvement: Hall of Fame — « Remove my scores » no longer shuts you out: your next score that gets in asks again, as the first time; if you chose « never », a « Take part again » button waits on the 🏆 boards
+
+2026-11-16 version 2.1.11-web.102:
 - new: Hall of Fame — Poker Solitaire (Daily challenge, Free game), the Ace's Bluff (Free, Daily challenge, Tournament) and the hidden House of Cards (Free, Daily challenge, Zen) join it: every mini-game with a score now has its boards, when the server has it on
 
 2026-11-16 version 2.1.11-web.101:

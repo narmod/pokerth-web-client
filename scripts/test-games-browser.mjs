@@ -67,6 +67,21 @@ async function hofCheck(pg, label, g, hook, modes, play) {
   await pg.evaluate(play);
   await pg.waitForSelector('#pth-game .gm-hof .gm-hyes', { timeout: 10000 }).catch(() => {});
   const ask = await pg.evaluate(() => ({ txt: (document.querySelector('#pth-game .gm-hof') || {}).textContent || '', v: (document.querySelector('#pth-game .gm-hof input') || {}).value }));
+  if (label === 'phone' && g === 'tapis') {
+    // web.103: a phone keyboard (a visual viewport 330 px shorter) must not hide the name's field.
+    const kb = await pg.evaluate(async () => {
+      const vv = new EventTarget(); vv.offsetTop = 0; vv.height = window.innerHeight - 330;
+      Object.defineProperty(window, 'visualViewport', { configurable: true, value: vv });
+      const inp = document.querySelector('#pth-game .gm-hof input'), wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      inp.focus(); vv.dispatchEvent(new Event('resize')); await wait(900);
+      const r = inp.getBoundingClientRect(), up = document.querySelector('#pth-game .gm-endc').style.transform;
+      inp.blur(); await wait(200);
+      const after = document.querySelector('#pth-game .gm-endc').style.transform;
+      delete window.visualViewport;
+      return { bottom: Math.round(r.bottom), room: vv.height, up, after };
+    });
+    ok(kb.bottom <= kb.room && /translateY\(-/.test(kb.up) && kb.after === '', label + ': ' + g + ': the keyboard does not hide the name\'s field, the card moves up then back (' + JSON.stringify(kb) + ')');
+  }
   await pg.click('#pth-game .gm-hof .gm-hyes').catch(() => {});
   await pg.waitForFunction(() => /N° 1 du Hall of Fame/.test((document.querySelector('#pth-game .gm-hof') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
   const done = await pg.evaluate(() => (document.querySelector('#pth-game .gm-hof') || {}).textContent || '');
@@ -75,6 +90,24 @@ async function hofCheck(pg, label, g, hook, modes, play) {
   await pg.evaluate((h) => window[h].hof(), hook);
   await pg.waitForSelector('#pth-game .gm-htabs button', { timeout: 5000 }).catch(() => {});
   const tabs = await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-htabs button').length);
+  if (g === 'tapis') {
+    // web.103: « Never » → « Take part again » on the boards; « Remove my scores » → asked again as the first time.
+    await pg.route('**/__hof/forget', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, removed: 1 }) }));
+    await pg.evaluate(() => { localStorage.setItem('pth_hof_opt', 'no'); });
+    await pg.click('#pth-game .gm-htabs button[data-h="1"]');
+    await pg.waitForSelector('#pth-game .gm-hrejoin', { timeout: 3000 }).catch(() => {});
+    const rj = await pg.evaluate(() => (document.querySelector('#pth-game .gm-hrejoin') || {}).textContent || '');
+    await pg.click('#pth-game .gm-hrejoin').catch(() => {});
+    const rj2 = await pg.evaluate(() => ({ opt: localStorage.getItem('pth_hof_opt'), btn: !!document.querySelector('#pth-game .gm-hrejoin') }));
+    await pg.evaluate(() => { localStorage.setItem('pth_hof_opt', 'yes'); });
+    pg.once('dialog', (d) => d.accept());
+    await pg.click('#pth-game .gm-hforget').catch(() => {});
+    await pg.waitForSelector('#pth-game .gm-hmsg', { timeout: 3000 }).catch(() => {});
+    const fg = await pg.evaluate(() => ({ opt: localStorage.getItem('pth_hof_opt'), msg: (document.querySelector('#pth-game .gm-hmsg') || {}).textContent || '' }));
+    ok(/Participer de nouveau/.test(rj) && rj2.opt === 'ask' && !rj2.btn && fg.opt === 'ask' && /1/.test(fg.msg),
+      label + ': ' + g + ': « Jamais » → « Participer de nouveau » on the boards; « Retirer mes scores » → asked again (' + JSON.stringify({ rj, rj2, fg }) + ')');
+    await pg.unroute('**/__hof/forget');
+  }
   await pg.keyboard.press('Escape');
   await sleep(300);
   const back = await pg.evaluate((h) => window[h].state(), hook);
@@ -225,19 +258,20 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(hf3.tabs === 3 && hf3.rows === 2 && /ABC/.test(hf3.me) && hf3.st === 'board' && /Hall of Fame/.test(hf3.h), label + ': Hall of Fame on the title: a tab per mode, the board, the player\'s line lit (' + JSON.stringify(hf3) + ')');
   await pg.click('#pth-game .gm-htabs [data-h="2"]');
   ok(await pg.evaluate(() => /Pas encore de score/.test(document.querySelector('#pth-game .gm-endc').textContent)), label + ': Hall of Fame: an empty board says so');
-  // « Remove my scores »: confirmed, sent with this browser's key, and no longer taking part.
+  // « Remove my scores »: confirmed, sent with this browser's key, then asked again as the first time (web.103; « never » until then).
   let forgetBody = null;
   await pg.route('**/__hof/forget', (r) => { forgetBody = JSON.parse(r.request().postData() || '{}'); r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, removed: 2 }) }); });
   pg.once('dialog', (dl) => dl.accept());
   await pg.click('#pth-game .gm-hforget');
   await pg.waitForFunction(() => /Scores retirés : 2/.test((document.querySelector('#pth-game .gm-hmsg') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
   const hf4 = await pg.evaluate(() => ({ msg: (document.querySelector('#pth-game .gm-hmsg') || {}).textContent || '', opt: localStorage.getItem('pth_hof_opt'), dev: localStorage.getItem('pth_hof_dev') }));
-  ok(/Scores retirés : 2/.test(hf4.msg) && hf4.opt === 'no' && forgetBody && forgetBody.dev === hf4.dev && /^[0-9a-f]{32}$/.test(hf4.dev) && hofSent[0].dev === hf4.dev,
-    label + ': Hall of Fame: « Retirer mes scores » takes them back with this browser\'s key, then « never » (' + JSON.stringify(hf4) + ')');
+  ok(/Scores retirés : 2/.test(hf4.msg) && hf4.opt === 'ask' && forgetBody && forgetBody.dev === hf4.dev && /^[0-9a-f]{32}$/.test(hf4.dev) && hofSent[0].dev === hf4.dev,
+    label + ': Hall of Fame: « Retirer mes scores » takes them back with this browser\'s key, then asks again (' + JSON.stringify(hf4) + ')');
   await pg.keyboard.press('Escape');
   await sleep(300);
   ok(await pg.evaluate(() => window.__pthAR.state() === 'title' && !!document.querySelector('#pth-game .pg-panel.gm-title .gm-opt')), label + ': Hall of Fame: Escape goes back to the title, its 🏆 chip');
   // « Never »: the next run asks nothing, sends nothing.
+  await pg.evaluate(() => localStorage.setItem('pth_hof_opt', 'no'));
   const sentBefore = hofSent.length;
   await pg.evaluate(async () => {
     const A = window.__pthAR; A.start('free'); await new Promise((r) => setTimeout(r, 400));
