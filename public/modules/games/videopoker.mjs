@@ -29,6 +29,7 @@ import { rankOf } from './poker-hand.mjs';
 import { deckFor } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
+import { spriteCache } from './sprites.mjs';
 import { drawBackCard, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { VARIANTS, variantOf, rowOf, payOf, madeBy, deckOf, MAX_BET } from './videopoker-rules.mjs';
 import { titleScreen } from './title.mjs';
@@ -429,10 +430,18 @@ export function create(shell) {
 
   // ── Drawing ───────────────────────────────────────────────────────
   const GOLD = '#f5d77a';
+  // web.108 (audit lot 2): what does not move — the cabinet, the rings of bulbs (2 or 3 patterns), the title, the
+  // screen, the pay table, the panel and its buttons — is painted once and copied (sprites.mjs).
+  const sprites = spriteCache(shell, 48);
+  const lang = () => document.documentElement.lang || '';
+  /** A ring of bulbs: one picture per pattern (lit one out of three, or all / none when winning). */
   function bulbs(g, x, y, w, h, n, speed, all) {
+    const ph = Math.floor(time * speed) % (all ? 2 : 3);
+    sprites.draw(g, 'bulbs|' + [x, y, w, h, n, ph, all ? 1 : 0].map((v) => +(+v).toFixed(3)).join(','), 0, 0, [x - 3, y - 3, w + 6, h + 6], (c) => bulbsAt(c, x, y, w, h, n, ph, all));
+  }
+  function bulbsAt(g, x, y, w, h, n, ph, all) {
     const per = Math.max(4, (2 * (w + h)) / n);
     let k = 0;
-    const ph = Math.floor(time * speed);
     const dot = (px, py) => {
       const on = all ? ph % 2 === 0 : (k + ph) % 3 === 0; k++;
       g.beginPath(); g.arc(px, py, 2.1, 0, Math.PI * 2);
@@ -559,32 +568,42 @@ export function create(shell) {
     if (state === 'title' || state === 'board' || !G) { g.fillStyle = '#2a070c'; g.fillRect(0, 0, W, H); return; }
     const l = L();
     made = G.row >= 0 && G.cards.length ? madeBy(G.cards, G.v, G.row) : [];
-    const winning = time - G.winAt < 1.6;
-    // The cabinet.
-    const cab = g.createLinearGradient(0, 0, W, 0); cab.addColorStop(0, '#3a0a10'); cab.addColorStop(0.5, '#6e1420'); cab.addColorStop(1, '#3a0a10');
-    g.fillStyle = cab; g.fillRect(0, 0, W, H);
-    // The marquee: the variant's name, the LED counters (wide).
-    rr(g, l.m, l.my, W - 2 * l.m, l.mh, 8);
-    const mq = g.createLinearGradient(0, l.my, 0, l.my + l.mh); mq.addColorStop(0, '#ffcf4a'); mq.addColorStop(1, '#c4851a');
-    g.fillStyle = mq; g.fill(); g.strokeStyle = '#fff1b8'; g.lineWidth = 1.5; g.stroke();
+    const winning = time - G.winAt < 1.6, geo = [W, H, l.m, l.my, l.mh].map((v) => +v.toFixed(3)).join(',');
+    // The cabinet and the marquee.
+    sprites.draw(g, 'cab|' + geo, 0, 0, [0, 0, W, H], (c) => {
+      const cab = c.createLinearGradient(0, 0, W, 0); cab.addColorStop(0, '#3a0a10'); cab.addColorStop(0.5, '#6e1420'); cab.addColorStop(1, '#3a0a10');
+      c.fillStyle = cab; c.fillRect(0, 0, W, H);
+      rr(c, l.m, l.my, W - 2 * l.m, l.mh, 8);
+      const mq = c.createLinearGradient(0, l.my, 0, l.my + l.mh); mq.addColorStop(0, '#ffcf4a'); mq.addColorStop(1, '#c4851a');
+      c.fillStyle = mq; c.fill(); c.strokeStyle = '#fff1b8'; c.lineWidth = 1.5; c.stroke();
+    });
     bulbs(g, l.m + 3, l.my + 3, W - 2 * l.m - 6, l.mh - 6, l.narrow ? 34 : 70, winning ? 14 : 5, winning);
+    // The variant's name, the LED counters (wide).
     const ledW = l.narrow ? 0 : 92, title = t(G.v.key).toUpperCase();
-    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#5a0a12';
-    fitFont(g, title, W - 2 * l.m - 2 * ledW - (l.narrow ? 50 : 70), l.narrow ? 12 : 17, 900, 'Cinzel, Georgia, serif');
-    g.fillText(title, W / 2, l.my + l.mh / 2 + 1);
+    sprites.draw(g, 'title|' + title + '|' + geo + '|' + (l.narrow ? 1 : 0), 0, 0, [l.m, l.my, W - 2 * l.m, l.mh], (c) => {
+      c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#5a0a12';
+      fitFont(c, title, W - 2 * l.m - 2 * ledW - (l.narrow ? 50 : 70), l.narrow ? 12 : 17, 900, 'Cinzel, Georgia, serif');
+      c.fillText(title, W / 2, l.my + l.mh / 2 + 1);
+    });
     if (!l.narrow) {
       led(g, l.m + 8, l.my + 4, ledW, l.mh - 8, t('vpCredits').toUpperCase(), fmt(G.shown));
       led(g, W - l.m - 8 - ledW, l.my + 4, ledW, l.mh - 8, 'WIN', fmt(G.win || 0));
     }
     // The screen in its ring of bulbs.
     bulbs(g, l.sx - 3, l.sy - 3, l.sw + 6, l.sh + 6, l.narrow ? 40 : 90, winning ? 14 : 4, winning);
-    rr(g, l.sx, l.sy, l.sw, l.sh, 10); g.fillStyle = '#05060a'; g.fill();
-    rr(g, l.ix, l.iy, l.iw, l.ih, 7);
-    const scr = g.createRadialGradient(l.ix + l.iw / 2, l.iy + l.ih / 2, 10, l.ix + l.iw / 2, l.iy + l.ih / 2, Math.max(l.iw, l.ih) * 0.7);
-    scr.addColorStop(0, '#22744a'); scr.addColorStop(1, '#0f3d27');
-    g.fillStyle = scr; g.fill();
+    const scrGeo = [l.sx, l.sy, l.sw, l.sh, l.ix, l.iy, l.iw, l.ih].map((v) => +v.toFixed(3)).join(',');
+    sprites.draw(g, 'screen|' + scrGeo, 0, 0, [l.sx, l.sy, l.sw, l.sh], (c) => {
+      rr(c, l.sx, l.sy, l.sw, l.sh, 10); c.fillStyle = '#05060a'; c.fill();
+      rr(c, l.ix, l.iy, l.iw, l.ih, 7);
+      const scr = c.createRadialGradient(l.ix + l.iw / 2, l.iy + l.ih / 2, 10, l.ix + l.iw / 2, l.iy + l.ih / 2, Math.max(l.iw, l.ih) * 0.7);
+      scr.addColorStop(0, '#22744a'); scr.addColorStop(1, '#0f3d27');
+      c.fillStyle = scr; c.fill();
+    });
     g.save(); rr(g, l.ix, l.iy, l.iw, l.ih, 7); g.clip();
-    drawPaytable(g, l);
+    // The pay table: again only when the bet, the machine, the hand lit or its blink change.
+    const lit = state === 'win' || state === 'ready' || state === 'end' || state === 'double' || state === 'dres' ? G.row : -1;
+    const blink = lit >= 0 && time - G.winAt < 1.5 && Math.floor((time - G.winAt) * 6) % 2 === 0;
+    sprites.draw(g, 'pay|' + [G.v.id, G.bet, lit, blink ? 1 : 0, l.narrow ? 1 : 0, lang(), scrGeo, l.ptTop, l.rowH, l.ptW, l.per].join(','), 0, 0, [l.ix, l.iy, l.iw, l.ih], (c) => drawPaytable(c, l));
     drawReels(g, l);
     // Under the reels: the hand that paid, or what to do.
     if (G.msg && state !== 'spin' && state !== 'hold' && state !== 'draw') {
@@ -604,11 +623,19 @@ export function create(shell) {
     if (winning && Math.floor((time - G.winAt) * 8) % 2 === 0) { rr(g, l.ix - 1, l.iy - 1, l.iw + 2, l.ih + 2, 8); g.strokeStyle = '#ffd84a'; g.lineWidth = 3; g.stroke(); }
     else { rr(g, l.ix, l.iy, l.iw, l.ih, 7); g.strokeStyle = 'rgba(255,255,255,.15)'; g.lineWidth = 1; g.stroke(); }
     // The panel.
-    rr(g, l.m, l.cy0, W - 2 * l.m, l.ctrlH, 8);
-    const pan = g.createLinearGradient(0, l.cy0, 0, l.cy0 + l.ctrlH); pan.addColorStop(0, '#9aa0a8'); pan.addColorStop(1, '#4e535b');
-    g.fillStyle = pan; g.fill();
+    sprites.draw(g, 'panel|' + [W, l.m, l.cy0, l.ctrlH].map((v) => +v.toFixed(3)).join(','), 0, 0, [l.m, l.cy0, W - 2 * l.m, l.ctrlH], (c) => {
+      rr(c, l.m, l.cy0, W - 2 * l.m, l.ctrlH, 8);
+      const pan = c.createLinearGradient(0, l.cy0, 0, l.cy0 + l.ctrlH); pan.addColorStop(0, '#9aa0a8'); pan.addColorStop(1, '#4e535b');
+      c.fillStyle = pan; c.fill();
+    });
     const kb = keyboardFirst();
-    for (const b of l.B) { const info = btnInfo(b.id); if (!info.hidden) machineButton(g, b, info, kb && (state === 'ready' || state === 'win') && G.focus === b.id); }
+    for (const b of l.B) {
+      const info = btnInfo(b.id);
+      if (info.hidden) continue;
+      const focused = kb && (state === 'ready' || state === 'win') && G.focus === b.id;
+      sprites.draw(g, 'btn|' + [b.id, info.label, info.on ? 1 : 0, info.lit ? 1 : 0, info.kind || '', focused ? 1 : 0, b.x, b.y, b.w, b.h].map((v) => typeof v === 'number' ? +v.toFixed(3) : v).join(','),
+        0, 0, [b.x - 3, b.y - 3, b.w + 6, b.h + 6], (c) => machineButton(c, b, info, focused));
+    }
     // The Ace on the marquee.
     ace.place(l.narrow ? l.m + 16 : l.m + ledW + 26, l.my + l.mh - 2, l.narrow ? 0.1 : 0.13, shell.k);
     drawFloaters(g, G.fx);

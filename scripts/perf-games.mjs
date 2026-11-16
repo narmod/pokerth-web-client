@@ -4,7 +4,7 @@
 // frame time, main-thread busy time (script, layout, style), the cost of the open-window check, the canvas'
 // sharpness. Not a test (no pass/fail). Options (env): GAMES=a,b  W= H= DPR=  CPU=4 (slower CPU)  OPS=1
 // (canvas calls a frame)  PROF=1 (JS profile)  TRACE=1 (Chrome trace)  PROBE=1 (transparent pixels left)
-// QSEED='{"tapis":1.25}' (a kept quality)  CSS=…  NOSHADOW=1  OPAQUE=1  DPRCAP=1.25 (experiments).
+// QSEED='{"tapis":1.25}' (a kept quality)  SHOT=name (/tmp/shots/<game>-<name>.png during the run)  CSS=…  NOSHADOW=1  OPAQUE=1  DPRCAP=1.25 (experiments).
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 import { startServer } from './lib/mobile-harness.mjs';
@@ -105,6 +105,7 @@ for (const id of GAMES) {
   if (START[id]) { await pg.evaluate(START[id]).catch((e) => console.log('start err', id, e.message)); } else { await pg.keyboard.press('Space'); }
   await sleep(1500);
   const play = await measure(pg, cdp, process.env.PROBE ? 300 : 4000);
+  if (process.env.SHOT) { mkdirSync('/tmp/shots', { recursive: true }); await pg.screenshot({ path: '/tmp/shots/' + id + '-' + process.env.SHOT + '.png' }); }
   if (process.env.PROBE) { console.log('  PROBE play', await pg.evaluate("(async () => { const c = document.querySelector('#pth-game .pg-stage canvas'); if (!c) return 'no canvas'; const x = c.getContext('2d'); const d = x.getImageData(0, 0, c.width, c.height).data; let t = 0, n = 0; for (let i = 3; i < d.length; i += 4 * 97) { n++; if (d[i] < 255) t++; } return t + '/' + n; })()")); await sleep(5000); console.log('  PROBE later', await pg.evaluate("(async () => { const c = document.querySelector('#pth-game .pg-stage canvas'); if (!c) return 'no canvas'; const x = c.getContext('2d'); const d = x.getImageData(0, 0, c.width, c.height).data; let t = 0, n = 0; for (let i = 3; i < d.length; i += 4 * 97) { n++; if (d[i] < 255) t++; } return t + '/' + n; })()")); }
   if (process.env.OPS) {
     const ops = await pg.evaluate(() => new Promise((res) => {

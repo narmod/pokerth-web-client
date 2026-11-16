@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.107 (current series):
+2026-11-16 version 2.1.11-web.108 (current series):
+- improvement: Video Poker and Tapis! — smoother: what does not move (the cabinet, the pay table, the buttons, the chips at rest) is drawn once and copied, about half the drawing work at every frame, same look
+
+2026-11-16 version 2.1.11-web.107:
 - improvement: Mini-games — smoother on every device: full sharpness first, and the picture gets a little less fine only when the device cannot keep up (remembered per game, retried higher next time)
 - improvement: Mini-games — on 120/144 Hz screens the games draw about 60 to 80 frames a second instead of every refresh, for the same motion and much less work
 - improvement: Mini-games — less work at every frame: the open windows checked 4 times a second, an opaque game canvas, the characters restyled only when they move

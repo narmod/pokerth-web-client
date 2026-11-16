@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Video Poker and Tapis!: drawn once, then copied — lot 2 of the audit** (`web.108`, narmod) — `games/sprites.mjs`
+  (`spriteCache(shell, max)`): a picture painted once at the canvas' resolution in a small canvas, keyed by what it
+  depends on (+ the scale and a fonts epoch), copied with `drawImage` at a whole device pixel; least used beyond
+  `max`. Video Poker: the cabinet and marquee, the rings of bulbs (2 or 3 patterns), the title, the screen, the pay
+  table (bet, machine, lit row, blink), the panel and each button. Tapis!: every chip at rest (colour, top, seal);
+  growing chips and cards drawn as before, the highlight over the copy. Canvas calls a frame: Video Poker 1 670 → 795,
+  Tapis! 1 391 → 774; DPR 2 (software canvas), first visit: 33 → 43 and 41 → 50 fps. Same picture (screenshots).
 - **Mini-games: smoother rendering, lot 1 of the audit** (`web.107`, narmod; `claude/AUDIT_PERF_MINIJEUX_2026-11-16.md`) —
   `games/quality.mjs` (pure, tested): the canvas starts at the screen's own sharpness (DPR ≤ 2) and steps down
   (1.75, 1.5, 1.25, 1; never below 1) only after two slow windows of 1.5 s (> 30 % of draws late; one window at

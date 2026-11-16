@@ -82,6 +82,7 @@ import { titleScreen, titleStep } from './title.mjs';
 import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
+import { spriteCache } from './sprites.mjs';
 import { endScreen, barsHtml, listHtml } from './end.mjs';
 
 const SINK_S = 0.45, PEEK_S = 1.1;          // into the hole, then his head out to wave
@@ -744,9 +745,29 @@ export function create(shell) {
     g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.stroke();
     if (hl) { g.fillStyle = 'rgba(255,250,220,.25)'; g.fill(); }
   }
+  /**
+   * A chip (web.108, audit lot 2): at rest it is painted once per colour, top and seal (sprites.mjs) and copied —
+   * two gradients, ellipses and text per chip at every frame before; growing (pop) or a card, drawn as before.
+   */
   function drawChip(g, L, x, yb, b, hl, sc, top) {
     const k = b.k;
     if (k === CARD) { drawCardCell(g, L, x, yb, b.card, hl, sc); return; }
+    if ((sc || 1) === 1) {
+      const s = shell.dpr * shell.k, { bh, ry, rx } = L;
+      x = Math.round(x * s) / s; yb = Math.round(yb * s) / s;      // where the copy lands: the highlight on it exactly
+      chipSprites.draw(g, k + (top ? 't' : '') + (b.seal ? 's' : '') + '|' + rx.toFixed(3) + '|' + bh.toFixed(3) + '|' + ry.toFixed(3),
+        x, yb, [-rx - 2, -bh - ry - 2, rx * 2 + 4, bh + ry * 2 + 4], (c) => chipBody(c, L, 0, 0, b, 1, top));
+    } else chipBody(g, L, x, yb, b, sc, top);
+    if (hl) {
+      const { bh, ry } = L, w = L.rx * (sc || 1);
+      g.fillStyle = 'rgba(255,250,220,' + (0.28 + 0.16 * Math.sin(time * 10)).toFixed(2) + ')';
+      g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.ellipse(x, yb - bh, w, ry, 0, 0, Math.PI, true); g.fill();
+    }
+  }
+  const chipSprites = spriteCache(shell, 96);
+  /** The chip itself (no highlight): its side, its marks and suit, its top, its seal. */
+  function chipBody(g, L, x, yb, b, sc, top) {
+    const k = b.k;
     const { bh, ry } = L, ch = CHIPS[k], w = L.rx * (sc || 1);
     // the side, with a dark seam at the bottom
     g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.closePath();
@@ -787,10 +808,6 @@ export function create(shell) {
       g.fillStyle = '#d8b25a'; rr(g, x - lw / 2, ly, lw, lw * 0.68, 2); g.fill(); g.strokeStyle = '#5a4210'; g.lineWidth = 1; g.stroke();
       g.fillStyle = '#3a2a08'; g.beginPath(); g.arc(x, ly + lw * 0.3, lw * 0.1, 0, 7); g.fill();
       g.restore();
-    }
-    if (hl) {
-      g.fillStyle = 'rgba(255,250,220,' + (0.28 + 0.16 * Math.sin(time * 10)).toFixed(2) + ')';
-      g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.ellipse(x, yb - bh, w, ry, 0, 0, Math.PI, true); g.fill();
     }
   }
   function draw(g) {
