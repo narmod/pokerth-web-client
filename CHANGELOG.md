@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Changed
+- **Poker Drop looks like Connect Four** (`web.89`, narmod: « more like the real Connect Four's board », his pick
+  « B » of the mock-ups) — `pokerdrop.mjs`: `frame()` a blue plastic frame (gradient, drop shadow, a light along the
+  top, a notch over each column) with a card-shaped window cut in each cell (even-odd path), `feet()` two splayed
+  feet; the cards and the one falling are drawn behind it, the marks (who dropped it, the last one) over it; on
+  landing a small bounce (`G.bounce`) and a knock (`notifyTick`). `GAP` 3 → 7, room for the frame and the feet in
+  the layout, the hand band lowered under them on narrow screens.
 - **Tapis!: big groups pay more, the friends drop after their stack** (`web.88`, the two details of the arcade
   video narmod asked for) — in a group the 5th to 8th chips count ×2 and from the 9th ×5 (`tierOf`, Monster Madness'
   100 / 250 / 500 a block), before the hand's multiplier; each chip's points are written on it as it goes, in gold

@@ -1,4 +1,7 @@
-2026-11-15 version 2.1.11-web.88 (current series):
+2026-11-16 version 2.1.11-web.89 (current series):
+- improvement: Poker Drop — the board now looks like a real Connect Four: a blue frame on two feet, a card-shaped window in each cell; a card falls behind the frame, seen through the windows, and lands with a small bounce
+
+2026-11-15 version 2.1.11-web.88:
 - improvement: Tapis! — as on the arcade machine, the bigger the group the more each chip pays (×2 from the 5th, ×5 from the 9th), and each chip shows its points as it goes
 - improvement: Tapis! — the characters drop after their stack instead of riding it down; the Joker floats down gently, like the arcade's ghost
 
