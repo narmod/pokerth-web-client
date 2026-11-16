@@ -447,6 +447,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(zen.held && zen.mode === 'zen' && zen.state === 'run' && Math.abs(zen.tilt) < 1, label + ': House of Cards Zen: ← holds the card, full tilt does not bring it down (' + JSON.stringify(zen) + ')');
   const daily = await pg.evaluate(() => { const H = window.__pthHouse; H.start('daily'); const a = H.run().deck.slice(-8).join(); H.start('daily'); return a === H.run().deck.slice(-8).join(); });
   ok(daily, label + ': House of Cards daily challenge: the same cards every time today');
+  await hofCheck(pg, label, 'house', '__pthHouse', ['free', 'daily', 'zen'], () => { const H = window.__pthHouse; H.start('free'); H.run().score = 800; H.end(); });
+  await pg.evaluate(() => window.__pthHouse.start('free'));   // back in a game, as before
   await pg.keyboard.press('Escape');
   await sleep(300);
   await pg.keyboard.press('Escape');
@@ -474,6 +476,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.keyboard.press('Escape');
   await sleep(400);
   ok(await pg.evaluate(() => !!document.querySelector('#pth-game .pg-panel.gm-title')), label + ': Esc on the end screen: back to the game\'s menu');
+  await hofCheck(pg, label, 'solitaire', '__pthPS', ['daily', 'free'], () => { const P = window.__pthPS; P.start(1); const G = P.run(); G.grid = G.cards.slice(0, 25); G.score = 60; P.end(); });
   await pg.keyboard.press('Escape');
   await sleep(500);
   // ── Video Poker (daily challenge): a pair of jacks pays, then double or nothing ──
@@ -806,6 +809,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => { const b = /** @type {HTMLElement} */ (document.querySelector('#pth-game .pg-hud .bl-pill')); if (!b) return false;
     const wide = innerWidth > innerHeight; if (wide) return b.style.display === 'none' && getComputedStyle(document.querySelector('#pth-game .bl-book')).display !== 'none';
     b.click(); return getComputedStyle(document.querySelector('#pth-game .bl-book')).display !== 'none'; }), label + ': the notebook: pinned on a wide stage, its pill in the HUD opens it on a phone');
+  await hofCheck(pg, label, 'bluff', '__pthBL', ['free', 'daily', 'tourney'], () => { const B = window.__pthBL; B.start('free'); B.run().chips = 180; B.end(); });
+  await pg.evaluate(() => window.__pthBL.start('tourney'));   // back in a game, as before
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Ace Dash: three lanes, the Ace from behind, swipes on a phone ──

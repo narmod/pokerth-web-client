@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: Poker Solitaire, the Ace's Bluff and the House of Cards** (`web.102`, narmod) — the last games:
+  `solitaire` (daily, free; 1 000 whatever the time: ten lines, 100 a royal), `bluff` (free, daily, tourney;
+  10 000 + 100 a second), `house` (free, daily, zen; 20 000 + 2 000 a second). Every mini-game with a score is ranked
+  (Poker Drop and the two-player modes are not). The Bluff's `running()` and its notebook leave the boards out;
+  Poker Solitaire gets a test hook (`__pthPS`).
 - **Hall of Fame: Who Wins? and Higher or Lower** (`web.101`, narmod) — `server/hall-of-fame.js` ranks `whowins`
   (tv, endless, daily; 200 + 70 a second, the TV show 1 000 000 flat) and `hilo` (hand 20 000 + 5 000 a second;
   tourney and both 2 000 000 + 1 000 000 a second, the All-Ins doubling the stack): a mode may now have its own

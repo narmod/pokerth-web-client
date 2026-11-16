@@ -34,6 +34,7 @@ import { rankHand, compareHands, NAME_KEYS } from './poker-hand.mjs';
 import { shuffled, rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
@@ -149,6 +150,8 @@ export function create(shell) {
   ui.appendChild(book);
 
   let state = 'title', G = null, time = 0, timer = 0, sel = 0, mode = 'free', bookOpen = false, lastL = null;
+  /** The title, or the Hall of Fame's boards opened from it. */
+  const onTitle = () => state === 'title' || state === 'board';
   let R = Math.random;
   let timerOn = false;
   try { timerOn = localStorage.getItem(TIMER_KEY) === '1'; } catch (e) {}
@@ -180,9 +183,21 @@ export function create(shell) {
     const rec = records();
     titleScreen(shell, { id: 'bluff', name: t('blName'), hint: t('blHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
-      options: [{ id: 'timer', label: '⏳ ' + t('blTimer') + ' ' + (timerOn ? '✓' : '✗'), on: timerOn, key: '4' }],
-      onPick: (i) => { sel = i; start(); }, onOption: () => toggleTimer() });
+      options: [{ id: 'timer', label: '⏳ ' + t('blTimer') + ' ' + (timerOn ? '✓' : '✗'), on: timerOn, key: '4' }]
+        .concat(hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : []),
+      onPick: (i) => { sel = i; start(); }, onOption: (id) => { if (id === 'hof') openHof(); else toggleTimer(); } });
   }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.102): the title's 🏆 only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('bluff').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'bluff', name: t('blName'), sel: sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
+  }
+
   function toggleTimer() {
     timerOn = !timerOn;
     try { localStorage.setItem(TIMER_KEY, timerOn ? '1' : '0'); } catch (e) {}
@@ -190,11 +205,12 @@ export function create(shell) {
   }
   newGame();
   titlePanel();
+  refreshHof();
   ace.hat('');
   // Browser tests only (navigator.webdriver).
   try {
     if (navigator.webdriver) window.__pthBL = { run: () => G, state: () => state, mode: () => mode,
-      start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); }, book: () => bookOpen, L: () => L() };
+      start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); }, book: () => bookOpen, L: () => L(), hof: () => openHof(), end: () => finish() };
   } catch (e) {}
 
   function start() {
@@ -203,6 +219,7 @@ export function create(shell) {
     R = mode === 'daily' ? rng('bl-' + dayKey()) : Math.random;
     newGame();
     shell.panel(null);
+    G.hof = hofStart('bluff', mode); G.hofDay = dayKey();   // the Hall of Fame's ticket (null offline / off)
     ace.pose('idle'); ace.mood('mc-m-smile');
     state = 'deal';
     deal();
@@ -423,8 +440,9 @@ export function create(shell) {
       levels: log.length ? { title: t('hlColHands'), right: fmt(log.length) + (mode === 'tourney' ? '' : ' / ' + HANDS), html: stepsHtml(esc, log.slice(-20).map((h) => ({ label: h.read ? '🎭' : '', cls: h.net > 0 ? 'ok' : h.net < 0 ? 'hard' : '' }))) } : null,
       stats: [[fmt(G.caught), '🎭 ' + t('blBluff').replace(/[!！¡]/g, '')], [fmt(G.quick), '⚡'], [fmt(log.length), t('hlColHands')]],
       onAgain: () => start(),
-      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderBook(); titlePanel(); },
+      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderBook(); titlePanel(); refreshHof(); },
     });
+    hofEnd(shell, { g: 'bluff', m: mode, s: score, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
   }
 
 
@@ -438,7 +456,7 @@ export function create(shell) {
   // ── Notebook ──────────────────────────────────────────────────────
   function toggleBook() { bookOpen = !bookOpen; renderBook(); }
   function renderBook() {
-    if (!G || state === 'title' || state === 'over') { book.style.display = 'none'; bookBtn.style.display = 'none'; return; }
+    if (!G || onTitle() || state === 'over') { book.style.display = 'none'; bookBtn.style.display = 'none'; return; }
     const l = lastL || L(), k = shell.k || 1;
     const pinned = l.wide;
     bookBtn.style.display = pinned ? 'none' : '';
@@ -531,6 +549,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck' && hofEnabled) { openHof(); return; }   // ↓: the Hall of Fame when it is on, else the next tile
     if (state === 'title') {
       const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
       if (step) { sel = (sel + step + MODES.length) % MODES.length; titlePanel(); return; }
@@ -565,7 +585,7 @@ export function create(shell) {
     if (G.shake > 0) G.shake = Math.max(0, G.shake - dt);
     // The hourglass: no answer in time is a fold.
     if (state === 'decide' && timerOn && (performance.now() - G.decideAt) / 1000 > DECIDE_S) press(0);
-    if (state === 'title' || state === 'over') return;
+    if (onTitle() || state === 'over') return;
     const now = performance.now();
     // His face: the tell while he waits for your answer (or in the replay), else his mood.
     const tl = activeTell();
@@ -648,9 +668,9 @@ export function create(shell) {
     const sh = G && G.shake > 0 && !shell.reduced ? Math.sin(time * 70) * 3 * (G.shake / 0.5) : 0;
     g.save(); g.translate(sh, 0);
     felt(g, W, H, shell.theme.light);
-    if (state === 'title' || state === 'over') ace.place(W / 2, l.top + 64, 0.28, shell.k);
+    if (onTitle() || state === 'over') ace.place(W / 2, l.top + 64, 0.28, shell.k);
     else ace.place(l.aceX + sh, l.aceFeet, l.s, shell.k);
-    if (state !== 'title' && state !== 'over' && G.board.length) {
+    if (!onTitle() && state !== 'over' && G.board.length) {
       const shown = state === 'shown' && !G.folded && !G.heFolded, cmp = shown ? compareHands(G.rMe, G.rHim) : 0;
       const lit = new Set(shown ? (cmp >= 0 ? G.rMe.best : []).concat(cmp <= 0 ? G.rHim.best : []) : []);
       const openHim = state === 'shown';
@@ -711,7 +731,7 @@ export function create(shell) {
     }
     g.restore();
     layoutButtons(l);
-    if (G && G.say && state !== 'title' && state !== 'over') {
+    if (G && G.say && !onTitle() && state !== 'over') {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
       bubble(g, G.say.s, l.himX, l.himY - l.hch / 2 - 4, W, a);
     }
@@ -721,7 +741,7 @@ export function create(shell) {
   return {
     update, draw, input,
     resize() { lastL = null; cache.fill(''); renderResult(); renderBook(); },
-    running: () => state !== 'title' && state !== 'over',
+    running: () => !onTitle() && state !== 'over',
     destroy() { clearTimeout(timer); ace.remove(); ui.remove(); },
   };
 }

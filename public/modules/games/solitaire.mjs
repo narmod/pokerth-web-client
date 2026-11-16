@@ -22,6 +22,7 @@ import { evalCards, rankOf, suitOf } from './poker-hand.mjs';
 import { SCORE, N, LINES, dayKey, dealFor } from './solitaire-rules.mjs';
 import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
 // Short hand names of the odds panel (the full ones are h1n…h10n).
@@ -69,6 +70,9 @@ export function create(shell) {
   const setDailyBest = (day, s) => { try { localStorage.setItem(dailyKey, JSON.stringify({ d: day, s })); } catch (e) {} };
 
   let state = 'title', mode = 0, G = null, timer = 0, time = 0;
+  /** The title, or the Hall of Fame's boards opened from it. */
+  const onTitle = () => state === 'title' || state === 'board';
+  const hofMode = () => (mode === 0 ? 'daily' : 'free');   // the tiles: 0 the daily challenge, 1 the free game
   function newGame(daily) {
     const day = dayKey();
     const cards = daily ? dealFor('pth-solitaire-' + day) : dealFor('free-' + Math.random() + '-' + Date.now());
@@ -89,16 +93,32 @@ export function create(shell) {
     titleScreen(shell, { id: 'solitaire', name: t('psName'), hint: t('psHint'), sel: mode,
       modes: [{ icon: '📅', label: t('psDaily'), desc: t('hcModeDailyD'), rec: db ? t('arRecord', { n: fmt(db) }) : '' },
         { icon: '🃏', label: t('psFree'), desc: t('hcModeFreeD'), rec: fb ? t('arRecord', { n: fmt(fb) }) : '' }],
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       foot: table, onPick: (i) => { mode = i; start(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.102): the title's 🏆 only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('solitaire').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'solitaire', name: t('psName'), sel: mode, modes: [{ id: 'daily', label: t('psDaily') }, { id: 'free', label: t('psFree') }],
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newGame(true);
   titlePanel();
+  refreshHof();
+  // Browser tests only (navigator.webdriver).
+  try { if (navigator.webdriver) window.__pthPS = { run: () => G, state: () => state, hof: () => openHof(), start: (i) => { mode = i; start(); }, end: () => result() }; } catch (e) {}
   ace.pose('idle');
 
   function start() {
     clearTimeout(timer);
     newGame(mode === 0);
     state = 'run'; shell.panel(null);
+    G.hof = hofStart('solitaire', hofMode());   // the Hall of Fame's ticket (null offline / off)
     ace.pose('idle'); ace.mood('mc-m-smile'); ace.king(false);
     G.cursor = nextFree(12);
   }
@@ -125,6 +145,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck') { if (hofEnabled) openHof(); return; }
     if (state === 'title') {
       if (a === 'left' || a === 'right') { mode = mode ? 0 : 1; titlePanel(); }
       else if (a === 'jump' && info.x == null) start();
@@ -224,7 +246,7 @@ export function create(shell) {
     G.res = { score, ev, record, prev: prev || 0 };
     renderResult();
   }
-  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); refreshHof(); }
   /** The end screen (end.mjs, web.67): the best line, the score, the ten lines' hands. */
   function renderResult() {
     if (state !== 'over' || !G.res || G.res.shown) return;
@@ -240,6 +262,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: toTitle,
     });
+    hofEnd(shell, { g: 'solitaire', m: G.daily ? 'daily' : 'free', s: score, run: G.hof, day: G.day, daily: G.daily });
   }
 
   function update(dt) {
@@ -296,7 +319,7 @@ export function create(shell) {
     }
     // The card to place, big, and the pile.
     const px = L.panelX, py = L.top + 40;
-    if (G.i < 25 && state !== 'title') {
+    if (G.i < 25 && !onTitle()) {
       for (let k = Math.min(3, 24 - G.i); k > 0; k--) { rr(g, px - 27 + k * 1.5, py - 38 - k * 1.5, 54, 76, 5); g.fillStyle = '#b3261e'; g.fill(); g.strokeStyle = '#141414'; g.lineWidth = 1; g.stroke(); }
       if (!G.fly) { g.save(); g.translate(px, py); drawFace(g, img, G.cards[G.i], 54, 76); g.restore(); }
     }
@@ -309,7 +332,7 @@ export function create(shell) {
     // The Ace, under the pile, and what he says.
     const ax = px, ay = Math.min(H - 10, py + 38 + 108);
     ace.place(ax, ay, S, shell.k);
-    if (G.say && state !== 'title') {
+    if (G.say && !onTitle()) {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > 2.2 ? Math.max(0, 1 - (G.say.t - 2.2) / 0.4) : 1;
       g.save(); g.globalAlpha = a;
       g.font = '600 11px Inter, system-ui, sans-serif';

@@ -63,6 +63,12 @@ const GAMES = Object.freeze({
   // Higher or Lower (web.101): the hand game's pots (×2 or so a right guess, banked); the tournaments' stack
   // can double on every All-In, so their ceiling is loose.
   hilo: { modes: ['hand', 'tourney', 'both'], perSec: 5000, base: 20000, caps: { tourney: { base: 2000000, perSec: 1000000 }, both: { base: 2000000, perSec: 1000000 } } },
+  // Poker Solitaire (web.102): ten lines of 5 cards, 100 a royal at most — a ceiling, whatever the time.
+  solitaire: { modes: ['daily', 'free'], daily: 'daily', perSec: 0, base: 1000 },
+  // The Ace's Bluff (web.102): 100 chips and 20 hands (free, daily); the tournament 200 each, 10 a hand played.
+  bluff: { modes: ['free', 'daily', 'tourney'], daily: 'daily', perSec: 100, base: 10000 },
+  // The House of Cards (web.102, the easter egg): a floor of 5 cards pays its hand (gold cards, the goal met).
+  house: { modes: ['free', 'daily', 'zen'], daily: 'daily', perSec: 2000, base: 20000 },
 });
 /** Is mode m of game G a daily challenge (its board of the day)? G.daily is a mode or a list of them. */
 const isDaily = (G, m) => !!G && (Array.isArray(G.daily) ? G.daily.indexOf(m) >= 0 : m === G.daily);

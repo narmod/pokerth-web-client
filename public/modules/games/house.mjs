@@ -54,6 +54,7 @@ import { drawScenery } from './runner-scenery.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
 const CW = 30, CH = 42;          // a leaning card
@@ -141,6 +142,8 @@ export function create(shell) {
   for (let i = 0; i < 14; i++) clouds.push({ x: Math.random() * 900 - 450, y: ROOF_Y + 150 + Math.random() * 2600, w: 50 + Math.random() * 70 });
 
   let state = 'title', G = null, revealTimer = 0, time = 0, sel = 0, mode = 'free';
+  /** The title, or the Hall of Fame's boards opened from it. */
+  const onTitle = () => state === 'title' || state === 'board';
   let R = Math.random;
   // The rail runs just below the HUD (taller, relative to the stage, on a phone).
   let railY = RAIL_Y;
@@ -217,18 +220,32 @@ export function create(shell) {
     const rec = records();
     titleScreen(shell, { id: 'house', live: true, name: t('hcName'), hint: t('hcHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.102): the title's 🏆 only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('house').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'house', name: t('hcName'), sel: sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newRun();
   titlePanel();
+  refreshHof();
   ace.pose('idle');
   // Browser tests only (navigator.webdriver): reach the run state.
-  try { if (navigator.webdriver) window.__pthHouse = { run: () => G, state: () => state, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthHouse = { run: () => G, state: () => state, mode: () => mode, hof: () => openHof(), end: () => finish(false), start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer);
     mode = MODES[sel].id;
     newRun(); state = 'run'; shell.panel(null);
+    G.hof = hofStart('house', mode); G.hofDay = dayKey();   // the Hall of Fame's ticket (null offline / off)
     G.windNext = time + 9 + R() * 5; G.bumpNext = time + 16 + R() * 8;
     ace.king(false); ace.mood('mc-m-smile'); ace.pose('idle');
     try { if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises(); } catch (e) {}
@@ -237,6 +254,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck' && hofEnabled) { openHof(); return; }   // ↓: the Hall of Fame when it is on, else the next tile
     if (state === 'title') {
       const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
       if (step) { sel = (sel + step + MODES.length) % MODES.length; titlePanel(); return; }
@@ -398,8 +417,9 @@ export function create(shell) {
         levels: floorsN ? { title: t('hcFloors'), right: fmt(floorsN) + (met ? ' · 🎯 ' + met : ''), html: barsHtml(built.slice(-40).map((f) => ({ h: 0.18 + 0.82 * Math.min(9, f.ev.cat) / 9, cls: f.met ? 'gold' : '' }))) } : null,
         stats: [[fmt(floorsN), t('hcFloors')], [met, t('hcGoalMet')], [G.best ? t(G.best.ev.nameKey) : '—', t('gmBestHand')]],
         onAgain: () => start(),
-        onMenu: () => { state = 'title'; newRun(); ace.king(false); ace.mood('mc-m-smile'); ace.pose('idle'); titlePanel(); },
+        onMenu: () => { state = 'title'; newRun(); ace.king(false); ace.mood('mc-m-smile'); ace.pose('idle'); titlePanel(); refreshHof(); },
       });
+      hofEnd(shell, { g: 'house', m: mode, s: score, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
     };
     revealTimer = setTimeout(show, 900);
   }
@@ -457,7 +477,7 @@ export function create(shell) {
       const camTarget = Math.max(0, G.floors.length * FH - (groundY() - H() * 0.66));
       G.camY += (camTarget - G.camY) * Math.min(1, dt * 3);
     }
-    if (state === 'title') return;
+    if (onTitle()) return;
     for (let i = G.debris.length - 1; i >= 0; i--) {
       const d = G.debris[i];
       d.t += dt;
@@ -769,7 +789,7 @@ export function create(shell) {
     drawFx(fg);
     drawBanner(fg);
     // The Ace on the last floor (behind the cards: he is on the canvas below them).
-    const feetY = state === 'title' ? 0 : G.aceY;
+    const feetY = onTitle() ? 0 : G.aceY;
     ace.place(W() / 2 + shift(feetY) - G.pan + sh, sy(feetY), S, shell.k, state === 'over' ? 0 : G.tilt * 8);
   }
 
