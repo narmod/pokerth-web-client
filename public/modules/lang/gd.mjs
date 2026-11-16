@@ -1168,7 +1168,7 @@ export const strings = {
     "adModeFreeD": "Ruith cho fada 's a ghabhas",
     "adModeDailyD": "An aon chùrsa do chàch an-diugh",
     "adModeTime": "An aghaidh a' chleoc",
-    "adModeTimeD": "60 diog gus na tha de chips a chosnadh; cosgaidh tubaist 5 diog", "arModeTimeD": "90 diog gus ruith cho fada 's a ghabhas; cosgaidh tubaist 5 diog",
+    "adModeTimeD": "60 diog gus na tha de chips a chosnadh; cosgaidh tubaist 5 diog", "arModeTimeD": "90 diog gus ruith cho fada 's a ghabhas; cosgaidh tubaist 5 diog", "hofTitle": "Talla a' Chliù", "hofRank": "Àireamh {n} ann an Talla a' Chliù!", "hofOut": "Talla a' Chliù: {s} airson faighinn a-steach", "hofLogin": "Clàraich a-steach aon turas leis a' chunntas pokerth.net agad airson faighinn a-steach do Thalla a' Chliù", "hofName3": "Na ciad litrichean agad", "hofNameFree": "Am far-ainm agad", "hofBad": "Cha ghabhar ris an ainm seo", "hofEmpty": "Chan eil sgòr ann fhathast — do thionndadh!",
     "adTime": "Ùine",
     "adSalto": "Car a' mhuiltein!",
     "adStreak": "Sreath",

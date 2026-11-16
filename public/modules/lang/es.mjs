@@ -1274,7 +1274,7 @@ export const strings = {
     "adModeFreeD": "Corre lo más lejos posible",
     "adModeDailyD": "El mismo recorrido para todos hoy",
     "adModeTime": "Contrarreloj",
-    "adModeTimeD": "60 s para ganar el máximo de fichas; un choque cuesta 5 s", "arModeTimeD": "90 s para correr lo más lejos posible; un choque cuesta 5 s",
+    "adModeTimeD": "60 s para ganar el máximo de fichas; un choque cuesta 5 s", "arModeTimeD": "90 s para correr lo más lejos posible; un choque cuesta 5 s", "hofTitle": "Salón de la fama", "hofRank": "¡N.º {n} del Salón de la fama!", "hofOut": "Salón de la fama: {s} para entrar", "hofLogin": "Inicia sesión una vez con tu cuenta de pokerth.net para entrar en el Salón de la fama", "hofName3": "Tus iniciales", "hofNameFree": "Tu apodo", "hofBad": "Este nombre no está permitido", "hofEmpty": "Aún no hay puntuaciones: ¡te toca!",
     "adTime": "Tiempo",
     "adSalto": "¡Salto!",
     "adStreak": "Racha",

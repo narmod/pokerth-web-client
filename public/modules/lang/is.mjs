@@ -894,7 +894,7 @@ export const strings = {
     "adModeFreeD": "Hlauptu eins langt og þú getur",
     "adModeDailyD": "Sama leiðin fyrir alla í dag",
     "adModeTime": "Kapp við klukkuna",
-    "adModeTimeD": "60 s til að vinna flesta peninga; árekstur kostar 5 s", "arModeTimeD": "90 s til að hlaupa eins langt og þú getur; árekstur kostar 5 s",
+    "adModeTimeD": "60 s til að vinna flesta peninga; árekstur kostar 5 s", "arModeTimeD": "90 s til að hlaupa eins langt og þú getur; árekstur kostar 5 s", "hofTitle": "Frægðarhöll", "hofRank": "Nr. {n} í frægðarhöllinni!", "hofOut": "Frægðarhöll: {s} til að komast inn", "hofLogin": "Skráðu þig einu sinni inn með pokerth.net-aðganginum þínum til að komast í frægðarhöllina", "hofName3": "Upphafsstafirnir þínir", "hofNameFree": "Gælunafnið þitt", "hofBad": "Þetta nafn er ekki leyft", "hofEmpty": "Engin stig enn – þú átt leik!",
     "adTime": "Tími",
     "adSalto": "Heljarstökk!",
     "adStreak": "Röð",

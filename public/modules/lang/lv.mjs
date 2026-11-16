@@ -897,7 +897,7 @@ export const strings = {
     "adModeFreeD": "Skrien, cik tālu vari",
     "adModeDailyD": "Šodien visiem tā pati trase",
     "adModeTime": "Pret laiku",
-    "adModeTimeD": "60 s, lai iegūtu visvairāk žetonu; sadursme maksā 5 s", "arModeTimeD": "90 s, lai aizskrietu pēc iespējas tālāk; sadursme maksā 5 s",
+    "adModeTimeD": "60 s, lai iegūtu visvairāk žetonu; sadursme maksā 5 s", "arModeTimeD": "90 s, lai aizskrietu pēc iespējas tālāk; sadursme maksā 5 s", "hofTitle": "Slavas zāle", "hofRank": "Nr. {n} slavas zālē!", "hofOut": "Slavas zāle: {s}, lai tiktu iekšā", "hofLogin": "Vienreiz pieslēdzies ar savu pokerth.net kontu, lai iekļūtu slavas zālē", "hofName3": "Tavi iniciāļi", "hofNameFree": "Tavs segvārds", "hofBad": "Šis vārds netiek pieņemts", "hofEmpty": "Rezultātu vēl nav — tavs gājiens!",
     "adTime": "Laiks",
     "adSalto": "Salto!",
     "adStreak": "Sērija",

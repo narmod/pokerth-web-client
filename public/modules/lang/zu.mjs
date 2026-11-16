@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Gijima kude ngangokusemandleni",
     "adModeDailyD": "Umzila ofanayo kubo bonke namuhla",
     "adModeTime": "Ngokumelene nesikhathi",
-    "adModeTimeD": "Imizuzwana engu-60 yokuwina ama-chip amaningi; ukushayisana kudla imizuzwana engu-5", "arModeTimeD": "Imizuzwana engu-90 yokugijima kude ngangokusemandleni; ukushayisana kudla imizuzwana engu-5",
+    "adModeTimeD": "Imizuzwana engu-60 yokuwina ama-chip amaningi; ukushayisana kudla imizuzwana engu-5", "arModeTimeD": "Imizuzwana engu-90 yokugijima kude ngangokusemandleni; ukushayisana kudla imizuzwana engu-5", "hofTitle": "Ihholo Lodumo", "hofRank": "Inombolo {n} eHholo Lodumo!", "hofOut": "Ihholo Lodumo: u-{s} ukuze ungene", "hofLogin": "Ngena kanye nge-akhawunti yakho ye-pokerth.net ukuze ungene eHholo Lodumo", "hofName3": "Izinhlamvu zakho zokuqala", "hofNameFree": "Igama lakho lokudlala", "hofBad": "Leli gama alamukelwa", "hofEmpty": "Awukabi khona amaphuzu — yithuba lakho!",
     "adTime": "Isikhathi",
     "adSalto": "Ukugingqika!",
     "adStreak": "Uchungechunge",

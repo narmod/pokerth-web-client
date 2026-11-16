@@ -1269,7 +1269,7 @@ export const strings = {
     "adModeFreeD": "Løb så langt du kan",
     "adModeDailyD": "Samme bane for alle i dag",
     "adModeTime": "Mod uret",
-    "adModeTimeD": "60 s til at vinde flest jetoner; et sammenstød koster 5 s", "arModeTimeD": "90 s til at løbe så langt du kan; et sammenstød koster 5 s",
+    "adModeTimeD": "60 s til at vinde flest jetoner; et sammenstød koster 5 s", "arModeTimeD": "90 s til at løbe så langt du kan; et sammenstød koster 5 s", "hofTitle": "Hall of Fame", "hofRank": "Nr. {n} i Hall of Fame!", "hofOut": "Hall of Fame: {s} for at komme ind", "hofLogin": "Log ind én gang med din pokerth.net-konto for at komme i Hall of Fame", "hofName3": "Dine initialer", "hofNameFree": "Dit kaldenavn", "hofBad": "Dette navn accepteres ikke", "hofEmpty": "Ingen score endnu — din tur!",
     "adTime": "Tid",
     "adSalto": "Salto!",
     "adStreak": "Stime",

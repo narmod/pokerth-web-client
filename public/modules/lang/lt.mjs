@@ -1164,7 +1164,7 @@ export const strings = {
     "adModeFreeD": "Bėk kuo toliau",
     "adModeDailyD": "Šiandien ta pati trasa visiems",
     "adModeTime": "Prieš laiką",
-    "adModeTimeD": "60 s surinkti kuo daugiau žetonų; susidūrimas kainuoja 5 s", "arModeTimeD": "90 s nubėgti kuo toliau; susidūrimas kainuoja 5 s",
+    "adModeTimeD": "60 s surinkti kuo daugiau žetonų; susidūrimas kainuoja 5 s", "arModeTimeD": "90 s nubėgti kuo toliau; susidūrimas kainuoja 5 s", "hofTitle": "Šlovės galerija", "hofRank": "Nr. {n} šlovės galerijoje!", "hofOut": "Šlovės galerija: {s}, kad patektum", "hofLogin": "Vieną kartą prisijunk su savo pokerth.net paskyra, kad patektum į šlovės galeriją", "hofName3": "Tavo inicialai", "hofNameFree": "Tavo slapyvardis", "hofBad": "Šis vardas nepriimamas", "hofEmpty": "Rezultatų dar nėra — tavo eilė!",
     "adTime": "Laikas",
     "adSalto": "Salto!",
     "adStreak": "Serija",

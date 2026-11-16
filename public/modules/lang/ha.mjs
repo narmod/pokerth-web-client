@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Yi gudu nesa gwargwadon iko",
     "adModeDailyD": "Hanya ɗaya ga kowa a yau",
     "adModeTime": "Gaba da agogo",
-    "adModeTimeD": "Daƙiƙa 60 don cin katunan kuɗi mafi yawa; karo na ɗaukar daƙiƙa 5", "arModeTimeD": "Daƙiƙa 90 don yin gudu nesa gwargwadon iko; karo na ɗaukar daƙiƙa 5",
+    "adModeTimeD": "Daƙiƙa 60 don cin katunan kuɗi mafi yawa; karo na ɗaukar daƙiƙa 5", "arModeTimeD": "Daƙiƙa 90 don yin gudu nesa gwargwadon iko; karo na ɗaukar daƙiƙa 5", "hofTitle": "Zauren Shahara", "hofRank": "Na {n} a Zauren Shahara!", "hofOut": "Zauren Shahara: {s} don shiga", "hofLogin": "Shiga sau ɗaya da asusunka na pokerth.net don shiga Zauren Shahara", "hofName3": "Baƙaƙen sunanka", "hofNameFree": "Laƙabinka", "hofBad": "Ba a karɓi wannan sunan ba", "hofEmpty": "Babu maki tukuna — kai ne!",
     "adTime": "Lokaci",
     "adSalto": "Juyi!",
     "adStreak": "Jere",

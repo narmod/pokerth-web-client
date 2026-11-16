@@ -888,7 +888,7 @@ export const strings = {
     "adModeFreeD": "Jookse nii kaugele kui suudad",
     "adModeDailyD": "Täna kõigile sama rada",
     "adModeTime": "Ajasõit",
-    "adModeTimeD": "60 s, et võita kõige rohkem žetoone; kokkupõrge maksab 5 s", "arModeTimeD": "90 s, et joosta nii kaugele kui suudad; kokkupõrge maksab 5 s",
+    "adModeTimeD": "60 s, et võita kõige rohkem žetoone; kokkupõrge maksab 5 s", "arModeTimeD": "90 s, et joosta nii kaugele kui suudad; kokkupõrge maksab 5 s", "hofTitle": "Kuulsuste hall", "hofRank": "Koht {n} kuulsuste hallis!", "hofOut": "Kuulsuste hall: {s}, et sisse saada", "hofLogin": "Logi korra oma pokerth.net-i kontoga sisse, et kuulsuste halli pääseda", "hofName3": "Sinu initsiaalid", "hofNameFree": "Sinu hüüdnimi", "hofBad": "Seda nime ei aktsepteerita", "hofEmpty": "Tulemusi veel pole – sinu kord!",
     "adTime": "Aeg",
     "adSalto": "Salto!",
     "adStreak": "Seeria",

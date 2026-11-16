@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Bolşuňça uzaga ylga",
     "adModeDailyD": "Şu gün hemmä üçin şol bir ýol",
     "adModeTime": "Wagta garşy",
-    "adModeTimeD": "Iň köp fişka utmak üçin 60 s; çaknyşyk 5 s durýar", "arModeTimeD": "Bolşuňça uzaga ylgamak üçin 90 s; çaknyşyk 5 s durýar",
+    "adModeTimeD": "Iň köp fişka utmak üçin 60 s; çaknyşyk 5 s durýar", "arModeTimeD": "Bolşuňça uzaga ylgamak üçin 90 s; çaknyşyk 5 s durýar", "hofTitle": "Şöhrat zaly", "hofRank": "Şöhrat zalynda {n}-nji orun!", "hofOut": "Şöhrat zaly: girmek üçin {s}", "hofLogin": "Şöhrat zalyna girmek üçin pokerth.net hasabyň bilen bir gezek gir", "hofName3": "Baş harplaryň", "hofNameFree": "Lakamyň", "hofBad": "Bu at kabul edilmeýär", "hofEmpty": "Entek bal ýok — nobat seniňki!",
     "adTime": "Wagt",
     "adSalto": "Salto!",
     "adStreak": "Seriýa",

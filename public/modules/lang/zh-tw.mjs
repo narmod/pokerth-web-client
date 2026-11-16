@@ -1265,7 +1265,7 @@ export const strings = {
     "adModeFreeD": "能跑多遠跑多遠",
     "adModeDailyD": "今天大家同一條路線",
     "adModeTime": "計時賽",
-    "adModeTimeD": "60秒贏取最多籌碼；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多遠跑多遠；每次碰撞扣5秒",
+    "adModeTimeD": "60秒贏取最多籌碼；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多遠跑多遠；每次碰撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：需要 {s} 才能上榜", "hofLogin": "用你的 pokerth.net 帳號登入一次即可進入名人堂", "hofName3": "你的縮寫", "hofNameFree": "你的暱稱", "hofBad": "此名稱不可使用", "hofEmpty": "還沒有成績——輪到你了！",
     "adTime": "時間",
     "adSalto": "空翻！",
     "adStreak": "連串",

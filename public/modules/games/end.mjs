@@ -105,7 +105,8 @@ body.has-gamepad #pth-game .gm-ebtns kbd{display:inline-block}
 @media (max-height:560px){#pth-game .gm-endc{padding:10px 12px 10px}#pth-game .gm-escore{font-size:32px}#pth-game .gm-elv{margin-top:7px}}
 `;
 
-function ensureCss() {
+/** The end template's styles (also the frame of the Hall of Fame's boards, hof.mjs). */
+export function ensureCss() {
   if (document.getElementById('pth-game-end-css')) return;
   const st = document.createElement('style'); st.id = 'pth-game-end-css'; st.textContent = CSS;
   document.head.appendChild(st);

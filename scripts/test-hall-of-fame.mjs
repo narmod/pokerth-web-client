@@ -66,6 +66,9 @@ const tok2 = H.issueToken(st, 'Narmod', T0);
 ok(sub({ names: 'account', s: 4000, token: tok2 }).name === 'Narmod' && sub({ names: 'account', s: 4000, token: 'nope', now: T0 + 700000 }).err === 'account', 'account: the name comes from the token, no token no score');
 for (let i = 0; i < 7; i++) H.issueToken(st, 'Narmod', T0 + i);
 ok(Object.values(st.tokens).filter((x) => x.n === 'Narmod').length === 5, 'five tokens a nickname at most (the oldest go)');
+// Off (the default): nothing taken, nothing shown.
+ok(H.namesOf(undefined) === 'off' && H.namesOf('nope') === 'off' && sub({ names: 'off', s: 3000, name: 'OFF' }).err === 'off' && Object.keys(H.view(st, 'off', 'ace-runner', T0).boards).length === 0 && Object.keys(H.adminView(st, 'off')).length === 0,
+  'off is the default: no score taken, no board shown');
 // View, admin, prune.
 const v = H.view(st, 'initials', 'ace-runner', T0);
 ok(v.names === 'initials' && v.boards.free.length === 20 && v.boards.daily.length === 1 && Array.isArray(v.boards.time) && !('at' in v.boards.free[0]), 'the public view: each mode\'s board and today\'s, no internal field');
@@ -88,7 +91,12 @@ const post = (p, body, h) => fetch(base + p, { method: 'POST', headers: Object.a
 try {
   await waitForServer(base, px);
   let g = await (await fetch(base + '/__hof?g=ace-runner')).json();
-  ok(g.ok && g.names === 'account' && g.boards.free.length === 0 && g.top === 20 && g.topDay === 10, 'GET /__hof: the pokerth.net account by default, empty boards');
+  ok(g.ok && g.names === 'off' && Object.keys(g.boards).length === 0, 'GET /__hof: off by default, no board');
+  const s0 = await post('/__hof/start', { g: 'ace-runner', m: 'free' });
+  ok(s0.d && s0.d.ok === false && s0.d.error === 'off' && !s0.d.ticket, 'off: no ticket');
+  ok((await post('/admin/hof', { token: TOKEN, names: 'account' })).d.names === 'account', 'the admin turns it on with pokerth.net accounts');
+  g = await (await fetch(base + '/__hof?g=ace-runner')).json();
+  ok(g.ok && g.names === 'account' && g.boards.free.length === 0 && g.top === 20 && g.topDay === 10, 'GET /__hof: on, empty boards');
   ok((await fetch(base + '/__hof?g=nope')).status === 404, 'GET /__hof: an unknown game is a 404');
   const s1 = await post('/__hof/start', { g: 'ace-runner', m: 'free' });
   ok(s1.status === 200 && typeof s1.d.ticket === 'string', 'POST /__hof/start: a ticket');
@@ -124,7 +132,8 @@ try {
 const pk = fs.readFileSync(path.join(root, 'public/pokerth.js'), 'utf8');
 ok(/data\.startsWith\('HOFTOK:'\)[\s\S]{0,200}localStorage\.setItem\('pth_hof_tok'/.test(pk), 'the client keeps the HOFTOK: key on the device (pth_hof_tok)');
 const pxs = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
-ok(/S\.isAuthLogin && S\.chatNick\) \{ _issueSyncToken\(S\); _issueHofToken\(S\); \}/.test(pxs), 'the proxy hands the key out only after an authenticated login (as the sync token)');
+ok(/S\.isAuthLogin && S\.chatNick\) \{ _issueSyncToken\(S\); _issueHofToken\(S\); \}/.test(pxs) && /if \(S\.hofFrame \|\| hofNames\(\) !== 'account'\) return;/.test(pxs),
+  'the proxy hands the key out only after an authenticated login (as the sync token), and only while the setting is « account »');
 
 console.log((fail ? 'FAIL ' : 'OK ') + pass + '/' + (pass + fail));
 process.exit(fail ? 1 : 0);

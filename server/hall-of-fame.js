@@ -5,7 +5,10 @@
 // the web client. Pure: no I/O, no clock of its own (proxy.js passes `now`,
 // stores the state in hall-of-fame.json); scripts/test-hall-of-fame.mjs drives it.
 //
-// The admin chooses the name shown beside a score (_adminConfig.hofNames):
+// The admin chooses whether there is a Hall of Fame and the name shown beside a
+// score (_adminConfig.hofNames):
+//   off       no Hall of Fame (the default, narmod 2026-11-16): no ticket, no
+//             score, no board, no account token handed out;
 //   account   the pokerth.net nickname, proved by a Hall of Fame token the
 //             proxy hands out when the real PokerTH server accepted an
 //             AUTHENTICATED login (guests never get one), valid TOKEN_DAYS;
@@ -26,7 +29,9 @@
 
 const crypto = require('crypto');
 
-const NAMES = Object.freeze(['account', 'initials', 'free']);
+const NAMES = Object.freeze(['off', 'account', 'initials', 'free']);
+/** The settings that keep boards (all but 'off'). */
+const RANKED = Object.freeze(['account', 'initials', 'free']);
 const TOP = 20, TOP_DAY = 10, DAYS_KEPT = 7;
 const TOKEN_DAYS = 90, TOKENS_PER_NAME = 5, TOKENS_MAX = 50000;
 const TICKET_MAX_MS = 6 * 3600 * 1000;   // a run longer than this is not ranked
@@ -50,7 +55,7 @@ function normalize(st) {
   if (!s.tokens || typeof s.tokens !== 'object') s.tokens = {};
   return s;
 }
-const namesOf = (v) => (NAMES.indexOf(v) >= 0 ? v : 'account');
+const namesOf = (v) => (NAMES.indexOf(v) >= 0 ? v : 'off');
 const dayOf = (now) => new Date(now).toISOString().slice(0, 10);
 /** Is `day` (YYYY-MM-DD) today or yesterday (a run that crossed midnight), UTC? */
 function dayOk(day, now) {
@@ -149,6 +154,7 @@ function tokenName(st, tok, now) {
  */
 function submit(st, o) {
   const now = o.now, names = namesOf(o.names), g = o.g, m = o.m, s = o.s;
+  if (names === 'off') return { ok: false, err: 'off' };
   if (!validGame(g, m)) return { ok: false, err: 'game' };
   const G = GAMES[g];
   const day = m === G.daily ? o.day : '';
@@ -180,12 +186,13 @@ function view(st, names, g, now) {
   const G = GAMES[g];
   if (!G) return null;
   const n = namesOf(names), day = dayOf(now), boards = {};
-  for (const m of G.modes) boards[m] = pub(st.boards[boardKey(n, g, m, day)]);
+  if (n !== 'off') for (const m of G.modes) boards[m] = pub(st.boards[boardKey(n, g, m, day)]);
   return { names: n, day, top: TOP, topDay: TOP_DAY, boards };
 }
 /** The admin's list: every board of a setting (key → lines). */
 function adminView(st, names) {
   const n = namesOf(names), out = {};
+  if (n === 'off') return out;
   Object.keys(st.boards).filter((k) => k.indexOf(n + '/') === 0).sort().forEach((k) => { out[k] = pub(st.boards[k]); });
   return out;
 }
@@ -206,5 +213,5 @@ function prune(st, now) {
   Object.keys(st.tokens).forEach((k) => { if (!st.tokens[k] || st.tokens[k].exp < now) delete st.tokens[k]; });
 }
 
-module.exports = { NAMES, GAMES, TOP, TOP_DAY, DAYS_KEPT, TOKEN_DAYS, BASE_WORDS, normalize, namesOf, dayOk, boardKey, ticket, ticketStart,
+module.exports = { NAMES, RANKED, GAMES, TOP, TOP_DAY, DAYS_KEPT, TOKEN_DAYS, BASE_WORDS, normalize, namesOf, dayOk, boardKey, ticket, ticketStart,
   plausible, fold, rude, cleanName, banned, issueToken, tokenName, submit, view, adminView, remove, prune };

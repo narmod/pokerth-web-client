@@ -1270,7 +1270,7 @@ export const strings = {
     "adModeFreeD": "Běž co nejdál",
     "adModeDailyD": "Dnes stejná trať pro všechny",
     "adModeTime": "Na čas",
-    "adModeTimeD": "60 s na co nejvíc žetonů; náraz stojí 5 s", "arModeTimeD": "90 s na to doběhnout co nejdál; náraz stojí 5 s",
+    "adModeTimeD": "60 s na co nejvíc žetonů; náraz stojí 5 s", "arModeTimeD": "90 s na to doběhnout co nejdál; náraz stojí 5 s", "hofTitle": "Síň slávy", "hofRank": "Č. {n} v síni slávy!", "hofOut": "Síň slávy: {s} na vstup", "hofLogin": "Jednou se přihlas svým účtem pokerth.net, abys mohl do síně slávy", "hofName3": "Tvoje iniciály", "hofNameFree": "Tvoje přezdívka", "hofBad": "Toto jméno není povoleno", "hofEmpty": "Zatím žádné skóre — jsi na řadě!",
     "adTime": "Čas",
     "adSalto": "Salto!",
     "adStreak": "Série",

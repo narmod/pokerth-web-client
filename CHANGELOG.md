@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games Hall of Fame — Ace Runner, and « Off » by default** (`web.96`, narmod) — `games/hof.mjs`: `hofStart`
+  (a ticket when a run starts), `hofEnd` (on the end screen: the rank, three letters or a nickname to type when the
+  score gets in, kept in `pth_hof_name`, or « log in once with your pokerth.net account »), `hofPanel` (the boards on
+  the title, a tab per mode, the player's line lit; keys and pad as on the end screen), `hofOn`. Ace Runner wires them:
+  the title's 🏆 chip (or ↓) only while the Hall of Fame is on. New setting `off`, the default (narmod: « disable the
+  ranking, and make it the default »): no ticket, no score, no board, no account key handed out (`HOFTOK:` only while
+  the setting is `account`); the boards are kept for when it is turned back on. `end.mjs` exports its styles. 8 keys
+  (`hofTitle`, `hofRank`, `hofOut`, `hofLogin`, `hofName3`, `hofNameFree`, `hofBad`, `hofEmpty`) × 83 catalogues.
 - **Mini-games Hall of Fame — server and admin** (`web.95`, narmod; design note `claude/CONCEPTION_HALL_OF_FAME.md`) —
   `server/hall-of-fame.js` (pure) and `hall-of-fame.json` beside `stats.json`: the top 20 of each game and mode and
   the top 10 of the day of a daily challenge (7 days kept), one line per name (its best). The name shown is an admin

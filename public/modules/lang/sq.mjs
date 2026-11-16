@@ -897,7 +897,7 @@ export const strings = {
     "adModeFreeD": "Vrapo sa më larg të mundesh",
     "adModeDailyD": "I njëjti parkur për të gjithë sot",
     "adModeTime": "Kundër kohës",
-    "adModeTimeD": "60 s për të fituar sa më shumë fisha; një përplasje kushton 5 s", "arModeTimeD": "90 s për të vrapuar sa më larg; një përplasje kushton 5 s",
+    "adModeTimeD": "60 s për të fituar sa më shumë fisha; një përplasje kushton 5 s", "arModeTimeD": "90 s për të vrapuar sa më larg; një përplasje kushton 5 s", "hofTitle": "Salla e famës", "hofRank": "Nr. {n} në Sallën e famës!", "hofOut": "Salla e famës: {s} për të hyrë", "hofLogin": "Hyr një herë me llogarinë tënde pokerth.net për të hyrë në Sallën e famës", "hofName3": "Inicialet e tua", "hofNameFree": "Nofka jote", "hofBad": "Ky emër nuk pranohet", "hofEmpty": "Ende pa pikë — radha jote!",
     "adTime": "Koha",
     "adSalto": "Salto!",
     "adStreak": "Seri",

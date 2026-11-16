@@ -897,7 +897,7 @@ export const strings = {
     "adModeFreeD": "Teci, kolikor daleč lahko",
     "adModeDailyD": "Danes ista proga za vse",
     "adModeTime": "Na čas",
-    "adModeTimeD": "60 s za čim več žetonov; trk stane 5 s", "arModeTimeD": "90 s, da pretečeš čim dlje; trk stane 5 s",
+    "adModeTimeD": "60 s za čim več žetonov; trk stane 5 s", "arModeTimeD": "90 s, da pretečeš čim dlje; trk stane 5 s", "hofTitle": "Hram slavnih", "hofRank": "Št. {n} v hramu slavnih!", "hofOut": "Hram slavnih: {s} za vstop", "hofLogin": "Enkrat se prijavi s svojim računom pokerth.net, da prideš v hram slavnih", "hofName3": "Tvoje začetnice", "hofNameFree": "Tvoj vzdevek", "hofBad": "To ime ni dovoljeno", "hofEmpty": "Še ni rezultatov — ti si na vrsti!",
     "adTime": "Čas",
     "adSalto": "Salto!",
     "adStreak": "Niz",

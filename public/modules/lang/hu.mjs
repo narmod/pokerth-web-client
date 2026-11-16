@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Fuss, ameddig csak bírsz",
     "adModeDailyD": "Ma ugyanaz a pálya mindenkinek",
     "adModeTime": "Időfutam",
-    "adModeTimeD": "60 mp a legtöbb zseton megszerzésére; egy ütközés 5 mp-be kerül", "arModeTimeD": "90 mp, hogy a lehető legmesszebb fuss; egy ütközés 5 mp-be kerül",
+    "adModeTimeD": "60 mp a legtöbb zseton megszerzésére; egy ütközés 5 mp-be kerül", "arModeTimeD": "90 mp, hogy a lehető legmesszebb fuss; egy ütközés 5 mp-be kerül", "hofTitle": "Dicsőségfal", "hofRank": "{n}. hely a dicsőségfalon!", "hofOut": "Dicsőségfal: {s} a bejutáshoz", "hofLogin": "Jelentkezz be egyszer a pokerth.net-fiókoddal, hogy felkerülj a dicsőségfalra", "hofName3": "A monogramod", "hofNameFree": "A beceneved", "hofBad": "Ez a név nem elfogadható", "hofEmpty": "Még nincs eredmény – te jössz!",
     "adTime": "Idő",
     "adSalto": "Szaltó!",
     "adStreak": "Sorozat",

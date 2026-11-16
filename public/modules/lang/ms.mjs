@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Lari sejauh yang boleh",
     "adModeDailyD": "Laluan yang sama untuk semua hari ini",
     "adModeTime": "Lawan masa",
-    "adModeTimeD": "60 saat untuk memenangi cip terbanyak; perlanggaran memakan 5 saat", "arModeTimeD": "90 saat untuk lari sejauh yang boleh; perlanggaran memakan 5 saat",
+    "adModeTimeD": "60 saat untuk memenangi cip terbanyak; perlanggaran memakan 5 saat", "arModeTimeD": "90 saat untuk lari sejauh yang boleh; perlanggaran memakan 5 saat", "hofTitle": "Dewan Kemasyhuran", "hofRank": "No. {n} dalam Dewan Kemasyhuran!", "hofOut": "Dewan Kemasyhuran: {s} untuk masuk", "hofLogin": "Log masuk sekali dengan akaun pokerth.net anda untuk masuk ke Dewan Kemasyhuran", "hofName3": "Huruf awal nama anda", "hofNameFree": "Nama samaran anda", "hofBad": "Nama ini tidak diterima", "hofEmpty": "Belum ada skor — giliran anda!",
     "adTime": "Masa",
     "adSalto": "Balik kuang!",
     "adStreak": "Rentetan",

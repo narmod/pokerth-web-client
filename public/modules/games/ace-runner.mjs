@@ -34,6 +34,9 @@
 // its record pth_ar_daily, for the day); Time attack (TIME_S seconds to run as
 // far as possible, a crash costs TIME_HIT seconds instead of the run; record
 // pth_ar_best.time).
+// Hall of Fame (web.96, claude/CONCEPTION_HALL_OF_FAME.md; games/hof.mjs): each
+// run asks the server for a signed ticket (hofStart), the end screen enters the
+// score (hofEnd), the title's 🏆 chip (or ↓) shows the boards of the three modes.
 // Sounds come from modules/sounds.mjs (mute and categories respected).
 // ═══════════════════════════════════════════════════════════════════
 
@@ -41,6 +44,7 @@ import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
 import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
 import { drawScenery, venueOf, dayAt, VENUES } from './runner-scenery.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
@@ -164,21 +168,38 @@ export function create(shell) {
     const rec = records();
     titleScreen(shell, { id: 'ace-runner', live: true, name: 'Ace Runner', hint: t('arHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(); } });
+  }
+  /** The Hall of Fame's boards (hof.mjs), on the mode lit on the title. */
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'ace-runner', name: 'Ace Runner', sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
+  }
+  // The title's 🏆 only when the admin turned the Hall of Fame on (off by default).
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('ace-runner').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
   }
   newRun();
   titlePanel();
+  refreshHof();
 
   function start() {
     clearTimeout(revealTimer);
     mode = MODES[sel].id;
     newRun(); state = 'run'; shell.panel(null);
+    G.hof = hofStart('ace-runner', mode);   // the Hall of Fame's ticket for this run (null offline)
     setKing(false); setMood('mc-m-smile'); setPose('run');
     try { if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises(); } catch (e) {}
   }
 
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down) {
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && down && a === 'duck') { if (hofEnabled) openHof(); return; }
     if (state === 'title' && down && (a === 'left' || a === 'right')) {
       sel = (sel + (a === 'left' ? -1 : 1) + MODES.length) % MODES.length; titlePanel(); return;
     }
@@ -276,7 +297,7 @@ export function create(shell) {
   }
 
   function update(dt) {
-    if (state !== 'run') { if (state === 'title') G.scroll += 40 * dt; return; }
+    if (state !== 'run') { if (state === 'title' || state === 'board') G.scroll += 40 * dt; return; }
     const now = performance.now();
     const king = now < G.allInUntil;
     G.t += dt;
@@ -468,8 +489,9 @@ export function create(shell) {
       levels: { title: t('arLevel') + ' ' + G.level, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
       stats: [[fmt(d), t('arDistance')], [G.level, t('arLevel')], timed ? [G.hits, '−' + TIME_HIT + ' s'] : [G.hand.length, t('psCards')]],
       onAgain: () => start(),
-      onMenu: () => { state = 'title'; newRun(); setKing(false); setMood('mc-m-smile'); setPose('run'); titlePanel(); },
+      onMenu: () => { state = 'title'; newRun(); setKing(false); setMood('mc-m-smile'); setPose('run'); titlePanel(); refreshHof(); },
     });
+    hofEnd(shell, { g: 'ace-runner', m: G.mode, s: score, run: G.hof, day: G.day, daily: G.mode === 'daily' });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
@@ -643,7 +665,7 @@ export function create(shell) {
   }
 
   // Test hook (automated browsers only): read the run, jump to a level or a time of day.
-  try { if (navigator.webdriver) window.__pthAR = { run: () => G, state: () => state, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthAR = { run: () => G, state: () => state, mode: () => mode, hof: () => openHof(), start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   return {
     update, draw, input,

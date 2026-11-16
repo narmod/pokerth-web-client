@@ -685,8 +685,8 @@ function _issueSyncToken(S) {
 }
 // ── Hall of Fame des mini-jeux (server/hall-of-fame.js, claude/CONCEPTION_HALL_OF_FAME.md) ──
 // Tableaux et jetons « compte » dans hall-of-fame.json, à côté de stats.json
-// (/data en Docker). Le réglage du nom affiché (compte pokerth.net / 3 lettres /
-// pseudo libre), les mots interdits et les noms bloqués sont dans _adminConfig.
+// (/data en Docker). Le réglage (désactivé par défaut / compte pokerth.net /
+// 3 lettres / pseudo libre), les mots interdits et les noms bloqués sont dans _adminConfig.
 const HOF = require('./server/hall-of-fame.js');
 const HOF_FILE = process.env.HOF_FILE || path.join(path.dirname(STATS_FILE), 'hall-of-fame.json');
 let _hof = HOF.normalize(null);
@@ -712,7 +712,7 @@ function hofBans() { return Array.isArray(_adminConfig && _adminConfig.hofBans) 
 // permet d'inscrire ses scores depuis l'arcade sans être connecté. Trame texte
 // HOFTOK:{"t":jeton,"n":pseudo} (les anciens clients l'ignorent).
 function _issueHofToken(S) {
-  if (S.hofFrame) return;
+  if (S.hofFrame || hofNames() !== 'account') return;   // only while the Hall of Fame shows account nicknames
   const tok = HOF.issueToken(_hof, S.chatNick, Date.now());
   if (!tok) return;
   saveHofSoon();
@@ -13823,7 +13823,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   // POST { names?, words?, bans? } : enregistrer ; POST /admin/hof/delete { key, name }.
   if (reqPathOnly === '/admin/hof' && req.method === 'GET') {
     if (!hasScope('leaderboard', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    const _hn = HOF.NAMES.indexOf(query.names) >= 0 ? query.names : hofNames();
+    const _hn = HOF.RANKED.indexOf(query.names) >= 0 ? query.names : (hofNames() === 'off' ? 'account' : hofNames());
     return adminJson(res, 200, { ok: true, names: hofNames(), shown: _hn, all: HOF.NAMES, games: Object.keys(HOF.GAMES), words: hofWords(), bans: hofBans(),
       baseWords: HOF.BASE_WORDS, top: HOF.TOP, topDay: HOF.TOP_DAY, boards: HOF.adminView(_hof, _hn), tokens: Object.keys(_hof.tokens).length });
   }
@@ -13833,7 +13833,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!d) return adminJson(res, 400, { ok: false, error: 'json' });
       const _list = function (a, max) { return Array.isArray(a) ? a.map(function (x) { return String(x == null ? '' : x).trim().slice(0, 40); }).filter(Boolean).slice(0, max) : null; };
       if (d.names !== undefined) {
-        if (HOF.NAMES.indexOf(d.names) < 0) return adminJson(res, 400, { ok: false, error: 'names: account | initials | free' });
+        if (HOF.NAMES.indexOf(d.names) < 0) return adminJson(res, 400, { ok: false, error: 'names: off | account | initials | free' });
         _adminConfig.hofNames = d.names;
       }
       if (d.words !== undefined) { const w = _list(d.words, 500); if (!w) return adminJson(res, 400, { ok: false, error: 'words: array' }); _adminConfig.hofWords = w; }
@@ -15919,6 +15919,7 @@ const httpServer = http.createServer((req, res) => {
       if (!d) return _hj(400, { ok: false, error: 'json' });
       if (!_hofRateOk(req)) return _hj(429, { ok: false, error: 'rate' });
       const now = Date.now();
+      if (hofNames() === 'off') return _hj(200, { ok: false, error: 'off', names: 'off' });
       if (reqPathOnly === '/__hof/start') {
         const tk = HOF.ticket(_hof, d.g, d.m, now);
         return tk ? _hj(200, { ok: true, ticket: tk, names: hofNames() }) : _hj(400, { ok: false, error: 'game' });

@@ -1268,7 +1268,7 @@ export const strings = {
     "adModeFreeD": "Spring så långt du kan",
     "adModeDailyD": "Samma bana för alla i dag",
     "adModeTime": "Mot klockan",
-    "adModeTimeD": "60 s för att vinna flest marker; en krock kostar 5 s", "arModeTimeD": "90 s för att springa så långt du kan; en krock kostar 5 s",
+    "adModeTimeD": "60 s för att vinna flest marker; en krock kostar 5 s", "arModeTimeD": "90 s för att springa så långt du kan; en krock kostar 5 s", "hofTitle": "Hall of Fame", "hofRank": "Nr {n} i Hall of Fame!", "hofOut": "Hall of Fame: {s} för att komma in", "hofLogin": "Logga in en gång med ditt pokerth.net-konto för att komma in i Hall of Fame", "hofName3": "Dina initialer", "hofNameFree": "Ditt smeknamn", "hofBad": "Det här namnet godkänns inte", "hofEmpty": "Inga poäng än – din tur!",
     "adTime": "Tid",
     "adSalto": "Volt!",
     "adStreak": "Svit",

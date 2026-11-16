@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Berlari sejauh mungkin",
     "adModeDailyD": "Rute yang sama untuk semua hari ini",
     "adModeTime": "Lawan waktu",
-    "adModeTimeD": "60 dtk untuk memenangkan chip terbanyak; tabrakan memakan 5 dtk", "arModeTimeD": "90 dtk untuk berlari sejauh mungkin; tabrakan memakan 5 dtk",
+    "adModeTimeD": "60 dtk untuk memenangkan chip terbanyak; tabrakan memakan 5 dtk", "arModeTimeD": "90 dtk untuk berlari sejauh mungkin; tabrakan memakan 5 dtk", "hofTitle": "Hall of Fame", "hofRank": "No. {n} di Hall of Fame!", "hofOut": "Hall of Fame: {s} untuk masuk", "hofLogin": "Masuk sekali dengan akun pokerth.net-mu untuk masuk Hall of Fame", "hofName3": "Inisialmu", "hofNameFree": "Nama panggilanmu", "hofBad": "Nama ini tidak diterima", "hofEmpty": "Belum ada skor — giliranmu!",
     "adTime": "Waktu",
     "adSalto": "Salto!",
     "adStreak": "Beruntun",

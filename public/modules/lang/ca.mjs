@@ -1166,7 +1166,7 @@ export const strings = {
     "adModeFreeD": "Corre tan lluny com puguis",
     "adModeDailyD": "El mateix recorregut per a tothom avui",
     "adModeTime": "Contrarellotge",
-    "adModeTimeD": "60 s per guanyar el màxim de fitxes; un xoc costa 5 s", "arModeTimeD": "90 s per córrer tan lluny com puguis; un xoc costa 5 s",
+    "adModeTimeD": "60 s per guanyar el màxim de fitxes; un xoc costa 5 s", "arModeTimeD": "90 s per córrer tan lluny com puguis; un xoc costa 5 s", "hofTitle": "Saló de la fama", "hofRank": "Núm. {n} del Saló de la fama!", "hofOut": "Saló de la fama: {s} per entrar-hi", "hofLogin": "Inicia la sessió una vegada amb el teu compte de pokerth.net per entrar al Saló de la fama", "hofName3": "Les teves inicials", "hofNameFree": "El teu sobrenom", "hofBad": "Aquest nom no s'accepta", "hofEmpty": "Encara no hi ha puntuacions: et toca!",
     "adTime": "Temps",
     "adSalto": "Tombarella!",
     "adStreak": "Ratxa",

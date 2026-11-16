@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Hardloop so ver as jy kan",
     "adModeDailyD": "Vandag dieselfde roete vir almal",
     "adModeTime": "Teen die horlosie",
-    "adModeTimeD": "60 s om die meeste skyfies te wen; 'n botsing kos 5 s", "arModeTimeD": "90 s om so ver as moontlik te hardloop; 'n botsing kos 5 s",
+    "adModeTimeD": "60 s om die meeste skyfies te wen; 'n botsing kos 5 s", "arModeTimeD": "90 s om so ver as moontlik te hardloop; 'n botsing kos 5 s", "hofTitle": "Eregalery", "hofRank": "Nr. {n} in die eregalery!", "hofOut": "Eregalery: {s} om in te kom", "hofLogin": "Meld een keer aan met jou pokerth.net-rekening om in die eregalery te kom", "hofName3": "Jou voorletters", "hofNameFree": "Jou bynaam", "hofBad": "Hierdie naam word nie aanvaar nie", "hofEmpty": "Nog geen telling nie — jou beurt!",
     "adTime": "Tyd",
     "adSalto": "Salto!",
     "adStreak": "Reeks",

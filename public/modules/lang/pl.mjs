@@ -1272,7 +1272,7 @@ export const strings = {
     "adModeFreeD": "Biegnij jak najdalej",
     "adModeDailyD": "Dziś ta sama trasa dla wszystkich",
     "adModeTime": "Na czas",
-    "adModeTimeD": "60 s, by zdobyć jak najwięcej żetonów; zderzenie kosztuje 5 s", "arModeTimeD": "90 s, by pobiec jak najdalej; zderzenie kosztuje 5 s",
+    "adModeTimeD": "60 s, by zdobyć jak najwięcej żetonów; zderzenie kosztuje 5 s", "arModeTimeD": "90 s, by pobiec jak najdalej; zderzenie kosztuje 5 s", "hofTitle": "Galeria sław", "hofRank": "Nr {n} w Galerii sław!", "hofOut": "Galeria sław: {s}, by się dostać", "hofLogin": "Zaloguj się raz kontem pokerth.net, aby trafić do Galerii sław", "hofName3": "Twoje inicjały", "hofNameFree": "Twój pseudonim", "hofBad": "Ta nazwa jest niedozwolona", "hofEmpty": "Jeszcze brak wyników — twoja kolej!",
     "adTime": "Czas",
     "adSalto": "Salto!",
     "adStreak": "Seria",

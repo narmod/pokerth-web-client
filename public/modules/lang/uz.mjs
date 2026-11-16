@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Iloji boricha uzoqqa yugur",
     "adModeDailyD": "Bugun hamma uchun bir xil yoʻl",
     "adModeTime": "Vaqtga qarshi",
-    "adModeTimeD": "Eng koʻp fishka yutish uchun 60 s; toʻqnashuv 5 s turadi", "arModeTimeD": "Iloji boricha uzoqqa yugurish uchun 90 s; toʻqnashuv 5 s turadi",
+    "adModeTimeD": "Eng koʻp fishka yutish uchun 60 s; toʻqnashuv 5 s turadi", "arModeTimeD": "Iloji boricha uzoqqa yugurish uchun 90 s; toʻqnashuv 5 s turadi", "hofTitle": "Shon-sharaf zali", "hofRank": "Shon-sharaf zalida {n}-o'rin!", "hofOut": "Shon-sharaf zali: kirish uchun {s}", "hofLogin": "Shon-sharaf zaliga kirish uchun pokerth.net hisobing bilan bir marta kir", "hofName3": "Bosh harflaring", "hofNameFree": "Taxallusing", "hofBad": "Bu ism qabul qilinmaydi", "hofEmpty": "Hozircha ochko yo'q — navbat senda!",
     "adTime": "Vaqt",
     "adSalto": "Salto!",
     "adStreak": "Seriya",

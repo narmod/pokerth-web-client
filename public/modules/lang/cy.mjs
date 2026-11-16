@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Rheda mor bell ag y gelli",
     "adModeDailyD": "Yr un cwrs i bawb heddiw",
     "adModeTime": "Ras yn erbyn y cloc",
-    "adModeTimeD": "60 eiliad i ennill y mwyaf o sglodion; mae gwrthdrawiad yn costio 5 eiliad", "arModeTimeD": "90 eiliad i redeg mor bell ag y gelli; mae gwrthdrawiad yn costio 5 eiliad",
+    "adModeTimeD": "60 eiliad i ennill y mwyaf o sglodion; mae gwrthdrawiad yn costio 5 eiliad", "arModeTimeD": "90 eiliad i redeg mor bell ag y gelli; mae gwrthdrawiad yn costio 5 eiliad", "hofTitle": "Oriel yr Anfarwolion", "hofRank": "Rhif {n} yn Oriel yr Anfarwolion!", "hofOut": "Oriel yr Anfarwolion: {s} i fynd i mewn", "hofLogin": "Mewngofnoda unwaith gyda dy gyfrif pokerth.net i fynd i Oriel yr Anfarwolion", "hofName3": "Dy lythrennau blaen", "hofNameFree": "Dy lysenw", "hofBad": "Ni dderbynnir yr enw hwn", "hofEmpty": "Dim sgôr eto — dy dro di!",
     "adTime": "Amser",
     "adSalto": "Tin-dros-ben!",
     "adStreak": "Rhediad",

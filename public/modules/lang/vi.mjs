@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Chạy càng xa càng tốt",
     "adModeDailyD": "Cùng một đường chạy cho mọi người hôm nay",
     "adModeTime": "Đua với thời gian",
-    "adModeTimeD": "60 giây để giành nhiều chip nhất; va chạm mất 5 giây", "arModeTimeD": "90 giây để chạy càng xa càng tốt; va chạm mất 5 giây",
+    "adModeTimeD": "60 giây để giành nhiều chip nhất; va chạm mất 5 giây", "arModeTimeD": "90 giây để chạy càng xa càng tốt; va chạm mất 5 giây", "hofTitle": "Đại sảnh danh vọng", "hofRank": "Hạng {n} trong Đại sảnh danh vọng!", "hofOut": "Đại sảnh danh vọng: cần {s} để vào", "hofLogin": "Đăng nhập một lần bằng tài khoản pokerth.net để vào Đại sảnh danh vọng", "hofName3": "Chữ cái đầu của bạn", "hofNameFree": "Biệt danh của bạn", "hofBad": "Tên này không được chấp nhận", "hofEmpty": "Chưa có điểm — đến lượt bạn!",
     "adTime": "Thời gian",
     "adSalto": "Lộn ngược!",
     "adStreak": "Chuỗi",

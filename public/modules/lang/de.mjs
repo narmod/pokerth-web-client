@@ -1273,7 +1273,7 @@ export const strings = {
     "adModeFreeD": "Lauf so weit du kannst",
     "adModeDailyD": "Heute dieselbe Strecke für alle",
     "adModeTime": "Zeitrennen",
-    "adModeTimeD": "60 s für möglichst viele Chips; ein Zusammenstoß kostet 5 s", "arModeTimeD": "90 s, um so weit wie möglich zu laufen; ein Zusammenstoß kostet 5 s",
+    "adModeTimeD": "60 s für möglichst viele Chips; ein Zusammenstoß kostet 5 s", "arModeTimeD": "90 s, um so weit wie möglich zu laufen; ein Zusammenstoß kostet 5 s", "hofTitle": "Ruhmeshalle", "hofRank": "Platz {n} in der Ruhmeshalle!", "hofOut": "Ruhmeshalle: {s} zum Einzug", "hofLogin": "Melde dich einmal mit deinem pokerth.net-Konto an, um in die Ruhmeshalle zu kommen", "hofName3": "Deine Initialen", "hofNameFree": "Dein Spitzname", "hofBad": "Dieser Name ist nicht erlaubt", "hofEmpty": "Noch kein Ergebnis – du bist dran!",
     "adTime": "Zeit",
     "adSalto": "Salto!",
     "adStreak": "Serie",

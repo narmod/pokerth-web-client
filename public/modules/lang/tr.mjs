@@ -1270,7 +1270,7 @@ export const strings = {
     "adModeFreeD": "Gidebildiğin kadar uzağa koş",
     "adModeDailyD": "Bugün herkese aynı parkur",
     "adModeTime": "Zamana karşı",
-    "adModeTimeD": "En çok fişi kazanmak için 60 sn; bir çarpışma 5 sn'ye mal olur", "arModeTimeD": "Gidebildiğin kadar uzağa koşmak için 90 sn; bir çarpışma 5 sn'ye mal olur",
+    "adModeTimeD": "En çok fişi kazanmak için 60 sn; bir çarpışma 5 sn'ye mal olur", "arModeTimeD": "Gidebildiğin kadar uzağa koşmak için 90 sn; bir çarpışma 5 sn'ye mal olur", "hofTitle": "Şöhretler Salonu", "hofRank": "Şöhretler Salonu'nda {n}. sıra!", "hofOut": "Şöhretler Salonu: girmek için {s}", "hofLogin": "Şöhretler Salonu'na girmek için pokerth.net hesabınla bir kez giriş yap", "hofName3": "Baş harflerin", "hofNameFree": "Takma adın", "hofBad": "Bu ad kabul edilmiyor", "hofEmpty": "Henüz skor yok — sıra sende!",
     "adTime": "Süre",
     "adSalto": "Takla!",
     "adStreak": "Seri",

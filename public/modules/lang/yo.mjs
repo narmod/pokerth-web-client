@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Sáré jìnnà bí o ti lè ṣe",
     "adModeDailyD": "Ọ̀nà kan náà fún gbogbo ènìyàn lónìí",
     "adModeTime": "Lòdì sí aago",
-    "adModeTimeD": "Ìṣẹ́jú-àáyá 60 láti jèrè chip tó pọ̀ jù; ìkọlù ń gbà ìṣẹ́jú-àáyá 5", "arModeTimeD": "Ìṣẹ́jú-àáyá 90 láti sáré jìnnà bí o ti lè ṣe; ìkọlù ń gbà ìṣẹ́jú-àáyá 5",
+    "adModeTimeD": "Ìṣẹ́jú-àáyá 60 láti jèrè chip tó pọ̀ jù; ìkọlù ń gbà ìṣẹ́jú-àáyá 5", "arModeTimeD": "Ìṣẹ́jú-àáyá 90 láti sáré jìnnà bí o ti lè ṣe; ìkọlù ń gbà ìṣẹ́jú-àáyá 5", "hofTitle": "Gbọ̀ngàn Òkìkí", "hofRank": "Nọ́mbà {n} nínú Gbọ̀ngàn Òkìkí!", "hofOut": "Gbọ̀ngàn Òkìkí: {s} láti wọlé", "hofLogin": "Wọlé lẹ́ẹ̀kan pẹ̀lú àkáǹtì pokerth.net rẹ láti wọ Gbọ̀ngàn Òkìkí", "hofName3": "Àwọn lẹ́tà àkọ́kọ́ orúkọ rẹ", "hofNameFree": "Orúkọ ìnagijẹ rẹ", "hofBad": "A kò gba orúkọ yìí", "hofEmpty": "Kò sí àmì kankan síbẹ̀ — ìgbà tìrẹ ni!",
     "adTime": "Àkókò",
     "adSalto": "Ìyípo!",
     "adStreak": "Ọ̀wọ́",

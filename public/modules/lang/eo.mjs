@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Kuru kiel eble plej malproksimen",
     "adModeDailyD": "La sama itinero por ĉiuj hodiaŭ",
     "adModeTime": "Kontraŭ la horloĝo",
-    "adModeTimeD": "60 s por gajni plej multe da ĵetonoj; kolizio kostas 5 s", "arModeTimeD": "90 s por kuri kiel eble plej malproksimen; kolizio kostas 5 s",
+    "adModeTimeD": "60 s por gajni plej multe da ĵetonoj; kolizio kostas 5 s", "arModeTimeD": "90 s por kuri kiel eble plej malproksimen; kolizio kostas 5 s", "hofTitle": "Halo de Famo", "hofRank": "N-ro {n} en la Halo de Famo!", "hofOut": "Halo de Famo: {s} por eniri", "hofLogin": "Ensalutu unufoje per via konto ĉe pokerth.net por eniri la Halon de Famo", "hofName3": "Viaj inicialoj", "hofNameFree": "Via kaŝnomo", "hofBad": "Ĉi tiu nomo ne estas akceptata", "hofEmpty": "Ankoraŭ neniu poentaro — via vico!",
     "adTime": "Tempo",
     "adSalto": "Salto!",
     "adStreak": "Serio",

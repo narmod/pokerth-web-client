@@ -1169,7 +1169,7 @@ export const strings = {
     "adModeFreeD": "Trči što dalje možeš",
     "adModeDailyD": "Danas ista staza za sve",
     "adModeTime": "Trka s vremenom",
-    "adModeTimeD": "60 s za što više žetona; sudar košta 5 s", "arModeTimeD": "90 s da trčiš što dalje možeš; sudar košta 5 s",
+    "adModeTimeD": "60 s za što više žetona; sudar košta 5 s", "arModeTimeD": "90 s da trčiš što dalje možeš; sudar košta 5 s", "hofTitle": "Kuća slavnih", "hofRank": "Br. {n} u Kući slavnih!", "hofOut": "Kuća slavnih: {s} za ulazak", "hofLogin": "Jednom se prijavi svojim pokerth.net računom da uđeš u Kuću slavnih", "hofName3": "Tvoji inicijali", "hofNameFree": "Tvoj nadimak", "hofBad": "Ovo ime nije dozvoljeno", "hofEmpty": "Još nema rezultata — ti si na redu!",
     "adTime": "Vrijeme",
     "adSalto": "Salto!",
     "adStreak": "Niz",

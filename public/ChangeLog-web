@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.95 (current series):
+2026-11-16 version 2.1.11-web.96 (current series):
+- new: Ace Runner — the Hall of Fame, when the server turns it on: the top 20 of each mode and the top 10 of the day of the Daily challenge, from the 🏆 on the title; at the end of a run, your rank, with your pokerth.net nickname, three letters or a nickname, as the server chooses
+
+2026-11-16 version 2.1.11-web.95:
 - new: the mini-games' Hall of Fame is on its way — logging in with a registered pokerth.net account now keeps a key on this device, so your best scores can soon be entered from the mini-games without being connected (see the privacy page)
 
 2026-11-16 version 2.1.11-web.94:

@@ -1269,7 +1269,7 @@ export const strings = {
     "adModeFreeD": "Juokse niin pitkälle kuin pääset",
     "adModeDailyD": "Sama rata kaikille tänään",
     "adModeTime": "Aika-ajo",
-    "adModeTimeD": "60 s voittaa eniten pelimerkkejä; törmäys maksaa 5 s", "arModeTimeD": "90 s juosta niin pitkälle kuin pääset; törmäys maksaa 5 s",
+    "adModeTimeD": "60 s voittaa eniten pelimerkkejä; törmäys maksaa 5 s", "arModeTimeD": "90 s juosta niin pitkälle kuin pääset; törmäys maksaa 5 s", "hofTitle": "Kunniagalleria", "hofRank": "Sija {n} kunniagalleriassa!", "hofOut": "Kunniagalleria: {s} päästäksesi mukaan", "hofLogin": "Kirjaudu kerran pokerth.net-tililläsi päästäksesi kunniagalleriaan", "hofName3": "Nimikirjaimesi", "hofNameFree": "Nimimerkkisi", "hofBad": "Tätä nimeä ei hyväksytä", "hofEmpty": "Ei vielä tuloksia – sinun vuorosi!",
     "adTime": "Aika",
     "adSalto": "Voltti!",
     "adStreak": "Putki",

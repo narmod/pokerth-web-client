@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Korri ahalik eta urrunen",
     "adModeDailyD": "Ibilbide bera guztientzat gaur",
     "adModeTime": "Erlojupekoa",
-    "adModeTimeD": "60 s ahalik eta fitxa gehien irabazteko; talka batek 5 s balio du", "arModeTimeD": "90 s ahalik eta urrunen korritzeko; talka batek 5 s balio du",
+    "adModeTimeD": "60 s ahalik eta fitxa gehien irabazteko; talka batek 5 s balio du", "arModeTimeD": "90 s ahalik eta urrunen korritzeko; talka batek 5 s balio du", "hofTitle": "Ospearen aretoa", "hofRank": "{n}. Ospearen aretoan!", "hofOut": "Ospearen aretoa: {s} sartzeko", "hofLogin": "Hasi saioa behin zure pokerth.net kontuarekin Ospearen aretoan sartzeko", "hofName3": "Zure inizialak", "hofNameFree": "Zure ezizena", "hofBad": "Izen hau ez da onartzen", "hofEmpty": "Oraindik ez dago punturik: zure txanda!",
     "adTime": "Denbora",
     "adSalto": "Itzulipurdia!",
     "adStreak": "Segida",

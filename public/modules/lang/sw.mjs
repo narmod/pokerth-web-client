@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Kimbia mbali kadiri uwezavyo",
     "adModeDailyD": "Njia ileile kwa wote leo",
     "adModeTime": "Dhidi ya saa",
-    "adModeTimeD": "Sekunde 60 kushinda chipu nyingi zaidi; kugongana kunagharimu sekunde 5", "arModeTimeD": "Sekunde 90 kukimbia mbali kadiri uwezavyo; kugongana kunagharimu sekunde 5",
+    "adModeTimeD": "Sekunde 60 kushinda chipu nyingi zaidi; kugongana kunagharimu sekunde 5", "arModeTimeD": "Sekunde 90 kukimbia mbali kadiri uwezavyo; kugongana kunagharimu sekunde 5", "hofTitle": "Ukumbi wa Umaarufu", "hofRank": "Nambari {n} katika Ukumbi wa Umaarufu!", "hofOut": "Ukumbi wa Umaarufu: {s} kuingia", "hofLogin": "Ingia mara moja kwa akaunti yako ya pokerth.net ili uingie Ukumbi wa Umaarufu", "hofName3": "Herufi zako za kwanza", "hofNameFree": "Jina lako la utani", "hofBad": "Jina hili halikubaliki", "hofEmpty": "Bado hakuna alama — ni zamu yako!",
     "adTime": "Muda",
     "adSalto": "Sarakasi!",
     "adStreak": "Mfululizo",

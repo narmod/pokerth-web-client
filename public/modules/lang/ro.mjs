@@ -1270,7 +1270,7 @@ export const strings = {
     "adModeFreeD": "Aleargă cât de departe poți",
     "adModeDailyD": "Același traseu pentru toți azi",
     "adModeTime": "Contra cronometru",
-    "adModeTimeD": "60 s pentru cât mai multe jetoane; o ciocnire costă 5 s", "arModeTimeD": "90 s ca să alergi cât mai departe; o ciocnire costă 5 s",
+    "adModeTimeD": "60 s pentru cât mai multe jetoane; o ciocnire costă 5 s", "arModeTimeD": "90 s ca să alergi cât mai departe; o ciocnire costă 5 s", "hofTitle": "Galeria celebrităților", "hofRank": "Nr. {n} în Galeria celebrităților!", "hofOut": "Galeria celebrităților: {s} ca să intri", "hofLogin": "Conectează-te o dată cu contul tău pokerth.net ca să intri în Galeria celebrităților", "hofName3": "Inițialele tale", "hofNameFree": "Porecla ta", "hofBad": "Acest nume nu este acceptat", "hofEmpty": "Încă niciun scor — e rândul tău!",
     "adTime": "Timp",
     "adSalto": "Salt mortal!",
     "adStreak": "Serie",

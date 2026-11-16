@@ -1074,7 +1074,7 @@ export const strings = {
     "adModeFreeD": "최대한 멀리 달리세요",
     "adModeDailyD": "오늘은 모두 같은 코스",
     "adModeTime": "타임 어택",
-    "adModeTimeD": "60초 동안 칩을 최대한 모으기; 충돌하면 5초 감소", "arModeTimeD": "90초 동안 최대한 멀리 달리기; 충돌하면 5초 감소",
+    "adModeTimeD": "60초 동안 칩을 최대한 모으기; 충돌하면 5초 감소", "arModeTimeD": "90초 동안 최대한 멀리 달리기; 충돌하면 5초 감소", "hofTitle": "명예의 전당", "hofRank": "명예의 전당 {n}위!", "hofOut": "명예의 전당: 진입하려면 {s}", "hofLogin": "명예의 전당에 오르려면 pokerth.net 계정으로 한 번 로그인하세요", "hofName3": "이니셜", "hofNameFree": "닉네임", "hofBad": "이 이름은 사용할 수 없습니다", "hofEmpty": "아직 점수가 없어요 — 당신 차례!",
     "adTime": "시간",
     "adSalto": "백플립!",
     "adStreak": "연속",

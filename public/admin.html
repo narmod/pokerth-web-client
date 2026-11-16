@@ -2145,8 +2145,8 @@
       <div class="card">
         <div class="boardhead"><h2>Hall of Fame</h2><span id="hofSum" class="headnote"></span><button id="hofRefresh" class="use">Refresh</button></div>
         <p class="muted">The mini-games' best scores of everyone who plays from this web client, as on an arcade machine: the top 20 of each game and mode, and the top 10 of the day for a daily challenge. Pilot: Ace Runner.</p>
-        <details class="more"><summary>The name shown, and cheating</summary><p class="muted"><b>pokerth.net account</b>: the nickname of a registered account — the proxy hands a 90-day Hall of Fame key to the browser when the real PokerTH server accepts an authenticated login (guests never get one), so scores can be entered from the mini-games without being connected. <b>3 letters</b>: initials, as on an arcade machine, open to everyone. <b>Free nickname</b>: 2 to 12 characters, through the word filter below, open to everyone. Each setting keeps its own boards: switching back brings its scores back. Scores are counted in the browser, so they can be faked with some effort: a run needs a ticket signed here, the score must be possible in the time played, and submissions are limited per address (in memory only, never stored). Remove a line below, or block a name.</p></details>
-        <div class="defrow fld"><span>Name shown</span><select id="hofNames"><option value="account">pokerth.net account</option><option value="initials">3 letters</option><option value="free">Free nickname</option></select></div>
+        <details class="more"><summary>The settings, and cheating</summary><p class="muted"><b>Off</b> (the default): no 🏆 on the mini-games, no score sent, no account key handed out; the boards already made are kept for when it is turned on again. <b>pokerth.net account</b>: the nickname of a registered account — the proxy hands a 90-day Hall of Fame key to the browser when the real PokerTH server accepts an authenticated login (guests never get one), so scores can be entered from the mini-games without being connected. <b>3 letters</b>: initials, as on an arcade machine, open to everyone. <b>Free nickname</b>: 2 to 12 characters, through the word filter below, open to everyone. Each setting keeps its own boards: switching back brings its scores back. Scores are counted in the browser, so they can be faked with some effort: a run needs a ticket signed here, the score must be possible in the time played, and submissions are limited per address (in memory only, never stored). Remove a line below, or block a name.</p></details>
+        <div class="defrow fld"><span>Hall of Fame</span><select id="hofNames"><option value="off">Off (no Hall of Fame)</option><option value="account">On · pokerth.net account</option><option value="initials">On · 3 letters</option><option value="free">On · free nickname</option></select></div>
         <div class="defrow fld"><span>Blocked names</span><textarea id="hofBans" rows="3" placeholder="One name per line" style="width:100%"></textarea></div>
         <div class="defrow fld"><span>Banned words (free nickname)</span><textarea id="hofWords" rows="3" placeholder="One word per line — a name with a word starting with one of them is refused" style="width:100%"></textarea></div>
         <p class="muted" id="hofBase"></p>
@@ -8458,7 +8458,7 @@
   // One card per poll: state, question, languages and answers, then one bar
   // per option (the one ahead marked) and the actions.
   // ── Hall of Fame (proxy.js /admin/hof, server/hall-of-fame.js) ──
-  var HOF_NAMES={account:'pokerth.net account',initials:'3 letters',free:'Free nickname'};
+  var HOF_NAMES={off:'Off',account:'pokerth.net account',initials:'3 letters',free:'Free nickname'};
   var HOF_MODES={free:'Free run',daily:'Daily challenge',time:'Time attack'};
   function _hofBoardLabel(k){ var m=/^[a-z]+\/([a-z-]+):(.+)$/.exec(k); if(!m) return k; var g=m[1]==='ace-runner'?'Ace Runner':m[1], md=m[2], d=/^daily:(.+)$/.exec(md); return g+' · '+(d?HOF_MODES.daily+' · '+d[1]:(HOF_MODES[md]||md)); }
   function loadHof(view){
@@ -8470,7 +8470,7 @@
       $('hofView').value=d.shown;
       $('hofBase').textContent='Always refused for a free nickname: '+(d.baseWords||[]).join(', ')+'.';
       var keys=Object.keys(d.boards||{});
-      $('hofSum').textContent='Shown: '+(HOF_NAMES[d.names]||d.names)+' · '+keys.length+' board'+(keys.length===1?'':'s')+' here · '+d.tokens+' account key'+(d.tokens===1?'':'s');
+      $('hofSum').textContent=(d.names==='off'?'Off':'On · '+(HOF_NAMES[d.names]||d.names))+' · '+keys.length+' board'+(keys.length===1?'':'s')+' here · '+d.tokens+' account key'+(d.tokens===1?'':'s');
       if(!keys.length){ el.innerHTML='<div class="empty">No score yet for this setting.</div>'; return; }
       el.innerHTML=keys.map(function(k){
         var rows=(d.boards[k]||[]).map(function(r,i){ return '<tr><td>'+(i+1)+'</td><td>'+srvEsc(r.n)+'</td><td>'+Number(r.s).toLocaleString()+'</td><td>'+srvEsc(new Date(r.ts).toISOString().slice(0,16).replace('T',' '))+'</td><td><button class="use hofDel" data-k="'+srvEsc(k)+'" data-n="'+srvEsc(r.n)+'">Remove</button></td></tr>'; }).join('');

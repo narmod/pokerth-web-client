@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Run as far as you can",
     "adModeDailyD": "The same course for everyone today",
     "adModeTime": "Time attack",
-    "adModeTimeD": "60 s to win the most chips; a crash costs 5 s", "arModeTimeD": "90 s to run as far as you can; a crash costs 5 s",
+    "adModeTimeD": "60 s to win the most chips; a crash costs 5 s", "arModeTimeD": "90 s to run as far as you can; a crash costs 5 s", "hofTitle": "Hall of Fame", "hofRank": "#{n} in the Hall of Fame!", "hofOut": "Hall of Fame: {s} to get in", "hofLogin": "Log in once with your pokerth.net account to enter the Hall of Fame", "hofName3": "Your initials", "hofNameFree": "Your nickname", "hofBad": "This name is not accepted", "hofEmpty": "No score yet — your turn!",
     "adTime": "Time",
     "adSalto": "Salto!",
     "adStreak": "Streak",

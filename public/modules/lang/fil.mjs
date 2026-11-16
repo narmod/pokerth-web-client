@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Tumakbo nang pinakamalayo",
     "adModeDailyD": "Iisang ruta para sa lahat ngayon",
     "adModeTime": "Laban sa oras",
-    "adModeTimeD": "60 s para manalo ng pinakamaraming chips; ang banggaan ay 5 s", "arModeTimeD": "90 s para tumakbo nang pinakamalayo; ang banggaan ay 5 s",
+    "adModeTimeD": "60 s para manalo ng pinakamaraming chips; ang banggaan ay 5 s", "arModeTimeD": "90 s para tumakbo nang pinakamalayo; ang banggaan ay 5 s", "hofTitle": "Hall of Fame", "hofRank": "Ika-{n} sa Hall of Fame!", "hofOut": "Hall of Fame: {s} para makapasok", "hofLogin": "Mag-log in nang isang beses gamit ang iyong pokerth.net account para makapasok sa Hall of Fame", "hofName3": "Ang iyong inisyal", "hofNameFree": "Ang iyong palayaw", "hofBad": "Hindi tinatanggap ang pangalang ito", "hofEmpty": "Wala pang score — ikaw na!",
     "adTime": "Oras",
     "adSalto": "Backflip!",
     "adStreak": "Sunod-sunod",

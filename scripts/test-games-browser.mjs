@@ -106,8 +106,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'ace-runner');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Runner', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'ace-runner'), label + ': Space opens Ace Runner');
-  ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.classList.contains('gm-title') && p.querySelectorAll('.gm-tile').length === 3 && !p.querySelector('.gm-bg'); }),
-    label + ': the common title: three modes for Ace Runner (free run, daily, time attack), its own scene behind (no picture)');
+  ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.classList.contains('gm-title') && p.querySelectorAll('.gm-tile').length === 3 && !p.querySelector('.gm-bg') && !p.querySelector('.gm-opt'); }),
+    label + ': the common title: three modes for Ace Runner (free run, daily, time attack), its own scene behind (no picture), no 🏆 while the Hall of Fame is off');
   await shot(pg, label + '-title');
   await pg.keyboard.press('Space');
   await sleep(1200);
@@ -151,6 +151,36 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
     label + ': Ace Runner time attack: 90 s, a crash costs 5 s and the run goes on, time up ends it, its record saved (' + JSON.stringify(art) + ')');
   const tu = await endInfo(pg, 4000);
   ok(tu.on && tu.title === 'Temps écoulé !', label + ': time attack: « Temps écoulé ! » (' + tu.title + ')');
+  // web.96: the Hall of Fame (hof.mjs), its server mocked: 3 letters typed on the end screen, then the boards on the title.
+  const hofSent = [];
+  await pg.route('**/__hof/start', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, ticket: 'tk.sig', names: 'initials' }) }));
+  await pg.route('**/__hof/score', (r) => { const b = JSON.parse(r.request().postData() || '{}'); hofSent.push(b);
+    r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, rank: 3, best: b.s, name: String(b.name || '').toUpperCase(), names: 'initials', day: '2026-11-16', boards: { free: [{ n: 'AAA', s: 9e6, ts: Date.now() }, { n: 'BBB', s: 8e6, ts: Date.now() }, { n: 'ABC', s: b.s, ts: Date.now() }], daily: [], time: [] } }) }); });
+  await pg.route('**/__hof?g=*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, names: 'initials', day: '2026-11-16', top: 20, topDay: 10, boards: { free: [{ n: 'AAA', s: 9e6, ts: Date.now() }, { n: 'ABC', s: 1234, ts: Date.now() }], daily: [], time: [] } }) }));
+  await pg.evaluate(async () => {
+    const A = window.__pthAR; A.start('free'); await new Promise((r) => setTimeout(r, 400));
+    const G = A.run(); G.allInUntil = 0; G.ins = false; G.safeUntil = 0; G.dist = Math.max(G.dist, 50);
+    G.obs.push({ type: 'stack', x: 120, w: 30, n: 6, h: 40, col: 0 });
+  });
+  await pg.waitForSelector('#pth-game .gm-hof input', { timeout: 8000 }).catch(() => {});
+  const hf1 = await pg.evaluate(() => ({ txt: (document.querySelector('#pth-game .gm-hof') || {}).textContent || '', input: !!document.querySelector('#pth-game .gm-hof input.gm-h3') }));
+  ok(hf1.input && /initiales/.test(hf1.txt), label + ': Hall of Fame: the end screen asks for 3 letters when the score gets in (' + hf1.txt + ')');
+  await pg.fill('#pth-game .gm-hof input', 'abc');
+  await pg.press('#pth-game .gm-hof input', 'Enter');
+  await pg.waitForFunction(() => /N° 3/.test((document.querySelector('#pth-game .gm-hof') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
+  const hf2 = await pg.evaluate(() => ({ txt: document.querySelector('#pth-game .gm-hof').textContent, saved: localStorage.getItem('pth_hof_name'), st: window.__pthAR.state() }));
+  ok(/N° 3 du Hall of Fame/.test(hf2.txt) && /"initials":"ABC"/.test(hf2.saved) && hf2.st === 'over' && hofSent.length === 1 && hofSent[0].name === 'ABC' && hofSent[0].m === 'free' && hofSent[0].ticket === 'tk.sig' && hofSent[0].s > 0,
+    label + ': Hall of Fame: ABC sent with the run\'s ticket, « N° 3 », kept for next time, typing did not restart the run (' + hf2.txt + ')');
+  await pg.evaluate(() => window.__pthAR.hof());
+  await pg.waitForSelector('#pth-game .gm-hlist li', { timeout: 5000 }).catch(() => {});
+  const hf3 = await pg.evaluate(() => ({ tabs: document.querySelectorAll('#pth-game .gm-htabs button').length, rows: document.querySelectorAll('#pth-game .gm-hlist li').length, me: (document.querySelector('#pth-game .gm-hlist li.me') || {}).textContent || '', st: window.__pthAR.state(), h: (document.querySelector('#pth-game .gm-endc h2') || {}).textContent }));
+  ok(hf3.tabs === 3 && hf3.rows === 2 && /ABC/.test(hf3.me) && hf3.st === 'board' && /Hall of Fame/.test(hf3.h), label + ': Hall of Fame on the title: a tab per mode, the board, the player\'s line lit (' + JSON.stringify(hf3) + ')');
+  await pg.click('#pth-game .gm-htabs [data-h="2"]');
+  ok(await pg.evaluate(() => /Pas encore de score/.test(document.querySelector('#pth-game .gm-endc').textContent)), label + ': Hall of Fame: an empty board says so');
+  await pg.keyboard.press('Escape');
+  await sleep(300);
+  ok(await pg.evaluate(() => window.__pthAR.state() === 'title' && !!document.querySelector('#pth-game .pg-panel.gm-title .gm-opt')), label + ': Hall of Fame: Escape goes back to the title, its 🏆 chip');
+  await pg.unroute('**/__hof/start'); await pg.unroute('**/__hof/score'); await pg.unroute('**/__hof?g=*');
   await sleep(800);
   await pg.keyboard.press('Space');
   await sleep(400);

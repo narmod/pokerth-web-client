@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Bacardığın qədər uzağa qaç",
     "adModeDailyD": "Bu gün hamı üçün eyni marşrut",
     "adModeTime": "Zamana qarşı",
-    "adModeTimeD": "Ən çox fişka qazanmaq üçün 60 san; toqquşma 5 san aparır", "arModeTimeD": "Bacardığın qədər uzağa qaçmaq üçün 90 san; toqquşma 5 san aparır",
+    "adModeTimeD": "Ən çox fişka qazanmaq üçün 60 san; toqquşma 5 san aparır", "arModeTimeD": "Bacardığın qədər uzağa qaçmaq üçün 90 san; toqquşma 5 san aparır", "hofTitle": "Şöhrət zalı", "hofRank": "Şöhrət zalında {n}-ci yer!", "hofOut": "Şöhrət zalı: girmək üçün {s}", "hofLogin": "Şöhrət zalına düşmək üçün pokerth.net hesabınla bir dəfə daxil ol", "hofName3": "Baş hərflərin", "hofNameFree": "Ləqəbin", "hofBad": "Bu ad qəbul edilmir", "hofEmpty": "Hələ xal yoxdur — növbə səndədir!",
     "adTime": "Vaxt",
     "adSalto": "Salto!",
     "adStreak": "Seriya",

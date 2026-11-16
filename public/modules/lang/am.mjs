@@ -895,7 +895,7 @@ export const strings = {
     "adModeFreeD": "የቻልከውን ያህል ሩቅ ሩጥ",
     "adModeDailyD": "ዛሬ ለሁሉም አንድ መንገድ",
     "adModeTime": "ከሰዓት ጋር",
-    "adModeTimeD": "ብዙ ቺፕ ለማሸነፍ 60 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል", "arModeTimeD": "በተቻለ መጠን ሩቅ ለመሮጥ 90 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል",
+    "adModeTimeD": "ብዙ ቺፕ ለማሸነፍ 60 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል", "arModeTimeD": "በተቻለ መጠን ሩቅ ለመሮጥ 90 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል", "hofTitle": "የዝና አዳራሽ", "hofRank": "በዝና አዳራሽ ቁጥር {n}!", "hofOut": "የዝና አዳራሽ፦ ለመግባት {s}", "hofLogin": "ወደ የዝና አዳራሽ ለመግባት በpokerth.net መለያህ አንድ ጊዜ ግባ", "hofName3": "የስምህ መነሻ ፊደላት", "hofNameFree": "ቅጽል ስምህ", "hofBad": "ይህ ስም ተቀባይነት የለውም", "hofEmpty": "እስካሁን ነጥብ የለም — ተራህ ነው!",
     "adTime": "ጊዜ",
     "adSalto": "ገልባጭ!",
     "adStreak": "ተከታታይ",

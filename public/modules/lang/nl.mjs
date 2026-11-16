@@ -1273,7 +1273,7 @@ export const strings = {
     "adModeFreeD": "Ren zo ver als je kunt",
     "adModeDailyD": "Vandaag dezelfde baan voor iedereen",
     "adModeTime": "Tijdrit",
-    "adModeTimeD": "60 s om zoveel mogelijk fiches te winnen; een botsing kost 5 s", "arModeTimeD": "90 s om zo ver mogelijk te rennen; een botsing kost 5 s",
+    "adModeTimeD": "60 s om zoveel mogelijk fiches te winnen; een botsing kost 5 s", "arModeTimeD": "90 s om zo ver mogelijk te rennen; een botsing kost 5 s", "hofTitle": "Eregalerij", "hofRank": "Nr. {n} in de eregalerij!", "hofOut": "Eregalerij: {s} om erin te komen", "hofLogin": "Log één keer in met je pokerth.net-account om in de eregalerij te komen", "hofName3": "Je initialen", "hofNameFree": "Je bijnaam", "hofBad": "Deze naam is niet toegestaan", "hofEmpty": "Nog geen score — jij bent aan de beurt!",
     "adTime": "Tijd",
     "adSalto": "Salto!",
     "adStreak": "Reeks",

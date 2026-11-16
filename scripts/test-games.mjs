@@ -96,7 +96,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'blModeFreeD', 'blModeDailyD', 'blModeTourneyD', 'blTimer', 'blQuick', 'blNotebook', 'blRepTight', 'blRepLoose', 'blReplay', 'blWin', 'blLose', 'blP_ace', 'blP_cowboy', 'blP_gent', 'blP_trap', 'blP_joker', 'blP_king', 'blT_sweat', 'blT_fierce', 'blT_cool', 'blT_fidget', 'blT_wave', 'blT_grin', 'blT_whistle', 'blT_chips', 'blT_wink', 'blT_scratch', 'hlModeTourney', 'evMcTable', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
-  'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'arModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
+  'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'arModeTimeD', 'hofTitle', 'hofRank', 'hofOut', 'hofLogin', 'hofName3', 'hofNameFree', 'hofBad', 'hofEmpty', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
   'prHint', 'prRules', 'prTimeUp', 'prQueen', 'prQueenD', 'prQDrift', 'prQChips', 'prQPass', 'prQClean', 'prQNitro', 'prQFast', 'prQLeft', 'prQRight',
   'gmTitle'];
 let missing = [], badRecord = [];
