@@ -49,6 +49,7 @@ import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, listHtml } from './end.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
+import { spriteCache } from './sprites.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -1086,10 +1087,25 @@ const carW = () => Math.min(W * 0.24, 100);
     }
     // The road over all the ground: far away a segment is thinner than a pixel,
     // and the ground of the next one (drawn 1 px taller to hide seams) would cover it.
-    for (const n of shown) {
+    // web.109 (audit lot 3): far away, consecutive segments that together are less than a screen pixel tall are
+    // drawn as one (same theme, same lanes, no finish, gate, ghost road or theme blend among them): the same
+    // picture, a fraction of the calls — most of the 300 segments are that thin.
+    const onePx = 1 / ((shell.dpr || 1) * (shell.k || 1));
+    const plain = (t) => !t.Tp && !(t.i >= finishSeg - 1 && t.i < finishSeg + 5) && !t.g.ghosts && !t.gate
+      && !!(segs[t.i + 1] && segs[t.i + 1].g) && segs[t.i + 1].g.pcs.length === t.g.pcs.length && !!segs[t.i + 1].g.joined === !!t.g.joined;
+    for (let j = 0; j < shown.length; j++) {
+      const n = shown[j];
       const s = segs[base.i + n];
-      const a = s.p1.s, b = s.p2.s, alt = Math.floor(s.i / 3) % 2, fin = s.i >= finishSeg && s.i < finishSeg + 4;
-      const nx = segs[s.i + 1] || s, g1 = s.g, g2 = nx.g || g1, T = s.T;
+      let e = s;
+      if (s.p1.s.y - s.p2.s.y < onePx && plain(s)) {
+        while (j + 1 < shown.length && shown[j + 1] === shown[j] + 1) {
+          const u = segs[base.i + shown[j + 1]];
+          if (u.T !== s.T || !plain(u) || u.g.pcs.length !== s.g.pcs.length || !!u.g.joined !== !!s.g.joined || s.p1.s.y - u.p2.s.y >= onePx) break;
+          e = u; j++;
+        }
+      }
+      const a = s.p1.s, b = e.p2.s, alt = Math.floor(s.i / 3) % 2, fin = s.i >= finishSeg && s.i < finishSeg + 4;
+      const nx = segs[e.i + 1] || e, g1 = s.g, g2 = nx.g || g1, T = s.T;
       const bl = s.Tp ? clamp((s.i - gates[s.stage - 1].seg) / 50, 0, 1) : 1;
       const col = (k) => bl < 1 ? rgb(mixA(s.Tp[k][alt], T[k][alt], bl)) : rgb(T[k][alt]);
       const U = (p, u) => p.x + p.w * u;
@@ -1132,6 +1148,9 @@ const carW = () => Math.min(W * 0.24, 100);
     let gh = ghostNow(); if (gh && (gh.z < myZ() + 1.5 || gh.z > last)) gh = null;
     for (let n = last - base.i; n > 0; n--) {
       const s = segs[base.i + n]; if (s.p1.c.z <= DEPTH) continue;
+      // Nothing on this segment: no clip to set and undo (web.109 — most of the 300 have nothing).
+      const cs = bySeg.get(s.i);
+      if (!cs && !s.gate && s.i !== finishSeg && !(gh && Math.floor(gh.z) === s.i) && !s.sprites.some((sp) => !sp.got)) continue;
       const sc = s.p1.s.scale * W / 2, sx = s.p1.s.x, sy = s.p1.s.y, g = s.g;
       ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, s.clip); ctx.clip();
       for (const sp of s.sprites) {
@@ -1150,7 +1169,6 @@ const carW = () => Math.min(W * 0.24, 100);
         ctx.fillText('👻', gx, gy - gw * 0.55 - 3);
         ctx.globalAlpha = 1;
       }
-      const cs = bySeg.get(s.i);
       if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind); }
       ctx.restore();
     }
@@ -1336,10 +1354,22 @@ const carW = () => Math.min(W * 0.24, 100);
     }
     ctx.lineCap = 'butt';
   }
+  // web.109 (audit lot 3): the car is ~700 faces (car3d.mjs), some 2 800 canvas calls a frame. While its yaw holds
+  // still (driving straight, or a steady curve) each half is painted once and copied; while it turns, and the tail
+  // with the nitro's flickering flames, it is drawn as before. Yaw in steps of 0.004 rad: under half a pixel.
+  const carSprites = spriteCache(shell, 16), carQ = { back: NaN, front: NaN }, YAW_Q = 0.004;
+  function carDraw(g, o, part) {
+    const q = Math.round(o.yaw / YAW_Q), steady = carQ[part] === q;
+    carQ[part] = q;
+    if (!steady || (part === 'front' && o.boost)) { drawCar(g, o, part); return; }
+    const w = o.w, at = Object.assign({}, o, { yaw: q * YAW_Q, x: 0, y: 0 });
+    carSprites.draw(g, part + '|' + q + '|' + w.toFixed(2) + '|' + o.color + '|' + o.pitch + '|' + (o.boost ? 1 : 0), o.x, o.y,
+      [-1.16 * w, -1.03 * w, 2.32 * w, 1.1 * w], (c) => drawCar(c, at, part));
+  }
   function drawCarBack(g) {
     const o = carOpts();
     ctx = g; skidMarks(o.w, o.x, o.y);
-    drawCar(g, o, 'back');
+    carDraw(g, o, 'back');
     // Dame de Cœur: the Queen of Hearts in the passenger seat.
     if (mode === 'queen' && state !== 'title' && state !== 'board') {
       const sp = seatPoint(o, 0.17), cw = o.w * 0.19;
@@ -1348,7 +1378,7 @@ const carW = () => Math.min(W * 0.24, 100);
   }
   function drawCarFront(g) {
     const o = carOpts(), { w, h, x, y } = carFrame();
-    ctx = g; drawCar(g, o, 'front');
+    ctx = g; carDraw(g, o, 'front');
     if (drift) {
       g.save(); g.translate(x, y); g.font = '700 ' + Math.round(Math.max(12, w * 0.14)) + 'px Inter, system-ui, sans-serif';
       g.textAlign = 'center'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.6)';

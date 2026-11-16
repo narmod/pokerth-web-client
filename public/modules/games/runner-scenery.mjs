@@ -407,3 +407,12 @@ export function drawScenery(g, o) {
   g.fillStyle = 'rgba(14,18,28,' + VEIL + ')'; g.fillRect(0, 0, w, gy);
 }
 export const VEIL = 0.12;
+/**
+ * Does drawScenery(o) draw the same picture whatever o.now (web.109)? Not the cruise's sea and the final table's
+ * sparkles, not a sky with stars twinkling (night) — unless reduced motion holds them still. A game may then keep it.
+ */
+export function sceneryStill(o) {
+  if (o.reduced) return true;
+  if (o.venue === 2 || o.venue === 5) return false;
+  return 1 - skyAt(o.p).light <= 0.05;
+}

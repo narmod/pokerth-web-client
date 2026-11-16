@@ -553,6 +553,13 @@ console.log('Ace Dash: the long run, the score, the modes');
   const st = Q.createQuality(2); run(st, 300, 16.7, 10);
   ok(st.dpr === 2, 'quality: stalls (a tab switch, a load) say nothing');
 }
+// web.109: a scenery a game may keep as one picture (nothing in it moves with time).
+{
+  const R = await import('../public/modules/games/runner-scenery.mjs');
+  ok(R.sceneryStill({ venue: 0, p: 0.5 }) && R.sceneryStill({ venue: 4, p: 0.45 }) && !R.sceneryStill({ venue: 0, p: 0.95 }) && !R.sceneryStill({ venue: 2, p: 0.5 })
+    && !R.sceneryStill({ venue: 5, p: 0.5 }) && R.sceneryStill({ venue: 2, p: 0.95, reduced: true }),
+    'scenery: still by day in the club, Vegas, Monaco, Macao; not with twinkling stars, the sea or the final table\'s sparkles; always with reduced motion');
+}
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

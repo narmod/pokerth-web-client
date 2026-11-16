@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run and Tapis!: lot 3 of the audit** (`web.109`, narmod) — Poker Run (11 445 canvas calls a frame → about
+  2 700 driving straight): consecutive far segments less than a device pixel tall together are drawn as one (same
+  theme and lanes; not near the finish, a gate, a ghost road or a theme blend) — road 6 381 → 1 870 calls; the
+  sprite pass skips the segments with nothing on them (no clip set and undone: 1 824 → 492); the car (car3d, ~2 800
+  calls) is copied from `sprites.mjs` while its yaw holds still (steps of 0.004 rad, under half a pixel), drawn as
+  before while it turns and for the flickering nitro flames. Tapis!: the room, spotlight and felt are one picture per
+  level when `sceneryStill()` (runner-scenery: no twinkling stars, sea or sparkles; always with reduced motion) —
+  774 → 241 calls. `sprites.mjs` now reads the canvas' own transform (a shake's shift kept). Ace Dash left as it is:
+  its felt and scenery change at every frame (the camera follows the lanes, the day goes by), keeping them would
+  mean visible steps.
 - **Video Poker and Tapis!: drawn once, then copied — lot 2 of the audit** (`web.108`, narmod) — `games/sprites.mjs`
   (`spriteCache(shell, max)`): a picture painted once at the canvas' resolution in a small canvas, keyed by what it
   depends on (+ the scale and a fonts epoch), copied with `drawImage` at a whole device pixel; least used beyond

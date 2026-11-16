@@ -8,8 +8,8 @@
 //   const sp = spriteCache(shell, 96)
 //   sp.draw(g, key, ax, ay, box, paint)
 //       key    what the picture depends on (a string; the scale, the fonts are added)
-//       ax, ay where its anchor goes, in the game's units (the main canvas' transform
-//              being shell.dpr × shell.k, nothing else)
+//       ax, ay where its anchor goes, in the game's units (the canvas' current transform:
+//              a scale, shell.dpr × shell.k, and maybe a shift — a shake; no rotation)
 //       box    [x, y, w, h] around the anchor that holds the whole picture (a margin
 //              for the glows is added)
 //       paint  (ctx) draws it as if the anchor were at (0, 0)
@@ -30,7 +30,7 @@ export function spriteCache(shell, max = 64) {
   return {
     /** @param {CanvasRenderingContext2D} g @param {string} key @param {number} ax @param {number} ay @param {number[]} box @param {(c: CanvasRenderingContext2D) => void} paint */
     draw(g, key, ax, ay, box, paint) {
-      const s = shell.dpr * shell.k;
+      const m = g.getTransform(), s = m.a || shell.dpr * shell.k;
       const full = key + '|' + s.toFixed(4) + '|' + fontEpoch;
       let sp = map.get(full);
       if (sp) { map.delete(full); map.set(full, sp); }        // most recently used last
@@ -48,7 +48,7 @@ export function spriteCache(shell, max = 64) {
       }
       g.save();
       g.setTransform(1, 0, 0, 1, 0, 0);
-      g.drawImage(sp.c, Math.round(ax * s) + sp.ox, Math.round(ay * s) + sp.oy);
+      g.drawImage(sp.c, Math.round(ax * s + m.e) + sp.ox, Math.round(ay * s + m.f) + sp.oy);
       g.restore();
     },
     clear() { map.clear(); },

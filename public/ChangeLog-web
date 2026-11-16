@@ -1,4 +1,8 @@
-2026-11-16 version 2.1.11-web.108 (current series):
+2026-11-16 version 2.1.11-web.109 (current series):
+- improvement: Poker Run — much lighter: the far road drawn in fewer pieces, nothing done for the empty stretches, the car copied while it goes straight — about a quarter of the drawing work, same look
+- improvement: Tapis! — the room, the spotlight and the felt are one picture for the whole level when nothing in them moves
+
+2026-11-16 version 2.1.11-web.108:
 - improvement: Video Poker and Tapis! — smoother: what does not move (the cabinet, the pay table, the buttons, the chips at rest) is drawn once and copied, about half the drawing work at every frame, same look
 
 2026-11-16 version 2.1.11-web.107:

@@ -76,7 +76,7 @@ import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
-import { drawScenery, VENUES } from './runner-scenery.mjs';
+import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
 import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
@@ -765,6 +765,7 @@ export function create(shell) {
     }
   }
   const chipSprites = spriteCache(shell, 96);
+  const roomSprite = spriteCache(shell, 2);     // the room: a whole-canvas picture, the last two levels'
   /** The chip itself (no highlight): its side, its marks and suit, its top, its seal. */
   function chipBody(g, L, x, yb, b, sc, top) {
     const k = b.k;
@@ -815,19 +816,26 @@ export function create(shell) {
     const L = geom(), W = L.W;
     // The venue (Ace Runner's scenery), from day to night along its levels; a veil so the chips stand out.
     const ty = L.base - L.ry * 2.4;
-    const o = { w: W, gy: ty - 5, scroll: 300, p: dayOfLevel(G.lv), now: time, reduced: shell.reduced, C: ink(!!(shell.theme && shell.theme.light)) };
-    if (G.venueT < 1) {
-      drawScenery(g, Object.assign({}, o, { venue: G.prevVenue }));
-      g.globalAlpha = G.venueT; drawScenery(g, Object.assign({}, o, { venue: G.venue })); g.globalAlpha = 1;
-    } else drawScenery(g, Object.assign({}, o, { venue: G.venue }));
-    g.fillStyle = 'rgba(12,10,26,.4)'; g.fillRect(0, 0, W, ty);
-    const sp = g.createRadialGradient(W / 2, -H * 0.2, 10, W / 2, H * 0.3, H);
-    sp.addColorStop(0, 'rgba(255,240,190,.24)'); sp.addColorStop(1, 'rgba(255,240,190,0)');
-    g.fillStyle = sp; g.fillRect(0, 0, W, H);
-    // The felt and its holes.
-    const fe = g.createLinearGradient(0, ty, 0, H); fe.addColorStop(0, '#1f8a4c'); fe.addColorStop(1, '#0c3f22');
-    g.fillStyle = fe; g.fillRect(0, ty, W, H - ty);
-    g.fillStyle = '#5a361c'; g.fillRect(0, ty - 5, W, 6); g.fillStyle = '#d8b25a'; g.fillRect(0, ty - 6, W, 1.2);
+    const o = { w: W, gy: ty - 5, scroll: 300, p: dayOfLevel(G.lv), now: time, reduced: shell.reduced, C: ink(!!(shell.theme && shell.theme.light)), venue: G.venue };
+    // The room, the spotlight, the felt: one picture for the whole level when nothing in it moves
+    // (web.109, sceneryStill: no twinkling stars, no sea, no sparkles), else drawn at every frame as before.
+    const room = (c) => {
+      if (G.venueT < 1) {
+        drawScenery(c, Object.assign({}, o, { venue: G.prevVenue }));
+        c.globalAlpha = G.venueT; drawScenery(c, o); c.globalAlpha = 1;
+      } else drawScenery(c, o);
+      c.fillStyle = 'rgba(12,10,26,.4)'; c.fillRect(0, 0, W, ty);
+      const sp = c.createRadialGradient(W / 2, -H * 0.2, 10, W / 2, H * 0.3, H);
+      sp.addColorStop(0, 'rgba(255,240,190,.24)'); sp.addColorStop(1, 'rgba(255,240,190,0)');
+      c.fillStyle = sp; c.fillRect(0, 0, W, H);
+      const fe = c.createLinearGradient(0, ty, 0, H); fe.addColorStop(0, '#1f8a4c'); fe.addColorStop(1, '#0c3f22');
+      c.fillStyle = fe; c.fillRect(0, ty, W, H - ty);
+      c.fillStyle = '#5a361c'; c.fillRect(0, ty - 5, W, 6); c.fillStyle = '#d8b25a'; c.fillRect(0, ty - 6, W, 1.2);
+    };
+    if (G.venueT >= 1 && sceneryStill(o)) {
+      roomSprite.draw(g, 'room|' + [G.venue, o.p, W, H, ty, o.C.light ? 1 : 0, shell.reduced ? 1 : 0].map((v) => typeof v === 'number' ? +v.toFixed(4) : v).join(','), 0, 0, [0, 0, W, H], room);
+    } else room(g);
+    // The holes.
     for (let c = 0; c < G.cols; c++) {
       const x = colX(L, c), ch = G.chars[c], buried = ch && (ch.st === 'in' || ch.st === 'spirit' || ch.st === 'gone');
       g.fillStyle = '#d8b25a'; g.beginPath(); g.ellipse(x, L.base, L.rx * 1.12, L.ry * 1.25, 0, 0, 7); g.fill();
