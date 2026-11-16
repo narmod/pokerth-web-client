@@ -1168,7 +1168,7 @@ export const strings = {
     "adModeFreeD": "Ruith cho fada 's a ghabhas",
     "adModeDailyD": "An aon chùrsa do chàch an-diugh",
     "adModeTime": "An aghaidh a' chleoc",
-    "adModeTimeD": "60 diog gus na tha de chips a chosnadh; cosgaidh tubaist 5 diog",
+    "adModeTimeD": "60 diog gus na tha de chips a chosnadh; cosgaidh tubaist 5 diog", "arModeTimeD": "90 diog gus ruith cho fada 's a ghabhas; cosgaidh tubaist 5 diog",
     "adTime": "Ùine",
     "adSalto": "Car a' mhuiltein!",
     "adStreak": "Sreath",

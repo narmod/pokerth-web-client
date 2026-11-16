@@ -1265,7 +1265,7 @@ export const strings = {
     "adModeFreeD": "どこまでも走れ",
     "adModeDailyD": "今日はみんな同じコース",
     "adModeTime": "タイムアタック",
-    "adModeTimeD": "60秒でチップを最大まで集めよう。衝突すると5秒減",
+    "adModeTimeD": "60秒でチップを最大まで集めよう。衝突すると5秒減", "arModeTimeD": "90秒でできるだけ遠くまで走ろう。衝突すると5秒減",
     "adTime": "タイム",
     "adSalto": "バク宙！",
     "adStreak": "連続",

@@ -1268,7 +1268,7 @@ export const strings = {
     "adModeFreeD": "Spring så långt du kan",
     "adModeDailyD": "Samma bana för alla i dag",
     "adModeTime": "Mot klockan",
-    "adModeTimeD": "60 s för att vinna flest marker; en krock kostar 5 s",
+    "adModeTimeD": "60 s för att vinna flest marker; en krock kostar 5 s", "arModeTimeD": "90 s för att springa så långt du kan; en krock kostar 5 s",
     "adTime": "Tid",
     "adSalto": "Volt!",
     "adStreak": "Svit",

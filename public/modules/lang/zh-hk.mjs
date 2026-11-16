@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "盡量跑得遠啲",
     "adModeDailyD": "今日大家同一條路線",
     "adModeTime": "計時賽",
-    "adModeTimeD": "60秒贏最多籌碼；每次相撞扣5秒",
+    "adModeTimeD": "60秒贏最多籌碼；每次相撞扣5秒", "arModeTimeD": "90秒盡量跑得遠啲；每次相撞扣5秒",
     "adTime": "時間",
     "adSalto": "空翻！",
     "adStreak": "連串",

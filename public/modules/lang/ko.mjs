@@ -1074,7 +1074,7 @@ export const strings = {
     "adModeFreeD": "최대한 멀리 달리세요",
     "adModeDailyD": "오늘은 모두 같은 코스",
     "adModeTime": "타임 어택",
-    "adModeTimeD": "60초 동안 칩을 최대한 모으기; 충돌하면 5초 감소",
+    "adModeTimeD": "60초 동안 칩을 최대한 모으기; 충돌하면 5초 감소", "arModeTimeD": "90초 동안 최대한 멀리 달리기; 충돌하면 5초 감소",
     "adTime": "시간",
     "adSalto": "백플립!",
     "adStreak": "연속",

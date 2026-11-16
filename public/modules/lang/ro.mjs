@@ -1270,7 +1270,7 @@ export const strings = {
     "adModeFreeD": "Aleargă cât de departe poți",
     "adModeDailyD": "Același traseu pentru toți azi",
     "adModeTime": "Contra cronometru",
-    "adModeTimeD": "60 s pentru cât mai multe jetoane; o ciocnire costă 5 s",
+    "adModeTimeD": "60 s pentru cât mai multe jetoane; o ciocnire costă 5 s", "arModeTimeD": "90 s ca să alergi cât mai departe; o ciocnire costă 5 s",
     "adTime": "Timp",
     "adSalto": "Salt mortal!",
     "adStreak": "Serie",

@@ -895,7 +895,7 @@ export const strings = {
     "adModeFreeD": "የቻልከውን ያህል ሩቅ ሩጥ",
     "adModeDailyD": "ዛሬ ለሁሉም አንድ መንገድ",
     "adModeTime": "ከሰዓት ጋር",
-    "adModeTimeD": "ብዙ ቺፕ ለማሸነፍ 60 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል",
+    "adModeTimeD": "ብዙ ቺፕ ለማሸነፍ 60 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል", "arModeTimeD": "በተቻለ መጠን ሩቅ ለመሮጥ 90 ሰከንድ፤ ግጭት 5 ሰከንድ ያስከፍላል",
     "adTime": "ጊዜ",
     "adSalto": "ገልባጭ!",
     "adStreak": "ተከታታይ",

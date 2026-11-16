@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Chạy càng xa càng tốt",
     "adModeDailyD": "Cùng một đường chạy cho mọi người hôm nay",
     "adModeTime": "Đua với thời gian",
-    "adModeTimeD": "60 giây để giành nhiều chip nhất; va chạm mất 5 giây",
+    "adModeTimeD": "60 giây để giành nhiều chip nhất; va chạm mất 5 giây", "arModeTimeD": "90 giây để chạy càng xa càng tốt; va chạm mất 5 giây",
     "adTime": "Thời gian",
     "adSalto": "Lộn ngược!",
     "adStreak": "Chuỗi",

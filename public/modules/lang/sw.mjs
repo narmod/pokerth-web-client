@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Kimbia mbali kadiri uwezavyo",
     "adModeDailyD": "Njia ileile kwa wote leo",
     "adModeTime": "Dhidi ya saa",
-    "adModeTimeD": "Sekunde 60 kushinda chipu nyingi zaidi; kugongana kunagharimu sekunde 5",
+    "adModeTimeD": "Sekunde 60 kushinda chipu nyingi zaidi; kugongana kunagharimu sekunde 5", "arModeTimeD": "Sekunde 90 kukimbia mbali kadiri uwezavyo; kugongana kunagharimu sekunde 5",
     "adTime": "Muda",
     "adSalto": "Sarakasi!",
     "adStreak": "Mfululizo",

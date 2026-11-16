@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Korri ahalik eta urrunen",
     "adModeDailyD": "Ibilbide bera guztientzat gaur",
     "adModeTime": "Erlojupekoa",
-    "adModeTimeD": "60 s ahalik eta fitxa gehien irabazteko; talka batek 5 s balio du",
+    "adModeTimeD": "60 s ahalik eta fitxa gehien irabazteko; talka batek 5 s balio du", "arModeTimeD": "90 s ahalik eta urrunen korritzeko; talka batek 5 s balio du",
     "adTime": "Denbora",
     "adSalto": "Itzulipurdia!",
     "adStreak": "Segida",

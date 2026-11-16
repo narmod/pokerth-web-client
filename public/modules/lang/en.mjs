@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Run as far as you can",
     "adModeDailyD": "The same course for everyone today",
     "adModeTime": "Time attack",
-    "adModeTimeD": "60 s to win the most chips; a crash costs 5 s",
+    "adModeTimeD": "60 s to win the most chips; a crash costs 5 s", "arModeTimeD": "90 s to run as far as you can; a crash costs 5 s",
     "adTime": "Time",
     "adSalto": "Salto!",
     "adStreak": "Streak",

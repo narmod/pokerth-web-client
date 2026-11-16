@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Rith chomh fada agus is féidir leat",
     "adModeDailyD": "An cúrsa céanna do chách inniu",
     "adModeTime": "In aghaidh an chloig",
-    "adModeTimeD": "60 s chun an méid is mó sceallóg a bhuachan; cosnaíonn tuairt 5 s",
+    "adModeTimeD": "60 s chun an méid is mó sceallóg a bhuachan; cosnaíonn tuairt 5 s", "arModeTimeD": "90 s chun rith chomh fada agus is féidir leat; cosnaíonn tuairt 5 s",
     "adTime": "Am",
     "adSalto": "Cor coise!",
     "adStreak": "Sraith",

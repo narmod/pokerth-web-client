@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Bacardığın qədər uzağa qaç",
     "adModeDailyD": "Bu gün hamı üçün eyni marşrut",
     "adModeTime": "Zamana qarşı",
-    "adModeTimeD": "Ən çox fişka qazanmaq üçün 60 san; toqquşma 5 san aparır",
+    "adModeTimeD": "Ən çox fişka qazanmaq üçün 60 san; toqquşma 5 san aparır", "arModeTimeD": "Bacardığın qədər uzağa qaçmaq üçün 90 san; toqquşma 5 san aparır",
     "adTime": "Vaxt",
     "adSalto": "Salto!",
     "adStreak": "Seriya",

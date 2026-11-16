@@ -28,6 +28,12 @@
 // Fairness: a jump pressed just before landing is kept (JUMP_BUFFER_MS), and
 // obstacles are spaced by the time they reach the Ace (GAP), whatever the speed
 // or their own motion, so a jump always has room to land.
+// Modes (web.94, narmod 2026-11-16): Free run (the arcade card's record,
+// shell.best); Daily challenge (the same course for everyone today: the
+// obstacles, the items and the deck come from seeded streams, rng('ar-<day>-…');
+// its record pth_ar_daily, for the day); Time attack (TIME_S seconds to run as
+// far as possible, a crash costs TIME_HIT seconds instead of the run; record
+// pth_ar_best.time).
 // Sounds come from modules/sounds.mjs (mute and categories respected).
 // ═══════════════════════════════════════════════════════════════════
 
@@ -35,6 +41,8 @@ import { evalCards, JOKER, rankOf, suitOf } from './poker-hand.mjs';
 import { SUITS, RANKS, CHIP, rlab, isRed, fmt, faceUrl, backUrl, cardHtml, newDeck, imageCache, rr, aceActor, ink } from './common.mjs';
 import { drawScenery, venueOf, dayAt, VENUES } from './runner-scenery.mjs';
 import { titleScreen } from './title.mjs';
+import { rng } from './deal.mjs';
+import { dayKey } from './solitaire-rules.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
 
 const GROUND_OFF = 74;        // ground line, from the bottom of the world
@@ -78,6 +86,16 @@ const GAP = { jump: { jump: 0.5, duck: 0.74 }, duck: { jump: 0.46, duck: 0.36 } 
 const CLOSE_PX = 12, CLOSE_BONUS = 10;   // a close call: within CLOSE_PX, +CLOSE_BONUS m
 const INS_COL = ['#1f4e9e', '#f5f0e3'];
 const SAFE_MS = 900;          // after the insurance pays: a short blink, no new hit
+// The modes (web.94): the free run, the daily challenge, the time attack.
+export const MODES = [
+  { id: 'free', icon: '🏃', key: 'adModeFree', desc: 'adModeFreeD' },
+  { id: 'daily', icon: '📅', key: 'psDaily', desc: 'adModeDailyD' },
+  { id: 'time', icon: '⏱️', key: 'adModeTime', desc: 'arModeTimeD' },
+];
+export const TIME_S = 90, TIME_HIT = 5;   // the time attack: its clock, what a crash costs
+const DAILY_KEY = 'pth_ar_daily', BEST_KEY = 'pth_ar_best';
+function loadJ(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
+function saveJ(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
 export function create(shell) {
   const { t, esc, sound } = shell;
@@ -87,11 +105,12 @@ export function create(shell) {
   // The venue paints its own sky, day or night: light text with a shadow, whatever the theme.
   shell.hud.classList.add('on-felt', 'ar-sky');
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('arDistance')) + '</div><div class="ar-num ar-d">0000</div></div>'
-    + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num ar-lv">1</div></div>'
+    + '<div><div class="ar-lab ar-lv-lab">' + esc(t('arLevel')) + '</div><div class="ar-num ar-lv">1</div></div>'
     + '<div class="ar-ins" hidden><div class="ar-lab">&nbsp;</div><div class="ar-num">🛡️</div></div></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
   const hDist = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-d'));
   const hLvl = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-lv'));
+  const hLvlLab = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-lv-lab'));
   const hIns = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-ins'));
   const buzz = (p) => { try { if (typeof window.hapticBuzz === 'function') window.hapticBuzz(p); } catch (e) {} };
   const hSlots = /** @type {HTMLElement} */ (shell.hud.querySelector('.ar-slots'));
@@ -102,15 +121,20 @@ export function create(shell) {
   const back = backUrl();
 
 
-  let state = 'title', G = null, revealTimer = 0;
+  let state = 'title', G = null, revealTimer = 0, sel = 0, mode = 'free';
+  // The course's randomness, in three streams (obstacles, cards, power chips): seeded in the
+  // daily challenge, so the course is the same for everyone today whatever the frame rate.
+  let R = { obs: Math.random, item: Math.random, pow: Math.random };
 
   function newRun() {
-    const deck = newDeck();
+    const day = dayKey();
+    R = mode === 'daily' ? { obs: rng('ar-' + day + '-obs'), item: rng('ar-' + day + '-item'), pow: rng('ar-' + day + '-pow') } : { obs: Math.random, item: Math.random, pow: Math.random };
+    const deck = newDeck(mode === 'daily' ? rng('ar-' + day + '-deck') : Math.random);
     G = { t: 0, dist: 0, level: 1, speed: SPEED0, y: 0, vy: 0, onGround: true, duck: false, holdJump: false,
       obs: [], items: [], fx: [], deck, hand: [], ev: evalCards([]), nextObs: 1.8, nextItem: 0.7,
-      nextAllIn: 22 + Math.random() * 14, allInUntil: 0, allInWarned: false, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
-      jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + Math.random() * 20, safeUntil: 0,
-      venue: 0, prevVenue: 0, venueT: 1 };
+      nextAllIn: 22 + R.pow() * 14, allInUntil: 0, allInWarned: false, scroll: 0, yayUntil: 0, coolUntil: 0, banner: null, overAt: 0,
+      jumpBufUntil: 0, lastArr: -9, lastKind: 'duck', ins: false, nextIns: 35 + R.pow() * 20, safeUntil: 0,
+      venue: 0, prevVenue: 0, venueT: 1, mode, day, time: TIME_S, hits: 0 };
     renderHand(); renderStats();
   }
 
@@ -125,21 +149,29 @@ export function create(shell) {
   }
 
   function renderStats() {
-    hLvl.textContent = String(G.level);
+    const timed = G.mode === 'time', v = timed ? Math.max(0, Math.ceil(G.time)) : G.level;
+    hLvlLab.textContent = t(timed ? 'adTime' : 'arLevel');
+    hLvl.textContent = String(v);
+    hLvl.classList.toggle('ar-low', timed && v <= 10);
     hIns.hidden = !G.ins;
   }
 
+  function records() {
+    const b = loadJ(BEST_KEY), d = loadJ(DAILY_KEY);
+    return { free: shell.best.get(), daily: d.d === dayKey() ? d.s || 0 : 0, time: b.time || 0 };
+  }
   function titlePanel() {
-    const best = shell.best.get();
-    titleScreen(shell, { id: 'ace-runner', live: true, name: 'Ace Runner', hint: t('arHint'), sel: 0,
-      modes: [{ icon: '🏃', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' }],
-      onPick: () => start() });
+    const rec = records();
+    titleScreen(shell, { id: 'ace-runner', live: true, name: 'Ace Runner', hint: t('arHint'), sel,
+      modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      onPick: (i) => { sel = i; start(); } });
   }
   newRun();
   titlePanel();
 
   function start() {
     clearTimeout(revealTimer);
+    mode = MODES[sel].id;
     newRun(); state = 'run'; shell.panel(null);
     setKing(false); setMood('mc-m-smile'); setPose('run');
     try { if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises(); } catch (e) {}
@@ -147,6 +179,9 @@ export function create(shell) {
 
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down) {
+    if (state === 'title' && down && (a === 'left' || a === 'right')) {
+      sel = (sel + (a === 'left' ? -1 : 1) + MODES.length) % MODES.length; titlePanel(); return;
+    }
     if (a === 'jump' && down) {
       if (state === 'title' || (state === 'over' && performance.now() > G.overAt + 700)) { start(); return; }
       if (state !== 'run') return;
@@ -179,55 +214,55 @@ export function create(shell) {
     return x0 + shift;
   }
   function spawnObstacle() {
-    const gy = groundY(), roll = Math.random(), tier = venueOf(G.level);
+    const gy = groundY(), roll = R.obs(), tier = venueOf(G.level);
     let x = W() + 40;
     // The venues' patterns (one at a time, a fair chance each).
-    const pat = Math.random();
+    const pat = R.obs();
     if (tier >= TIERS.combo && pat < 0.12) {
       // A low card (jump) then a high one (stay down): GAP keeps room between them.
-      place([{ type: 'fly', x, y: gy - FLY_LOW, y0: gy - FLY_LOW, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'jump', 110);
-      x = place([{ type: 'fly', x: x + 60, y: gy - FLY_HIGH, y0: gy - FLY_HIGH, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], 'duck', 110);
+      place([{ type: 'fly', x, y: gy - FLY_LOW, y0: gy - FLY_LOW, amp: 0, w: 38, h: 24, phase: R.obs() * 6, vx: 110 }], 'jump', 110);
+      x = place([{ type: 'fly', x: x + 60, y: gy - FLY_HIGH, y0: gy - FLY_HIGH, amp: 0, w: 38, h: 24, phase: R.obs() * 6, vx: 110 }], 'duck', 110);
       return;
     }
     if (tier >= TIERS.bounce && pat < 0.22) {
-      x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 120, rot: 0, bounce: 26, bp: Math.random() * 6 }], 'jump', 120) - 20;
+      x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 120, rot: 0, bounce: 26, bp: R.obs() * 6 }], 'jump', 120) - 20;
       return;
     }
     if (tier >= TIERS.triple && pat < 0.3) {
-      const group = [0, 1, 2].map((k) => { const n = 3 + Math.floor(Math.random() * 4); return { type: 'stack', x: x + k * 38, w: 30, n, h: n * 6 + 4, col: Math.floor(Math.random() * 4) }; });
+      const group = [0, 1, 2].map((k) => { const n = 3 + Math.floor(R.obs() * 4); return { type: 'stack', x: x + k * 38, w: 30, n, h: n * 6 + 4, col: Math.floor(R.obs() * 4) }; });
       place(group, 'jump', 0);
       return;
     }
     if (tier >= TIERS.rain && pat < 0.38) {
       // A rain of cards at mid height: stay down under all of them.
       const y0 = gy - FLY_MID;
-      place([0, 1, 2].map((k) => ({ type: 'fly', x: x + k * 70, y: y0, y0, amp: 0, w: 38, h: 24, phase: Math.random() * 6, vx: 110 })), 'duck', 110);
+      place([0, 1, 2].map((k) => ({ type: 'fly', x: x + k * 70, y: y0, y0, amp: 0, w: 38, h: 24, phase: R.obs() * 6, vx: 110 })), 'duck', 110);
       return;
     }
     if (G.dist > 250 && roll < 0.27) {
-      const lv = G.level, r = Math.random();
+      const lv = G.level, r = R.obs();
       const band = lv >= FLY_HIGH_LVL ? (r < 0.3 ? 'low' : r < 0.55 ? 'high' : 'mid') : lv >= FLY_LOW_LVL ? (r < 0.35 ? 'low' : 'mid') : 'mid';
-      const y0 = gy - (band === 'low' ? FLY_LOW : band === 'high' ? FLY_HIGH : FLY_MID) + (Math.random() * 2 - 1) * FLY_JITTER;
+      const y0 = gy - (band === 'low' ? FLY_LOW : band === 'high' ? FLY_HIGH : FLY_MID) + (R.obs() * 2 - 1) * FLY_JITTER;
       const amp = band !== 'low' && lv >= FLY_DRIFT_LVL ? FLY_DRIFT * (tier >= TIERS.drift ? 1.6 : 1) : 0;
-      x = place([{ type: 'fly', x, y: y0, y0, amp, w: 38, h: 24, phase: Math.random() * 6, vx: 110 }], band === 'low' ? 'jump' : 'duck', 110);
+      x = place([{ type: 'fly', x, y: y0, y0, amp, w: 38, h: 24, phase: R.obs() * 6, vx: 110 }], band === 'low' ? 'jump' : 'duck', 110);
     } else if (G.dist > 450 && roll < 0.42) {
       x = place([{ type: 'dealer', x: x + 20, r: 13, vx: 150, rot: 0 }], 'jump', 150) - 20;
     } else {
-      const n = 3 + Math.floor(Math.random() * (G.level >= 3 ? 7 : 5));
-      const group = [{ type: 'stack', x, w: 30, n, h: n * 6 + 4, col: Math.floor(Math.random() * 4) }];
-      if (G.level >= 3 && Math.random() < 0.28) {
-        const n2 = 3 + Math.floor(Math.random() * 4);
-        group.push({ type: 'stack', x: x + 38, w: 30, n: n2, h: n2 * 6 + 4, col: Math.floor(Math.random() * 4) });
+      const n = 3 + Math.floor(R.obs() * (G.level >= 3 ? 7 : 5));
+      const group = [{ type: 'stack', x, w: 30, n, h: n * 6 + 4, col: Math.floor(R.obs() * 4) }];
+      if (G.level >= 3 && R.obs() < 0.28) {
+        const n2 = 3 + Math.floor(R.obs() * 4);
+        group.push({ type: 'stack', x: x + 38, w: 30, n: n2, h: n2 * 6 + 4, col: Math.floor(R.obs() * 4) });
       }
       x = place(group, 'jump', 0);
     }
     // A card right above the obstacle: risk for a reward.
-    if (Math.random() < 0.3 && G.deck.length) G.items.push({ kind: 'card', x: x + 14, y: gy - 130 - Math.random() * 20, c: G.deck.pop(), t: Math.random() * 6 });
+    if (R.obs() < 0.3 && G.deck.length) G.items.push({ kind: 'card', x: x + 14, y: gy - 130 - R.obs() * 20, c: G.deck.pop(), t: R.obs() * 6 });
   }
   function spawnItem() {
     if (!G.deck.length) return;
     const gy = groundY();
-    G.items.push({ kind: 'card', x: W() + 30, y: Math.random() < 0.5 ? gy - 34 : gy - 100 - Math.random() * 40, c: G.deck.pop(), t: Math.random() * 6 });
+    G.items.push({ kind: 'card', x: W() + 30, y: R.item() < 0.5 ? gy - 34 : gy - 100 - R.item() * 40, c: G.deck.pop(), t: R.item() * 6 });
   }
   function aceBox() {
     const top = G.duck && G.onGround ? 46 : 84, feet = groundY() - G.y;
@@ -266,6 +301,12 @@ export function create(shell) {
     }
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.6);
     if (G.banner) { G.banner.t += dt; if (G.banner.t > 1.6) G.banner = null; }
+    if (G.mode === 'time') {
+      const before = Math.ceil(G.time);
+      G.time -= dt;
+      if (Math.ceil(G.time) !== before) { renderStats(); if (G.time > 0 && G.time <= 5) sound('notifyTick'); }
+      if (G.time <= 0) { G.time = 0; renderStats(); timeUp(); return; }
+    }
     if (!G.onGround) {
       G.vy += (G.holdJump && G.vy < 0 ? 2100 : 2900) * dt;
       G.y -= G.vy * dt;
@@ -281,19 +322,19 @@ export function create(shell) {
     if (G.nextObs <= 0) {
       spawnObstacle();
       const [g0, spread] = gapFor(G.level);
-      G.nextObs = g0 + Math.random() * spread;
+      G.nextObs = g0 + R.obs() * spread;
     }
     G.nextItem -= dt;
-    if (G.nextItem <= 0) { spawnItem(); G.nextItem = 1.6 + Math.random() * 1.6; }
+    if (G.nextItem <= 0) { spawnItem(); G.nextItem = 1.6 + R.item() * 1.6; }
     G.nextAllIn -= dt;
     if (G.nextAllIn <= 0) {
-      G.items.push({ kind: 'allin', x: W() + 30, y: groundY() - 110 - Math.random() * 30, t: 0 });
-      G.nextAllIn = 28 + Math.random() * 20;
+      G.items.push({ kind: 'allin', x: W() + 30, y: groundY() - 110 - R.pow() * 30, t: 0 });
+      G.nextAllIn = 28 + R.pow() * 20;
     }
     if (!G.ins) G.nextIns -= dt;
     if (G.nextIns <= 0) {
-      G.items.push({ kind: 'ins', x: W() + 30, y: groundY() - 40 - Math.random() * 70, t: 0 });
-      G.nextIns = 40 + Math.random() * 25;
+      G.items.push({ kind: 'ins', x: W() + 30, y: groundY() - 40 - R.pow() * 70, t: 0 });
+      G.nextIns = 40 + R.pow() * 25;
     }
     const ab = aceBox(), gy = groundY();
     for (let i = G.obs.length - 1; i >= 0; i--) {
@@ -307,6 +348,7 @@ export function create(shell) {
         if (king) { G.obs.splice(i, 1); smash(o); continue; }
         if (now < G.safeUntil) { o.passed = true; continue; }
         if (G.ins) { G.obs.splice(i, 1); insured(o); continue; }
+        if (G.mode === 'time') { G.obs.splice(i, 1); timeHit(o); continue; }
         die(); return;
       }
       // Close call: how near the Ace came while level with it, paid once passed.
@@ -355,6 +397,14 @@ export function create(shell) {
     G.fx.push({ type: 'txt', x: ACE_X + 30, y: gy - G.y - 110, s: '🛡️', big: true, t: 0, life: 0.9 });
     sound('notifyFold'); buzz(50);
   }
+  /** The time attack: a crash costs TIME_HIT seconds, not the run (a short blink, the obstacle breaks). */
+  function timeHit(o) {
+    G.time = Math.max(0, G.time - TIME_HIT); G.hits++; G.safeUntil = performance.now() + SAFE_MS; renderStats();
+    const gy = groundY();
+    burst(o.x, o.type === 'fly' ? o.y : gy - 20, 8, ['#e8503f', '#f5f0e3']);
+    G.fx.push({ type: 'txt', x: ACE_X + 30, y: gy - G.y - 110, s: '−' + TIME_HIT + ' s', red: true, big: true, t: 0, life: 0.9 });
+    sound('notifyFold'); buzz([50, 30, 50]);
+  }
   function closeCall(o, ob) {
     G.dist += CLOSE_BONUS;
     G.fx.push({ type: 'txt', x: ACE_X + 24, y: Math.min(ob.t, groundY() - G.y - 90) - 6, s: '+' + CLOSE_BONUS, gold: true, t: 0, life: 0.7 });
@@ -391,19 +441,32 @@ export function create(shell) {
     state = 'over'; G.overAt = performance.now();
     setKing(false); setPose('ko'); setMood('mc-m-ko');
     sound('notifyFold'); buzz([60, 40, 90]);
+    finish();
+  }
+  /** The time attack's clock ran out: the Ace stops and waves. */
+  function timeUp() {
+    state = 'over'; G.overAt = performance.now();
+    setKing(false); setPose('wave'); setMood('mc-m-yay');
+    sound('notifyTickFinal');
+    finish();
+  }
+  /** The score, the record of the mode, the end screen. */
+  function finish() {
     shell.ended();
-    const d = Math.floor(G.dist), score = scoreOf(G.dist, G.ev), prevBest = shell.best.get();
-    const record = score > prevBest;
-    if (record) shell.best.set(score);
+    const d = Math.floor(G.dist), score = scoreOf(G.dist, G.ev), timed = G.mode === 'time';
+    let prevBest = 0;
+    if (G.mode === 'free') { prevBest = shell.best.get(); if (score > prevBest) shell.best.set(score); }
+    else if (G.mode === 'daily') { const dl = loadJ(DAILY_KEY); prevBest = dl.d === G.day ? dl.s || 0 : 0; if (score > prevBest) saveJ(DAILY_KEY, { d: G.day, s: score }); }
+    else { const b = loadJ(BEST_KEY); prevBest = b.time || 0; if (score > prevBest) { b.time = score; saveJ(BEST_KEY, b); } }
     // The end screen (end.mjs, web.67): the showdown, the score, the venues reached.
     const v = venueOf(G.level), cards = G.ev.best;
     endScreen(shell, {
-      title: t('arBusted'), sub: t('adModeFree') + ' · Ace Runner',
+      title: t(timed ? 'prTimeUp' : 'arBusted'), sub: t(MODES[sel].key) + (G.mode === 'daily' ? ' · ' + G.day : '') + ' · Ace Runner',
       cards, hand: cards.length ? t(G.ev.nameKey) + ' +' + Math.round(bonusOf(G.ev) * 100) + '%' : t('arNoCards'),
       score, prev: prevBest,
       calc: [[t('arDistance'), fmt(d)], cards.length ? [t(G.ev.nameKey), '+' + Math.round(bonusOf(G.ev) * 100) + '%'] : null],
       levels: { title: t('arLevel') + ' ' + G.level, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
-      stats: [[fmt(d), t('arDistance')], [G.level, t('arLevel')], [G.hand.length, t('psCards')]],
+      stats: [[fmt(d), t('arDistance')], [G.level, t('arLevel')], timed ? [G.hits, '−' + TIME_HIT + ' s'] : [G.hand.length, t('psCards')]],
       onAgain: () => start(),
       onMenu: () => { state = 'title'; newRun(); setKing(false); setMood('mc-m-smile'); setPose('run'); titlePanel(); },
     });
@@ -580,7 +643,7 @@ export function create(shell) {
   }
 
   // Test hook (automated browsers only): read the run, jump to a level or a time of day.
-  try { if (navigator.webdriver) window.__pthAR = { run: () => G, state: () => state }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthAR = { run: () => G, state: () => state, mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   return {
     update, draw, input,

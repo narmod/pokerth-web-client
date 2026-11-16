@@ -897,7 +897,7 @@ export const strings = {
     "adModeFreeD": "Teci, kolikor daleč lahko",
     "adModeDailyD": "Danes ista proga za vse",
     "adModeTime": "Na čas",
-    "adModeTimeD": "60 s za čim več žetonov; trk stane 5 s",
+    "adModeTimeD": "60 s za čim več žetonov; trk stane 5 s", "arModeTimeD": "90 s, da pretečeš čim dlje; trk stane 5 s",
     "adTime": "Čas",
     "adSalto": "Salto!",
     "adStreak": "Niz",

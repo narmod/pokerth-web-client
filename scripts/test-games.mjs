@@ -96,7 +96,7 @@ const KEYS = ['gameWordAce', 'arHint', 'arTapStart', 'arBusted', 'arNoCards', 'a
   'blName', 'blHint', 'blBets', 'blBluff', 'blTells', 'blChips', 'blRules', 'blModeFreeD', 'blModeDailyD', 'blModeTourneyD', 'blTimer', 'blQuick', 'blNotebook', 'blRepTight', 'blRepLoose', 'blReplay', 'blWin', 'blLose', 'blP_ace', 'blP_cowboy', 'blP_gent', 'blP_trap', 'blP_joker', 'blP_king', 'blT_sweat', 'blT_fierce', 'blT_cool', 'blT_fidget', 'blT_wave', 'blT_grin', 'blT_whistle', 'blT_chips', 'blT_wink', 'blT_scratch', 'hlModeTourney', 'evMcTable', 'ach_bluff', 'ach_bluff_d',
   'pdName', 'pdHint', 'pdVsAce', 'pdTwo', 'pdPoints', 'pdSudden', 'pdSuddenGoal', 'pdYou', 'pdAce', 'pdPlayer', 'pdYourTurn', 'pdAceTurn',
   'pdTurn', 'pdYouWin', 'pdAceWins', 'pdWins', 'pdTie', 'pdRules', 'ach_pdrop', 'ach_pdrop_d',
-  'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
+  'adHint', 'adRules', 'adModeFree', 'adModeFreeD', 'adModeDailyD', 'adModeTime', 'adModeTimeD', 'arModeTimeD', 'adTime', 'adSalto', 'adStreak', 'adMagnet', 'adRebuy', 'adRebuyQ', 'adRebuyKeys', 'prTimeUp', 'psDaily',
   'prHint', 'prRules', 'prTimeUp', 'prQueen', 'prQueenD', 'prQDrift', 'prQChips', 'prQPass', 'prQClean', 'prQNitro', 'prQFast', 'prQLeft', 'prQRight',
   'gmTitle'];
 let missing = [], badRecord = [];
@@ -388,6 +388,11 @@ console.log('Ace Runner: the climb, the venues, the score');
   ok(S.VENUES.length === 6 && S.VENUE_EVERY === 10 && S.venueOf(1) === 0 && S.venueOf(10) === 0 && S.venueOf(11) === 1 && S.venueOf(51) === 5 && S.venueOf(999) === 5, 'six venues, one every 10 levels, the final table stays');
   const night = S.skyAt(0), noon = S.skyAt(0.5);
   ok(night.light === 0 && noon.light === 1 && night.top !== noon.top && S.dayAt(0) === S.DAY_START && Math.abs(S.dayAt(S.DAY_S) - S.DAY_START) < 1e-9, 'day and night: dark sky at night, light at noon, a full cycle every ' + S.DAY_S + ' s');
+  // web.94: three modes — free run, daily challenge (seeded deck: the same for everyone today), time attack (90 s, a crash costs 5 s)
+  const C_ = await import('../public/modules/games/common.mjs'), DL = await import('../public/modules/games/deal.mjs');
+  ok(R.MODES.map((m) => m.id).join(',') === 'free,daily,time' && R.TIME_S === 90 && R.TIME_HIT === 5
+    && C_.newDeck(DL.rng('ar-x-deck')).join() === C_.newDeck(DL.rng('ar-x-deck')).join() && C_.newDeck().length === 53,
+    'Ace Runner: free run, daily challenge (a seeded deck), time attack (90 s, a crash costs 5 s)');
   ok(R.RUN_BONUS.length === 10 && R.RUN_BONUS[0] === 0 && R.RUN_BONUS[1] === 0.2 && R.RUN_BONUS[9] === 3 && R.RUN_BONUS.every((v, i) => i === 0 || v > R.RUN_BONUS[i - 1]), 'the hand bonus: +0 % for a high card, +20 % a pair … +300 % a royal flush');
   const long = R.scoreOf(83 * 300, { cat: -1 }), short = R.scoreOf(19 * 300, { cat: 9 });
   ok(long > short, 'a level-83 run with no hand beats a level-19 run with a royal flush (' + long + ' > ' + short + ')');

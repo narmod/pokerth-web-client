@@ -1265,7 +1265,7 @@ export const strings = {
     "adModeFreeD": "能跑多远跑多远",
     "adModeDailyD": "今天大家同一条路线",
     "adModeTime": "计时赛",
-    "adModeTimeD": "60秒赢取最多筹码；每次碰撞扣5秒",
+    "adModeTimeD": "60秒赢取最多筹码；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多远跑多远；每次碰撞扣5秒",
     "adTime": "时间",
     "adSalto": "空翻！",
     "adStreak": "连串",

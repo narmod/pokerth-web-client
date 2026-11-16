@@ -897,7 +897,7 @@ export const strings = {
     "adModeFreeD": "Skrien, cik tālu vari",
     "adModeDailyD": "Šodien visiem tā pati trase",
     "adModeTime": "Pret laiku",
-    "adModeTimeD": "60 s, lai iegūtu visvairāk žetonu; sadursme maksā 5 s",
+    "adModeTimeD": "60 s, lai iegūtu visvairāk žetonu; sadursme maksā 5 s", "arModeTimeD": "90 s, lai aizskrietu pēc iespējas tālāk; sadursme maksā 5 s",
     "adTime": "Laiks",
     "adSalto": "Salto!",
     "adStreak": "Sērija",

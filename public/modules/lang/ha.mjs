@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Yi gudu nesa gwargwadon iko",
     "adModeDailyD": "Hanya ɗaya ga kowa a yau",
     "adModeTime": "Gaba da agogo",
-    "adModeTimeD": "Daƙiƙa 60 don cin katunan kuɗi mafi yawa; karo na ɗaukar daƙiƙa 5",
+    "adModeTimeD": "Daƙiƙa 60 don cin katunan kuɗi mafi yawa; karo na ɗaukar daƙiƙa 5", "arModeTimeD": "Daƙiƙa 90 don yin gudu nesa gwargwadon iko; karo na ɗaukar daƙiƙa 5",
     "adTime": "Lokaci",
     "adSalto": "Juyi!",
     "adStreak": "Jere",

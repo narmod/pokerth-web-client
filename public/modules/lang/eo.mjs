@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Kuru kiel eble plej malproksimen",
     "adModeDailyD": "La sama itinero por ĉiuj hodiaŭ",
     "adModeTime": "Kontraŭ la horloĝo",
-    "adModeTimeD": "60 s por gajni plej multe da ĵetonoj; kolizio kostas 5 s",
+    "adModeTimeD": "60 s por gajni plej multe da ĵetonoj; kolizio kostas 5 s", "arModeTimeD": "90 s por kuri kiel eble plej malproksimen; kolizio kostas 5 s",
     "adTime": "Tempo",
     "adSalto": "Salto!",
     "adStreak": "Serio",

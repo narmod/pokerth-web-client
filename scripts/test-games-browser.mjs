@@ -106,8 +106,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pick(pg, 'ace-runner');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Runner', null, { timeout: 8000 }).catch(() => {});
   ok(await pg.evaluate(() => window._pthPadOwner === 'ace-runner'), label + ': Space opens Ace Runner');
-  ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.classList.contains('gm-title') && p.querySelectorAll('.gm-tile').length === 1 && !p.querySelector('.gm-bg'); }),
-    label + ': the common title: one tile for Ace Runner, its own scene behind (no picture)');
+  ok(await pg.evaluate(() => { const p = document.querySelector('#pth-game .pg-panel'); return p.classList.contains('gm-title') && p.querySelectorAll('.gm-tile').length === 3 && !p.querySelector('.gm-bg'); }),
+    label + ': the common title: three modes for Ace Runner (free run, daily, time attack), its own scene behind (no picture)');
   await shot(pg, label + '-title');
   await pg.keyboard.press('Space');
   await sleep(1200);
@@ -129,6 +129,28 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(over.steps === 6 && /Niveau/.test(over.lv) && /Distance/.test(over.stats), label + ': the venues reached, three stat tiles (' + over.lv + ')');
   ok(over.btns.length === 2 && /Rejouer/.test(over.btns[0]) && /Menu du jeu/.test(over.btns[1]) && over.focusA, label + ': « Rejouer » (lit) and « Menu du jeu » (' + over.btns.join(' / ') + ')');
   await shot(pg, label + '-over');
+  // web.94: the daily challenge deals the same course twice; the time attack: a crash costs 5 s, not the run.
+  const ard = await pg.evaluate(async () => {
+    const A = window.__pthAR; A.start('daily'); const d1 = A.run().deck.join(), m = A.mode();
+    A.start('daily'); const d2 = A.run().deck.join();
+    A.start('free'); const d3 = A.run().deck.join();
+    return { m, same: d1 === d2, other: d1 !== d3 };
+  });
+  ok(ard.m === 'daily' && ard.same && ard.other, label + ': Ace Runner daily challenge: the same deck for everyone today (' + JSON.stringify(ard) + ')');
+  const art = await pg.evaluate(async () => {
+    const A = window.__pthAR; A.start('time'); await new Promise((r) => setTimeout(r, 300));
+    const G = A.run(), lab = document.querySelector('#pth-game .ar-lv-lab').textContent, t0 = G.time;
+    G.allInUntil = 0; G.ins = false; G.safeUntil = 0;
+    G.obs.push({ type: 'stack', x: 120, w: 30, n: 6, h: 40, col: 0 });
+    await new Promise((r) => setTimeout(r, 200));
+    const after = { st: A.state(), hits: G.hits, lost: t0 - G.time };
+    G.time = 0.05; await new Promise((r) => setTimeout(r, 400));
+    return { lab, t0, after, st: A.state(), best: JSON.parse(localStorage.getItem('pth_ar_best') || '{}').time > 0 };
+  });
+  ok(art.lab === 'Temps' && art.t0 > 85 && art.after.st === 'run' && art.after.hits === 1 && art.after.lost > 4.5 && art.st === 'over' && art.best,
+    label + ': Ace Runner time attack: 90 s, a crash costs 5 s and the run goes on, time up ends it, its record saved (' + JSON.stringify(art) + ')');
+  const tu = await endInfo(pg, 4000);
+  ok(tu.on && tu.title === 'Temps écoulé !', label + ': time attack: « Temps écoulé ! » (' + tu.title + ')');
   await sleep(800);
   await pg.keyboard.press('Space');
   await sleep(400);

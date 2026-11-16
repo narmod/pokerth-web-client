@@ -1272,7 +1272,7 @@ export const strings = {
     "adModeFreeD": "Biegnij jak najdalej",
     "adModeDailyD": "Dziś ta sama trasa dla wszystkich",
     "adModeTime": "Na czas",
-    "adModeTimeD": "60 s, by zdobyć jak najwięcej żetonów; zderzenie kosztuje 5 s",
+    "adModeTimeD": "60 s, by zdobyć jak najwięcej żetonów; zderzenie kosztuje 5 s", "arModeTimeD": "90 s, by pobiec jak najdalej; zderzenie kosztuje 5 s",
     "adTime": "Czas",
     "adSalto": "Salto!",
     "adStreak": "Seria",

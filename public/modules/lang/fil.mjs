@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Tumakbo nang pinakamalayo",
     "adModeDailyD": "Iisang ruta para sa lahat ngayon",
     "adModeTime": "Laban sa oras",
-    "adModeTimeD": "60 s para manalo ng pinakamaraming chips; ang banggaan ay 5 s",
+    "adModeTimeD": "60 s para manalo ng pinakamaraming chips; ang banggaan ay 5 s", "arModeTimeD": "90 s para tumakbo nang pinakamalayo; ang banggaan ay 5 s",
     "adTime": "Oras",
     "adSalto": "Backflip!",
     "adStreak": "Sunod-sunod",

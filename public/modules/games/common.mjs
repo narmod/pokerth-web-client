@@ -54,6 +54,7 @@ const CSS = `
 @keyframes arEnd{50%{filter:none}}
 #pth-game .ar-lab{font:600 10px/1 'Inter',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#9bb0a3;margin-bottom:4px}
 #pth-game .ar-num{font:700 clamp(15px,2.4vw,20px)/1 'Inconsolata',monospace;font-variant-numeric:tabular-nums;color:#f5f0e3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#pth-game .ar-num.ar-low{color:#ff8a80}
 #pth-game .ar-stats{display:flex;gap:16px}
 #pth-game .ar-hand{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
 #pth-game .ar-sky .ar-lab{color:#e3ece6}#pth-game .ar-sky .ar-lab,#pth-game .ar-sky .ar-name{text-shadow:0 1px 2px rgba(0,0,0,.75),0 0 6px rgba(0,0,0,.35)}
@@ -133,12 +134,12 @@ export function cardHtml(n, size) {
   try { if (typeof window.cardToHtml === 'function') return window.cardToHtml(n, size === 'sm', false, size === 'sm' ? '' : ' ' + size); } catch (e) {}
   return '<div class="pk ' + size + (isRed(n) ? ' red' : '') + '"><span class="c-rank">' + RANKS[n % 13] + '</span><span class="c-suit">' + SUITS[suitOf(n)] + '</span></div>';
 }
-/** 52 shuffled cards plus one Joker somewhere in what will come out first. */
-export function newDeck() {
+/** 52 shuffled cards plus one Joker somewhere in what will come out first (rnd: a seeded stream for a daily challenge). */
+export function newDeck(rnd = Math.random) {
   const deck = [];
   for (let n = 0; n < 52; n++) deck.push(n);
-  for (let j = deck.length - 1; j > 0; j--) { const x = Math.floor(Math.random() * (j + 1)); const tmp = deck[j]; deck[j] = deck[x]; deck[x] = tmp; }
-  deck.splice(deck.length - 6 - Math.floor(Math.random() * 30), 0, JOKER);
+  for (let j = deck.length - 1; j > 0; j--) { const x = Math.floor(rnd() * (j + 1)); const tmp = deck[j]; deck[j] = deck[x]; deck[x] = tmp; }
+  deck.splice(deck.length - 6 - Math.floor(rnd() * 30), 0, JOKER);
   return deck;
 }
 /** Image loader for the canvas: img(url) is the image once it can be drawn, else null. */

@@ -1164,7 +1164,7 @@ export const strings = {
     "adModeFreeD": "Bėk kuo toliau",
     "adModeDailyD": "Šiandien ta pati trasa visiems",
     "adModeTime": "Prieš laiką",
-    "adModeTimeD": "60 s surinkti kuo daugiau žetonų; susidūrimas kainuoja 5 s",
+    "adModeTimeD": "60 s surinkti kuo daugiau žetonų; susidūrimas kainuoja 5 s", "arModeTimeD": "90 s nubėgti kuo toliau; susidūrimas kainuoja 5 s",
     "adTime": "Laikas",
     "adSalto": "Salto!",
     "adStreak": "Serija",

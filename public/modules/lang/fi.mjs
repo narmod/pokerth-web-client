@@ -1269,7 +1269,7 @@ export const strings = {
     "adModeFreeD": "Juokse niin pitkälle kuin pääset",
     "adModeDailyD": "Sama rata kaikille tänään",
     "adModeTime": "Aika-ajo",
-    "adModeTimeD": "60 s voittaa eniten pelimerkkejä; törmäys maksaa 5 s",
+    "adModeTimeD": "60 s voittaa eniten pelimerkkejä; törmäys maksaa 5 s", "arModeTimeD": "90 s juosta niin pitkälle kuin pääset; törmäys maksaa 5 s",
     "adTime": "Aika",
     "adSalto": "Voltti!",
     "adStreak": "Putki",

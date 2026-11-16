@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Sáré jìnnà bí o ti lè ṣe",
     "adModeDailyD": "Ọ̀nà kan náà fún gbogbo ènìyàn lónìí",
     "adModeTime": "Lòdì sí aago",
-    "adModeTimeD": "Ìṣẹ́jú-àáyá 60 láti jèrè chip tó pọ̀ jù; ìkọlù ń gbà ìṣẹ́jú-àáyá 5",
+    "adModeTimeD": "Ìṣẹ́jú-àáyá 60 láti jèrè chip tó pọ̀ jù; ìkọlù ń gbà ìṣẹ́jú-àáyá 5", "arModeTimeD": "Ìṣẹ́jú-àáyá 90 láti sáré jìnnà bí o ti lè ṣe; ìkọlù ń gbà ìṣẹ́jú-àáyá 5",
     "adTime": "Àkókò",
     "adSalto": "Ìyípo!",
     "adStreak": "Ọ̀wọ́",

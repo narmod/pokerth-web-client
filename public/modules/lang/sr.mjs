@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Трчи што даље можеш",
     "adModeDailyD": "Данас иста стаза за све",
     "adModeTime": "Трка са временом",
-    "adModeTimeD": "60 s за што више жетона; судар кошта 5 s",
+    "adModeTimeD": "60 s за што више жетона; судар кошта 5 s", "arModeTimeD": "90 s да трчиш што даље можеш; судар кошта 5 s",
     "adTime": "Време",
     "adSalto": "Салто!",
     "adStreak": "Низ",

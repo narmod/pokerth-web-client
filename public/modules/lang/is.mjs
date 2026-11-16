@@ -894,7 +894,7 @@ export const strings = {
     "adModeFreeD": "Hlauptu eins langt og þú getur",
     "adModeDailyD": "Sama leiðin fyrir alla í dag",
     "adModeTime": "Kapp við klukkuna",
-    "adModeTimeD": "60 s til að vinna flesta peninga; árekstur kostar 5 s",
+    "adModeTimeD": "60 s til að vinna flesta peninga; árekstur kostar 5 s", "arModeTimeD": "90 s til að hlaupa eins langt og þú getur; árekstur kostar 5 s",
     "adTime": "Tími",
     "adSalto": "Heljarstökk!",
     "adStreak": "Röð",

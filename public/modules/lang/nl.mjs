@@ -1273,7 +1273,7 @@ export const strings = {
     "adModeFreeD": "Ren zo ver als je kunt",
     "adModeDailyD": "Vandaag dezelfde baan voor iedereen",
     "adModeTime": "Tijdrit",
-    "adModeTimeD": "60 s om zoveel mogelijk fiches te winnen; een botsing kost 5 s",
+    "adModeTimeD": "60 s om zoveel mogelijk fiches te winnen; een botsing kost 5 s", "arModeTimeD": "90 s om zo ver mogelijk te rennen; een botsing kost 5 s",
     "adTime": "Tijd",
     "adSalto": "Salto!",
     "adStreak": "Reeks",

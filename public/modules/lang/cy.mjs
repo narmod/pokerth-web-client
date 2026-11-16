@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Rheda mor bell ag y gelli",
     "adModeDailyD": "Yr un cwrs i bawb heddiw",
     "adModeTime": "Ras yn erbyn y cloc",
-    "adModeTimeD": "60 eiliad i ennill y mwyaf o sglodion; mae gwrthdrawiad yn costio 5 eiliad",
+    "adModeTimeD": "60 eiliad i ennill y mwyaf o sglodion; mae gwrthdrawiad yn costio 5 eiliad", "arModeTimeD": "90 eiliad i redeg mor bell ag y gelli; mae gwrthdrawiad yn costio 5 eiliad",
     "adTime": "Amser",
     "adSalto": "Tin-dros-ben!",
     "adStreak": "Rhediad",

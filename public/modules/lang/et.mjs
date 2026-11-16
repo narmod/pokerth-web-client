@@ -888,7 +888,7 @@ export const strings = {
     "adModeFreeD": "Jookse nii kaugele kui suudad",
     "adModeDailyD": "Täna kõigile sama rada",
     "adModeTime": "Ajasõit",
-    "adModeTimeD": "60 s, et võita kõige rohkem žetoone; kokkupõrge maksab 5 s",
+    "adModeTimeD": "60 s, et võita kõige rohkem žetoone; kokkupõrge maksab 5 s", "arModeTimeD": "90 s, et joosta nii kaugele kui suudad; kokkupõrge maksab 5 s",
     "adTime": "Aeg",
     "adSalto": "Salto!",
     "adStreak": "Seeria",

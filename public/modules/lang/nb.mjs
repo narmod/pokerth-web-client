@@ -1267,7 +1267,7 @@ export const strings = {
     "adModeFreeD": "Løp så langt du kan",
     "adModeDailyD": "Samme løype for alle i dag",
     "adModeTime": "Mot klokka",
-    "adModeTimeD": "60 s for å vinne flest sjetonger; et sammenstøt koster 5 s",
+    "adModeTimeD": "60 s for å vinne flest sjetonger; et sammenstøt koster 5 s", "arModeTimeD": "90 s til å løpe så langt du kan; et sammenstøt koster 5 s",
     "adTime": "Tid",
     "adSalto": "Salto!",
     "adStreak": "Rekke",

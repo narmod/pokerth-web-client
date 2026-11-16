@@ -896,7 +896,7 @@ export const strings = {
     "adModeFreeD": "Lari sejauh yang boleh",
     "adModeDailyD": "Laluan yang sama untuk semua hari ini",
     "adModeTime": "Lawan masa",
-    "adModeTimeD": "60 saat untuk memenangi cip terbanyak; perlanggaran memakan 5 saat",
+    "adModeTimeD": "60 saat untuk memenangi cip terbanyak; perlanggaran memakan 5 saat", "arModeTimeD": "90 saat untuk lari sejauh yang boleh; perlanggaran memakan 5 saat",
     "adTime": "Masa",
     "adSalto": "Balik kuang!",
     "adStreak": "Rentetan",

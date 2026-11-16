@@ -1166,7 +1166,7 @@ export const strings = {
     "adModeFreeD": "Corre tan lluny com puguis",
     "adModeDailyD": "El mateix recorregut per a tothom avui",
     "adModeTime": "Contrarellotge",
-    "adModeTimeD": "60 s per guanyar el màxim de fitxes; un xoc costa 5 s",
+    "adModeTimeD": "60 s per guanyar el màxim de fitxes; un xoc costa 5 s", "arModeTimeD": "90 s per córrer tan lluny com puguis; un xoc costa 5 s",
     "adTime": "Temps",
     "adSalto": "Tombarella!",
     "adStreak": "Ratxa",

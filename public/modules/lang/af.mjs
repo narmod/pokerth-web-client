@@ -1165,7 +1165,7 @@ export const strings = {
     "adModeFreeD": "Hardloop so ver as jy kan",
     "adModeDailyD": "Vandag dieselfde roete vir almal",
     "adModeTime": "Teen die horlosie",
-    "adModeTimeD": "60 s om die meeste skyfies te wen; 'n botsing kos 5 s",
+    "adModeTimeD": "60 s om die meeste skyfies te wen; 'n botsing kos 5 s", "arModeTimeD": "90 s om so ver as moontlik te hardloop; 'n botsing kos 5 s",
     "adTime": "Tyd",
     "adSalto": "Salto!",
     "adStreak": "Reeks",

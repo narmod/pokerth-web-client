@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Bolşuňça uzaga ylga",
     "adModeDailyD": "Şu gün hemmä üçin şol bir ýol",
     "adModeTime": "Wagta garşy",
-    "adModeTimeD": "Iň köp fişka utmak üçin 60 s; çaknyşyk 5 s durýar",
+    "adModeTimeD": "Iň köp fişka utmak üçin 60 s; çaknyşyk 5 s durýar", "arModeTimeD": "Bolşuňça uzaga ylgamak üçin 90 s; çaknyşyk 5 s durýar",
     "adTime": "Wagt",
     "adSalto": "Salto!",
     "adStreak": "Seriýa",

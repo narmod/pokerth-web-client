@@ -1269,7 +1269,7 @@ export const strings = {
     "adModeFreeD": "Corre o mais longe possível",
     "adModeDailyD": "O mesmo percurso para todos hoje",
     "adModeTime": "Contrarrelógio",
-    "adModeTimeD": "60 s para ganhar o máximo de fichas; um choque custa 5 s",
+    "adModeTimeD": "60 s para ganhar o máximo de fichas; um choque custa 5 s", "arModeTimeD": "90 s para correr o mais longe possível; um choque custa 5 s",
     "adTime": "Tempo",
     "adSalto": "Mortal!",
     "adStreak": "Série",

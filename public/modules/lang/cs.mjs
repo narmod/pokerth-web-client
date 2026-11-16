@@ -1270,7 +1270,7 @@ export const strings = {
     "adModeFreeD": "Běž co nejdál",
     "adModeDailyD": "Dnes stejná trať pro všechny",
     "adModeTime": "Na čas",
-    "adModeTimeD": "60 s na co nejvíc žetonů; náraz stojí 5 s",
+    "adModeTimeD": "60 s na co nejvíc žetonů; náraz stojí 5 s", "arModeTimeD": "90 s na to doběhnout co nejdál; náraz stojí 5 s",
     "adTime": "Čas",
     "adSalto": "Salto!",
     "adStreak": "Série",

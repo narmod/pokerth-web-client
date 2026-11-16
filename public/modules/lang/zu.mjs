@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Gijima kude ngangokusemandleni",
     "adModeDailyD": "Umzila ofanayo kubo bonke namuhla",
     "adModeTime": "Ngokumelene nesikhathi",
-    "adModeTimeD": "Imizuzwana engu-60 yokuwina ama-chip amaningi; ukushayisana kudla imizuzwana engu-5",
+    "adModeTimeD": "Imizuzwana engu-60 yokuwina ama-chip amaningi; ukushayisana kudla imizuzwana engu-5", "arModeTimeD": "Imizuzwana engu-90 yokugijima kude ngangokusemandleni; ukushayisana kudla imizuzwana engu-5",
     "adTime": "Isikhathi",
     "adSalto": "Ukugingqika!",
     "adStreak": "Uchungechunge",

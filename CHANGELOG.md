@@ -15,6 +15,14 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Ace Runner: Daily challenge and Time attack** (`web.94`, narmod) — the title now offers three modes. Daily: the
+  obstacles, the items and the deck come from seeded streams (`rng('ar-<day>-obs|item|pow|deck')`, one per spawner so
+  the course does not depend on the frame rate), record of the day in `pth_ar_daily`. Time attack: `TIME_S` 90 s to run
+  as far as possible, a crash costs `TIME_HIT` 5 s (the obstacle breaks, a short blink) instead of the run; the HUD shows
+  the seconds left (red from 10), « Time's up! » ends it, record in `pth_ar_best.time`. The free run keeps the arcade
+  card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
+
 ### Changed
 - **Tapis!: scores toned down, a little harder** (`web.93`, narmod: « the score gets very high fast; 10 levels a bit
   easy ») — the poker multipliers (×2 … ×50) stacked on the chip tiers (×1 / ×2 / ×5) made one big group worth more

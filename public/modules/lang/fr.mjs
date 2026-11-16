@@ -899,7 +899,7 @@ export const strings = {
     "adModeFreeD": "Cours le plus loin possible",
     "adModeDailyD": "Le même parcours pour tous aujourd'hui",
     "adModeTime": "Contre-la-montre",
-    "adModeTimeD": "60 s pour gagner un max de jetons ; un choc coûte 5 s",
+    "adModeTimeD": "60 s pour gagner un max de jetons ; un choc coûte 5 s", "arModeTimeD": "90 s pour courir le plus loin possible ; un choc coûte 5 s",
     "adTime": "Temps",
     "adSalto": "Salto !",
     "adStreak": "Série",

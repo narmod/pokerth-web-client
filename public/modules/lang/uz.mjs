@@ -898,7 +898,7 @@ export const strings = {
     "adModeFreeD": "Iloji boricha uzoqqa yugur",
     "adModeDailyD": "Bugun hamma uchun bir xil yoʻl",
     "adModeTime": "Vaqtga qarshi",
-    "adModeTimeD": "Eng koʻp fishka yutish uchun 60 s; toʻqnashuv 5 s turadi",
+    "adModeTimeD": "Eng koʻp fishka yutish uchun 60 s; toʻqnashuv 5 s turadi", "arModeTimeD": "Iloji boricha uzoqqa yugurish uchun 90 s; toʻqnashuv 5 s turadi",
     "adTime": "Vaqt",
     "adSalto": "Salto!",
     "adStreak": "Seriya",

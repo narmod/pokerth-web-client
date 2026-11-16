@@ -1273,7 +1273,7 @@ export const strings = {
     "adModeFreeD": "Corri il più lontano possibile",
     "adModeDailyD": "Lo stesso percorso per tutti oggi",
     "adModeTime": "A cronometro",
-    "adModeTimeD": "60 s per vincere più fiches possibile; uno scontro costa 5 s",
+    "adModeTimeD": "60 s per vincere più fiches possibile; uno scontro costa 5 s", "arModeTimeD": "90 s per correre il più lontano possibile; uno scontro costa 5 s",
     "adTime": "Tempo",
     "adSalto": "Salto!",
     "adStreak": "Serie",
