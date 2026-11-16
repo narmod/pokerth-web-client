@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.111 (current series):
+2026-11-16 version 2.1.11-web.112 (current series):
+- improvement: Poker Run — the harder the road, the busier: 5 more cars per level of difficulty and one more per stage; from level 2 slow trucks and fast sports cars, from level 3 cars that change lane (indicator first), from level 4 convoys with a single gap to thread
+
+2026-11-16 version 2.1.11-web.111:
 - improvement: Who Wins? — a new table: no message ever covers the cards any more (the question, the result and the Ace's words are on one line above the hands), the board in the middle with its label, smaller cards, and each hand right above its own « Left » / « Right » button
 - new: Who Wins?, TV show — the money ladder like on TV: always on the right on a computer, a strip on a phone, and on a phone the whole ladder between two questions (« Question 6, for 2 000 chips… »)
 - improvement: Who Wins?, TV show — the jokers are round medallions under the clock, struck through once used

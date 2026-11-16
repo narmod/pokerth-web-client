@@ -74,6 +74,21 @@ const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, SPLIT = 1
 export const stageLen = (k) => 740 + k * 40;
 /** The branch (0 left, 1 right) a car in lane l keeps at a fork: the middle lane goes either way. */
 export const branchOfLane = (l, side) => (l === 0 ? 0 : l === 2 ? 1 : side);
+// Traffic by difficulty (web.112, narmod: « the hard roads are too easy — more cars at different speeds »):
+// the further and the harder, the busier. A road of level lv on stage k gets extraCars(k, lv) more cars, out
+// of sight ahead; from level 2 slow trucks and fast sports cars among them, from level 3 cars that change lane
+// (their indicator on for SWERVE_WARN s first), from level 4 convoys — two side by side, the third just behind
+// in the gap: a chicane. Level 0 (the easy roads) is as before but for one more car per stage.
+export const TRAFFIC_LV = { mixed: 2, swerve: 3, convoy: 4 };
+export const SWERVE_WARN = 1, SWERVE_MOVE = 0.8;
+/** The cars a stage adds: 5 per level of its road, 1 per stage driven. */
+export const extraCars = (k, lv) => 5 * lv + k;
+/** The share of a stage's cars that change lane, by its road's level. */
+export const swerveShare = (lv) => (lv < TRAFFIC_LV.swerve ? 0 : [0.25, 0.35, 0.45][Math.min(lv, 5) - TRAFFIC_LV.swerve]);
+/** Convoys on a road of level lv: 2 at level 4, 3 at level 5. */
+export const convoys = (lv) => (lv < TRAFFIC_LV.convoy ? 0 : lv - 2);
+/** A lane change's lateral blend, eased (0 … 1 over SWERVE_MOVE s). */
+export const swerveBlend = (t) => { const x = Math.max(0, Math.min(1, t / SWERVE_MOVE)); return x * x * (3 - 2 * x); };
 // Dame de Cœur (web.66, narmod: « mode 2 of the proposals », OutRun 2's Heart
 // Attack in a poker key): the Queen of Hearts rides beside the Ace and asks
 // one thing per stage, against the clock. Done in half the time: ♥♥♥, in 80 %:
@@ -388,16 +403,41 @@ export function create(shell) {
     tmpl[k + 1] = [genStage(k + 1, branches[k][0], d), genStage(k + 1, branches[k][1], Math.min(FORKS, d + 1))];
     applyStage(k + 1, tmpl[k + 1][0]);
   }
-  /** A harder road brings its own traffic, out of sight ahead. */
+  /** A stage brings its own traffic, out of sight ahead: the more for a harder road (web.112). */
   function addTraffic(k, from) {
-    const n = 3 * (lvl[k] || 0), z0 = Math.max(stageStart[k], from + DRAW + 10), z1 = k < FORKS ? gates[k].seg - 200 : finishSeg - 40;
-    const r = S('tr' + k + '-' + (lvl[k] || 0));
-    for (let i = 0; i < n && z1 > z0; i++) cars.push(newCar(Math.floor(z0 + r() * (z1 - z0)), r() < 0.5 ? 0 : 1, r));
+    const lv = lvl[k] || 0, z0 = Math.max(stageStart[k], from + DRAW + 10), z1 = k < FORKS ? gates[k].seg - 200 : finishSeg - 40;
+    const r = S('tr' + k + '-' + lv), fresh = [];
+    let n = extraCars(k, lv);
+    // Convoys: two side by side, the third 14-22 segments behind in the lane they leave free.
+    for (let i = 0; i < convoys(lv) && n >= 3 && z1 - 30 > z0; i++) {
+      const z = Math.floor(z0 + r() * (z1 - 30 - z0)), gap = Math.floor(r() * 3), sp = MAXV * (0.34 + r() * 0.1);
+      for (const l of [0, 1, 2]) {
+        const c = newCar(l === gap ? z + 14 + Math.floor(r() * 9) : z, r() < 0.5 ? 0 : 1, r);
+        c.lane = l; c.v = sp; c.convoy = true; fresh.push(c);
+      }
+      n -= 3;
+    }
+    for (let i = 0; i < n && z1 > z0; i++) {
+      const c = newCar(Math.floor(z0 + r() * (z1 - z0)), r() < 0.5 ? 0 : 1, r);
+      // From level 2 a third are slow trucks, a third fast sports cars, long to pass.
+      if (lv >= TRAFFIC_LV.mixed && i % 3 === 0) { c.kind = 'van'; c.v = MAXV * (0.2 + r() * 0.1); }
+      else if (lv >= TRAFFIC_LV.mixed && i % 3 === 1) { c.kind = 'sport'; c.v = MAXV * (0.7 + r() * 0.15); }
+      fresh.push(c);
+    }
+    for (const c of fresh) cars.push(c);
+    // Lane changes: some of the stage's cars, drawn per car (the same in the daily whatever the timing).
+    const p = swerveShare(lv);
+    if (p) for (const c of cars) {
+      const ci = c.z / SEG;
+      if (c.dead || c.convoy || c.sw || ci <= from || ci > z1) continue;
+      const rc = S('sw' + c.n + '-' + k);
+      if (rc() < p) c.sw = { at: 60 + Math.floor(rc() * 70), dir: rc() < 0.5 ? -1 : 1, ph: 0, t: 0, from: c.lane, to: c.lane };
+    }
   }
   let carSeq = 0, trafficSig = '';
   function newCar(z, side, r = Math.random) {
     const n = carSeq++;
-    return { z: z * SEG, lane: Math.floor(r() * 3), side, v: MAXV * (0.3 + r() * 0.24),
+    return { n, z: z * SEG, lane: Math.floor(r() * 3), side, v: MAXV * (0.3 + r() * 0.24),
       col: CAR_COLS[(n * 3 + Math.floor(r() * 2)) % CAR_COLS.length], kind: CAR_KINDS[Math.floor(r() * 10) < 6 ? 0 : r() < 0.5 ? 1 : 2], dead: false, ahead: true };
   }
   const findSeg = (z) => segs[clamp(Math.floor(z / SEG), 0, segs.length - 1)];
@@ -434,6 +474,8 @@ export function create(shell) {
   const envR = (g) => Math.max(...g.pcs.map((p) => p.c + p.hw));
   const nearest = (g, x) => { let bi = 0; g.pcs.forEach((p, i) => { if (Math.abs(x - p.c) < Math.abs(x - g.pcs[bi].c)) bi = i; }); return bi; };
   function carX(c, s, g) {
+    // Changing lane (web.112): between its two lanes, on a plain stretch only.
+    if (c.sw && c.sw.ph === 2 && !g.fork && !(s.m > 0)) { const e = swerveBlend(c.sw.t); return g.pcs[c.sw.from].c * (1 - e) + g.pcs[c.sw.to].c * e; }
     const b = branchOfLane(c.lane, c.side);
     if (s.m > 0) { const cl = chosenLane(gates[s.gk]); return b === cl ? (envL(g) + envR(g)) / 2 : g.ghosts[b].c; }
     // At a fork, a car eases from its lane into its branch.
@@ -583,12 +625,31 @@ export function create(shell) {
     if (driftGain >= 15 && state === 'run') aceDo('pump', 0.8, null, 2);
     driftGain = 0;
   }
+  /**
+   * A lane change (web.112): when the car is `at` segments ahead, its indicator blinks SWERVE_WARN s, then it
+   * moves one lane over SWERVE_MOVE s — towards the player's lane when he is beside it, else its own way.
+   * ph: 0 waiting, 1 indicating, 2 moving, 3 done. Never at a fork (it waits, or snaps to its new lane).
+   */
+  function swerveTick(c, cs, ahead, dt) {
+    const w = c.sw, plain = cs && !(cs.f > 0) && !(cs.m > 0) && !cs.gate;
+    if (w.ph === 0) {
+      if (!plain || ahead > w.at || ahead < 6) return;
+      const mine = px < -0.33 ? 0 : px > 0.33 ? 2 : 1;
+      let d = mine !== c.lane ? Math.sign(mine - c.lane) : w.dir;
+      if (c.lane + d < 0 || c.lane + d > 2) d = -d;
+      w.from = c.lane; w.to = c.lane + d; w.ph = 1; w.t = 0;
+    } else if (w.ph === 1) { w.t += dt; if (w.t >= SWERVE_WARN) { w.ph = 2; w.t = 0; } }
+    else if (w.ph === 2) { w.t += dt; if (w.t >= SWERVE_MOVE || !plain) { c.lane = w.to; w.ph = 3; } }
+  }
+  /** The indicator of a car about to change lane, or changing it: -1 left, 1 right, 0 off (blinking 2.5 times a second). */
+  const blinkOf = (c) => (c.sw && (c.sw.ph === 1 || c.sw.ph === 2) && Math.floor((c.sw.t + (c.sw.ph === 2 ? SWERVE_WARN : 0)) * 5) % 2 === 0 ? Math.sign(c.sw.to - c.sw.from) : 0);
   function respawn(c, pi) {
     if (mode === 'daily') { c.dead = true; return; }      // the daily: the same traffic for everyone, none drawn anew
     let z = pi + DRAW + 10 + Math.floor(Math.random() * 120);
     while (segs[z] && (segs[z].f > 0 || segs[z].m > 0)) z++;
     if (z >= finishSeg) { c.dead = true; return; }
-    // A new car, not the one just seen coming back.
+    // A new car, not the one just seen coming back (no lane change, no convoy left over).
+    delete c.sw; delete c.convoy;
     Object.assign(c, newCar(z, c.side));
   }
   function takeGate(g, lane, live) {
@@ -705,6 +766,7 @@ export function create(shell) {
       if (c.dead) continue;
       const old = Math.floor(c.z / SEG), cs = segs[old];
       if (cs && (cs.f > 0 || cs.m > 0)) c.v = Math.max(c.v, MAXV * 0.62);
+      if (c.sw && c.sw.ph < 3) swerveTick(c, cs, old - ps.i, dt);
       c.z += c.v * dt;
       const nw = Math.floor(c.z / SEG);
       for (let i = old + 1; i <= nw; i++) {
@@ -1169,7 +1231,7 @@ const carW = () => Math.min(W * 0.24, 100);
         ctx.fillText('👻', gx, gy - gw * 0.55 - 3);
         ctx.globalAlpha = 1;
       }
-      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind); }
+      if (cs) for (const c of cs) { const tt = (c.z % SEG) / SEG; drawCarRear(sx + sc * carX(c, s, g) * ROAD, sy + (s.p2.s.y - sy) * tt, sc * 520, c.col, s.T.night, c.kind, blinkOf(c)); }
       ctx.restore();
     }
     const spd = v / MAXV;
@@ -1293,9 +1355,9 @@ const carW = () => Math.min(W * 0.24, 100);
       ctx.fillStyle = '#ffe6b0'; ctx.beginPath(); ctx.arc(lx, ly, u * 0.7, 0, 7); ctx.fill();
     }
   }
-  function drawCarRear(X, by, w, col, night, kind) {
+  function drawCarRear(X, by, w, col, night, kind, blink) {
     if (w < 2.5) return;
-    if (kind === 'van') { drawVan(X, by, w, col, night); return; }
+    if (kind === 'van') { drawVan(X, by, w, col, night); indicator(X, by - w * 0.95 * 0.42, w, 0.43, blink); return; }
     const sport = kind === 'sport', h = w * (sport ? 0.5 : 0.62), x = X - w / 2, y = by - h, lx = [x + w * 0.15, x + w * 0.85], ly = y + h * 0.52;
     // At night the tail lights glow: a car is seen from afar before its shape.
     if (night) for (const cx of lx) {
@@ -1313,6 +1375,15 @@ const carW = () => Math.min(W * 0.24, 100);
     ctx.fillStyle = '#f4eedf'; rr(X - w * 0.12, y + h * 0.6, w * 0.24, h * 0.13, h * 0.03); ctx.fill();
     ctx.fillStyle = night ? '#ff6a6a' : '#ff3b40'; ctx.beginPath(); ctx.arc(lx[0], ly, w * 0.08, 0, 7); ctx.arc(lx[1], ly, w * 0.08, 0, 7); ctx.fill();
     if (sport) { ctx.fillStyle = '#14171c'; rr(x - w * 0.02, y + h * 0.1, w * 1.04, h * 0.1, h * 0.04); ctx.fill(); ctx.fillRect(x + w * 0.12, y + h * 0.18, w * 0.05, h * 0.12); ctx.fillRect(x + w * 0.83, y + h * 0.18, w * 0.05, h * 0.12); }
+    indicator(X, ly, w, 0.35, blink);
+  }
+  /** A car's indicator, amber, on the side it is turning to (web.112); a halo so it is seen from afar. */
+  function indicator(X, y, w, off, blink) {
+    if (!blink) return;
+    const cx = X + blink * w * off, r = Math.max(w * 0.09, 2.2), gr = Math.max(w * 0.4, 7);
+    const gl = ctx.createRadialGradient(cx, y, 0, cx, y, gr);
+    gl.addColorStop(0, 'rgba(255,176,32,.75)'); gl.addColorStop(1, 'rgba(255,176,32,0)'); ctx.fillStyle = gl; ctx.fillRect(cx - gr, y - gr, gr * 2, gr * 2);
+    ctx.fillStyle = '#ffc23a'; ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
   }
   /** A van from behind: a tall box, two rear doors, lights up the sides. */
   function drawVan(X, by, w, col, night) {

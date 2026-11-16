@@ -74,6 +74,9 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
   ok(pr.branchOfLane(0, 1) === 0 && pr.branchOfLane(2, 0) === 1 && pr.branchOfLane(1, 0) === 0 && pr.branchOfLane(1, 1) === 1, 'Poker Run: two roads at a fork, the middle lane takes its side');
   ok(pr.queenHearts(3, 14, true) === 3 && pr.queenHearts(10, 14, true) === 2 && pr.queenHearts(13, 14, true) === 1 && pr.queenHearts(2, 14, false) === 0 && pr.queenHearts(0, 0, true) === 3 && pr.queenMult(12) === 2.2,
     'Dame de Cœur: ♥♥♥ in half the time, ♥♥ in 80 %, ♥ in time, none missed; 12 ♥ → × 2.2');
+  ok(pr.extraCars(0, 0) === 0 && pr.extraCars(3, 0) === 3 && pr.extraCars(5, 5) === 30 && pr.swerveShare(2) === 0 && pr.swerveShare(3) === 0.25 && pr.swerveShare(5) === 0.45
+    && pr.convoys(3) === 0 && pr.convoys(4) === 2 && pr.convoys(5) === 3 && pr.swerveBlend(0) === 0 && pr.swerveBlend(pr.SWERVE_MOVE) === 1 && pr.swerveBlend(pr.SWERVE_MOVE / 2) === 0.5,
+    'Poker Run traffic (web.112): 5 cars a level and 1 a stage, lane changes from level 3, convoys from level 4, an eased slide');
   const c3 = await import('../public/modules/games/car3d.mjs');
   const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });
   let calls = 0; const stub = new Proxy({}, { get: (t, k) => (k in t ? t[k] : () => { calls++; return { addColorStop() {} }; }), set: (t, k, v) => { t[k] = v; return true; } });

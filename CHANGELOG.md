@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: traffic by difficulty** (`web.112`, narmod: « the hard roads are too easy ») — a stage adds
+  `extraCars(k, lv)` = 5 × its road's level + its index cars, out of sight ahead (was 3 × level). From level 2 a third
+  are slow trucks (20–30 % of top speed) and a third fast sports cars (70–85 %); from level 3 a share of the stage's
+  cars (25 / 35 / 45 %) change lane once, 60–130 segments ahead — towards the player's lane when he is beside them —
+  after `SWERVE_WARN` = 1 s of amber indicator, sliding over `SWERVE_MOVE` = 0.8 s, never at a fork; from level 4
+  convoys (2 then 3): two cars side by side, the third 14–22 segments behind in the lane they leave free. Drawn per
+  car in the daily, so its traffic stays the same whatever the timing. Rules updated in the 83 languages;
+  `scripts/test-poker-run-traffic.mjs` (9 checks).
 - **Who Wins?: a new table and the TV ladder** (`web.111`, narmod) — chosen on mock-ups (layout « B2 »):
   nothing is drawn over the cards any more — banners, the Ace's words, the safe level and the result go to one
   line above the hands; the board sits in the middle with « The board, shared by both hands » above it and the pot
