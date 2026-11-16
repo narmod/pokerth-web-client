@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: Who Wins? and Higher or Lower** (`web.101`, narmod) — `server/hall-of-fame.js` ranks `whowins`
+  (tv, endless, daily; 200 + 70 a second, the TV show 1 000 000 flat) and `hilo` (hand 20 000 + 5 000 a second;
+  tourney and both 2 000 000 + 1 000 000 a second, the All-Ins doubling the stack): a mode may now have its own
+  ceiling (`GAMES[g].caps[m]`). Who Wins?' daily gets a ticket for the first game of the day only, as its local
+  record. Both games wire the title's 🏆 (↓ when it is on, else the next tile), the end screen's question and the
+  boards. The admin names their modes.
 - **Hall of Fame: Poker Run and Video Poker** (`web.100`, narmod) — `server/hall-of-fame.js` ranks `poker-run`
   (free, queen, daily; 50 000 + 30 000 a second) and `videopoker`: a board per machine, free (`jacks`, `bonus`,
   `deuces`, `joker`) and daily (`day-jacks`…; 200 000 + 20 000 a second). `GAMES[g].daily` may now list several daily

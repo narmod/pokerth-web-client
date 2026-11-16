@@ -43,6 +43,7 @@ import { shuffled } from './deal.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, drawBackCard, drawPlace, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
 
 export const POT0 = 10, LIVES = 3, RESHUFFLE = 8, TROPHY_STREAK = 10, EDGE = 0.95;
@@ -112,6 +113,8 @@ export function create(shell) {
     hScore = shell.hud.querySelector('.hl-score'); hLives = shell.hud.querySelector('.hl-lives,.hl-level'); hShoe = shell.hud.querySelector('.hl-shoe');
   }
 
+  /** The title, or the Hall of Fame's boards opened from it (the same scene behind). */
+  const onTitle = () => state === 'title' || state === 'board';
   let state = 'title', mode = 'hand', sel = 0, G = null, time = 0, timer = 0;
   const tour = () => mode !== 'hand';
   function newGame() {
@@ -146,11 +149,25 @@ export function create(shell) {
     };
     titleScreen(shell, { id: 'hilo', name: t('hlName'), hint: t('hlHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec(m) })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(MODES[sel].id); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.101): the title's 🏆 (or ↓, else the next
+  // tile) only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('hilo').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'hilo', name: t('hlName'), sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newGame();
   titlePanel();
-  try { if (navigator.webdriver) window.__pthHL = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m), layout: () => L() }; } catch (e) {}
+  refreshHof();
+  try { if (navigator.webdriver) window.__pthHL = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m), hof: () => openHof(), end: () => finish(), layout: () => L() }; } catch (e) {}
 
   function start(m) {
     clearTimeout(timer);
@@ -159,6 +176,7 @@ export function create(shell) {
     newGame();
     buildHud(); renderHud();
     state = 'guess'; shell.panel(null);
+    G.hof = hofStart('hilo', mode);   // the Hall of Fame's ticket (null offline / off)
     ace.pose('idle'); ace.mood('mc-m-smile');
     sound('notifyCard');
   }
@@ -326,8 +344,9 @@ export function create(shell) {
       levels: { title: t('hlLevel') + ' ' + level, right: BLINDS[level - 1][0] + '/' + BLINDS[level - 1][1], html: stepsHtml(esc, BLINDS.map((b, i) => ({ label: String(i + 1), cls: i < level - 1 ? 'ok' : i === level - 1 ? 'ok cur' : '' }))) },
       stats: [[fmt(G.cards), t('psCards')], ['×' + fmt(G.bestStreak), '🔥'], [fmt(G.bestPot), t('hlPot')]],
       onAgain: () => start(mode),
-      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); },
+      onMenu: () => { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); refreshHof(); },
     });
+    hofEnd(shell, { g: 'hilo', m: mode, s: score, run: G.hof });
   }
 
 
@@ -416,7 +435,7 @@ export function create(shell) {
     b.classList.toggle('hl-focus', !!o.focus);
   }
   function layoutButtons(l) {
-    const show = state !== 'title' && state !== 'over';
+    const show = !onTitle() && state !== 'over';
     if (!show) { for (const id of Object.keys(B)) setBtn(id, null); return; }
     const kb = keyboardFirst(), foc = (id) => kb && state === 'guess' && G.focus === id;
     const o = odds(G.cur, G.shoe);
@@ -454,6 +473,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck' && hofEnabled) { openHof(); return; }
     if (state === 'title') {
       // Arrows pick a way to play, Space (or a tap on the felt) plays it.
       const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
@@ -488,7 +509,7 @@ export function create(shell) {
     if (!G) return;
     stepFloaters(G.fx, dt);
     if (G.say) { G.say.t += dt; if (G.say.t > G.say.life) G.say = null; }
-    if (state !== 'over' && state !== 'title') {
+    if (state !== 'over' && !onTitle()) {
       const now = performance.now();
       ace.mood(now < G.koUntil ? 'mc-m-ko' : now < G.yayUntil ? 'mc-m-yay' : G.streak >= 6 ? 'mc-m-fierce' : G.streak >= 3 ? 'mc-m-cool' : 'mc-m-smile');
       ace.pose(now < G.yayUntil ? 'wave' : G.streak >= 4 ? 'balance' : 'idle');
@@ -556,7 +577,7 @@ export function create(shell) {
   function draw(g) {
     const l = L(), W = l.W;
     felt(g, W, l.H, shell.theme.light);
-    if (state !== 'title') {
+    if (!onTitle()) {
       ladder(g, l);
       // Cards already out, small, in a row (the last ones), after « Out ».
       g.save(); g.textAlign = 'left'; g.textBaseline = 'middle';
@@ -600,7 +621,7 @@ export function create(shell) {
     // The Ace sits on the shoe.
     const s = l.narrow ? 0.17 : 0.24, ax = l.shoeX - 2, ay = l.shoeY - l.sh / 2 - 6;
     ace.place(ax, ay, s, shell.k);
-    if (G && G.say && state !== 'title') {
+    if (G && G.say && !onTitle()) {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
       bubble(g, G.say.s, Math.min(ax + 6, W - 20), ay - 212 * s - 2, W, a);
     }

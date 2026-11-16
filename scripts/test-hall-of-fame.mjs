@@ -88,6 +88,9 @@ const tvp = H.ticket(st, 'videopoker', 'day-deuces', T0);
 ok(sub({ g: 'videopoker', m: 'day-deuces', ticket: tvp, s: 480, name: 'VPD', day: '2026-11-16' }).rank === 1 && st.boards['initials/videopoker:day-deuces:2026-11-16'].length === 1
   && sub({ g: 'videopoker', m: 'day-deuces', ticket: tvp, s: 480, name: 'VPO', day: '2026-11-01' }).err === 'day',
   'Video Poker: each machine its daily board (one of several daily modes), today or yesterday only');
+ok(Object.keys(H.view(st, 'initials', 'whowins', T0).boards).join() === 'tv,endless,daily' && Object.keys(H.view(st, 'initials', 'hilo', T0).boards).join() === 'hand,tourney,both'
+  && H.plausible('whowins', 1000000, 1, 'tv') && !H.plausible('whowins', 1000, 5, 'endless') && H.plausible('whowins', 500, 5, 'endless') && H.plausible('hilo', 5000000, 3, 'tourney') && !H.plausible('hilo', 5000000, 3, 'hand'),
+  'Who Wins? and Higher or Lower are ranked (web.101), a mode may have its own ceiling (the TV show\'s million, the tournaments\' All-Ins)');
 const tkt = H.ticket(st, 'tapis', 'daily', T0);
 ok(sub({ g: 'tapis', m: 'daily', ticket: tkt, s: 40000, name: 'TAP', day: '2026-11-16' }).rank === 1 && st.boards['initials/tapis:daily:2026-11-16'].length === 1, 'Tapis!: its daily board');
 // Off (the default): nothing taken, nothing shown.

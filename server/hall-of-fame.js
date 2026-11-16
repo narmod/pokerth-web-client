@@ -57,6 +57,12 @@ const GAMES = Object.freeze({
   // 4 000 on 5 credits, doubled up to 5 times.
   videopoker: { modes: ['jacks', 'bonus', 'deuces', 'joker', 'day-jacks', 'day-bonus', 'day-deuces', 'day-joker'],
     daily: ['day-jacks', 'day-bonus', 'day-deuces', 'day-joker'], perSec: 20000, base: 200000 },
+  // Who Wins? (web.101): endless and daily ≤ 66 points an answer (fever ×2), an answer a second at most;
+  // the TV show pays its ladder, up to 1 000 000 (caps: a mode's own ceiling). The daily counts its first game only.
+  whowins: { modes: ['tv', 'endless', 'daily'], daily: 'daily', perSec: 70, base: 200, caps: { tv: { base: 1000000, perSec: 0 } } },
+  // Higher or Lower (web.101): the hand game's pots (×2 or so a right guess, banked); the tournaments' stack
+  // can double on every All-In, so their ceiling is loose.
+  hilo: { modes: ['hand', 'tourney', 'both'], perSec: 5000, base: 20000, caps: { tourney: { base: 2000000, perSec: 1000000 }, both: { base: 2000000, perSec: 1000000 } } },
 });
 /** Is mode m of game G a daily challenge (its board of the day)? G.daily is a mode or a list of them. */
 const isDaily = (G, m) => !!G && (Array.isArray(G.daily) ? G.daily.indexOf(m) >= 0 : m === G.daily);
@@ -109,9 +115,9 @@ function ticketStart(st, tk, g, m, now) {
   return t0 > 0 && t0 <= now && now - t0 <= TICKET_MAX_MS ? t0 : 0;
 }
 /** Could this score be made in `secs` seconds of this game? */
-function plausible(g, s, secs) {
-  const G = GAMES[g];
-  return !!G && Number.isInteger(s) && s > 0 && s <= G.base + G.perSec * Math.max(0, secs);
+function plausible(g, s, secs, m) {
+  const G = GAMES[g], C = G && G.caps && m && G.caps[m] ? G.caps[m] : G;
+  return !!G && Number.isInteger(s) && s > 0 && s <= C.base + C.perSec * Math.max(0, secs);
 }
 
 // ── Names ────────────────────────────────────────────────────────────
@@ -184,7 +190,7 @@ function submit(st, o) {
   if (daily && !dayOk(day, now)) return { ok: false, err: 'day' };
   const t0 = ticketStart(st, o.ticket, g, m, now);
   if (!t0) return { ok: false, err: 'ticket' };
-  if (!plausible(g, s, (now - t0) / 1000)) return { ok: false, err: 'score' };
+  if (!plausible(g, s, (now - t0) / 1000, m)) return { ok: false, err: 'score' };
   let name = '';
   if (names === 'account') { name = tokenName(st, o.token, now) || ''; if (!name) return { ok: false, err: 'account' }; }
   else { name = cleanName(names, o.name, o.words); if (!name) return { ok: false, err: 'name' }; }

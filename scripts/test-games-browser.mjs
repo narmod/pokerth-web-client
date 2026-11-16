@@ -675,6 +675,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(await pg.evaluate(() => window.__pthWW.state()) === 'shown', label + ': the explanation waits for the player (still there after 3 s)');
   await pg.keyboard.press('Space'); await sleep(300);
   ok(await pg.evaluate(() => window.__pthWW.run().trap == null), label + ': Space: the next hand, the explanation is gone');
+  await hofCheck(pg, label, 'whowins', '__pthWW', ['tv', 'endless', 'daily'], () => { const W = window.__pthWW; W.start('endless'); W.run().score = 150; W.end(); });
   await pg.keyboard.press('Space');                // back in a game, as before the modes
   await sleep(300);
   await pg.keyboard.press('Escape'); await sleep(200);
@@ -739,6 +740,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.waitForFunction(() => window.__pthHL.state() === 'guess', null, { timeout: 3000 }).catch(() => {});
   ok(await pg.evaluate((s0) => window.__pthHL.run().stack > s0, st0), label + ': a tap on ▲ Plus haut plays the card (a 3, a K comes: the raise is won)');
   await shot(pg, label + '-hl-buttons');
+  await hofCheck(pg, label, 'hilo', '__pthHL', ['hand', 'tourney', 'both'], () => { const H = window.__pthHL; H.start('hand'); H.run().score = 120; H.end(); });
+  await pg.evaluate(() => window.__pthHL.start('tourney'));   // back in a game, as before
   await pg.keyboard.press('Escape'); await sleep(200);
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── The Ace's Bluff: he bets, Call shows his cards; Fold gives up the ante ──

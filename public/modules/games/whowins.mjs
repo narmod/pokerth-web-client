@@ -58,6 +58,7 @@ import { dayKey } from './solitaire-rules.mjs';
 import { fmt, imageCache, rr, drawFace, aceActor, CHIP } from './common.mjs';
 import { felt, buttons, bubble, drawFloaters, stepFloaters, keyboardFirst, fitFont, drawBackCard } from './ui.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
 
 export const LIVES = 3, TIME_MAX = 9, TIME_MIN = 3.5, FEVER_STREAK = 5, LEVEL_EVERY = 5;
@@ -216,6 +217,8 @@ export function create(shell) {
   const hProg = /** @type {HTMLElement} */ (shell.hud.querySelector('.ww-prog'));
   ensureCss();
 
+  /** The title, or the Hall of Fame's boards opened from it (the same scene behind). */
+  const onTitle = () => state === 'title' || state === 'board';
   let state = 'title', G = null, time = 0, timer = 0;
   let mode = 'tv';                // the way of playing
   let sel = 0;                    // the mode picked on the title (keys)
@@ -228,7 +231,7 @@ export function create(shell) {
   const tv = () => mode === 'tv';
   const daily = () => mode === 'daily';
   function renderHud() {
-    const play = state !== 'title';
+    const play = !onTitle();
     hScore.textContent = fmt(tv() ? G.won : G.score);
     hTab.textContent = !play ? '\u00a0' : tv() ? t('wwQLab') : daily() ? t('wwHandLab') : t('wwLevelLab');
     hProg.textContent = !play ? '' : tv() ? Math.min(G.right + 1, LADDER.length) + '/' + LADDER.length
@@ -263,11 +266,25 @@ export function create(shell) {
     };
     titleScreen(shell, { id: 'whowins', name: t('wwName'), hint: t('wwHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec(m) })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(MODES[sel].id); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.101): the title's 🏆 (or ↓, else the next
+  // tile) only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('whowins').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'whowins', name: t('wwName'), sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newGame();
   titlePanel();
-  try { if (navigator.webdriver) window.__pthWW = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m) }; } catch (e) {}
+  refreshHof();
+  try { if (navigator.webdriver) window.__pthWW = { run: () => G, state: () => state, mode: () => mode, start: (m) => start(m), hof: () => openHof(), end: () => finish() }; } catch (e) {}
 
   function start(m) {
     clearTimeout(timer);
@@ -278,6 +295,8 @@ export function create(shell) {
       const day = dayKey(), d = loadDaily();
       G.day = day; G.deals = dailyDeals(day); G.counted = !(d && d.day === day);
     }
+    // The Hall of Fame's ticket — the daily's first game of the day only, as its local record.
+    G.hof = daily() && !G.counted ? null : hofStart('whowins', mode);
     state = 'ask'; shell.panel(null);
     ace.pose('idle'); ace.mood('mc-m-smile');
     next();
@@ -455,11 +474,12 @@ export function create(shell) {
         stats: [[fmt(G.right), '✓'], ['×' + fmt(G.bestStreak), '🔥'], [G.level + 1, t('wwLevelLab')]],
       }, common));
     }
+    hofEnd(shell, { g: 'whowins', m: mode, s: tv() ? G.won : G.score, run: G.hof, day: G.day, daily: daily() });
   }
   function act(what) {
     if (state !== 'over') return;
     if (what === 'again') start(mode);
-    else { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderHud(); titlePanel(); }
+    else { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); renderHud(); titlePanel(); refreshHof(); }
   }
 
   // ── Layout (world px) ─────────────────────────────────────────────
@@ -506,6 +526,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck' && hofEnabled) { openHof(); return; }
     if (state === 'title') {
       // Arrows pick a way to play, Space (or a tap on the felt) plays it.
       const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
@@ -555,7 +577,7 @@ export function create(shell) {
     }
     if (state === 'shown' && G.shownAt == null) G.shownAt = time;
     if (state === 'ask') G.shownAt = null;
-    if (state !== 'over' && state !== 'title') {
+    if (state !== 'over' && !onTitle()) {
       const now = performance.now();
       ace.mood(now < G.koUntil ? 'mc-m-ko' : now < G.yayUntil ? 'mc-m-yay' : G.streak >= 5 ? 'mc-m-cool' : 'mc-m-smile');
       ace.pose(now < G.yayUntil ? 'wave' : 'idle');
@@ -633,7 +655,7 @@ export function create(shell) {
     g.save();
     // A wrong answer shakes the table.
     if (G && G.shake > 0) g.translate(Math.sin(time * 70) * 6 * (G.shake / 0.4), 0);
-    if (state !== 'title' && G.q) {
+    if (!onTitle() && G.q) {
       const q = G.q, shown = state === 'shown' || state === 'over';
       const glow = G.streak >= FEVER_STREAK ? 0.5 + 0.5 * Math.sin(time * 6) : 0;
       // Winning five: the winner's (both on a split).
@@ -689,7 +711,7 @@ export function create(shell) {
     // The Ace, top right: he reacts to the answers (mood, pose).
     const s = l.narrow ? 0.17 : 0.22, ax = W - (l.narrow ? 20 : 30), ay = l.top + (l.narrow ? 0 : 18);
     ace.place(ax, ay, s, shell.k);
-    if (G && G.say && state !== 'title') {
+    if (G && G.say && !onTitle()) {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > G.say.life - 0.4 ? Math.max(0, (G.say.life - G.say.t) / 0.4) : 1;
       // His bubble on his left, clear of him.
       g.save(); g.font = '600 11px Inter, system-ui, sans-serif';
@@ -698,7 +720,7 @@ export function create(shell) {
     }
     if (G) drawFloaters(g, G.fx);
     // The level's banner: fades in and out on the board, never wider than the felt.
-    if (G && G.ban && state !== 'title') {
+    if (G && G.ban && !onTitle()) {
       const l = L(), b = G.ban, a = Math.min(1, b.t / 0.25, (b.life - b.t) / 0.5);
       g.save(); g.globalAlpha = Math.max(0, a); g.textAlign = 'center'; g.textBaseline = 'middle';
       fitFont(g, b.s, l.W - 24, l.narrow ? 19 : 24, 700, 'Cinzel, Georgia, serif');
