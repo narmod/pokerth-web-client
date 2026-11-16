@@ -472,7 +472,8 @@ console.log('Ace Dash: the long run, the score, the modes');
   const R = (await import('../public/modules/games/deal.mjs')).rng('tapis-test'), d = TP.dealRound(1, 6, 12, R);
   ok(d.length === 6 && d.every((c) => c.length >= 2 && c.length <= 13) && TP.anyMove(d) && d.every((c) => c.every((b) => b.k < 3)), 'Tapis!: a round deals 6 columns of 3 colours with a move to play');
   ok(TP.crossCells(mk([[0, 1, 2], [1, 1], [2]]), 0, 1).length === 4 && TP.colorCells(mk([[0, 1], [1, 0]]), 1).length === 2, 'Tapis!: the Dealer takes a row and a column, the Joker a colour');
-  ok(TP.powerFor(5) === '' && TP.powerFor(9) === 'joker' && ['dealer', 'shuffle'].includes(TP.powerFor(6)), 'Tapis!: a group of 6 wins a Dealer or a Shuffle, 9 a Joker');
+  ok(TP.powerFor(8) === '' && TP.powerFor(13) === 'joker' && ['dealer', 'shuffle'].includes(TP.powerFor(9)) && ['dealer', 'shuffle'].includes(TP.powerFor(12)) && TP.POWER_MAX === 3,
+    'Tapis!: a group of 9 wins a Dealer or a Shuffle, 13 a Joker (web.103: 6 and 9 until then), 3 of each at most');
   ok(TP.castFamily(1) === 'suits' && TP.castFamily(2) === 'suits' && TP.castFamily(3) === 'figures' && TP.castFamily(4) === 'figures' && TP.castFamily(5) === 'suits' && TP.castFamily(8) === 'figures' && TP.castFamily(20) === 'figures' && TP.castFamily(21) === 'mixed',
     'Tapis!: the Suits at levels 1-2, the Figures at 3-4, two by two, all mixed from 21');
   {

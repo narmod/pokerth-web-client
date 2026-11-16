@@ -323,9 +323,15 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
 export const castFamily = (lv) => (lv >= 21 ? 'mixed' : (Math.floor((Math.max(1, lv) - 1) / 2) % 2 ? 'figures' : 'suits'));
 /** Chips left on the board. */
 export const chipsLeft = (grid) => grid.reduce((a, col) => a + col.length, 0);
-/** The power a big group wins (n ≥ 6), or '' : a Joker from 9, else a Dealer or a Shuffle. */
+/**
+ * The power a big group wins (n ≥ 9), or '' : a Joker from 13, else a Dealer or a Shuffle.
+ * Until web.103 from 6 and 9 (narmod: « too many rewards: at level 12, 30 Jokers »): with
+ * POWER_MAX and one power a level (tapis.mjs), a few in hand, not a pile.
+ */
 export function powerFor(n, rnd = Math.random) {
-  if (n >= 9) return 'joker';
-  if (n >= 6) return rnd() < 0.5 ? 'dealer' : 'shuffle';
+  if (n >= 13) return 'joker';
+  if (n >= 9) return rnd() < 0.5 ? 'dealer' : 'shuffle';
   return '';
 }
+/** The most of each power a player keeps (web.103). */
+export const POWER_MAX = 3;

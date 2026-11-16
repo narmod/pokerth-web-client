@@ -73,7 +73,7 @@
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove,
-  removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, castFamily, tierOf,
+  removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, VENUES } from './runner-scenery.mjs';
@@ -175,6 +175,7 @@ export function create(shell) {
   }
   function newRound() {
     (G.all || []).forEach((ch) => ch.ace.remove());
+    G.wonLv = false;
     G.cols0 = G.cols = colsFor(shell.W);
     const L = geom();
     G.xs = Array.from({ length: G.cols }, (_, c) => colAim(L, c)); G.closing = []; G.signs = []; G.picked = null;
@@ -299,8 +300,9 @@ export function create(shell) {
     if (pay.cat > G.bestCat) G.bestCat = pay.cat;
     G.fx.push({ s: t(NAME_KEYS[pay.cat]) + '  +' + fmt(pay.pts), x: colX(L, top[0]), y: chipY(L, top[0], Math.min(top[1], G.grid[top[0]].length)) - L.bh * 2, t: 0, life: 1.2, big: grp.length >= 5 });
     sound(grp.length >= 5 ? 'notifyRaise' : 'notifyAction');
-    const p = powerFor(grp.length);
-    if (p) { G.inv[p]++; say(t('tpWon', { b: t(P_KEY[p]) })); sound('notifyAllIn'); }
+    // One power a level at most, POWER_MAX of each (web.103).
+    const p = G.wonLv ? '' : powerFor(grp.length);
+    if (p && G.inv[p] < POWER_MAX) { G.inv[p]++; G.wonLv = true; say(t('tpWon', { b: t(P_KEY[p]) })); sound('notifyAllIn'); }
     moved(); renderHud(); afterMove();
   }
   function usePower(p, c, r) {
@@ -419,8 +421,10 @@ export function create(shell) {
     timer = setTimeout(() => {
       if (state !== 'clear') return;
       G.lv++;
-      if (duel()) { G.players.forEach((p) => { p.inv.shuffle++; }); if (G.inv !== G.players[G.turn].inv) G.inv.shuffle++; }
-      else G.inv.shuffle++;
+      // A Shuffle for the new level when there is none left (until web.103 one more each level).
+      const top = (inv) => { if (inv.shuffle < 1) inv.shuffle = 1; };
+      if (duel()) { G.players.forEach((p) => top(p.inv)); top(G.inv); }
+      else top(G.inv);
       newRound(); state = 'run'; sound('notifyBlindsUp');
       if (duel()) turnTo((G.lv - 1) % 2);        // each round, the other one starts
       const lvLine = t('arLevel') + ' ' + G.lv + ' · ' + t('tpBlinds', { b: blindsAt(G.lv) }) + (colorsAt(G.lv) > colorsAt(G.lv - 1) ? ' · +1 🪙' : '');

@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: fewer bonuses** (`web.104`, narmod: « too many rewards: at level 12, 30 Jokers ») — `powerFor()` gives a
+  Dealer or a Shuffle from 9 chips (6 until now), the Joker from 13 (9); one power per level (`G.wonLv`) and
+  `POWER_MAX` (3) of each; a new level tops the Shuffles up to 1 instead of adding one. A simulation of 12 levels
+  gave about 28 Jokers, 15 Dealers and 27 Shuffles before; now 12 powers at most. `tpRules` says it, in the 83 languages.
 - **Hall of Fame: back in after « Remove my scores », the field above the keyboard** (`web.103`, narmod) —
   removing one's scores now sets `pth_hof_opt` back to `ask` (the next score that gets in asks, as the first time;
   `hofForgetQ` says so, in the 83 languages); with `no`, the boards show « Take part again » (`hofRejoin`). On a
