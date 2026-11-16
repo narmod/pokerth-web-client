@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: Poker Run and Video Poker** (`web.100`, narmod) — `server/hall-of-fame.js` ranks `poker-run`
+  (free, queen, daily; 50 000 + 30 000 a second) and `videopoker`: a board per machine, free (`jacks`, `bonus`,
+  `deuces`, `joker`) and daily (`day-jacks`…; 200 000 + 20 000 a second). `GAMES[g].daily` may now list several daily
+  modes (`isDaily`), their boards `<game>:<mode>:<day>`, pruned by any daily mode. Video Poker's boards follow the
+  title's daily / free choice, its 🏆 key is 1 (↓ switches daily / free); its `running()` leaves the boards out, so
+  Escape goes back to the title. The admin names the machines.
 - **Hall of Fame: Tapis! and Ace Dash** (`web.99`, narmod) — `server/hall-of-fame.js` ranks `tapis` (classic, folie,
   daily, zen — not the Duel; ceiling 100 000 + 4 000 a second) and `ace-dash` (free, daily, time; 5 000 + 3 000 a
   second). Both games wire `hofStart` / `hofEnd` / `hofPanel` as Ace Runner does: the title's 🏆 chip (or ↓, which on

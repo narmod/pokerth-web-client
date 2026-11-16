@@ -527,7 +527,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   const vpE = await endInfo(pg, 6000);
   ok(vpE.on && vpE.btns.length === 2 && vpE.bars >= 2 && /→/.test(vpE.lv), label + ': Video Poker\'s end screen: the credits hand after hand (' + vpE.lv + ')');
   await shot(pg, label + '-vp-over');
-  await pg.keyboard.press('Escape'); await sleep(300);
+  await hofCheck(pg, label, 'videopoker', '__pthVP', ['day-jacks', 'day-bonus', 'day-deuces', 'day-joker'], () => { const V = window.__pthVP; V.start(true); V.run().credits = 250; V.end(); });
   await pg.keyboard.press('Escape'); await sleep(500);
   // ── Who Wins?: the right hand scores, a wrong one costs a heart ──
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
@@ -974,7 +974,8 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(prOver.mini, label + ': the HUD\'s small map gone with the showdown');
   ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');
-  // A new run (Space on the showdown), to take every fork on the right.
+  await hofCheck(pg, label, 'poker-run', '__pthRun', ['free', 'queen', 'daily'], () => { const R = window.__pthRun; R.start('free'); R.addStack(500); R.setTime(0.05); });
+  // A new run (Space on the title), to take every fork on the right.
   await sleep(800); await pg.keyboard.press('Space');
   await pg.waitForFunction(() => window.__pthRun && window.__pthRun.state() === 'run', null, { timeout: 4000 }).catch(() => {});
   // Left an easier road, right a harder one (sharper bends, chips worth more): all rights.

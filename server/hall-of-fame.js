@@ -22,7 +22,7 @@
 // (pth_hof_dev), never shown; forget() removes a player's lines — the device's,
 // and with an account token every line of that nickname.
 //
-// Boards: '<names>/<game>:<mode>' keeps the TOP best, '<names>/<game>:daily:<day>'
+// Boards: '<names>/<game>:<mode>' keeps the TOP best, '<names>/<game>:<daily mode>:<day>'
 // the TOP_DAY best of a daily challenge (DAYS_KEPT days kept). One line per name
 // and board (its best), so a player cannot fill a board alone.
 //
@@ -51,7 +51,15 @@ const GAMES = Object.freeze({
   // Ace Dash (web.99): ≈ 29 m/s at top speed, ×2 in All-In, chips 10 × a streak of 5 × 2 (gold),
   // the pool's rows, all × 4 with a royal flush.
   'ace-dash': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 3000, base: 5000 },
+  // Poker Run (web.100): (chips + 5 a second left) × the hand (×50 a royal) × the Queen's hearts (×2.8 at most).
+  'poker-run': { modes: ['free', 'queen', 'daily'], daily: 'daily', perSec: 30000, base: 50000 },
+  // Video Poker (web.100): the credits left, a game per machine (free) and a daily per machine; a royal pays
+  // 4 000 on 5 credits, doubled up to 5 times.
+  videopoker: { modes: ['jacks', 'bonus', 'deuces', 'joker', 'day-jacks', 'day-bonus', 'day-deuces', 'day-joker'],
+    daily: ['day-jacks', 'day-bonus', 'day-deuces', 'day-joker'], perSec: 20000, base: 200000 },
 });
+/** Is mode m of game G a daily challenge (its board of the day)? G.daily is a mode or a list of them. */
+const isDaily = (G, m) => !!G && (Array.isArray(G.daily) ? G.daily.indexOf(m) >= 0 : m === G.daily);
 // Words a free nickname may not contain (the admin adds more: _adminConfig.hofWords).
 // A word of the name (or the whole name) that STARTS with one of them is refused —
 // « Computer » stays fine, « Pute123 » does not.
@@ -74,7 +82,7 @@ function dayOk(day, now) {
 }
 function boardKey(names, g, m, day) {
   const G = GAMES[g];
-  return namesOf(names) + '/' + g + ':' + (G && m === G.daily ? 'daily:' + day : m);
+  return namesOf(names) + '/' + g + ':' + (isDaily(G, m) ? m + ':' + day : m);
 }
 const validGame = (g, m) => !!(GAMES[g] && GAMES[g].modes.indexOf(m) >= 0);
 
@@ -172,8 +180,8 @@ function submit(st, o) {
   if (names === 'off') return { ok: false, err: 'off' };
   if (!validGame(g, m)) return { ok: false, err: 'game' };
   const G = GAMES[g];
-  const day = m === G.daily ? o.day : '';
-  if (m === G.daily && !dayOk(day, now)) return { ok: false, err: 'day' };
+  const daily = isDaily(G, m), day = daily ? o.day : '';
+  if (daily && !dayOk(day, now)) return { ok: false, err: 'day' };
   const t0 = ticketStart(st, o.ticket, g, m, now);
   if (!t0) return { ok: false, err: 'ticket' };
   if (!plausible(g, s, (now - t0) / 1000)) return { ok: false, err: 'score' };
@@ -181,7 +189,7 @@ function submit(st, o) {
   if (names === 'account') { name = tokenName(st, o.token, now) || ''; if (!name) return { ok: false, err: 'account' }; }
   else { name = cleanName(names, o.name, o.words); if (!name) return { ok: false, err: 'name' }; }
   if (banned(name, o.bans)) return { ok: false, err: 'banned' };
-  const key = boardKey(names, g, m, day), max = m === G.daily ? TOP_DAY : TOP;
+  const key = boardKey(names, g, m, day), max = daily ? TOP_DAY : TOP;
   const b = Array.isArray(st.boards[key]) ? st.boards[key] : (st.boards[key] = []);
   const i = b.findIndex((r) => same(r.n, name));
   if (i >= 0 && now - (b[i].at || 0) < NAME_GAP_MS) return { ok: false, err: 'rate' };
@@ -243,7 +251,7 @@ function forget(st, o) {
 /** Old daily boards and expired tokens go. */
 function prune(st, now) {
   const oldest = dayOf(now - DAYS_KEPT * 86400000);
-  Object.keys(st.boards).forEach((k) => { const m = /:daily:(\d{4}-\d{2}-\d{2})$/.exec(k); if (m && m[1] < oldest) delete st.boards[k]; });
+  Object.keys(st.boards).forEach((k) => { const m = /:[a-z-]+:(\d{4}-\d{2}-\d{2})$/.exec(k); if (m && m[1] < oldest) delete st.boards[k]; });
   Object.keys(st.tokens).forEach((k) => { if (!st.tokens[k] || st.tokens[k].exp < now) delete st.tokens[k]; });
 }
 

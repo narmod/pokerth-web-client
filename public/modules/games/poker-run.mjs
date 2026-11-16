@@ -45,6 +45,7 @@ import { evalCards, suitOf } from './poker-hand.mjs';
 import { drawCar, seatPoint } from './car3d.mjs';
 import { fmt, cardHtml, imageCache, drawFace, aceActor, ACE_ID, RANKS, isRed } from './common.mjs';
 import { titleScreen, titleStep } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, listHtml } from './end.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
@@ -440,7 +441,7 @@ export function create(shell) {
   }
 
   // ── State ──────────────────────────────────────────────────────────
-  let state = 'title', overAt = 0, revealTimer = 0, lastChipSnd = 0;
+  let state = 'title', overAt = 0, revealTimer = 0, lastChipSnd = 0, hofRun = null;
   let pos = 0, px = 0, v = 0, pv = 0, yaw = 0, turn = 0, slide = 0, bob = 0, camY = CAMH, lastCen = null;
   let stack = 0, time = TIME0, nitro = 0, boost = false, inv = 0, shake = 0, skyOff = 0, curStage = 0, skyFrom = 'vegas', skyGate = -1;
   let slip = 0, slipDir = 1, yawVel = 0, charge = 0, mt = 0, spin = 0, drift = false, driftDir = 0, driftTick = 0, driftGain = 0, parts = [], fx = [];
@@ -509,7 +510,20 @@ export function create(shell) {
       modes: [{ icon: '🏎️', label: t('adModeFree'), desc: t('adModeFreeD'), rec: best ? t('arRecord', { n: fmt(best) }) : '' },
         { icon: '♥️', label: t('prQueen'), desc: t('prQueenD'), rec: qb ? t('arRecord', { n: fmt(qb) }) : '' },
         { icon: '📅', label: t('psDaily'), desc: t('adModeDailyD') + ' · 👻', rec: dl.s ? t('wwDailyToday', { n: fmt(dl.s) }) : '' }],
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { modeSel = i; start(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.100): the title's 🏆 (or ↓) only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('poker-run').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'poker-run', name: 'Poker Run', sel: modeSel,
+      modes: [{ id: 'free', label: t('adModeFree') }, { id: 'queen', label: t('prQueen') }, { id: 'daily', label: t('psDaily') }],
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
 
   // ── The Ace's reactions ────────────────────────────────────────────
@@ -527,6 +541,7 @@ export function create(shell) {
     mode = MODES[modeSel] || 'free';
     day = dayKey();
     reset(); state = 'run'; shell.panel(null); lastMini = '';
+    hofRun = hofStart('poker-run', mode);   // the Hall of Fame's ticket for this run (null offline / off)
     // The daily: today's best run drives as a ghost; this one is recorded.
     if (mode === 'daily') { const g = dLoad().g; ghost = g && g.z && g.z.length > 1 ? g : null; gRec = { p: [], z: [], x: [] }; }
     else { ghost = null; gRec = null; }
@@ -538,6 +553,8 @@ export function create(shell) {
 
   // ── Input ──────────────────────────────────────────────────────────
   function input(a, down, info) {
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && down && a === 'duck') { if (hofEnabled) openHof(); return; }
     if (state === 'title' || state === 'over') {
       if (state === 'title' && down) { const st = titleStep(a, modeSel, MODES.length); if (st === 'start') start(); else if (st != null) { modeSel = st; titlePanel(); } return; }
       if (a === 'jump' && down && performance.now() > overAt + 700) start();
@@ -597,7 +614,7 @@ export function create(shell) {
 
   function update(dt) {
     W = shell.W; H = shell.H;
-    if (state === 'title' || state === 'over') { aceTick(dt); return; }
+    if (state === 'title' || state === 'over' || state === 'board') { aceTick(dt); return; }
     if (state === 'outro') { stepOutro(dt); return; }
     for (const k of ['l', 'r', 'n', 'b']) if (pulse[k] > 0) pulse[k] -= dt;
     const L = keys.l || pulse.l > 0, R = keys.r || pulse.r > 0, N = keys.n || pulse.n > 0, B = keys.b || pulse.b > 0;
@@ -968,8 +985,9 @@ export function create(shell) {
         : { title: t('gmCourse'), right: reached + '/' + STAGES + (rights ? ' · ' + rights + ' ▶' : ''), html: courseMap(pr) },
       stats: [[stDrifts, t('prDrifts')], [stPasses, t('prPasses')], [stHits, t('prHits')]],
       onAgain: () => start(),
-      onMenu: () => { state = 'title'; titlePanel(); },
+      onMenu: () => { state = 'title'; titlePanel(); refreshHof(); },
     });
+    hofEnd(shell, { g: 'poker-run', m: mode, s: score, run: hofRun, day, daily: mode === 'daily' });
     gRec = null;
   }
 
@@ -1323,7 +1341,7 @@ const carW = () => Math.min(W * 0.24, 100);
     ctx = g; skidMarks(o.w, o.x, o.y);
     drawCar(g, o, 'back');
     // Dame de Cœur: the Queen of Hearts in the passenger seat.
-    if (mode === 'queen' && state !== 'title') {
+    if (mode === 'queen' && state !== 'title' && state !== 'board') {
       const sp = seatPoint(o, 0.17), cw = o.w * 0.19;
       card(sp.x, sp.y - cw * 0.45, cw, 23);     // 23 = Q♥ (suit 1 = ♥ × 13 + rank 10 = Q)
     }
@@ -1377,7 +1395,7 @@ const carW = () => Math.min(W * 0.24, 100);
       case 'pump': dy = -Math.sin(p * Math.PI) * h * 0.1; pose = 'prun-pump'; break;
       case 'slump': rot = -0.4 * Math.min(1, p * 1.5); dy = h * 0.18 * Math.min(1, p * 1.5); pose = 'prun-slump'; break;
     }
-    if (state === 'title') pose = 'prun-wave';
+    if (state === 'title' || state === 'board') pose = 'prun-wave';
     if (state === 'over') pose = outroWin ? 'prun-up' : 'prun-slump';
     rot += turn * 0.08;
     if (state === 'run' && wasOff && !shell.reduced) dy += (Math.random() - 0.5) * h * 0.08;
@@ -1441,7 +1459,8 @@ const carW = () => Math.min(W * 0.24, 100);
   reset();
   pos = (gates[0].seg - 150) * SEG; { const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y; }
   titlePanel();
-  try { if (navigator.webdriver) window.__pthRun = { state: () => state, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal, mode: () => mode, quests: () => quests.map((q) => Object.assign({}, q)), quest: () => quest && Object.assign({}, quest), setMode: (m) => { modeSel = Math.max(0, MODES.indexOf(m)); }, ghost: () => ghost, gap: () => gGap, ghostNow: () => ghostNow(), hole: () => hole.slice(), cards: () => gates.map((g) => g.cards.slice()), carsAt: () => trafficSig, gT: () => gT, forceQuest: (id) => { if (quest) quests.pop(); quest = { id, stage: findSeg(pos + PLAYER_Z).stage, t: 0, c: 0, done: false }; quests.push(quest); renderQuest(true); } }; } catch (e) {}
+  refreshHof();
+  try { if (navigator.webdriver) window.__pthRun = { state: () => state, hof: () => openHof(), start: (m) => { if (m) modeSel = Math.max(0, MODES.indexOf(m)); start(); }, addStack: (n) => { stack += n; }, game: () => ({ pos, px, time, stack, inv, keys: Object.assign({}, keys), boost, board: board.slice(), gates, stageTheme: stageTheme.slice() }), segAt: () => findSeg(pos + PLAYER_Z).i, setTime: (x) => { time = x; }, setPos: (z) => { pos = z * SEG; }, view: () => Object.assign({}, view), segs: () => segs.length, finish: () => finishSeg, cars: () => cars, setPx: (x) => { px = x; pv = 0; }, setV: (x) => { v = x * MAXV; }, drift: () => drift, slip: () => slip, curve: (i) => segs[i].curve, mt: () => mt, charge: () => charge, lvl: () => lvl.slice(), branches: () => branches.map((b) => b.slice()), stageCurves: (k) => applied[k] ? applied[k].c.reduce((m, v) => Math.max(m, Math.abs(v)), 0) : 0, chipVal, mode: () => mode, quests: () => quests.map((q) => Object.assign({}, q)), quest: () => quest && Object.assign({}, quest), setMode: (m) => { modeSel = Math.max(0, MODES.indexOf(m)); }, ghost: () => ghost, gap: () => gGap, ghostNow: () => ghostNow(), hole: () => hole.slice(), cards: () => gates.map((g) => g.cards.slice()), carsAt: () => trafficSig, gT: () => gT, forceQuest: (id) => { if (quest) quests.pop(); quest = { id, stage: findSeg(pos + PLAYER_Z).stage, t: 0, c: 0, done: false }; quests.push(quest); renderQuest(true); } }; } catch (e) {}
 
   return {
     update, draw, input,

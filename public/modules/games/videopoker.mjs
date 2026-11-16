@@ -32,6 +32,7 @@ import { fmt, cardHtml, imageCache, rr, drawFace, aceActor } from './common.mjs'
 import { drawBackCard, drawFloaters, stepFloaters, keyboardFirst, fitFont } from './ui.mjs';
 import { VARIANTS, variantOf, rowOf, payOf, madeBy, deckOf, MAX_BET } from './videopoker-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, barsHtml } from './end.mjs';
 
 export const START = 100, MAX_DOUBLE = 5, TROPHY_DOUBLES = 3;
@@ -85,18 +86,34 @@ export function create(shell) {
     // The machines are the tiles; daily challenge or free game, the options (↓ switches).
     titleScreen(shell, { id: 'videopoker', name: t('vpName'), hint: t('vpHint'), sel: vi,
       modes: VARIANTS.map((v, i) => ({ icon: ['🃏', '💰', '2️⃣', '🤡'][i], label: t(v.key), desc: t(v.desc), rec: rec(v) })),
-      options: [{ id: 'daily', label: '📅 ' + t('psDaily') + ' · ' + day, on: daily, key: '↓' }, { id: 'free', label: '🎰 ' + t('psFree'), on: !daily }],
-      onPick: (i) => { vi = i; start(); }, onOption: (id) => { daily = id === 'daily'; titlePanel(); } });
+      options: [{ id: 'daily', label: '📅 ' + t('psDaily') + ' · ' + day, on: daily, key: '↓' }, { id: 'free', label: '🎰 ' + t('psFree'), on: !daily }]
+        .concat(hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '1' }] : []),
+      onPick: (i) => { vi = i; start(); }, onOption: (id) => { if (id === 'hof') { openHof(); return; } daily = id === 'daily'; titlePanel(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.100): a board per machine, free game
+  // ('jacks'…) or daily challenge ('day-jacks'…), the ones shown following the title's daily / free choice;
+  // the 🏆 (or 1) only while the admin has it on.
+  const hofMode = (isDaily, v) => (isDaily ? 'day-' : '') + v.id;
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('videopoker').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'videopoker', name: t('vpName') + ' · ' + (daily ? t('psDaily') : t('psFree')), sel: vi,
+      modes: VARIANTS.map((v) => ({ id: hofMode(daily, v), label: t(v.key) })), onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newGame();
   titlePanel();
+  refreshHof();
   // Browser tests only (navigator.webdriver): reach the game state.
-  try { if (navigator.webdriver) window.__pthVP = { run: () => G, state: () => state, layout: () => L() }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthVP = { run: () => G, state: () => state, layout: () => L(), hof: () => openHof(), start: (d) => { if (d != null) daily = !!d; start(); }, end: () => finish() }; } catch (e) {}
 
   function start() {
     clearTimeout(timer);
     newGame();
     state = 'ready'; shell.panel(null);
+    G.hof = hofStart('videopoker', hofMode(G.daily, G.v));   // the Hall of Fame's ticket for this session (null offline / off)
     ace.pose('idle'); ace.mood('mc-m-smile'); ace.king(false);
     deal();
   }
@@ -244,7 +261,7 @@ export function create(shell) {
     G.res = { score, record, prev };
     renderResult();
   }
-  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); }
+  function toTitle() { state = 'title'; ace.pose('idle'); ace.mood('mc-m-smile'); titlePanel(); refreshHof(); }
   /** The end screen (end.mjs, web.67): the credits, the best hand, the credits hand after hand. */
   function renderResult() {
     if (state !== 'over' || !G.res || G.res.shown) return;
@@ -260,6 +277,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: toTitle,
     });
+    hofEnd(shell, { g: 'videopoker', m: hofMode(G.daily, G.v), s: score, run: G.hof, day: G.day, daily: G.daily });
   }
 
 
@@ -341,6 +359,8 @@ export function create(shell) {
   // ── Input ─────────────────────────────────────────────────────────
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'n1') { if (hofEnabled) openHof(); return; }
     if (state === 'title') {
       if (a === 'left' || a === 'right') { vi = (vi + (a === 'left' ? VARIANTS.length - 1 : 1)) % VARIANTS.length; titlePanel(); }
       else if (a === 'duck') { daily = !daily; titlePanel(); }
@@ -400,7 +420,7 @@ export function create(shell) {
       G.shown = Math.min(G.credits, G.shown + Math.max(1, Math.ceil((G.credits - G.shown) * dt * 5)));
       if (time - G.tickAt > 0.06) { G.tickAt = time; tone(1500, 0.02, 0.035); }
     } else if (G.shown > G.credits) G.shown = G.credits;
-    if (state !== 'over' && state !== 'title') {
+    if (state !== 'over' && state !== 'title' && state !== 'board') {
       const now = performance.now();
       ace.mood(now < G.koUntil ? 'mc-m-ko' : now < G.yayUntil ? 'mc-m-yay' : state === 'double' ? 'mc-m-cool' : 'mc-m-smile');
       ace.pose(now < G.yayUntil ? 'wave' : 'idle');
@@ -536,7 +556,7 @@ export function create(shell) {
   }
   function draw(g) {
     const W = shell.W, H = shell.H;
-    if (state === 'title' || !G) { g.fillStyle = '#2a070c'; g.fillRect(0, 0, W, H); return; }
+    if (state === 'title' || state === 'board' || !G) { g.fillStyle = '#2a070c'; g.fillRect(0, 0, W, H); return; }
     const l = L();
     made = G.row >= 0 && G.cards.length ? madeBy(G.cards, G.v, G.row) : [];
     const winning = time - G.winAt < 1.6;
@@ -596,7 +616,7 @@ export function create(shell) {
 
   return {
     update, draw, input, resize: renderResult,
-    running: () => state !== 'title' && state !== 'over',
+    running: () => state !== 'title' && state !== 'over' && state !== 'board',
     destroy() { clearTimeout(timer); ace.remove(); },
   };
 }
