@@ -1089,7 +1089,7 @@ export const strings = {
     "psAgain": "Mod seçmek için dokun · Menü için Esc",
     "gmPlay": "Oyna",
     "gmRules": "Kurallar",
-    "gmIntro": "Küçük poker oyunları, sadece seninle As arasında. En iyi skorlar bu cihazda kalır.",
+    "gmIntro": "Küçük poker oyunları, sadece seninle As arasında. En iyi skorlar bu cihazda kalır.", "gmIntroHof": "Küçük poker oyunları, sadece seninle As arasında. İstersen en iyi skorların Hall of Fame'e girebilir.",
     "gmKindLearn": "Gelişmek için", "gmKindFun": "Sadece eğlence için", "gmMystery": "Gizemli oyun", "gmNeedOne": "1 kupa daha · {c}/{t}", "gmNeed": "{n} kupa daha · {c}/{t}", "gmCountOne": "{o}/{all} oyun açık · keşfedilecek 1 gizemli oyun", "gmCount": "{o}/{all} oyun açık · keşfedilecek {m} gizemli oyun", "gmCountAll": "{all} oyunun hepsi açık",
     "arRules": "As keçenin üzerinde koşar: fiş yığınlarının ve yuvarlanan krupiye düğmesinin üzerinden atla, uçan kartların altından eğil.\nBlindlar yükseldikçe kartlar alçaktan (üstünden atla) ya da yüksekten (yerde kal) da uçar.\nAçık kartları topla: 5 kartlık en iyi elin sonda mesafeye bonus ekler, +%20'den (bir per) +%300'e (royal flush) kadar (Joker her kartın yerine geçer).\nAltın All-In fişi onu birkaç saniyeliğine kral yapar: hiçbir şey onu durduramaz, kırdıkları bonus verir ve mesafe iki kat sayılır.\nBlindlar her 300 m'de artar: her şey hızlanır; her 10 seviyede yeni bir mekân ve yeni engeller gelir, sen koşarken gündüz geceye döner.\nKalkanlı mavi fiş bir sigortadır: onun yerine bir darbeyi karşılar. Bir engelin yanından sıyırarak geç: +10 m.\nBoşluk, ↑ veya dokunma: zıpla (daha yükseğe için basılı tut) · ↓ veya aşağı kaydır: eğil · P: duraklat.",
     "arVenue1": "Mahalle kulübü",

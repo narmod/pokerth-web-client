@@ -1089,7 +1089,7 @@ export const strings = {
     "psAgain": "Klepni a vyber režim · Esc pro menu",
     "gmPlay": "Hrát",
     "gmRules": "Pravidla",
-    "gmIntro": "Malé pokerové hry, jen mezi tebou a esem. Nejlepší skóre zůstávají v tomto zařízení.",
+    "gmIntro": "Malé pokerové hry, jen mezi tebou a esem. Nejlepší skóre zůstávají v tomto zařízení.", "gmIntroHof": "Malé pokerové hry, jen mezi tebou a esem. Tvá nejlepší skóre se můžou dostat do Hall of Fame, pokud chceš.",
     "gmKindLearn": "Zlepši se", "gmKindFun": "Jen pro zábavu", "gmMystery": "Tajemná hra", "gmNeedOne": "Ještě 1 trofej · {c}/{t}", "gmNeed": "Zbývá trofejí: {n} · {c}/{t}", "gmCountOne": "Otevřené hry: {o}/{all} · tajemné: 1", "gmCount": "Otevřené hry: {o}/{all} · tajemné: {m}", "gmCountAll": "Všechny hry ({all}) jsou otevřené",
     "arRules": "Eso běží po suknu: přeskakuj sloupce žetonů a kutálející se tlačítko dealera, skrč se pod letícími kartami.\nKdyž rostou blindy, karty létají i nízko (přeskoč je) nebo vysoko (zůstaň na zemi).\nSbírej otočené karty: tvá nejlepší kombinace z 5 karet přidá na konci bonus ke vzdálenosti, od +20 % (pár) po +300 % (královská postupka) (Žolík nahradí jakoukoli kartu).\nZlatý žeton All-In z něj na pár sekund udělá krále: nic ho nezastaví, co rozbije, dá bonus a vzdálenost se počítá dvojnásobně.\nBlindy rostou každých 300 m: vše se zrychluje; každých 10 úrovní nové místo a nové překážky a během běhu se den mění v noc.\nModrý žeton se štítem je pojistka: schytá za něj jeden náraz. Prosmýkni se těsně kolem překážky: +10 m.\nMezerník, ↑ nebo klepnutí: skok (podrž pro výš) · ↓ nebo přejetí dolů: skrčit se · P: pauza.",
     "arVenue1": "Klub v sousedství",

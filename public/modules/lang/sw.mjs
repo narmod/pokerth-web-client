@@ -715,7 +715,7 @@ export const strings = {
     "psAgain": "Gusa kuchagua hali · Esc kwa menyu",
     "gmPlay": "Cheza",
     "gmRules": "Sheria",
-    "gmIntro": "Michezo midogo ya poka, kati yako na Ree peke yake. Rekodi zinabaki kwenye kifaa hiki.",
+    "gmIntro": "Michezo midogo ya poka, kati yako na Ree peke yake. Rekodi zinabaki kwenye kifaa hiki.", "gmIntroHof": "Michezo midogo ya poka, kati yako na Ree peke yake. Ukitaka, alama zako bora zinaweza kuingia kwenye Hall of Fame.",
     "gmKindLearn": "Kujiboresha", "gmKindFun": "Kwa burudani tu", "gmMystery": "Mchezo wa siri", "gmNeedOne": "Kikombe 1 zaidi · {c}/{t}", "gmNeed": "Vikombe {n} zaidi · {c}/{t}", "gmCountOne": "Michezo iliyo wazi: {o}/{all} · ya siri: 1", "gmCount": "Michezo iliyo wazi: {o}/{all} · ya siri: {m}", "gmCountAll": "Michezo yote {all} iko wazi",
     "arRules": "Ree anakimbia juu ya kitambaa cha meza: ruka juu ya marundo ya chipsi na kitufe cha muuzaji kinachobingirika, inama chini ya karata zinazoruka.\nBlinds zinapopanda, kadi pia huruka chini (zirukie juu) au juu (baki chini).\nOkota karata zilizo wazi: mkono wako bora wa karata 5 huongeza bonasi kwenye umbali mwishoni, kutoka +20% (jozi) hadi +300% (royal flush) (Jokari huwa karata yoyote).\nChipu ya dhahabu ya All-In inamfanya mfalme kwa sekunde chache: hakuna kinachomzuia, anachovunja kinatoa bonasi na umbali unahesabiwa mara mbili.\nBlinds hupanda kila m 300: kila kitu kinaenda kasi; kila ngazi 10 mahali papya na vikwazo vipya, na mchana unageuka usiku unapokimbia.\nChipu ya buluu yenye ngao ni bima: inapokea pigo moja kwa niaba yake. Pita karibu kabisa na kizuizi: +10 m.\nNafasi, ↑ au gusa: ruka (shikilia kwa juu zaidi) · ↓ au telezesha chini: inama · P: sitisha.",
     "arVenue1": "Klabu ya mtaani",

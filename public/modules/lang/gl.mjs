@@ -985,7 +985,7 @@ export const strings = {
     "psAgain": "Toca para escoller un modo · Esc para o menú",
     "gmPlay": "Xogar",
     "gmRules": "Regras",
-    "gmIntro": "Pequenos xogos de póquer, só entre ti e o Ás. As mellores puntuacións quedan neste dispositivo.",
+    "gmIntro": "Pequenos xogos de póquer, só entre ti e o Ás. As mellores puntuacións quedan neste dispositivo.", "gmIntroHof": "Pequenos xogos de póquer, só entre ti e o Ás. As túas mellores puntuacións poden entrar no Hall of Fame, se queres.",
     "gmKindLearn": "Mellorar", "gmKindFun": "Por diversión", "gmMystery": "Xogo misterioso", "gmNeedOne": "Falta 1 trofeo · {c}/{t}", "gmNeed": "Faltan {n} trofeos · {c}/{t}", "gmCountOne": "{o}/{all} xogos abertos · 1 xogo misterioso por descubrir", "gmCount": "{o}/{all} xogos abertos · {m} xogos misteriosos por descubrir", "gmCountAll": "Os {all} xogos están abertos",
     "arRules": "O Ás corre polo tapete: salta as pilas de fichas e o botón do dealer que roda, agáchate baixo as cartas que voan.\nCando soben as cegas, algunhas cartas voan baixas (sáltaas) ou altas (quédate no chan).\nRecolle as cartas boca arriba: a túa mellor man de 5 cartas suma un bonus á distancia ao final, de +20 % (unha parella) a +300 % (unha escaleira real) (o Joker vale por calquera carta).\nA ficha dourada All-In faino rei uns segundos: nada o detén, o que esnaquiza dá bonus e a distancia conta dobre.\nAs cegas soben cada 300 m: todo vai máis rápido; cada 10 niveis, un novo escenario e novos obstáculos, e o día faise noite mentres corres.\nA ficha azul co escudo é un seguro: aguanta un golpe por el. Pasa rozando un obstáculo: +10 m.\nEspazo, ↑ ou toque: saltar (mantén para máis alto) · ↓ ou esvarar abaixo: agacharse · P: pausa.",
     "arVenue1": "O club do barrio",

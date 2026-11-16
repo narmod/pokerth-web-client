@@ -1,4 +1,8 @@
-2026-11-16 version 2.1.11-web.104 (current series):
+2026-11-16 version 2.1.11-web.105 (current series):
+- new: Ranking — a « Mini-games » tab next to Trophies, when the server has the Hall of Fame on: every game's boards in one place, a tab per mode; opened by itself from the mini-games page
+- improvement: Mini-games — the welcome line follows the Hall of Fame: « your best scores can enter the Hall of Fame, if you wish » when it is on, « best scores stay on this device » when it is off or you chose « never »
+
+2026-11-16 version 2.1.11-web.104:
 - improvement: Tapis! — fewer bonuses: a Dealer or a Shuffle from 9 chips in one go (was 6), the Joker from 13 (was 9), one bonus per level at most and 3 of each at most; a new level gives a Shuffle only when you have none left
 
 2026-11-16 version 2.1.11-web.103:

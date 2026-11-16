@@ -1088,7 +1088,7 @@ export const strings = {
     "psAgain": "Tryk for at vælge en tilstand · Esc for menuen",
     "gmPlay": "Spil",
     "gmRules": "Regler",
-    "gmIntro": "Små pokerspil, kun mellem dig og esset. De bedste resultater bliver på denne enhed.",
+    "gmIntro": "Små pokerspil, kun mellem dig og esset. De bedste resultater bliver på denne enhed.", "gmIntroHof": "Små pokerspil, kun mellem dig og esset. Dine bedste resultater kan komme i Hall of Fame, hvis du vil.",
     "gmKindLearn": "Bliv bedre", "gmKindFun": "Bare for sjov", "gmMystery": "Mystisk spil", "gmNeedOne": "1 trofæ mere · {c}/{t}", "gmNeed": "{n} trofæer mere · {c}/{t}", "gmCountOne": "{o}/{all} spil åbne · 1 mystisk spil at opdage", "gmCount": "{o}/{all} spil åbne · {m} mystiske spil at opdage", "gmCountAll": "Alle {all} spil er åbne",
     "arRules": "Esset løber hen over filten: hop over jetonstabler og den rullende dealerknap, duk dig under flyvende kort.\nNår blinds stiger, flyver kort også lavt (hop over dem) eller højt (bliv på jorden).\nSaml de åbne kort op: din bedste hånd på 5 kort giver til sidst en bonus på distancen, fra +20 % (et par) til +300 % (en royal flush) (Jokeren tæller som ethvert kort).\nDen gyldne All-In-jeton gør ham til konge i nogle sekunder: intet stopper ham, det han smadrer giver bonus, og distancen tæller dobbelt.\nBlinds stiger hver 300 m: alt går hurtigere; hvert 10. niveau et nyt sted og nye forhindringer, og dag bliver til nat, mens du løber.\nDen blå jeton med skjoldet er en forsikring: den tager ét slag for ham. Snit tæt forbi en forhindring: +10 m.\nMellemrum, ↑ eller tryk: hop (hold for højere) · ↓ eller stryg ned: duk · P: pause.",
     "arVenue1": "Kvarterets klub",

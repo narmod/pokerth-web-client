@@ -717,7 +717,7 @@ export const strings = {
     "psAgain": "Tap to choose a mode · Esc for the menu",
     "gmPlay": "Play",
     "gmRules": "Rules",
-    "gmIntro": "Little poker games, just between you and the Ace. Best scores stay on this device.",
+    "gmIntro": "Little poker games, just between you and the Ace. Best scores stay on this device.", "gmIntroHof": "Little poker games, just between you and the Ace. Your best scores can enter the Hall of Fame, if you wish.",
     "gmKindLearn": "Get better", "gmKindFun": "Just for fun", "gmMystery": "Mystery game", "gmNeedOne": "1 more trophy · {c}/{t}", "gmNeed": "{n} more trophies · {c}/{t}", "gmCountOne": "{o}/{all} games open · 1 mystery game to discover", "gmCount": "{o}/{all} games open · {m} mystery games to discover", "gmCountAll": "All {all} games are open",
     "arRules": "The Ace runs along the felt: jump over chip stacks and the rolling dealer button, duck under flying cards.\nAs the blinds go up, cards also fly low (jump over them) or high (stay on the ground).\nPick up the face-up cards: your best five-card hand adds a bonus to the distance at the end, from +20% (a pair) to +300% (a royal flush) (the Joker is wild).\nThe gold All-In chip makes him king for a few seconds: nothing stops him, what he smashes gives a bonus and the distance counts double.\nBlinds up every 300 m: everything goes faster; every 10 levels a new venue and new obstacles, and the day turns to night as you run.\nThe blue shield chip is an insurance: it takes one hit for him. Skim past an obstacle: +10 m.\nSpace, ↑ or a tap: jump (hold for higher) · ↓ or swipe down: duck · P: pause.",
     "arVenue1": "The local club",

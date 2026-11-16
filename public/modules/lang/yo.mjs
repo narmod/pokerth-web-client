@@ -717,7 +717,7 @@ export const strings = {
     "psAgain": "Fọwọ́kàn láti yan ipò · Esc fún àkójọ",
     "gmPlay": "Ṣeré",
     "gmRules": "Àwọn òfin",
-    "gmIntro": "Àwọn eré pókà kékeré, láàárín ìwọ àti Ace nìkan. Àwọn àkọsílẹ̀ máa ń wà lórí ẹ̀rọ yìí.",
+    "gmIntro": "Àwọn eré pókà kékeré, láàárín ìwọ àti Ace nìkan. Àwọn àkọsílẹ̀ máa ń wà lórí ẹ̀rọ yìí.", "gmIntroHof": "Àwọn eré pókà kékeré, láàárín ìwọ àti Ace nìkan. Tí o bá fẹ́, àwọn àmì tó dára jùlọ rẹ lè wọ Hall of Fame.",
     "gmKindLearn": "Tẹ̀síwájú", "gmKindFun": "Fún ìgbádùn nìkan", "gmMystery": "Eré àṣírí", "gmNeedOne": "Ife ẹ̀yẹ 1 sí i · {c}/{t}", "gmNeed": "Ife ẹ̀yẹ {n} sí i · {c}/{t}", "gmCountOne": "Eré tó ṣí: {o}/{all} · àṣírí: 1", "gmCount": "Eré tó ṣí: {o}/{all} · àṣírí: {m}", "gmCountAll": "Gbogbo eré {all} ti ṣí",
     "arRules": "Ace ń sáré lórí aṣọ tábìlì: fò kọjá òkìtì chip àti bọ́tìnnì olùpín tó ń yí, bẹ̀rẹ̀ sábẹ́ àwọn káàdì tó ń fò.\nBí blinds ṣe ń gòkè, àwọn káàdì tún ń fò nísàlẹ̀ (fò kọjá wọn) tàbí lókè (dúró sílẹ̀).\nKó àwọn káàdì tó dojúkọ òkè: ọwọ́ káàdì 5 tó dára jù ẹ ń fi ẹ̀bùn kún ìjìnnà ní ìparí, láti +20% (méjì) dé +300% (royal flush) (Joker lè dúró fún káàdì èyíkéyìí).\nChip wúrà All-In sọ ọ́ di ọba fún ìṣẹ́jú-àáyá díẹ̀: kò sí ohun tó lè dá a dúró, ohun tó bá fọ́ ń mú èrè wá, a sì ń ka ìjìnnà ní ìlọ́po méjì.\nBlinds ń gòkè ní gbogbo 300 m: gbogbo nǹkan ń yára sí i; ní gbogbo ìpele 10 ibì tuntun àti ìdènà tuntun, ọ̀sán sì ń di òru bí o ṣe ń sáré.\nṢíìpù búlúù oní apata jẹ́ ìdánilójú: ó máa gba ìkọlù kan dípò rẹ̀. Kọjá ìdènà kan ní tòsí pátápátá: +10 m.\nÀyè, ↑ tàbí fọwọ́kàn: fò (tẹ̀ mọ́lẹ̀ fún gíga) · ↓ tàbí fà sísàlẹ̀: bẹ̀rẹ̀ · P: dúró.",
     "arVenue1": "Ẹgbẹ́ àdúgbò",

@@ -1091,7 +1091,7 @@ export const strings = {
     "psAgain": "Dotknij, aby wybrać tryb · Esc – menu",
     "gmPlay": "Graj",
     "gmRules": "Zasady",
-    "gmIntro": "Małe gry pokerowe, tylko między tobą a Asem. Najlepsze wyniki zostają na tym urządzeniu.",
+    "gmIntro": "Małe gry pokerowe, tylko między tobą a Asem. Najlepsze wyniki zostają na tym urządzeniu.", "gmIntroHof": "Małe gry pokerowe, tylko między tobą a Asem. Twoje najlepsze wyniki mogą trafić do Hall of Fame, jeśli zechcesz.",
     "gmKindLearn": "Rozwijaj się", "gmKindFun": "Dla zabawy", "gmMystery": "Tajemnicza gra", "gmNeedOne": "Jeszcze 1 trofeum · {c}/{t}", "gmNeed": "Brakuje trofeów: {n} · {c}/{t}", "gmCountOne": "Otwarte gry: {o}/{all} · tajemnicze: 1", "gmCount": "Otwarte gry: {o}/{all} · tajemnicze: {m}", "gmCountAll": "Wszystkie gry ({all}) są otwarte",
     "arRules": "As biegnie po suknie: przeskakuj stosy żetonów i toczący się przycisk dealera, schylaj się pod lecącymi kartami.\nGdy rosną blindy, karty latają też nisko (przeskocz je) albo wysoko (zostań na ziemi).\nZbieraj odkryte karty: twój najlepszy układ z 5 kart dodaje na koniec bonus do dystansu, od +20% (para) do +300% (poker królewski) (Joker zastępuje dowolną kartę).\nZłoty żeton All-In czyni go na kilka sekund królem: nic go nie zatrzyma, to, co rozbije, daje premię, a dystans liczy się podwójnie.\nBlindy rosną co 300 m: wszystko przyspiesza; co 10 poziomów nowe miejsce i nowe przeszkody, a dzień zmienia się w noc w trakcie biegu.\nNiebieski żeton z tarczą to ubezpieczenie: przyjmuje za niego jedno uderzenie. Otrzyj się o przeszkodę: +10 m.\nSpacja, ↑ lub dotknięcie: skok (przytrzymaj, by wyżej) · ↓ lub przesunięcie w dół: unik · P: pauza.",
     "arVenue1": "Osiedlowy klub",

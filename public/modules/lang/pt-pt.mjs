@@ -1088,7 +1088,7 @@ export const strings = {
     "psAgain": "Toca para escolher um modo · Esc para o menu",
     "gmPlay": "Jogar",
     "gmRules": "Regras",
-    "gmIntro": "Pequenos jogos de póquer, só entre ti e o Ás. As melhores pontuações ficam neste dispositivo.",
+    "gmIntro": "Pequenos jogos de póquer, só entre ti e o Ás. As melhores pontuações ficam neste dispositivo.", "gmIntroHof": "Pequenos jogos de póquer, só entre ti e o Ás. As tuas melhores pontuações podem entrar no Hall of Fame, se quiseres.",
     "gmKindLearn": "Evoluir", "gmKindFun": "Só para divertir", "gmMystery": "Jogo mistério", "gmNeedOne": "Falta 1 troféu · {c}/{t}", "gmNeed": "Faltam {n} troféus · {c}/{t}", "gmCountOne": "{o}/{all} jogos abertos · 1 jogo mistério por descobrir", "gmCount": "{o}/{all} jogos abertos · {m} jogos mistério por descobrir", "gmCountAll": "Os {all} jogos estão todos abertos",
     "arRules": "O Ás corre pelo pano: salta as pilhas de fichas e o botão do dealer que rola, baixa-te sob as cartas que voam.\nQuando os blinds sobem, algumas cartas voam baixo (salta-as) ou alto (fica no chão).\nApanha as cartas viradas para cima: a tua melhor mão de 5 cartas soma um bónus à distância no fim, de +20% (um par) a +300% (um royal flush) (o Joker vale qualquer carta).\nA ficha dourada All-In torna-o rei durante alguns segundos: nada o pára, o que destrói dá bónus e a distância conta a dobrar.\nAs blinds sobem a cada 300 m: tudo fica mais rápido; a cada 10 níveis um novo cenário e novos obstáculos, e o dia dá lugar à noite enquanto corres.\nA ficha azul com escudo é um seguro: aguenta um embate por ele. Passa rente a um obstáculo: +10 m.\nEspaço, ↑ ou toque: saltar (mantém para mais alto) · ↓ ou deslizar para baixo: baixar · P: pausa.",
     "arVenue1": "O clube do bairro",

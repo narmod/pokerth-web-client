@@ -1087,7 +1087,7 @@ export const strings = {
     "psAgain": "Tryck för att välja läge · Esc för menyn",
     "gmPlay": "Spela",
     "gmRules": "Regler",
-    "gmIntro": "Små pokerspel, bara mellan dig och esset. De bästa resultaten stannar på den här enheten.",
+    "gmIntro": "Små pokerspel, bara mellan dig och esset. De bästa resultaten stannar på den här enheten.", "gmIntroHof": "Små pokerspel, bara mellan dig och esset. Dina bästa resultat kan komma in i Hall of Fame, om du vill.",
     "gmKindLearn": "Bli bättre", "gmKindFun": "Bara för skojs skull", "gmMystery": "Mysteriespel", "gmNeedOne": "1 trofé kvar · {c}/{t}", "gmNeed": "{n} troféer kvar · {c}/{t}", "gmCountOne": "{o}/{all} spel öppna · 1 mysteriespel att upptäcka", "gmCount": "{o}/{all} spel öppna · {m} mysteriespel att upptäcka", "gmCountAll": "Alla {all} spel är öppna",
     "arRules": "Esset springer över filten: hoppa över markstaplar och den rullande dealerknappen, ducka under flygande kort.\nNär mörkarna höjs flyger kort också lågt (hoppa över dem) eller högt (stanna på marken).\nPlocka upp de öppna korten: din bästa hand på 5 kort ger en bonus på sträckan i slutet, från +20 % (ett par) till +300 % (en royal flush) (Jokern räknas som vilket kort som helst).\nDen gyllene All-In-marken gör honom till kung några sekunder: inget stoppar honom, det han krossar ger bonus och sträckan räknas dubbelt.\nBlindarna höjs var 300:e m: allt går fortare; var 10:e nivå en ny plats och nya hinder, och dagen blir natt medan du springer.\nDen blå marken med skölden är en försäkring: den tar en smäll åt honom. Passera nära ett hinder: +10 m.\nMellanslag, ↑ eller tryck: hoppa (håll för högre) · ↓ eller svep nedåt: ducka · P: paus.",
     "arVenue1": "Kvarterets klubb",

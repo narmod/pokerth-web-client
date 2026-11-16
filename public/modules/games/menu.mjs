@@ -15,6 +15,7 @@ import { aceActor, fmt } from './common.mjs';
 import { art } from './art.mjs';
 import { backlight, motionOff } from '../ui/backlight.mjs';
 import { arcadeStat } from './stats.mjs';
+import { hofOn, hofOpt } from './hof.mjs';
 
 // The games already revealed on this device (a game newly opened by the
 // trophies is revealed once, in the light, the next time this page opens).
@@ -148,12 +149,18 @@ export function create(shell) {
       + '<div class="gm-bar"><i style="width:' + Math.min(100, Math.round(100 * count / Math.max(1, g.need))) + '%"></i></div></div></div></article>';
   }
 
-  shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>' + esc(t('gmTitle')) + '</h2><p>' + esc(t('gmIntro')) + '</p>'
+  shell.view.innerHTML = '<div class="gm-hub"><div class="gm-head"><div class="gm-ace"></div><div><h2>' + esc(t('gmTitle')) + '</h2><p class="gm-intro">' + esc(t('gmIntro')) + '</p>'
     + '<p class="gm-count">' + esc(countLine) + '</p></div></div>'
     + '<div class="gm-grid">' + games.map((g, i) => (g.locked || pending.indexOf(i) >= 0 ? lockedCard(g, i) : openCard(g, i))).join('')
     + '</div>'
     + '<p class="gm-keys"><span class="pg-k">←</span> <span class="pg-k">↑</span> <span class="pg-k">↓</span> <span class="pg-k">→</span> · <span class="pg-k">Space</span> ' + esc(t('gmPlay')) + ' · <span class="pg-k">R</span> ' + esc(t('gmRules'))
     + ' <span class="gm-padk">· 🎮 <span class="pg-k">A</span> ' + esc(t('gmPlay')) + ' · <span class="pg-k">Y</span> ' + esc(t('gmRules')) + ' · <span class="pg-k">B</span> ←</span></p></div>';
+  // « Best scores stay on this device » is only true with the Hall of Fame off (the admin's setting) or
+  // when the player said never (web.105, narmod: « adapt the sentence to the option chosen »).
+  hofOn('ace-runner').then((on) => {
+    const p = shell.view.querySelector('.gm-intro');
+    if (p && on && hofOpt() !== 'no') p.textContent = t('gmIntroHof');
+  }).catch(() => {});
   const cards = Array.from(shell.view.querySelectorAll('.gm-card'));
   const mark = () => cards.forEach((c, i) => c.classList.toggle('on', i === sel));
   mark();

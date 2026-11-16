@@ -984,7 +984,7 @@ export const strings = {
     "psAgain": "Koppints a mód kiválasztásához · Esc a menühöz",
     "gmPlay": "Játék",
     "gmRules": "Szabályok",
-    "gmIntro": "Kis pókerjátékok, csak közted és az Ász között. A legjobb eredmények ezen az eszközön maradnak.",
+    "gmIntro": "Kis pókerjátékok, csak közted és az Ász között. A legjobb eredmények ezen az eszközön maradnak.", "gmIntroHof": "Kis pókerjátékok, csak közted és az Ász között. A legjobb eredményeid bekerülhetnek a Hall of Fame-be, ha szeretnéd.",
     "gmKindLearn": "Fejlődj", "gmKindFun": "Csak a móka kedvéért", "gmMystery": "Titkos játék", "gmNeedOne": "Még 1 trófea · {c}/{t}", "gmNeed": "Még {n} trófea · {c}/{t}", "gmCountOne": "{o}/{all} játék nyitva · 1 titkos játék vár felfedezésre", "gmCount": "{o}/{all} játék nyitva · {m} titkos játék vár felfedezésre", "gmCountAll": "Mind a(z) {all} játék nyitva",
     "arRules": "Az Ász fut a posztón: ugord át a zsetonkupacokat és a guruló osztógombot, hajolj el a repülő lapok alatt.\nAhogy nőnek a vakok, a lapok alacsonyan (ugord át) vagy magasan (maradj a földön) is repülnek.\nSzedd fel a felfordított lapokat: a legjobb 5 lapos kezed a végén bónuszt ad a távhoz, +20%-tól (pár) +300%-ig (royal flöss) (a Joker bármelyik lapot helyettesíti).\nAz arany All-In zseton néhány másodpercre királlyá teszi: semmi sem állítja meg, amit összetör, bónuszt ad, és a távolság duplán számít.\nA vakok 300 méterenként nőnek: minden gyorsul; 10 szintenként új helyszín és új akadályok, és futás közben a nappalból éjszaka lesz.\nA pajzsos kék zseton biztosítás: egy ütközést elvisel helyette. Súrold az akadályt: +10 m.\nSzóköz, ↑ vagy koppintás: ugrás (tartsd nyomva a magasabbhoz) · ↓ vagy lefelé húzás: guggolás · P: szünet.",
     "arVenue1": "A környékbeli klub",

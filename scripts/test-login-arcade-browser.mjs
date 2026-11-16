@@ -278,6 +278,52 @@ for (const [w, h] of [[852, 393], [740, 360], [375, 667], [1440, 900]]) {
   ok(c.shown && m.open === 3 && n === 0, 'storage refusing the flags: the card and the 3 open games are there, never in the light (' + n + ' lights, ' + m.open + ' open)');
   await ctx.close();
 }
+{
+  // web.105: the welcome sentence follows the Hall of Fame (off: « stay on this device »; on: « can enter the
+  // Hall of Fame, if you wish »; on but « never »: the device again), and the Ranking window gets a « Mini-jeux »
+  // tab with every ranked game's boards, opened by itself from the mini-games page.
+  const intro = async (names, opt) => {
+    const { ctx, pg } = await open(393, 852, 12, Object.assign({ pth_arcade_seen: '1', pth_arcade_shown: '1', pth_arcade_revealed: '["whowins","ace-runner","hilo"]' }, opt ? { pth_hof_opt: opt } : {}));
+    const top = [{ n: 'ABC', s: 4321, ts: Date.now() }, { n: 'XYZ', s: 1200, ts: Date.now() }];
+    const boards = { tv: top, endless: [], daily: [], free: top, time: [] };
+    if (names) await pg.route('**/__hof?g=*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, names, day: '2026-11-16', top: 20, topDay: 10, boards }) }));
+    await pg.click('#login-card-arcade');
+    await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
+    await sleep(900);
+    const txt = await pg.evaluate(() => (document.querySelector('#pth-game .gm-intro') || {}).textContent || '');
+    return { ctx, pg, txt };
+  };
+  let r = await intro(null);
+  ok(/restent sur cet appareil/.test(r.txt), 'Hall of Fame off: « the best scores stay on this device » (' + r.txt.slice(-40) + ')');
+  await r.ctx.close();
+  r = await intro('initials', 'no');
+  ok(/restent sur cet appareil/.test(r.txt), 'Hall of Fame on, the player said never: the same sentence');
+  await r.ctx.close();
+  r = await intro('initials');
+  ok(/peuvent entrer au Hall of Fame, si tu le veux/.test(r.txt), 'Hall of Fame on: « your best scores can enter the Hall of Fame, if you wish » (' + r.txt.slice(-50) + ')');
+  const pg = r.pg;
+  await pg.click('#ranking-btn-arcade');
+  await pg.waitForSelector('#rk-hof-wrap .rk-table', { timeout: 6000 }).catch(() => {});
+  const v = await pg.evaluate(() => {
+    const tab = document.querySelector('#ranking-modal .rk-tab-hof'), act = document.querySelector('#ranking-modal .rk-tab.active');
+    const tabs = [...document.querySelectorAll('#ranking-modal .rk-tab')].filter((b) => b.offsetParent), rows = [...document.querySelectorAll('#rk-hof-wrap tbody tr')];
+    const tr = tabs.map((b) => b.getBoundingClientRect()), card = document.querySelector('#ranking-modal .rk-card').getBoundingClientRect();
+    return { shown: tab && tab.style.display !== 'none', label: tab && tab.textContent, active: act && act.dataset.src,
+      games: [...document.querySelectorAll('#rk-hof-wrap select option')].map((o) => o.value), modes: [...document.querySelectorAll('#rk-hof-wrap .hofv-modes button')].map((b) => b.textContent),
+      rows: rows.map((x) => x.cells[1].textContent + ' ' + x.cells[2].textContent), fit: tr.every((x) => x.right <= card.right + 1), ach: document.getElementById('rk-ach-wrap').style.display };
+  });
+  ok(v.shown && v.label === 'Mini-jeux' && v.active === 'hof' && v.ach === 'none', 'Ranking from the mini-games page: the « Mini-jeux » tab, opened by itself (' + JSON.stringify({ label: v.label, active: v.active }) + ')');
+  ok(v.games.length === 9 && v.games[0] === 'whowins' && !v.games.includes('pokerdrop') && !v.games.includes('house') && v.modes.length === 3 && v.rows.length === 2 && /^ABC 4/.test(v.rows[0]) && v.fit,
+    'its boards: the 9 ranked games (no Poker Drop, the hidden House not found yet), a tab per mode, the top lines; the five tabs fit (' + JSON.stringify({ g: v.games.length, modes: v.modes, rows: v.rows }) + ')');
+  await pg.selectOption('#rk-hof-wrap select', 'videopoker');
+  await sleep(500);
+  const vp = await pg.evaluate(() => [...document.querySelectorAll('#rk-hof-wrap .hofv-modes button')].map((b) => b.textContent));
+  ok(vp.length === 8 && vp.filter((x) => /Défi du jour/.test(x)).length === 4, 'Video Poker: each machine, free and daily (' + vp.length + ' tabs)');
+  await pg.click('#ranking-modal .rk-tab[data-src="pth"]').catch(() => {});
+  await sleep(300);
+  ok(await pg.evaluate(() => document.getElementById('rk-hof-wrap').style.display === 'none' && document.querySelector('#ranking-modal .rk-tab.active').dataset.src === 'pth'), 'back on PokerTH, the boards hide');
+  await r.ctx.close();
+}
 ok(!errors.length, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));
 await b.close(); server.close();
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

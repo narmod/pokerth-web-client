@@ -717,7 +717,7 @@ export const strings = {
     "psAgain": "Režim saýlamak üçin degiň · Menýu üçin Esc",
     "gmPlay": "Oýna",
     "gmRules": "Düzgünler",
-    "gmIntro": "Kiçijik poker oýunlary, diňe seniň bilen Tuzuň arasynda. Iň gowy netijeler şu enjamda galýar.",
+    "gmIntro": "Kiçijik poker oýunlary, diňe seniň bilen Tuzuň arasynda. Iň gowy netijeler şu enjamda galýar.", "gmIntroHof": "Kiçijik poker oýunlary, diňe seniň bilen Tuzuň arasynda. Isleseň, iň gowy netijeleriň Hall of Fame-e girip biler.",
     "gmKindLearn": "Ösüş", "gmKindFun": "Diňe güýmenje üçin", "gmMystery": "Syrly oýun", "gmNeedOne": "Ýene 1 kubok · {c}/{t}", "gmNeed": "Ýene {n} kubok · {c}/{t}", "gmCountOne": "Açyk oýunlar: {o}/{all} · syrly: 1", "gmCount": "Açyk oýunlar: {o}/{all} · syrly: {m}", "gmCountAll": "{all} oýunyň hemmesi açyk",
     "arRules": "Tuz mahuda üstünde ylgaýar: fiş üýşmeleriniň we togalanýan diler düwmesiniň üstünden bök, uçýan kartlaryň aşagyndan egil.\nBlaýndlar ýokarlandygyça kartlar pesden (üstünden bök) ýa-da beýikden (ýerde gal) hem uçýar.\nAçyk kartlary ýygna: 5 kartdan iň gowy eliň ahyrynda aralyga bonus goşýar, +20%-den (jübüt) +300%-e çenli (roýal fleş) (Joker islendik kartyň ornuny tutýar).\nAltyn All-In fişi ony birnäçe sekunt patyşa edýär: hiç zat ony saklap bilmeýär, döwen zady bonus berýär we aralyk iki esse hasaplanýar.\nBlaýndlar her 300 m-de artýar: hemme zat çaltlanýar; her 10 derejede täze ýer we täze päsgelçilikler, ylgaýarkaň gündiz gijä öwrülýär.\nGalkanly gök fişka — ätiýaçlandyryş: ol onuň ýerine bir urgyny kabul edýär. Päsgelçiligiň ýanyndan juda ýakyn geç: +10 m.\nBoşluk, ↑ ýa-da degmek: bökmek (has belent üçin sakla) · ↓ ýa-da aşak süýşürmek: egilmek · P: arakesme.",
     "arVenue1": "Etrap kluby",

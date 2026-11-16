@@ -988,7 +988,7 @@ export const strings = {
     "psAgain": "Dodirnite za izbor načina · Esc za meni",
     "gmPlay": "Igraj",
     "gmRules": "Pravila",
-    "gmIntro": "Male igre pokera, samo između tebe i asa. Najbolji rezultati ostaju na ovom uređaju.",
+    "gmIntro": "Male igre pokera, samo između tebe i asa. Najbolji rezultati ostaju na ovom uređaju.", "gmIntroHof": "Male igre pokera, samo između tebe i asa. Tvoji najbolji rezultati mogu ući u Hall of Fame, ako želiš.",
     "gmKindLearn": "Napreduj", "gmKindFun": "Samo za zabavu", "gmMystery": "Tajanstvena igra", "gmNeedOne": "Još 1 trofej · {c}/{t}", "gmNeed": "Još trofeja: {n} · {c}/{t}", "gmCountOne": "Otvorene igre: {o}/{all} · tajanstvene: 1", "gmCount": "Otvorene igre: {o}/{all} · tajanstvene: {m}", "gmCountAll": "Sve igre ({all}) su otvorene",
     "arRules": "As trči po suknu: preskačite gomile žetona i djeliteljevo dugme koje se kotrlja, sagnite se ispod karata koje lete.\nKad blindovi rastu, karte lete i nisko (preskoči ih) ili visoko (ostani na tlu).\nSkupljaj otvorene karte: tvoja najbolja ruka od 5 karata na kraju daje bonus na udaljenost, od +20 % (par) do +300 % (kraljevska skala u boji) (Džoker zamjenjuje bilo koju kartu).\nZlatni All-In žeton čini ga kraljem nekoliko sekundi: ništa ga ne zaustavlja, ono što razbije donosi bonus, a udaljenost se računa duplo.\nBlindovi rastu svakih 300 m: sve je brže; svakih 10 nivoa novo mjesto i nove prepreke, a dan prelazi u noć dok trčiš.\nPlavi žeton sa štitom je osiguranje: prima jedan udarac umjesto njega. Prođi tik uz prepreku: +10 m.\nRazmak, ↑ ili dodir: skok (držite za više) · ↓ ili prevlačenje dolje: sagnite se · P: pauza.",
     "arVenue1": "Klub iz kvarta",

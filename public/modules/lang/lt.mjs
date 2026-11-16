@@ -983,7 +983,7 @@ export const strings = {
     "psAgain": "Paliesk, kad pasirinktum režimą · Esc – į meniu",
     "gmPlay": "Žaisti",
     "gmRules": "Taisyklės",
-    "gmIntro": "Maži pokerio žaidimai, tik tarp tavęs ir tūzo. Geriausi rezultatai lieka šiame įrenginyje.",
+    "gmIntro": "Maži pokerio žaidimai, tik tarp tavęs ir tūzo. Geriausi rezultatai lieka šiame įrenginyje.", "gmIntroHof": "Maži pokerio žaidimai, tik tarp tavęs ir tūzo. Jei nori, geriausi tavo rezultatai gali patekti į Hall of Fame.",
     "gmKindLearn": "Tobulėk", "gmKindFun": "Tik dėl smagumo", "gmMystery": "Paslaptingas žaidimas", "gmNeedOne": "Liko trofėjų: 1 · {c}/{t}", "gmNeed": "Liko trofėjų: {n} · {c}/{t}", "gmCountOne": "Atverta žaidimų: {o}/{all} · paslaptingų: 1", "gmCount": "Atverta žaidimų: {o}/{all} · paslaptingų: {m}", "gmCountAll": "Atverti visi {all} žaidimai",
     "arRules": "Tūzas bėga per stalo audinį: peršok žetonų krūveles ir riedantį dalintojo mygtuką, pritūpk po skrendančiomis kortomis.\nKylant blindams, kortos skrenda ir žemai (peršok jas) arba aukštai (lik ant žemės).\nRink atverstas kortas: tavo geriausia 5 kortų ranka pabaigoje prideda premiją prie atstumo, nuo +20 % (pora) iki +300 % (karališkoji spalvų eilė) (Džokeris pakeičia bet kurią kortą).\nAuksinis All-In žetonas kelioms sekundėms padaro jį karaliumi: niekas jo nesustabdo, sudaužytas daiktas duoda premiją, o atstumas skaičiuojamas dvigubai.\nBlaindai kyla kas 300 m: viskas greitėja; kas 10 lygių nauja vieta ir nauji kliūtys, o bėgant diena virsta naktimi.\nMėlynas žetonas su skydu yra draudimas: jis atlaiko vieną smūgį už jį. Prašok visai arti kliūties: +10 m.\nTarpas, ↑ arba palietimas: šokti (laikyk, kad aukščiau) · ↓ arba braukti žemyn: pritūpti · P: pauzė.",
     "arVenue1": "Kvartalo klubas",

@@ -707,7 +707,7 @@ export const strings = {
     "psAgain": "Puuduta režiimi valimiseks · Esc menüüsse",
     "gmPlay": "Mängi",
     "gmRules": "Reeglid",
-    "gmIntro": "Väikesed pokkerimängud, ainult sinu ja ässa vahel. Parimad tulemused jäävad sellesse seadmesse.",
+    "gmIntro": "Väikesed pokkerimängud, ainult sinu ja ässa vahel. Parimad tulemused jäävad sellesse seadmesse.", "gmIntroHof": "Väikesed pokkerimängud, ainult sinu ja ässa vahel. Sinu parimad tulemused võivad pääseda Hall of Fame'i, kui soovid.",
     "gmKindLearn": "Arene", "gmKindFun": "Lihtsalt lõbuks", "gmMystery": "Salamäng", "gmNeedOne": "Veel 1 trofee · {c}/{t}", "gmNeed": "Veel {n} trofeed · {c}/{t}", "gmCountOne": "{o}/{all} mängu avatud · 1 salamäng avastamiseks", "gmCount": "{o}/{all} mängu avatud · {m} salamängu avastamiseks", "gmCountAll": "Kõik {all} mängu on avatud",
     "arRules": "Äss jookseb mööda lauakatet: hüppa üle žetoonivirnade ja veereva diileri nupu, kükita lendavate kaartide alt.\nKui blindid tõusevad, lendavad kaardid ka madalalt (hüppa üle) või kõrgelt (jää maha).\nKorja üles avatud kaardid: su parim 5 kaardi käsi lisab lõpus distantsile boonuse, +20%-st (paar) +300%-ni (kuninglik mastirida) (Joker asendab iga kaarti).\nKuldne All-In-žetoon teeb ta mõneks sekundiks kuningaks: miski ei peata teda, purustatu annab boonust ja vahemaa loeb topelt.\nBlindid tõusevad iga 300 m järel: kõik läheb kiiremaks; iga 10 taseme järel uus koht ja uued takistused, ning jooksu ajal saab päevast öö.\nSinine kilbiga žetoon on kindlustus: see võtab ühe löögi tema eest. Möödu takistusest napilt: +10 m.\nTühik, ↑ või puudutus: hüppa (hoia kõrgemaks) · ↓ või pühkimine alla: kükita · P: paus.",
     "arVenue1": "Naabruskonna klubi",

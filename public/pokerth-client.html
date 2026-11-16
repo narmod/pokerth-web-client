@@ -3891,6 +3891,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
       <button type="button" class="rk-tab rk-tab-lan" data-src="lan" onclick="rankingSelect('lan')" style="display:none">LAN</button>
       <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophies</button>
+      <button type="button" class="rk-tab rk-tab-hof" data-src="hof" onclick="rankingSelect('hof')" data-i18n="gmTitle" style="display:none">Mini-games</button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
       <!-- Champions du jour (web.130) : podium au-dessus du classement PokerTH
@@ -3915,6 +3916,8 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <div id="rk-table-wrap" style="display:none"></div>
       <div id="rk-ach-wrap" style="display:none"></div>
       <div id="rk-lan-wrap" style="display:none"></div>
+      <!-- Hall of Fame des mini-jeux (web.105) : rempli par modules/games/hof-view.mjs. -->
+      <div id="rk-hof-wrap" style="display:none"></div>
       <div id="rk-pager" class="rk-pager" style="display:none"></div>
       <!-- Calcul du classement (parité QML RankingPage, commit ea33d7a) :
            le même encart que sous le leaderboard de pokerth.net. Valeurs
@@ -5054,6 +5057,17 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     if (_off) _rkDef = 'ach';
     else if (_lan) _rkDef = 'lan';
     rankingSelect(_rkDef);
+    // Onglet Mini-jeux (Hall of Fame, web.105) : visible quand le serveur l'a
+    // active ; ouvert d'office depuis la page des mini-jeux.
+    var _hofTab = document.querySelector('#ranking-modal .rk-tab-hof');
+    var _fromArcade = !!document.querySelector('#s-arcade.active');
+    if (_hofTab) {
+      import('/modules/games/hof-view.mjs').then(function (hv) { return hv.hofTabOn(); }).then(function (on) {
+        _hofTab.style.display = on ? '' : 'none';
+        var cur = document.querySelector('#ranking-modal .rk-tab.active');
+        if (on && _fromArcade && m.style.display !== 'none' && cur && cur.dataset.src === _rkDef) rankingSelect('hof');
+      }).catch(function () {});
+    }
   };
   // Re-clic sur le bouton declencheur = fermer (parite des autres boutons a
   // fenetre : chat, journal, reactions, menus...). openRankingModal reste
@@ -5139,7 +5153,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     rkSetView('list');
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'ach');
-    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-lan-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-lan-wrap', 'rk-hof-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
     var w = document.getElementById('rk-ach-wrap'); if (w) { w.innerHTML = rkAchRender(); w.style.display = ''; }
   };
 
@@ -5157,12 +5171,27 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     rkFetchSeq++;                                  // une reponse /api/ranking en vol ne repeint plus la liste
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'lan');
-    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-ach-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-ach-wrap', 'rk-hof-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
     var w = document.getElementById('rk-lan-wrap'); if (!w) return;
     w.style.display = '';
     if (typeof window.renderBoard !== 'function') { w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
     w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
     window.renderBoard('rk-lan-wrap');
+  };
+  // -- Onglet Mini-jeux : le Hall of Fame des mini-jeux (modules/games/hof-view.mjs).
+  window.rankingSelectHof = function () {
+    rkCod(false);
+    rkSetView('list');
+    rkFetchSeq++;
+    var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'hof');
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-ach-wrap', 'rk-lan-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    var w = document.getElementById('rk-hof-wrap'); if (!w) return;
+    w.style.display = '';
+    w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    import('/modules/games/hof-view.mjs').then(function (hv) { hv.renderHofTab(w); }).catch(function () {
+      w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>';
+    });
   };
   try {
     window.addEventListener('pth-achievement', function (ev) {
@@ -5182,6 +5211,8 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     if (src === 'ach') { rankingSelectAch(); return; }
     if (src === 'lan' && !_lanAllowed()) src = 'pth';   // LAN : connecte en LAN / serveur prive uniquement
     if (src === 'lan') { rankingSelectLan(); return; }
+    if (src === 'hof') { rankingSelectHof(); return; }
+    var _hw = document.getElementById('rk-hof-wrap'); if (_hw) _hw.style.display = 'none';
     var _aw = document.getElementById('rk-ach-wrap'); if (_aw) _aw.style.display = 'none';
     var _lw = document.getElementById('rk-lan-wrap'); if (_lw) _lw.style.display = 'none';
     rkSetView('list');

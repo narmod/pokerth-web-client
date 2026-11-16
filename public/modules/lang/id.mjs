@@ -715,7 +715,7 @@ export const strings = {
     "psAgain": "Ketuk untuk memilih mode · Esc untuk menu",
     "gmPlay": "Main",
     "gmRules": "Aturan",
-    "gmIntro": "Permainan poker kecil, hanya antara kamu dan As. Rekor tersimpan di perangkat ini.",
+    "gmIntro": "Permainan poker kecil, hanya antara kamu dan As. Rekor tersimpan di perangkat ini.", "gmIntroHof": "Permainan poker kecil, hanya antara kamu dan As. Skor terbaikmu bisa masuk Hall of Fame, jika kamu mau.",
     "gmKindLearn": "Makin jago", "gmKindFun": "Sekadar untuk seru", "gmMystery": "Permainan misteri", "gmNeedOne": "Kurang 1 trofi · {c}/{t}", "gmNeed": "Kurang {n} trofi · {c}/{t}", "gmCountOne": "{o}/{all} permainan terbuka · 1 permainan misteri menanti", "gmCount": "{o}/{all} permainan terbuka · {m} permainan misteri menanti", "gmCountAll": "Semua {all} permainan terbuka",
     "arRules": "As berlari di atas meja: lompati tumpukan chip dan tombol dealer yang menggelinding, menunduk di bawah kartu yang terbang.\nSaat blind naik, kartu juga terbang rendah (lompati) atau tinggi (tetap di tanah).\nAmbil kartu yang terbuka: tangan 5 kartu terbaikmu menambah bonus ke jarak di akhir, dari +20% (sepasang) hingga +300% (royal flush) (Joker menggantikan kartu apa pun).\nChip emas All-In menjadikannya raja beberapa detik: tak ada yang menghentikannya, yang ia hancurkan memberi bonus dan jarak dihitung dua kali lipat.\nBlind naik tiap 300 m: semuanya makin cepat; tiap 10 level tempat baru dan rintangan baru, dan siang berganti malam saat kamu berlari.\nChip biru berperisai adalah asuransi: ia menahan satu benturan untuknya. Lewati rintangan dengan sangat tipis: +10 m.\nSpasi, ↑ atau ketuk: lompat (tahan untuk lebih tinggi) · ↓ atau geser ke bawah: menunduk · P: jeda.",
     "arVenue1": "Klub lingkungan",

@@ -9281,6 +9281,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .rk-tab:hover { border-color: var(--border-hi); color: var(--text-hi); }
+/* Five tabs on a phone (PokerTH, BBC, WEC, Trophies, Mini-games — web.105): they wrap instead of overflowing. */
+#ranking-modal .rk-tabs { flex-wrap: wrap; }
+#ranking-modal .rk-tab { flex: 1 1 auto; }
 .rk-tab.active { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); border-color: var(--sel,var(--gold)); color: var(--sel-hi,var(--gold-hi)); }
 .rk-body { flex: 1; min-height: 120px; overflow-y: auto; }
 .rk-msg { text-align: center; color: var(--text); opacity: 0.85; padding: 30px 8px; font-size: var(--fs-base); }

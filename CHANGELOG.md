@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Ranking › Mini-games: the Hall of Fame in one place** (`web.105`, narmod) — a fifth tab in the Ranking window
+  (`data-src="hof"`, label `gmTitle`), shown when `/__hof` answers with a setting other than `off`, selected by
+  itself when the window opens from the mini-games page. `modules/games/hof-view.mjs` draws it: a game (the
+  arcade's order, Poker Drop out, the hidden House of Cards once found), its ranked modes (Video Poker: each
+  machine, free and daily), the board as an `rk-table`, the player's line lit. Read only. The tabs wrap on a
+  phone. The mini-games' welcome line (`gmIntroHof`, 83 languages) and Ace's Help (Trophies) follow.
 - **Tapis!: fewer bonuses** (`web.104`, narmod: « too many rewards: at level 12, 30 Jokers ») — `powerFor()` gives a
   Dealer or a Shuffle from 9 chips (6 until now), the Joker from 13 (9); one power per level (`G.wonLv`) and
   `POWER_MAX` (3) of each; a new level tops the Shuffles up to 1 instead of adding one. A simulation of 12 levels

@@ -1088,7 +1088,7 @@ export const strings = {
     "psAgain": "Napauta valitaksesi tilan · Esc valikkoon",
     "gmPlay": "Pelaa",
     "gmRules": "Säännöt",
-    "gmIntro": "Pieniä pokeripelejä, vain sinun ja ässän kesken. Parhaat tulokset jäävät tähän laitteeseen.",
+    "gmIntro": "Pieniä pokeripelejä, vain sinun ja ässän kesken. Parhaat tulokset jäävät tähän laitteeseen.", "gmIntroHof": "Pieniä pokeripelejä, vain sinun ja ässän kesken. Parhaat tuloksesi voivat päästä Hall of Fameen, jos haluat.",
     "gmKindLearn": "Kehity", "gmKindFun": "Ihan huviksi", "gmMystery": "Salainen peli", "gmNeedOne": "Vielä 1 pokaali · {c}/{t}", "gmNeed": "Vielä {n} pokaalia · {c}/{t}", "gmCountOne": "{o}/{all} peliä auki · 1 salainen peli löydettävänä", "gmCount": "{o}/{all} peliä auki · {m} salaista peliä löydettävänä", "gmCountAll": "Kaikki {all} peliä ovat auki",
     "arRules": "Ässä juoksee pöytäliinalla: hyppää pelimerkkipinojen ja vierivän jakajanappulan yli, kyyristy lentävien korttien alta.\nBlindien noustessa kortit lentävät myös matalalla (hyppää yli) tai korkealla (pysy maassa).\nPoimi avoimet kortit: paras 5 kortin kätesi antaa lopuksi bonuksen matkaan, +20 % (pari) … +300 % (kuningasvärisuora) (Jokeri käy minä tahansa korttina).\nKultainen All-In-merkki tekee hänestä kuninkaan muutamaksi sekunniksi: mikään ei pysäytä häntä, murskatusta saa bonusta ja matka lasketaan kaksinkertaisena.\nBlindit nousevat 300 metrin välein: kaikki nopeutuu; joka 10. taso tuo uuden paikan ja uusia esteitä, ja päivä vaihtuu yöksi juostessasi.\nSininen kilpimerkki on vakuutus: se ottaa yhden osuman hänen puolestaan. Ohita este täpärästi: +10 m.\nVälilyönti, ↑ tai napautus: hyppää (pidä pohjassa korkeammalle) · ↓ tai pyyhkäisy alas: kyyristy · P: tauko.",
     "arVenue1": "Korttelin klubi",

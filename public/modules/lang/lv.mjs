@@ -716,7 +716,7 @@ export const strings = {
     "psAgain": "Pieskaries, lai izvēlētos režīmu · Esc uz izvēlni",
     "gmPlay": "Spēlēt",
     "gmRules": "Noteikumi",
-    "gmIntro": "Mazas pokera spēles, tikai starp tevi un dūzi. Labākie rezultāti paliek šajā ierīcē.",
+    "gmIntro": "Mazas pokera spēles, tikai starp tevi un dūzi. Labākie rezultāti paliek šajā ierīcē.", "gmIntroHof": "Mazas pokera spēles, tikai starp tevi un dūzi. Ja vēlies, tavi labākie rezultāti var nonākt Hall of Fame.",
     "gmKindLearn": "Pilnveidojies", "gmKindFun": "Tikai prieka pēc", "gmMystery": "Noslēpumaina spēle", "gmNeedOne": "Vēl trofeju: 1 · {c}/{t}", "gmNeed": "Vēl trofeju: {n} · {c}/{t}", "gmCountOne": "Atvērtas spēles: {o}/{all} · noslēpumainas: 1", "gmCount": "Atvērtas spēles: {o}/{all} · noslēpumainas: {m}", "gmCountAll": "Visas {all} spēles ir atvērtas",
     "arRules": "Dūzis skrien pa galdautu: lec pāri žetonu kaudzēm un ripojošajai dīlera pogai, pieliecies zem lidojošām kārtīm.\nKad blaindi aug, kārtis lido arī zemu (pārlec tām pāri) vai augstu (paliec uz zemes).\nSavāc atklātās kārtis: tava labākā 5 kāršu roka beigās dod bonusu distancei, no +20% (pāris) līdz +300% (karaliskā mastu sērija) (Džokers aizstāj jebkuru kārti).\nZelta All-In žetons uz dažām sekundēm padara viņu par karali: nekas viņu neaptur, sagrautais dod bonusu un attālums skaitās dubulti.\nBlaindi aug ik pēc 300 m: viss kļūst ātrāks; ik pēc 10 līmeņiem jauna vieta un jauni šķēršļi, un skrienot diena pāriet naktī.\nZilais žetons ar vairogu ir apdrošināšana: tas uzņem vienu triecienu viņa vietā. Paslīdi garām šķērslim pavisam tuvu: +10 m.\nAtstarpe, ↑ vai pieskāriens: lēkt (turi, lai augstāk) · ↓ vai vilkšana uz leju: pieliekties · P: pauze.",
     "arVenue1": "Apkaimes klubs",

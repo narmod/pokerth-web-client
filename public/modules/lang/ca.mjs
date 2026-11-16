@@ -985,7 +985,7 @@ export const strings = {
     "psAgain": "Toca per triar un mode · Esc per al menú",
     "gmPlay": "Juga",
     "gmRules": "Regles",
-    "gmIntro": "Petits jocs de pòquer, només entre tu i l'As. Les millors puntuacions es queden en aquest dispositiu.",
+    "gmIntro": "Petits jocs de pòquer, només entre tu i l'As. Les millors puntuacions es queden en aquest dispositiu.", "gmIntroHof": "Petits jocs de pòquer, només entre tu i l'As. Les teves millors puntuacions poden entrar al Hall of Fame, si vols.",
     "gmKindLearn": "Millorar", "gmKindFun": "Per divertir-se", "gmMystery": "Joc misteriós", "gmNeedOne": "Falta 1 trofeu · {c}/{t}", "gmNeed": "Falten {n} trofeus · {c}/{t}", "gmCountOne": "{o}/{all} jocs oberts · 1 joc misteriós per descobrir", "gmCount": "{o}/{all} jocs oberts · {m} jocs misteriosos per descobrir", "gmCountAll": "Els {all} jocs estan oberts",
     "arRules": "L'As corre pel tapet: salta les piles de fitxes i el botó del dealer que roda, ajup-te sota les cartes que volen.\nQuan pugen les cegues, algunes cartes volen baixes (salta-les) o altes (queda’t a terra).\nRecull les cartes de cara amunt: la teva millor mà de 5 cartes afegeix un bo a la distància al final, de +20 % (una parella) a +300 % (una escala reial) (el Joker val per qualsevol carta).\nLa fitxa daurada All-In el fa rei uns segons: res no l'atura, el que destrossa dona bonus i la distància compta doble.\nLes cegues pugen cada 300 m: tot va més ràpid; cada 10 nivells, un nou escenari i nous obstacles, i el dia es fa nit mentre corres.\nLa fitxa blava amb escut és una assegurança: aguanta un cop per ell. Passa fregant un obstacle: +10 m.\nEspai, ↑ o toc: saltar (mantén per més alt) · ↓ o lliscar avall: ajupir-se · P: pausa.",
     "arVenue1": "El club del barri",

@@ -716,7 +716,7 @@ export const strings = {
     "psAgain": "Dotakni se za izbiro načina · Esc za meni",
     "gmPlay": "Igraj",
     "gmRules": "Pravila",
-    "gmIntro": "Majhne igre pokra, samo med tabo in asom. Najboljši rezultati ostanejo na tej napravi.",
+    "gmIntro": "Majhne igre pokra, samo med tabo in asom. Najboljši rezultati ostanejo na tej napravi.", "gmIntroHof": "Majhne igre pokra, samo med tabo in asom. Tvoji najboljši rezultati lahko pridejo v Hall of Fame, če želiš.",
     "gmKindLearn": "Izboljšaj se", "gmKindFun": "Samo za zabavo", "gmMystery": "Skrivnostna igra", "gmNeedOne": "Še 1 trofeja · {c}/{t}", "gmNeed": "Še trofej: {n} · {c}/{t}", "gmCountOne": "Odprte igre: {o}/{all} · skrivnostne: 1", "gmCount": "Odprte igre: {o}/{all} · skrivnostne: {m}", "gmCountAll": "Vse igre ({all}) so odprte",
     "arRules": "As teče po suknu: preskakuj stolpce žetonov in kotaleči se gumb delilca, skloni se pod letečimi kartami.\nKo se blindi zvišajo, karte letijo tudi nizko (preskoči jih) ali visoko (ostani na tleh).\nPoberi odprte karte: tvoja najboljša roka iz 5 kart na koncu doda bonus k razdalji, od +20 % (par) do +300 % (kraljeva barvna lestvica) (Joker nadomesti katero koli karto).\nZlati žeton All-In ga za nekaj sekund naredi za kralja: nič ga ne ustavi, kar razbije, prinese bonus, razdalja pa šteje dvojno.\nBlindi rastejo vsakih 300 m: vse je hitrejše; vsakih 10 ravni nov kraj in nove ovire, med tekom pa dan preide v noč.\nModri žeton s ščitom je zavarovanje: namesto njega prestreže en udarec. Za las se izogni oviri: +10 m.\nPreslednica, ↑ ali dotik: skok (drži za višje) · ↓ ali poteg navzdol: sklon · P: premor.",
     "arVenue1": "Soseščinski klub",

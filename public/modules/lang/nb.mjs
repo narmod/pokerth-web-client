@@ -1086,7 +1086,7 @@ export const strings = {
     "psAgain": "Trykk for å velge modus · Esc for menyen",
     "gmPlay": "Spill",
     "gmRules": "Regler",
-    "gmIntro": "Små pokerspill, bare mellom deg og esset. De beste resultatene blir værende på denne enheten.",
+    "gmIntro": "Små pokerspill, bare mellom deg og esset. De beste resultatene blir værende på denne enheten.", "gmIntroHof": "Små pokerspill, bare mellom deg og esset. De beste resultatene dine kan komme inn i Hall of Fame, hvis du vil.",
     "gmKindLearn": "Bli bedre", "gmKindFun": "Bare for moro skyld", "gmMystery": "Mysteriespill", "gmNeedOne": "1 trofé til · {c}/{t}", "gmNeed": "{n} trofeer til · {c}/{t}", "gmCountOne": "{o}/{all} spill åpne · 1 mysteriespill å oppdage", "gmCount": "{o}/{all} spill åpne · {m} mysteriespill å oppdage", "gmCountAll": "Alle {all} spillene er åpne",
     "arRules": "Esset løper over filten: hopp over sjetongstabler og den rullende dealerknappen, dukk under flyvende kort.\nNår blindene øker, flyr kort også lavt (hopp over dem) eller høyt (bli på bakken).\nPlukk opp de åpne kortene: din beste hånd på 5 kort gir til slutt en bonus på distansen, fra +20 % (et par) til +300 % (en royal flush) (Jokeren teller som hvilket som helst kort).\nDen gylne All-In-sjetongen gjør ham til konge i noen sekunder: ingenting stopper ham, det han knuser gir bonus, og distansen teller dobbelt.\nBlinds øker hver 300 m: alt går fortere; hvert 10. nivå et nytt sted og nye hindringer, og dag blir til natt mens du løper.\nDen blå sjetongen med skjoldet er en forsikring: den tar ett slag for ham. Smett tett forbi et hinder: +10 m.\nMellomrom, ↑ eller trykk: hopp (hold for høyere) · ↓ eller sveip ned: dukk · P: pause.",
     "arVenue1": "Nabolagsklubben",

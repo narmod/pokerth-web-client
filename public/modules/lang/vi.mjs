@@ -984,7 +984,7 @@ export const strings = {
     "psAgain": "Chạm để chọn chế độ · Esc để về menu",
     "gmPlay": "Chơi",
     "gmRules": "Luật chơi",
-    "gmIntro": "Những trò poker nhỏ, chỉ giữa bạn và quân Át. Kỷ lục được lưu trên thiết bị này.",
+    "gmIntro": "Những trò poker nhỏ, chỉ giữa bạn và quân Át. Kỷ lục được lưu trên thiết bị này.", "gmIntroHof": "Những trò poker nhỏ, chỉ giữa bạn và quân Át. Nếu muốn, điểm cao nhất của bạn có thể vào Hall of Fame.",
     "gmKindLearn": "Tiến bộ", "gmKindFun": "Chỉ để giải trí", "gmMystery": "Trò chơi bí ẩn", "gmNeedOne": "Còn 1 cúp · {c}/{t}", "gmNeed": "Còn {n} cúp · {c}/{t}", "gmCountOne": "Đã mở {o}/{all} trò · còn 1 trò bí ẩn", "gmCount": "Đã mở {o}/{all} trò · còn {m} trò bí ẩn", "gmCountAll": "Đã mở cả {all} trò",
     "arRules": "Quân Át chạy trên mặt bàn: nhảy qua những chồng phỉnh và nút dealer đang lăn, cúi xuống dưới những lá bài bay.\nKhi mức mù tăng, bài cũng bay thấp (nhảy qua) hoặc bay cao (đứng yên dưới đất).\nNhặt các lá bài ngửa: bộ 5 lá tốt nhất của bạn cộng thưởng vào quãng đường khi kết thúc, từ +20% (một đôi) đến +300% (thùng phá sảnh hoàng gia) (Joker thay cho bất kỳ lá nào).\nPhỉnh vàng All-In biến cậu thành vua trong vài giây: không gì cản được, thứ cậu đập vỡ cho điểm thưởng và quãng đường tính gấp đôi.\nMức cược mù tăng mỗi 300 m: mọi thứ nhanh hơn; cứ 10 cấp lại có địa điểm mới và chướng ngại mới, và ngày chuyển sang đêm khi bạn chạy.\nPhỉnh xanh có hình khiên là bảo hiểm: nó chịu thay anh ấy một cú va chạm. Lướt sát qua chướng ngại vật: +10 m.\nPhím cách, ↑ hoặc chạm: nhảy (giữ để nhảy cao) · ↓ hoặc vuốt xuống: cúi · P: tạm dừng.",
     "arVenue1": "Câu lạc bộ trong xóm",

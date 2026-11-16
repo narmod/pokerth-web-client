@@ -717,7 +717,7 @@ export const strings = {
     "psAgain": "Rejim seçmək üçün toxunun · Menyu üçün Esc",
     "gmPlay": "Oyna",
     "gmRules": "Qaydalar",
-    "gmIntro": "Kiçik poker oyunları, yalnız səninlə Tuz arasında. Ən yaxşı nəticələr bu cihazda qalır.",
+    "gmIntro": "Kiçik poker oyunları, yalnız səninlə Tuz arasında. Ən yaxşı nəticələr bu cihazda qalır.", "gmIntroHof": "Kiçik poker oyunları, yalnız səninlə Tuz arasında. İstəsən, ən yaxşı nəticələrin Hall of Fame-ə düşə bilər.",
     "gmKindLearn": "İnkişaf et", "gmKindFun": "Sadəcə əyləncə üçün", "gmMystery": "Sirli oyun", "gmNeedOne": "Daha 1 kubok · {c}/{t}", "gmNeed": "Daha {n} kubok · {c}/{t}", "gmCountOne": "{o}/{all} oyun açıq · kəşf ediləcək 1 sirli oyun", "gmCount": "{o}/{all} oyun açıq · kəşf ediləcək {m} sirli oyun", "gmCountAll": "{all} oyunun hamısı açıqdır",
     "arRules": "Tuz mahud üzərində qaçır: fiş qalaqlarının və yuvarlanan diler düyməsinin üstündən tullan, uçan kartların altından əyil.\nBlaindlar artdıqca kartlar həm alçaqdan (üstündən tullan), həm də hündürdən (yerdə qal) uçur.\nAçıq kartları topla: 5 kartlıq ən yaxşı əlin sonda məsafəyə bonus əlavə edir, +20%-dən (cüt) +300%-ə qədər (royal floş) (Coker istənilən kartı əvəz edir).\nQızıl All-In fişi onu bir neçə saniyəlik kral edir: heç nə onu dayandırmır, sındırdığı bonus verir və məsafə iki qat sayılır.\nBlaindlər hər 300 m-dən bir artır: hər şey sürətlənir; hər 10 səviyyədə yeni məkan və yeni maneələr, sən qaçarkən gündüz gecəyə dönür.\nQalxanlı mavi fişka sığortadır: onun yerinə bir zərbəni qəbul edir. Maneənin yanından az qala toxunaraq keç: +10 m.\nBoşluq, ↑ və ya toxunuş: tullan (daha hündür üçün saxla) · ↓ və ya aşağı sürüşdür: əyil · P: fasilə.",
     "arVenue1": "Məhəllə klubu",

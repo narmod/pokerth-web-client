@@ -984,7 +984,7 @@ export const strings = {
     "psAgain": "Tik om ’n modus te kies · Esc vir die kieslys",
     "gmPlay": "Speel",
     "gmRules": "Reëls",
-    "gmIntro": "Klein pokerspeletjies, net tussen jou en die Aas. Die beste tellings bly op hierdie toestel.",
+    "gmIntro": "Klein pokerspeletjies, net tussen jou en die Aas. Die beste tellings bly op hierdie toestel.", "gmIntroHof": "Klein pokerspeletjies, net tussen jou en die Aas. Jou beste tellings kan in die Hall of Fame kom, as jy wil.",
     "gmKindLearn": "Word beter", "gmKindFun": "Net vir die pret", "gmMystery": "Geheimsinnige speletjie", "gmNeedOne": "Nog 1 trofee · {c}/{t}", "gmNeed": "Nog {n} trofeë · {c}/{t}", "gmCountOne": "{o}/{all} speletjies oop · 1 geheimsinnige speletjie om te ontdek", "gmCount": "{o}/{all} speletjies oop · {m} geheimsinnige speletjies om te ontdek", "gmCountAll": "Al {all} speletjies is oop",
     "arRules": "Die Aas hardloop oor die laken: spring oor skyfiestapels en die rollende smousknoppie, buk onder vlieënde kaarte.\nSoos die blinds styg, vlieg kaarte ook laag (spring oor hulle) of hoog (bly op die grond).\nTel die oop kaarte op: jou beste hand van 5 kaarte gee aan die einde 'n bonus op die afstand, van +20% ('n paar) tot +300% ('n koninklike reeks) (die Joker tel as enige kaart).\nDie goue All-In-skyfie maak hom ’n paar sekondes koning: niks keer hom nie, wat hy verpletter gee ’n bonus en die afstand tel dubbel.\nBlinds styg elke 300 m: alles gaan vinniger; elke 10 vlakke 'n nuwe plek en nuwe hindernisse, en die dag word nag terwyl jy hardloop.\nDie blou skyfie met die skild is 'n versekering: dit vang een hou vir hom. Skeer verby 'n hindernis: +10 m.\nSpasie, ↑ of tik: spring (hou in vir hoër) · ↓ of vee af: buk · P: pouse.",
     "arVenue1": "Die buurtklub",
