@@ -566,12 +566,18 @@ var SND_OFF_SVG = '<svg viewBox="0 0 24 24" style="display:block;width:22px;heig
 
 // Etat visuel du bouton du header (factorise : sert aussi quand le mute est
 // change depuis une AUTRE fenetre, via l'evenement 'storage').
+// The buttons: the table's header and the mini-games' header (web.98, narmod:
+// « the sound button in the header of the mini-games and of each mini-game »).
+var SOUND_BTN_IDS = ['sound-toggle-btn', 'sound-toggle-btn-arcade'];
 function _applySoundBtn() {
-  var btn = document.getElementById('sound-toggle-btn');
-  if (!btn) return;
-  btn.innerHTML     = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
-  btn.style.opacity = _soundEnabled ? '' : '0.5';
-  btn.title         = _soundEnabled ? 'Mute' : 'Unmute';
+  SOUND_BTN_IDS.forEach(function (id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    btn.innerHTML     = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
+    btn.style.opacity = _soundEnabled ? '' : '0.5';
+    btn.title         = _soundEnabled ? 'Mute' : 'Unmute';
+    try { btn.setAttribute('aria-pressed', String(!_soundEnabled)); } catch (e) {}
+  });
 }
 
 function toggleSound() {
@@ -588,7 +594,7 @@ function isSoundEnabled() {
 // Tap sur #sound-toggle-btn → ouvre/ferme un petit popover : bouton mute +
 // curseur de volume des effets de jeu. L'icône du bouton reflète toujours
 // l'état coupé/actif (toggleSound met le bouton du header à jour).
-var _soundPop = null;
+var _soundPop = null, _soundPopBtn = null;   // the popover, and the header button it hangs from
 function _stxt(key, fb) {
   try { if (typeof window.t === 'function') { var s = window.t(key); if (s && s !== key) return s; } } catch(e) {}
   return fb;
@@ -604,13 +610,13 @@ function _syncSoundPop() {
 function closeSoundPopover() {
   if (!_soundPop) return;
   try { _soundPop.remove(); } catch(e) {}
-  _soundPop = null;
+  _soundPop = null; _soundPopBtn = null;
   document.removeEventListener('pointerdown', _soundPopOutside, true);
   window.removeEventListener('resize', closeSoundPopover);
 }
 function _soundPopOutside(e) {
   if (!_soundPop) return;
-  var btn = document.getElementById('sound-toggle-btn');
+  var btn = _soundPopBtn || document.getElementById('sound-toggle-btn');
   if (_soundPop.contains(e.target) || (btn && btn.contains(e.target))) return;
   closeSoundPopover();
 }
@@ -680,7 +686,7 @@ function toggleSoundPopover(btn) {
       try { if (window.Music && typeof window.Music.setVolume === 'function') window.Music.setVolume(pct / 100); } catch (e) {}
     });
   }
-  _soundPop = pop;
+  _soundPop = pop; _soundPopBtn = btn;
   // Fermer au clic extérieur (différé pour ne pas capter le clic d'ouverture).
   setTimeout(function () { document.addEventListener('pointerdown', _soundPopOutside, true); }, 0);
   window.addEventListener('resize', closeSoundPopover);

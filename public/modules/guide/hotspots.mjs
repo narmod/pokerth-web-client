@@ -138,7 +138,7 @@ export const HOTSPOTS = [
   // ── at the table (H3, web.269) ──
   ['#s-game [onclick*="confirmLeaveGame"]', 'hsQuit'],
   ['.g-brand-click', 'hsGameDetails', false, 'lobby:gameinfo'],
-  ['#sound-toggle-btn, #adv-sound-btn', 'hsSound', false, 'style:sounds'],
+  ['#sound-toggle-btn, #sound-toggle-btn-arcade, #adv-sound-btn', 'hsSound', false, 'style:sounds'],
   ['.sound-pop-mute', 'hsSoundMute', true, 'style:sounds'],
   ['.sound-pop-range.sp-music-range', 'hsMusicVol', true, 'style:music'],
   ['.sound-pop-range', 'hsSoundVol', true, 'style:sounds'],

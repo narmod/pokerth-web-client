@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.97 (current series):
+2026-11-16 version 2.1.11-web.98 (current series):
+- new: Mini-games — a 🔊 button in the header (the games' page and every game): mute or turn the sound back on, game sounds and music volume, as at the table
+
+2026-11-16 version 2.1.11-web.97:
 - improvement: Hall of Fame — nothing is sent without your yes: when a score would get in, you are asked first, with what everyone will see (name, score, date); « remember my choice » answers once for all
 - new: Advanced options › Community — « Mini-games Hall of Fame: ask me / always / never », synced with your account
 - new: Hall of Fame — « Remove my scores » on the 🏆 boards takes all of yours back; the boards and Ace's Help say what is public and how to choose

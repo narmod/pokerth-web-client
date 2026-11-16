@@ -102,6 +102,19 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(st.nick === 'Narmod' && st.stored === 'Narmod', label + ': the real nickname is back (field ' + st.nick + ', stored ' + st.stored + ')');
   ok(st.pad === 'arcade', label + ': the gamepad navigation steps aside');
   await shot(pg, label + '-menu');
+  // web.98: the sound button in the mini-games' header (the arcade and each game share it): the table's popover, mute.
+  await pg.click('#sound-toggle-btn-arcade');
+  await pg.waitForSelector('.sound-pop', { timeout: 3000 }).catch(() => {});
+  const snd0 = await pg.evaluate(() => ({ pop: !!document.querySelector('.sound-pop'), vis: (() => { const b = document.getElementById('sound-toggle-btn-arcade'); const r = b.getBoundingClientRect(); return r.width > 0 && r.right <= innerWidth + 1; })() }));
+  await pg.click('.sound-pop .sound-pop-mute');
+  const snd1 = await pg.evaluate(() => ({ ls: localStorage.getItem('pth_sound'), op: document.getElementById('sound-toggle-btn-arcade').style.opacity, pressed: document.getElementById('sound-toggle-btn-arcade').getAttribute('aria-pressed') }));
+  await pg.click('.sound-pop .sound-pop-mute');
+  const snd2 = await pg.evaluate(() => ({ ls: localStorage.getItem('pth_sound'), op: document.getElementById('sound-toggle-btn-arcade').style.opacity }));
+  await pg.mouse.click(5, 300);
+  await sleep(150);
+  const snd3 = await pg.evaluate(() => !document.querySelector('.sound-pop'));
+  ok(snd0.pop && snd0.vis && snd1.ls === '0' && snd1.op === '0.5' && snd1.pressed === 'true' && snd2.ls === '1' && snd2.op === '' && snd3,
+    label + ': the 🔊 button in the mini-games\' header: the sound popover, mute and back on, closed by a tap outside (' + JSON.stringify([snd0, snd1, snd2, snd3]) + ')');
   // ── Ace Runner ──
   await pick(pg, 'ace-runner');
   await pg.waitForFunction(() => (document.querySelector('#pth-game .pg-panel h2') || {}).textContent === 'Ace Runner', null, { timeout: 8000 }).catch(() => {});

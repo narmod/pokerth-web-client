@@ -16,6 +16,10 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games: the sound button in the header** (`web.98`, narmod) — `#sound-toggle-btn-arcade` in the `#s-arcade`
+  header (shared by the games' page and every game), before the ranking: the table's popover (mute, game sounds,
+  music volume). `sounds.mjs` keeps both header buttons in step (`SOUND_BTN_IDS`, `aria-pressed`) and closes the
+  popover on a tap outside the button it hangs from (`_soundPopBtn`); Ace's Help explains it (`hsSound`).
 - **Hall of Fame: taking part is the player's choice** (`web.97`, narmod: « some people will not want to take part, be
   more explicit ») — nothing is sent without a yes: `hofEnd` reads the board first and, when the score would get in,
   asks « N° 7! Enter your score? » with what everyone will see (name, score, date), « Enter it / No thanks » and
