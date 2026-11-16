@@ -76,13 +76,21 @@ ok(lineDev && typeof lineDev.o === 'string' && lineDev.o !== DEV && !('o' in H.v
 ok(H.forget(st, { dev: DEV, now: T0 }) === 2 && !st.boards['initials/ace-runner:free'].some((x) => x.n === 'DEV') && st.boards['initials/ace-runner:free'].some((x) => x.n === 'OTH') && !st.boards['initials/ace-runner:time'],
   'forget(): the browser\'s lines go (all boards), the others stay');
 ok(H.forget(st, { dev: 'short', now: T0 }) === 0, 'forget(): no key, nothing goes');
+// More games (web.99): Tapis! (not its Duel) and Ace Dash, each with its own ceiling.
+ok(H.view(st, 'initials', 'tapis', T0) && Object.keys(H.view(st, 'initials', 'tapis', T0).boards).join() === 'classic,folie,daily,zen' && H.ticket(st, 'tapis', 'duel', T0) === null
+  && Object.keys(H.view(st, 'initials', 'ace-dash', T0).boards).join() === 'free,daily,time',
+  'Tapis! (classic, Madness, daily, Zen — not the Duel) and Ace Dash (free, daily, time attack) are ranked');
+ok(H.plausible('tapis', 100000 + 4000 * 60, 60) && !H.plausible('tapis', 100001 + 4000 * 60, 60) && H.plausible('ace-dash', 5000 + 3000 * 60, 60) && !H.plausible('ace-dash', 5001 + 3000 * 60, 60),
+  'each game its own ceiling (Tapis! 100 000 + 4 000 a second, Ace Dash 5 000 + 3 000 a second)');
+const tkt = H.ticket(st, 'tapis', 'daily', T0);
+ok(sub({ g: 'tapis', m: 'daily', ticket: tkt, s: 40000, name: 'TAP', day: '2026-11-16' }).rank === 1 && st.boards['initials/tapis:daily:2026-11-16'].length === 1, 'Tapis!: its daily board');
 // Off (the default): nothing taken, nothing shown.
 ok(H.namesOf(undefined) === 'off' && H.namesOf('nope') === 'off' && sub({ names: 'off', s: 3000, name: 'OFF' }).err === 'off' && Object.keys(H.view(st, 'off', 'ace-runner', T0).boards).length === 0 && Object.keys(H.adminView(st, 'off')).length === 0,
   'off is the default: no score taken, no board shown');
 // View, admin, prune.
 const v = H.view(st, 'initials', 'ace-runner', T0);
 ok(v.names === 'initials' && v.boards.free.length === 19 && v.boards.daily.length === 1 && Array.isArray(v.boards.time) && !('at' in v.boards.free[0]), 'the public view: each mode\'s board and today\'s, no internal field');
-ok(Object.keys(H.adminView(st, 'initials')).length === 2 && H.remove(st, 'initials/ace-runner:free', 'abc') && !H.remove(st, 'initials/ace-runner:free', 'abc'), 'the admin lists a setting\'s boards and removes a line');
+ok(Object.keys(H.adminView(st, 'initials')).length === 3 && H.remove(st, 'initials/ace-runner:free', 'abc') && !H.remove(st, 'initials/ace-runner:free', 'abc'), 'the admin lists a setting\'s boards and removes a line');
 H.prune(st, T0 + 10 * 86400000);
 ok(!st.boards['initials/ace-runner:daily:2026-11-16'] && st.boards['initials/ace-runner:free'], 'old daily boards go, the others stay');
 

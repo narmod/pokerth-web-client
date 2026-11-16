@@ -81,6 +81,7 @@ import { RUN_BONUS } from './ace-runner.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { titleScreen } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { endScreen, stepsHtml } from './end.mjs';
 
 // World units are metres; the camera looks down the felt (+z, away from it).
@@ -331,19 +332,33 @@ export function create(shell) {
     const rec = records();
     titleScreen(shell, { id: 'ace-dash', live: true, name: 'Ace Dash', hint: t('adHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.99): the title's 🏆 (or ↓) only while the admin has it on.
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('ace-dash').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'ace-dash', name: 'Ace Dash', sel, modes: MODES.map((m) => ({ id: m.id, label: t(m.key) })),
+      onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   buildHud('free');
   newRun();
   titlePanel();
+  refreshHof();
   turnBack(false); ace.pose('wave');
-  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, underView: () => seenUnder, pool: () => { G.level = Math.max(G.level, POOL_LEVEL); G.nextPool = 0; G.rows = Math.max(G.rows, 1); G.zig = false; G.obj = []; G.items = []; G.spawnAt = G.travel; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthDash = { run: () => G, state: () => state, mode: () => mode, hof: () => openHof(), jet: () => { jetStart(performance.now()); }, skates: () => { G.skateUntil = performance.now() + SKATE_MS; }, underView: () => seenUnder, pool: () => { G.level = Math.max(G.level, POOL_LEVEL); G.nextPool = 0; G.rows = Math.max(G.rows, 1); G.zig = false; G.obj = []; G.items = []; G.spawnAt = G.travel; }, slow: () => { G.slowUntil = performance.now() + SLOW_MS; }, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
 
   function start() {
     clearTimeout(revealTimer); clearTimeout(rebuyTimer);
     mode = MODES[sel].id;
     buildHud(mode);
     newRun(); state = 'run'; camX = 0; shell.panel(null);
+    G.hof = hofStart('ace-dash', mode);   // the Hall of Fame's ticket for this run (null offline / off)
     turnBack(true); ace.king(false); ace.mood('mc-m-smile'); ace.pose('run');
     try { if (typeof window.resetBlindRaises === 'function') window.resetBlindRaises(); } catch (e) {}
   }
@@ -477,8 +492,10 @@ export function create(shell) {
   }
   function input(a, down, info) {
     const now = performance.now();
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
     if (state === 'title') {
       if (!down) return;
+      if (a === 'duck' && hofEnabled) { openHof(); return; }   // ↓: the Hall of Fame, when it is on (else the next tile)
       const step = a === 'left' ? -1 : a === 'right' || a === 'duck' ? 1 : 0;
       if (step) { sel = (sel + step + MODES.length) % MODES.length; titlePanel(); return; }
       if (a === 'jump') start();
@@ -535,7 +552,7 @@ export function create(shell) {
   }
 
   function update(dt) {
-    if (state === 'title') { attract += 7 * dt; return; }
+    if (state === 'title' || state === 'board') { attract += 7 * dt; return; }
     stepFx(dt);
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.6);
     if (state !== 'run') return;
@@ -917,8 +934,9 @@ export function create(shell) {
       levels: timed ? null : { title: t('arLevel') + ' ' + lvl, right: t(VENUES[v]), html: stepsHtml(esc, VENUES.map((x, i) => ({ label: String(i + 1), cls: i < v ? 'ok' : i === v ? 'ok cur' : '' }))) },
       stats: [[fmt(d), t('arDistance')], [timed ? fmt(G.chips) : lvl, timed ? t('blChips') : t('arLevel')], [G.rebought ? '✓' : '—', t('adRebuy')]],
       onAgain: () => start(),
-      onMenu: () => { clearTimeout(revealTimer); state = 'title'; newRun(); buildHud('free'); turnBack(false); ace.king(false); ace.mood('mc-m-smile'); ace.pose('wave'); titlePanel(); },
+      onMenu: () => { clearTimeout(revealTimer); state = 'title'; newRun(); buildHud('free'); turnBack(false); ace.king(false); ace.mood('mc-m-smile'); ace.pose('wave'); titlePanel(); refreshHof(); },
     });
+    hofEnd(shell, { g: 'ace-dash', m: mode, s: score, run: G.hof, day: G.day, daily: mode === 'daily' });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────
@@ -930,7 +948,7 @@ export function create(shell) {
   const quad = (g, x0, x1, y, z0, z1, fill) => poly(g, [P(x0, y, z0), P(x1, y, z0), P(x1, y, z1), P(x0, y, z1)], fill);
 
   /** The time of day, the venue shown (and the one fading out). */
-  const dayNow = () => (state === 'title' ? dayAt(0) : dayAt(G.t));
+  const dayNow = () => (state === 'title' || state === 'board' ? dayAt(0) : dayAt(G.t));
   function drawWorld(g, travel) {
     const W = shell.W, H = shell.H, v = G.venue, p = dayNow();
     // The venue's panorama at the end of the felt, fitted above the horizon.
@@ -1266,7 +1284,7 @@ export function create(shell) {
   function draw(g) {
     palette(); camera(); sizeFront();
     const now = performance.now();
-    if (state === 'title') { drawWorld(g, attract); placeAce(0, 0, 0, 1); return; }
+    if (state === 'title' || state === 'board') { drawWorld(g, attract); placeAce(0, 0, 0, 1); return; }
     drawWorld(g, G.travel);
     // Far to near: behind the Ace on the stage's canvas, past him on the front
     // one (the ramps lie on the felt: always under him).

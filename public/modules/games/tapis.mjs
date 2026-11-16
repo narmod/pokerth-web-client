@@ -79,6 +79,7 @@ import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed }
 import { drawScenery, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
 import { titleScreen, titleStep } from './title.mjs';
+import { hofOn, hofStart, hofEnd, hofPanel } from './hof.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { endScreen, barsHtml, listHtml } from './end.mjs';
@@ -140,6 +141,8 @@ export function create(shell) {
   const hLabs = /** @type {HTMLElement[]} */ (Array.from(shell.hud.querySelectorAll('.ar-stats .ar-lab')));
 
   let state = 'title', time = 0, timer = 0, check = 0, sel = 0, mode = 'classic', R = Math.random;
+  /** The title, or the Hall of Fame's boards opened from it (the same scene behind). */
+  const onTitle = () => state === 'title' || state === 'board';
   const timed = () => mode === 'classic' || mode === 'daily';
   const duel = () => mode === 'duel';
   /** @type {any} */
@@ -239,10 +242,25 @@ export function create(shell) {
     const rec = records();
     titleScreen(shell, { id: 'tapis', live: true, name: t('tpName'), hint: t('tpHint'), sel,
       modes: MODES.map((m) => ({ icon: m.icon, label: t(m.key), desc: t(m.desc), rec: rec[m.id] ? t('arRecord', { n: fmt(rec[m.id]) }) : '' })),
+      options: hofEnabled ? [{ id: 'hof', label: '🏆 ' + t('hofTitle'), key: '↓' }] : [],
+      onOption: (id) => { if (id === 'hof') openHof(); },
       onPick: (i) => { sel = i; start(); } });
+  }
+  // The Hall of Fame (hof.mjs, claude/CONCEPTION_HALL_OF_FAME.md, web.99): the solo modes only (not the Duel);
+  // the title's 🏆 only while the admin has it on.
+  const HOF_MODES = MODES.filter((m) => m.id !== 'duel');
+  let hofEnabled = false;
+  function refreshHof() {
+    hofOn('tapis').then((on) => { if (on !== hofEnabled) { hofEnabled = on; if (state === 'title') titlePanel(); } }).catch(() => {});
+  }
+  function openHof() {
+    state = 'board';
+    hofPanel(shell, { g: 'tapis', name: t('tpName'), sel: Math.max(0, HOF_MODES.findIndex((m) => m.id === MODES[sel].id)),
+      modes: HOF_MODES.map((m) => ({ id: m.id, label: t(m.key) })), onBack: () => { state = 'title'; titlePanel(); refreshHof(); } });
   }
   newGame(); newRound();
   titlePanel();
+  refreshHof();
 
   function start() {
     clearTimeout(timer); clearTimeout(check);
@@ -254,6 +272,7 @@ export function create(shell) {
     }
     newRound();
     state = 'run'; shell.panel(null);
+    G.hof = duel() ? null : hofStart('tapis', mode); G.hofDay = dayKey();   // the Hall of Fame's ticket (not in the Duel)
     say(duel() ? t('pdTurn', { n: 1 }) : t('tpHint'));
     G.banner = { s: t('arLevel') + ' 1', s2: t('tpBlinds', { b: blindsAt(1) }), t: 0, life: 1.6 };
   }
@@ -437,7 +456,7 @@ export function create(shell) {
     G.res = { score: G.score, prev, shown: false };
     timer = setTimeout(renderResult, 1300);
   }
-  function toTitle() { state = 'title'; newGame(); newRound(); titlePanel(); }
+  function toTitle() { state = 'title'; newGame(); newRound(); titlePanel(); refreshHof(); }
   function renderResult() {
     if (state !== 'over' || !G.res || G.res.shown) return;
     G.res.shown = true;
@@ -471,6 +490,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: toTitle,
     });
+    hofEnd(shell, { g: 'tapis', m: mode, s: score, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
   }
 
   // ── Input ─────────────────────────────────────────────────────────
@@ -491,6 +511,8 @@ export function create(shell) {
   }
   function input(a, down, info) {
     if (!down) return;
+    if (state === 'board') return;                 // the Hall of Fame's boards: their own buttons
+    if (state === 'title' && a === 'duck') { if (hofEnabled) openHof(); return; }
     if (state === 'title') {
       const st = titleStep(a, sel, MODES.length);
       if (st === 'start') { if (info.x == null) start(); }
@@ -617,7 +639,7 @@ export function create(shell) {
             }
           } else { ch.y = target; ch.dvy = 0; ch.dropAt = 0; }
           if (dropping && target - ch.y > L.bh * 0.6) { setPose(ch, 'air'); setMood(ch, ch.kind === 'joker' ? 'wink' : 'jump'); }
-          else if (state === 'run' || state === 'title') {
+          else if (state === 'run' || onTitle()) {
             const low = col.length <= 2, hurry = state === 'run' && (timed() ? G.timeLeft < 12 : mode === 'folie' && col.length >= G.maxRows - 1);
             const m = ch.clapUntil > time ? 'yay' : hurry ? 'scared' : ch.look > time ? 'dizzy' : low ? 'jump'
               : (Math.sin(time * 0.6 + c * 1.7) > 0.97 ? 'wink' : Math.sin(time * 0.37 + c * 2.3) > 0.985 ? 'grin' : 'smile');
@@ -797,7 +819,7 @@ export function create(shell) {
       g.fillStyle = '#3a2614'; g.beginPath(); g.ellipse(h.x, L.base, L.rx * k, L.ry * 1.1 * k, 0, 0, 7); g.fill();
     }
     // Madness: the red line no stack may pass.
-    if (mode === 'folie' && state !== 'title' && G.cols) {
+    if (mode === 'folie' && !onTitle() && G.cols) {
       const ly = L.base - G.maxRows * L.bh - L.ry, near = G.grid.some((col) => col.length >= G.maxRows - 1);
       g.save(); g.strokeStyle = near ? 'rgba(255,74,58,' + (0.55 + 0.4 * Math.sin(time * 9)).toFixed(2) + ')' : 'rgba(255,90,70,.45)';
       g.lineWidth = near ? 2 : 1.2; g.setLineDash([6, 5]); g.beginPath(); g.moveTo(8, ly); g.lineTo(W - 8, ly); g.stroke(); g.restore();
@@ -859,7 +881,7 @@ export function create(shell) {
     }
     g.globalAlpha = 1;
     // The hand of 5 at the top (from level 2), and the cards flying to it.
-    if (state !== 'title' && (G.lv >= 2 || G.hand.length || G.handFull || G.flying.length)) {
+    if (!onTitle() && (G.lv >= 2 || G.hand.length || G.handFull || G.flying.length)) {
       const shown = G.handFull ? G.handFull.cards : G.hand;
       for (let i = 0; i < 5; i++) {
         const sl = handSlot(L, i), n = shown[i];
@@ -887,7 +909,7 @@ export function create(shell) {
     });
     (G.all || []).forEach((ch) => { if (ch.st === 'spirit' && ch.spT >= 0) ch.ace.place(ch.spX, ch.y, s, shell.k); });
     // The powers' pills.
-    if (state !== 'title') {
+    if (!onTitle()) {
       const PILL_W = pillW(W), ix = PILL_W < 50 ? 9 : 12;
       POWERS.forEach((p, i) => {
         const x = pillX(L, i), n = G.inv[p], on = G.armed === p, lit = G.showCursor && cur.bar === i;
@@ -923,7 +945,7 @@ export function create(shell) {
       g.restore();
     }
     g.globalAlpha = 1;
-    if (G.say && state !== 'title') {
+    if (G.say && !onTitle()) {
       const a = G.say.t < 0.2 ? G.say.t / 0.2 : G.say.t > 2.4 ? Math.max(0, 1 - (G.say.t - 2.4) / 0.4) : 1;
       g.save(); g.globalAlpha = a;
       g.font = '600 10.5px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
@@ -945,7 +967,7 @@ export function create(shell) {
     }
   }
 
-  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpAllIn')); } }, turn: () => G.turn, picked: () => G.picked, screenOf: (c, r) => { const L = geom(), rc = shell.stage.getBoundingClientRect(), k = shell.k || 1; return { x: rc.left + colX(L, c) * k, y: rc.top + (chipY(L, c, r) - L.bh / 2) * k }; }, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
+  try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpAllIn')); } }, turn: () => G.turn, picked: () => G.picked, screenOf: (c, r) => { const L = geom(), rc = shell.stage.getBoundingClientRect(), k = shell.k || 1; return { x: rc.left + colX(L, c) * k, y: rc.top + (chipY(L, c, r) - L.bh / 2) * k }; }, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, hof: () => openHof(), start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
     update, draw, input, resize: () => {},
     running: () => state === 'run' || state === 'clear',

@@ -52,6 +52,37 @@ const endInfo = async (pg, ms) => {
 };
 const shot = async (pg, name) => { if (!SHOTS) return; mkdirSync('.shots', { recursive: true }); await pg.screenshot({ path: '.shots/games-' + name + '.png' }); };
 
+/**
+ * The Hall of Fame on game `g` (web.99), its server mocked (3 letters): the end screen asks first, « Enter it »
+ * sends, the boards open with a tab per ranked mode, Escape goes back to the title. `play` ends a run with a score.
+ */
+async function hofCheck(pg, label, g, hook, modes, play) {
+  const sent = [];
+  const boards = Object.fromEntries(modes.map((m) => [m, []]));
+  await pg.route('**/__hof/start', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, ticket: 'tk.' + g, names: 'initials' }) }));
+  await pg.route('**/__hof?g=*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, names: 'initials', day: '2026-11-16', top: 20, topDay: 10, boards }) }));
+  await pg.route('**/__hof/score', (r) => { const b = JSON.parse(r.request().postData() || '{}'); sent.push(b);
+    r.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, rank: 1, best: b.s, name: b.name, names: 'initials', day: '2026-11-16', boards: Object.assign({}, boards, { [b.m]: [{ n: b.name, s: b.s, ts: Date.now() }] }) }) }); });
+  await pg.evaluate(() => { localStorage.removeItem('pth_hof_opt'); localStorage.setItem('pth_hof_name', JSON.stringify({ initials: 'XYZ' })); });
+  await pg.evaluate(play);
+  await pg.waitForSelector('#pth-game .gm-hof .gm-hyes', { timeout: 10000 }).catch(() => {});
+  const ask = await pg.evaluate(() => ({ txt: (document.querySelector('#pth-game .gm-hof') || {}).textContent || '', v: (document.querySelector('#pth-game .gm-hof input') || {}).value }));
+  await pg.click('#pth-game .gm-hof .gm-hyes').catch(() => {});
+  await pg.waitForFunction(() => /N° 1 du Hall of Fame/.test((document.querySelector('#pth-game .gm-hof') || {}).textContent || ''), null, { timeout: 5000 }).catch(() => {});
+  const done = await pg.evaluate(() => (document.querySelector('#pth-game .gm-hof') || {}).textContent || '');
+  ok(/N° 1 du Hall of Fame ! Inscrire/.test(ask.txt) && ask.v === 'XYZ' && sent.length === 1 && sent[0].g === g && sent[0].ticket === 'tk.' + g && sent[0].s > 0 && /N° 1 du Hall of Fame ! · XYZ/.test(done),
+    label + ': ' + g + ': Hall of Fame — asked first, XYZ entered with the run\'s ticket (' + JSON.stringify({ ask: ask.txt.slice(0, 50), sent: sent.map((x) => x.m + ' ' + x.s) }) + ')');
+  await pg.evaluate((h) => window[h].hof(), hook);
+  await pg.waitForSelector('#pth-game .gm-htabs button', { timeout: 5000 }).catch(() => {});
+  const tabs = await pg.evaluate(() => document.querySelectorAll('#pth-game .gm-htabs button').length);
+  await pg.keyboard.press('Escape');
+  await sleep(300);
+  const back = await pg.evaluate((h) => window[h].state(), hook);
+  ok(tabs === modes.length && back === 'title', label + ': ' + g + ': its boards, a tab per ranked mode (' + tabs + '), Escape back to the title');
+  await pg.unroute('**/__hof/start'); await pg.unroute('**/__hof?g=*'); await pg.unroute('**/__hof/score');
+  await pg.evaluate(() => { localStorage.removeItem('pth_hof_name'); localStorage.removeItem('pth_hof_opt'); });
+}
+
 // Open game `id` from the arcade's home with the keys: → up to its card, then Space.
 async function pick(pg, id) {
   await pg.waitForSelector('#pth-game .gm-card', { timeout: 8000 }).catch(() => {});
@@ -362,6 +393,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   });
   ok(tpd.t0 === 0 && tpd.s1 > 0 && tpd.t1 === 1 && tpd.s2now === 0 && tpd.p1 >= tpd.s1 && /1/.test(tpd.hud) && tpd.t2 === 0 && /1|2|!/.test(tpd.end),
     label + ': Tapis!: Duel — a move passes the turn to player 2 (player 1 keeps his ' + tpd.s1 + '), a slow turn passes back, the end names the winner (' + JSON.stringify(tpd) + ')');
+  await hofCheck(pg, label, 'tapis', '__pthTapis', ['classic', 'folie', 'daily', 'zen'], () => { const T = window.__pthTapis; T.start('classic'); T.run().score = 12345; T.timeUp(); });
   await pg.evaluate(() => window.__pthTapis.start('classic'));
   await pg.evaluate(() => window.__pthTapis.timeUp());
   const tpo = await endInfo(pg, 8000);
@@ -860,6 +892,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   await pg.evaluate(() => { window.__pthDash.run().time = 0.05; });
   await pg.waitForSelector('#pth-game .gm-endc', { timeout: 6000 }).catch(() => {});
   ok(await pg.evaluate(() => window.__pthDash.state() === 'over' && /\{|"time"/.test(localStorage.getItem('pth_ad_best') || '')), label + ': time\'s up: the showdown, the time-attack record kept');
+  await hofCheck(pg, label, 'ace-dash', '__pthDash', ['free', 'daily', 'time'], () => { const D = window.__pthDash; D.start('time'); const G = D.run(); G.chipPts = 640; G.time = 0.05; });
   // The daily challenge: the same cards for everyone today.
   const dd = await pg.evaluate(() => { window.__pthDash.start('daily'); const a = window.__pthDash.run().deck.join(); window.__pthDash.start('daily'); const b = window.__pthDash.run().deck.join(); window.__pthDash.start('free'); const c = window.__pthDash.run().deck.join(); return { same: a === b, other: a !== c }; });
   ok(dd.same && dd.other, label + ': daily: the same deck at every try today, a free run shuffles anew');

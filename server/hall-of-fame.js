@@ -45,6 +45,12 @@ const NAME_GAP_MS = 5000;                 // one score per name every 5 s at mos
 // can bring (Ace Runner: ≈ 99 m/s at top speed, ×2 in All-In, ×4 with a royal flush).
 const GAMES = Object.freeze({
   'ace-runner': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 800, base: 2000 },
+  // Tapis! (web.99): a round of ≈ 60 s pays ≈ 30 000 at level 10, ≈ 70 000 at 16 (groups, holes,
+  // spirits, the time left), a royal flush of cards 100 × level × 50 — the Duel is not ranked.
+  tapis: { modes: ['classic', 'folie', 'daily', 'zen'], daily: 'daily', perSec: 4000, base: 100000 },
+  // Ace Dash (web.99): ≈ 29 m/s at top speed, ×2 in All-In, chips 10 × a streak of 5 × 2 (gold),
+  // the pool's rows, all × 4 with a royal flush.
+  'ace-dash': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 3000, base: 5000 },
 });
 // Words a free nickname may not contain (the admin adds more: _adminConfig.hofWords).
 // A word of the name (or the whole name) that STARTS with one of them is refused —

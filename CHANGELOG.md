@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: Tapis! and Ace Dash** (`web.99`, narmod) — `server/hall-of-fame.js` ranks `tapis` (classic, folie,
+  daily, zen — not the Duel; ceiling 100 000 + 4 000 a second) and `ace-dash` (free, daily, time; 5 000 + 3 000 a
+  second). Both games wire `hofStart` / `hofEnd` / `hofPanel` as Ace Runner does: the title's 🏆 chip (or ↓, which on
+  Ace Dash's title moves to the next tile only while the Hall of Fame is off), the question on the end screen.
+  The admin names their boards. `scripts/test-games-browser.mjs` `hofCheck()` drives any game.
 - **Mini-games: the sound button in the header** (`web.98`, narmod) — `#sound-toggle-btn-arcade` in the `#s-arcade`
   header (shared by the games' page and every game), before the ranking: the table's popover (mute, game sounds,
   music volume). `sounds.mjs` keeps both header buttons in step (`SOUND_BTN_IDS`, `aria-pressed`) and closes the
