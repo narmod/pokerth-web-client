@@ -389,7 +389,7 @@ const ADMIN_CONFIG_KEYS = Object.freeze([
   'communityEvents', 'bannedIps', 'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
   'musicEnabled', 'musicHidden', 'musicOrder', 'musicVotesPublic', 'seo', 'servers', 'activeServerId',
   'pokerthnetSource', 'internetTransport', 'liveTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate',
-  'lanDirectory', 'arena'
+  'lanDirectory', 'arena', 'hofNames', 'hofWords', 'hofBans'
 ]);
 // Secrets and personal data removed from an export unless asked for. Returns
 // what was removed, as paths, for the file's "redacted" list.
@@ -682,6 +682,50 @@ function _issueSyncToken(S) {
   const frame = 'SYNCTOK:' + S.syncToken;
   if (S.ws && S.ws.readyState === 1) { try { S.ws.send(frame); } catch (e) {} }
   else S.pendingTok = frame;
+}
+// ── Hall of Fame des mini-jeux (server/hall-of-fame.js, claude/CONCEPTION_HALL_OF_FAME.md) ──
+// Tableaux et jetons « compte » dans hall-of-fame.json, à côté de stats.json
+// (/data en Docker). Le réglage du nom affiché (compte pokerth.net / 3 lettres /
+// pseudo libre), les mots interdits et les noms bloqués sont dans _adminConfig.
+const HOF = require('./server/hall-of-fame.js');
+const HOF_FILE = process.env.HOF_FILE || path.join(path.dirname(STATS_FILE), 'hall-of-fame.json');
+let _hof = HOF.normalize(null);
+try { _hof = HOF.normalize(JSON.parse(fs.readFileSync(HOF_FILE, 'utf8'))); } catch (e) { _hof = HOF.normalize(null); }
+let _hofSaveTimer = null;
+function saveHofSoon() {
+  if (_hofSaveTimer) return;
+  _hofSaveTimer = setTimeout(function () {
+    _hofSaveTimer = null;
+    const tmp = HOF_FILE + '.tmp';
+    fs.writeFile(tmp, JSON.stringify(_hof), { mode: 0o600 }, function (err) {
+      if (err) return console.error('[hof] write failed:', err.message);
+      fs.rename(tmp, HOF_FILE, function (e2) { if (e2) console.error('[hof] rename failed:', e2.message); });
+    });
+  }, 1000);
+}
+setInterval(function () { HOF.prune(_hof, Date.now()); saveHofSoon(); }, 6 * 3600 * 1000).unref();
+function hofNames() { return HOF.namesOf(_adminConfig && _adminConfig.hofNames); }
+function hofWords() { return Array.isArray(_adminConfig && _adminConfig.hofWords) ? _adminConfig.hofWords : []; }
+function hofBans() { return Array.isArray(_adminConfig && _adminConfig.hofBans) ? _adminConfig.hofBans : []; }
+// Un login AUTHENTIFIÉ accepté par le vrai serveur (comme _issueSyncToken) : un
+// jeton Hall of Fame de 90 jours pour ce pseudo, gardé par le navigateur, qui
+// permet d'inscrire ses scores depuis l'arcade sans être connecté. Trame texte
+// HOFTOK:{"t":jeton,"n":pseudo} (les anciens clients l'ignorent).
+function _issueHofToken(S) {
+  if (S.hofFrame) return;
+  const tok = HOF.issueToken(_hof, S.chatNick, Date.now());
+  if (!tok) return;
+  saveHofSoon();
+  S.hofFrame = 'HOFTOK:' + JSON.stringify({ t: tok, n: S.chatNick });
+  if (S.ws && S.ws.readyState === 1) { try { S.ws.send(S.hofFrame); } catch (e) {} }
+}
+// Envois anonymes (/__hof/start, /__hof/score) : limite par adresse, en mémoire,
+// sous un hachage salé par processus (jamais stockée, jamais journalisée).
+const HOF_RATE_MAX = 120, HOF_RATE_WINDOW = 600000;
+const _hofRate = new Map();
+function _hofRateOk(req) {
+  const k = crypto.createHash('sha256').update(_BEACON_SALT).update('hof').update(String(clientIp(req))).digest('base64').slice(0, 16);
+  return _ipRateOk(_hofRate, k, HOF_RATE_MAX, HOF_RATE_WINDOW);
 }
 // ── PokerTH game-server registry (admin Layer A) — see /admin/servers ──
 // Entries: { id, name, host, port, tls, sni, noverify }. A saved server is
@@ -13774,6 +13818,39 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (_wr) return adminJson(res, 200, { ok: true, master: false, label: String(_wr.name || '').slice(0, 64), scopes: (_wr.scopes || []).filter(function (s) { return ADMIN_SCOPES.indexOf(s) >= 0; }) });
     return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
   }
+  // ── Hall of Fame (admin, scope « leaderboard ») ──
+  // GET : le réglage, les listes et les tableaux du réglage choisi (?names=).
+  // POST { names?, words?, bans? } : enregistrer ; POST /admin/hof/delete { key, name }.
+  if (reqPathOnly === '/admin/hof' && req.method === 'GET') {
+    if (!hasScope('leaderboard', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    const _hn = HOF.NAMES.indexOf(query.names) >= 0 ? query.names : hofNames();
+    return adminJson(res, 200, { ok: true, names: hofNames(), shown: _hn, all: HOF.NAMES, games: Object.keys(HOF.GAMES), words: hofWords(), bans: hofBans(),
+      baseWords: HOF.BASE_WORDS, top: HOF.TOP, topDay: HOF.TOP_DAY, boards: HOF.adminView(_hof, _hn), tokens: Object.keys(_hof.tokens).length });
+  }
+  if (reqPathOnly === '/admin/hof' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('leaderboard', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d) return adminJson(res, 400, { ok: false, error: 'json' });
+      const _list = function (a, max) { return Array.isArray(a) ? a.map(function (x) { return String(x == null ? '' : x).trim().slice(0, 40); }).filter(Boolean).slice(0, max) : null; };
+      if (d.names !== undefined) {
+        if (HOF.NAMES.indexOf(d.names) < 0) return adminJson(res, 400, { ok: false, error: 'names: account | initials | free' });
+        _adminConfig.hofNames = d.names;
+      }
+      if (d.words !== undefined) { const w = _list(d.words, 500); if (!w) return adminJson(res, 400, { ok: false, error: 'words: array' }); _adminConfig.hofWords = w; }
+      if (d.bans !== undefined) { const b = _list(d.bans, 2000); if (!b) return adminJson(res, 400, { ok: false, error: 'bans: array' }); _adminConfig.hofBans = b; }
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, names: hofNames(), words: hofWords(), bans: hofBans() });
+    });
+  }
+  if (reqPathOnly === '/admin/hof/delete' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('leaderboard', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || typeof d.key !== 'string' || typeof d.name !== 'string') return adminJson(res, 400, { ok: false, error: 'key and name required' });
+      const gone = HOF.remove(_hof, d.key, d.name);
+      if (gone) saveHofSoon();
+      return adminJson(res, gone ? 200 : 404, { ok: gone });
+    });
+  }
   // ── Product polls (admin) — store and helpers defined near _pollPublic() ──
   if (reqPathOnly === '/admin/polls' && req.method === 'GET') {
     if (!hasScope('polls', query, null)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -15825,6 +15902,36 @@ const httpServer = http.createServer((req, res) => {
     }, 256);
     return;
   }
+  // ── Hall of Fame des mini-jeux (server/hall-of-fame.js) ──
+  // GET /__hof?g=<jeu> : le réglage du nom et les tableaux du jeu (public).
+  // POST /__hof/start { g, m } : un ticket signé pour la partie qui commence.
+  // POST /__hof/score { g, m, s, ticket, day?, name? } (+ Authorization: Bearer
+  // <jeton HOFTOK> en mode compte) : le score est inscrit s'il est plausible.
+  if (reqPathOnly === '/__hof' || reqPathOnly === '/__hof/start' || reqPathOnly === '/__hof/score') {
+    const _hj = function (code, obj) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
+    if (reqPathOnly === '/__hof') {
+      if (req.method !== 'GET' && req.method !== 'HEAD') return _hj(405, { ok: false, error: 'method' });
+      const v = HOF.view(_hof, hofNames(), String(query.g || ''), Date.now());
+      return v ? _hj(200, Object.assign({ ok: true }, v)) : _hj(404, { ok: false, error: 'game' });
+    }
+    if (req.method !== 'POST') return _hj(405, { ok: false, error: 'method' });
+    return readJsonBody(req, function (d) {
+      if (!d) return _hj(400, { ok: false, error: 'json' });
+      if (!_hofRateOk(req)) return _hj(429, { ok: false, error: 'rate' });
+      const now = Date.now();
+      if (reqPathOnly === '/__hof/start') {
+        const tk = HOF.ticket(_hof, d.g, d.m, now);
+        return tk ? _hj(200, { ok: true, ticket: tk, names: hofNames() }) : _hj(400, { ok: false, error: 'game' });
+      }
+      const _bt = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
+      const r = HOF.submit(_hof, { now: now, names: hofNames(), g: d.g, m: d.m, s: d.s, day: d.day, ticket: d.ticket,
+        token: _bt ? _bt[1] : '', name: d.name, words: hofWords(), bans: hofBans() });
+      if (!r.ok) return _hj(r.err === 'rate' ? 429 : r.err === 'account' ? 401 : 400, { ok: false, error: r.err });
+      if (r.improved) saveHofSoon();
+      const v = HOF.view(_hof, hofNames(), d.g, now);
+      return _hj(200, { ok: true, rank: r.rank, best: r.best, name: r.name, names: v.names, boards: v.boards, day: v.day });
+    }, 2048);
+  }
   if (reqPathOnly === '/__guide') {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
@@ -16489,7 +16596,7 @@ function _openUpstream(S) {
           S.n++;
           const d = describeMsg(payload);
           if (d.name === 'InitAck' && typeof d.pid === 'number') S.playerId = d.pid;
-          if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) _issueSyncToken(S);
+          if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) { _issueSyncToken(S); _issueHofToken(S); }
           const _ll = _logLevel();
           // quiet : rien par message, SAUF les trames d'erreur (toujours utiles).
           if (_ll >= 1 || d.name.includes('Error'))
@@ -16565,6 +16672,7 @@ function _attachWs(S, ws) {
   // (utile après un rebranchement WS — le jeton reste lié à la session TCP).
   if (S.syncToken) { try { ws.send('SYNCTOK:' + S.syncToken); } catch (e) {} S.pendingTok = null; }
   else if (S.pendingTok) { try { ws.send(S.pendingTok); } catch (e) {} S.pendingTok = null; }
+  if (S.hofFrame) { try { ws.send(S.hofFrame); } catch (e) {} }
 
   ws.on('message', (data, isBinary) => {
     // ── Soft per-connection rate limit (frames + bytes, sliding 1 s window).

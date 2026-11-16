@@ -81,6 +81,7 @@ arena-out.result.json
 db-config.json
 broadcasts.json
 lan-boards.json
+hall-of-fame.json
 /prefs/
 *.json.tmp
 *.json.corrupt-*

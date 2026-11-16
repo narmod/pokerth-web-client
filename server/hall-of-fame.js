@@ -1,0 +1,210 @@
+'use strict';
+// ═══════════════════════════════════════════════════════════════════
+// The mini-games' Hall of Fame (design note claude/CONCEPTION_HALL_OF_FAME.md,
+// narmod 2026-11-16) — arcade-style best scores of everyone who plays from
+// the web client. Pure: no I/O, no clock of its own (proxy.js passes `now`,
+// stores the state in hall-of-fame.json); scripts/test-hall-of-fame.mjs drives it.
+//
+// The admin chooses the name shown beside a score (_adminConfig.hofNames):
+//   account   the pokerth.net nickname, proved by a Hall of Fame token the
+//             proxy hands out when the real PokerTH server accepted an
+//             AUTHENTICATED login (guests never get one), valid TOKEN_DAYS;
+//   initials  three letters or digits, as on an arcade machine;
+//   free      a free nickname, 2 to 12 characters, through a word filter.
+// Each setting has its own boards (narmod: « un tableau par réglage »): coming
+// back to a setting brings its scores back.
+//
+// Boards: '<names>/<game>:<mode>' keeps the TOP best, '<names>/<game>:daily:<day>'
+// the TOP_DAY best of a daily challenge (DAYS_KEPT days kept). One line per name
+// and board (its best), so a player cannot fill a board alone.
+//
+// Not cheat-proof (the score is counted in the browser), only tedious to fake:
+// a run must start with a ticket signed here (HMAC, nothing stored), the score
+// must be possible in the time since that ticket (GAMES[g].perSec), and the
+// proxy limits the submissions per address (in memory) and per name.
+// ═══════════════════════════════════════════════════════════════════
+
+const crypto = require('crypto');
+
+const NAMES = Object.freeze(['account', 'initials', 'free']);
+const TOP = 20, TOP_DAY = 10, DAYS_KEPT = 7;
+const TOKEN_DAYS = 90, TOKENS_PER_NAME = 5, TOKENS_MAX = 50000;
+const TICKET_MAX_MS = 6 * 3600 * 1000;   // a run longer than this is not ranked
+const NAME_GAP_MS = 5000;                 // one score per name every 5 s at most
+// The games that may be ranked (pilot: Ace Runner) and the most a second of play
+// can bring (Ace Runner: ≈ 99 m/s at top speed, ×2 in All-In, ×4 with a royal flush).
+const GAMES = Object.freeze({
+  'ace-runner': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 800, base: 2000 },
+});
+// Words a free nickname may not contain (the admin adds more: _adminConfig.hofWords).
+// A word of the name (or the whole name) that STARTS with one of them is refused —
+// « Computer » stays fine, « Pute123 » does not.
+const BASE_WORDS = Object.freeze(['fuck', 'shit', 'cunt', 'nigger', 'nigga', 'whore', 'hitler', 'nazi', 'pute', 'salope',
+  'connard', 'connasse', 'encule', 'negro', 'puta', 'cabron', 'fotze', 'arschloch', 'kurwa', 'bitch']);
+
+/** A fresh or loaded state, made safe to use. */
+function normalize(st) {
+  const s = st && typeof st === 'object' ? st : {};
+  if (typeof s.secret !== 'string' || s.secret.length < 32) s.secret = crypto.randomBytes(32).toString('hex');
+  if (!s.boards || typeof s.boards !== 'object') s.boards = {};
+  if (!s.tokens || typeof s.tokens !== 'object') s.tokens = {};
+  return s;
+}
+const namesOf = (v) => (NAMES.indexOf(v) >= 0 ? v : 'account');
+const dayOf = (now) => new Date(now).toISOString().slice(0, 10);
+/** Is `day` (YYYY-MM-DD) today or yesterday (a run that crossed midnight), UTC? */
+function dayOk(day, now) {
+  return typeof day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(day) && (day === dayOf(now) || day === dayOf(now - 86400000));
+}
+function boardKey(names, g, m, day) {
+  const G = GAMES[g];
+  return namesOf(names) + '/' + g + ':' + (G && m === G.daily ? 'daily:' + day : m);
+}
+const validGame = (g, m) => !!(GAMES[g] && GAMES[g].modes.indexOf(m) >= 0);
+
+// ── Tickets ──────────────────────────────────────────────────────────
+const sign = (st, s) => crypto.createHmac('sha256', st.secret).update(s).digest('base64url').slice(0, 22);
+/** A run starts: a ticket for game g, mode m, signed with the time. */
+function ticket(st, g, m, now) {
+  if (!validGame(g, m)) return null;
+  const body = g + '|' + m + '|' + Math.floor(now);
+  return Buffer.from(body).toString('base64url') + '.' + sign(st, body);
+}
+/** The ticket's start time when it is ours, for g and m, and not too old; else 0. */
+function ticketStart(st, tk, g, m, now) {
+  if (typeof tk !== 'string' || tk.length > 200) return 0;
+  const i = tk.indexOf('.');
+  if (i < 0) return 0;
+  let body = '';
+  try { body = Buffer.from(tk.slice(0, i), 'base64url').toString(); } catch (e) { return 0; }
+  const a = crypto.createHash('sha256').update(sign(st, body)).digest(), b = crypto.createHash('sha256').update(tk.slice(i + 1)).digest();
+  if (!crypto.timingSafeEqual(a, b)) return 0;
+  const p = body.split('|');
+  if (p[0] !== g || p[1] !== m) return 0;
+  const t0 = +p[2];
+  return t0 > 0 && t0 <= now && now - t0 <= TICKET_MAX_MS ? t0 : 0;
+}
+/** Could this score be made in `secs` seconds of this game? */
+function plausible(g, s, secs) {
+  const G = GAMES[g];
+  return !!G && Number.isInteger(s) && s > 0 && s <= G.base + G.perSec * Math.max(0, secs);
+}
+
+// ── Names ────────────────────────────────────────────────────────────
+// Letters only, accents and look-alike digits folded: « Pùt3 » → « pute ».
+function fold(s) {
+  return String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/@/g, 'a').replace(/\$/g, 's')
+    .replace(/[^a-zͰ-ϿЀ-ӿ]/g, '');
+}
+/** Does a word of this name, or the whole name, start with a banned word (BASE_WORDS + the admin's)? */
+function rude(name, words) {
+  const parts = String(name).split(/[\s._-]+/).map(fold).filter(Boolean).concat([fold(name)]);
+  return BASE_WORDS.concat(Array.isArray(words) ? words : []).some((w) => { const x = fold(w); return x.length >= 3 && parts.some((p) => p.indexOf(x) === 0); });
+}
+/**
+ * The name a player chose, cleaned for the setting, or '' when it cannot be used:
+ * initials A-Z 0-9 (exactly 3, upper case); free 2-12 letters, digits, space . _ -
+ * (spaces squeezed), no banned word.
+ */
+function cleanName(names, raw, words) {
+  const s = String(raw == null ? '' : raw).normalize('NFC').trim();
+  if (names === 'initials') { const u = s.toUpperCase(); return /^[A-Z0-9]{3}$/.test(u) ? u : ''; }
+  if (names === 'free') {
+    const n = s.replace(/\s+/g, ' ');
+    if (n.length < 2 || n.length > 12 || !/^[\p{L}\p{N} ._-]+$/u.test(n) || !/[\p{L}\p{N}]/u.test(n)) return '';
+    return rude(n, words) ? '' : n;
+  }
+  return '';
+}
+const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+/** Is this name blocked by the admin (_adminConfig.hofBans)? */
+const banned = (name, bans) => Array.isArray(bans) && bans.some((b) => same(b, name));
+
+// ── Account tokens ───────────────────────────────────────────────────
+/** An authenticated login: a token for this nickname (TOKEN_DAYS), the oldest of its own dropped past TOKENS_PER_NAME. */
+function issueToken(st, nick, now) {
+  const n = String(nick || '').slice(0, 64);
+  if (!n) return null;
+  const mine = Object.keys(st.tokens).filter((k) => same(st.tokens[k].n, n)).sort((a, b) => st.tokens[a].exp - st.tokens[b].exp);
+  while (mine.length >= TOKENS_PER_NAME) delete st.tokens[mine.shift()];
+  const keys = Object.keys(st.tokens);
+  if (keys.length >= TOKENS_MAX) { keys.sort((a, b) => st.tokens[a].exp - st.tokens[b].exp); for (let i = 0; i < keys.length - TOKENS_MAX + 1; i++) delete st.tokens[keys[i]]; }
+  const tok = crypto.randomBytes(24).toString('base64url');
+  st.tokens[tok] = { n, exp: now + TOKEN_DAYS * 86400000 };
+  return tok;
+}
+/** The nickname of a valid token, else null. */
+function tokenName(st, tok, now) {
+  if (typeof tok !== 'string' || tok.length > 64 || !Object.prototype.hasOwnProperty.call(st.tokens, tok)) return null;
+  const e = st.tokens[tok];
+  if (!e || e.exp < now) { delete st.tokens[tok]; return null; }
+  return e.n;
+}
+
+// ── Boards ───────────────────────────────────────────────────────────
+/**
+ * A score is in: { ok, rank (1…, 0 when not in the board), key, best (the name's
+ * best on the board), err }.
+ */
+function submit(st, o) {
+  const now = o.now, names = namesOf(o.names), g = o.g, m = o.m, s = o.s;
+  if (!validGame(g, m)) return { ok: false, err: 'game' };
+  const G = GAMES[g];
+  const day = m === G.daily ? o.day : '';
+  if (m === G.daily && !dayOk(day, now)) return { ok: false, err: 'day' };
+  const t0 = ticketStart(st, o.ticket, g, m, now);
+  if (!t0) return { ok: false, err: 'ticket' };
+  if (!plausible(g, s, (now - t0) / 1000)) return { ok: false, err: 'score' };
+  let name = '';
+  if (names === 'account') { name = tokenName(st, o.token, now) || ''; if (!name) return { ok: false, err: 'account' }; }
+  else { name = cleanName(names, o.name, o.words); if (!name) return { ok: false, err: 'name' }; }
+  if (banned(name, o.bans)) return { ok: false, err: 'banned' };
+  const key = boardKey(names, g, m, day), max = m === G.daily ? TOP_DAY : TOP;
+  const b = Array.isArray(st.boards[key]) ? st.boards[key] : (st.boards[key] = []);
+  const i = b.findIndex((r) => same(r.n, name));
+  if (i >= 0 && now - (b[i].at || 0) < NAME_GAP_MS) return { ok: false, err: 'rate' };
+  if (i >= 0 && b[i].s >= s) { b[i].at = now; return { ok: true, key, rank: i + 1, best: b[i].s, name, improved: false }; }
+  if (i >= 0) b.splice(i, 1);
+  const line = { n: name, s, ts: now, at: now };
+  let at = b.findIndex((r) => r.s < s);
+  if (at < 0) at = b.length;
+  if (at >= max) return { ok: true, key, rank: 0, best: s, name, improved: true };
+  b.splice(at, 0, line);
+  b.length = Math.min(b.length, max);
+  return { ok: true, key, rank: at + 1, best: s, name, improved: true };
+}
+const pub = (b) => (Array.isArray(b) ? b.map((r) => ({ n: r.n, s: r.s, ts: r.ts })) : []);
+/** What a game's title shows: the setting, each mode's board, today's daily board. */
+function view(st, names, g, now) {
+  const G = GAMES[g];
+  if (!G) return null;
+  const n = namesOf(names), day = dayOf(now), boards = {};
+  for (const m of G.modes) boards[m] = pub(st.boards[boardKey(n, g, m, day)]);
+  return { names: n, day, top: TOP, topDay: TOP_DAY, boards };
+}
+/** The admin's list: every board of a setting (key → lines). */
+function adminView(st, names) {
+  const n = namesOf(names), out = {};
+  Object.keys(st.boards).filter((k) => k.indexOf(n + '/') === 0).sort().forEach((k) => { out[k] = pub(st.boards[k]); });
+  return out;
+}
+/** The admin removes a name's line from a board; true when one went. */
+function remove(st, key, name) {
+  const b = st.boards[key];
+  if (!Array.isArray(b)) return false;
+  const i = b.findIndex((r) => same(r.n, name));
+  if (i < 0) return false;
+  b.splice(i, 1);
+  if (!b.length) delete st.boards[key];
+  return true;
+}
+/** Old daily boards and expired tokens go. */
+function prune(st, now) {
+  const oldest = dayOf(now - DAYS_KEPT * 86400000);
+  Object.keys(st.boards).forEach((k) => { const m = /:daily:(\d{4}-\d{2}-\d{2})$/.exec(k); if (m && m[1] < oldest) delete st.boards[k]; });
+  Object.keys(st.tokens).forEach((k) => { if (!st.tokens[k] || st.tokens[k].exp < now) delete st.tokens[k]; });
+}
+
+module.exports = { NAMES, GAMES, TOP, TOP_DAY, DAYS_KEPT, TOKEN_DAYS, BASE_WORDS, normalize, namesOf, dayOk, boardKey, ticket, ticketStart,
+  plausible, fold, rude, cleanName, banned, issueToken, tokenName, submit, view, adminView, remove, prune };

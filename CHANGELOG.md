@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Mini-games Hall of Fame — server and admin** (`web.95`, narmod; design note `claude/CONCEPTION_HALL_OF_FAME.md`) —
+  `server/hall-of-fame.js` (pure) and `hall-of-fame.json` beside `stats.json`: the top 20 of each game and mode and
+  the top 10 of the day of a daily challenge (7 days kept), one line per name (its best). The name shown is an admin
+  setting (`hofNames`: `account` by default, `initials`, `free`), each setting with its own boards. Account: the proxy
+  sends `HOFTOK:{t,n}` after an authenticated login only (like `SYNCTOK:`), a 90-day key the browser keeps
+  (`pth_hof_tok`) to enter scores from the mini-games while not connected. Routes `GET /__hof?g=`,
+  `POST /__hof/start` (an HMAC-signed ticket, nothing stored), `POST /__hof/score` (ticket, score possible in the time
+  played, name, per-address limit in memory and one score per name every 5 s). Admin: Community › Hall of Fame
+  (setting, blocked names, banned words for free nicknames, boards with Remove; scope `leaderboard`). Privacy page
+  updated. Pilot game: Ace Runner (client next). `scripts/test-hall-of-fame.mjs`.
 - **Ace Runner: Daily challenge and Time attack** (`web.94`, narmod) — the title now offers three modes. Daily: the
   obstacles, the items and the deck come from seeded streams (`rng('ar-<day>-obs|item|pow|deck')`, one per spawner so
   the course does not depend on the frame rate), record of the day in `pth_ar_daily`. Time attack: `TIME_S` 90 s to run

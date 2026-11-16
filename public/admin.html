@@ -1224,6 +1224,7 @@
         <div class="tabs subtabs" data-g="community" style="display:none">
           <button type="button" class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
           <button type="button" class="tab" data-t="polls" data-scope="polls">Polls</button>
+          <button type="button" class="tab" data-t="hof" data-scope="leaderboard">Hall of Fame</button>
           <button type="button" class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
           <button type="button" class="tab" data-t="arena">Arena<span class="tbeta" title="Beta: still being built">beta</span></button>
           <button type="button" class="tab" data-t="landir">LAN directory<span class="tbadge" id="ldBadge" style="display:none" title="Requests waiting for approval"></span></button>
@@ -2137,6 +2138,25 @@
       <div class="card" data-master="1">
         <h2>Arrival notices</h2>
         <p class="muted">The welcome / rules message and the guest, LAN and registered-account notices open when a player arrives: they are set in <a href="#login" data-goto="login">Player experience › Login screen</a>.</p>
+      </div>
+    </div>
+
+    <div id="panel-hof" style="display:none">
+      <div class="card">
+        <div class="boardhead"><h2>Hall of Fame</h2><span id="hofSum" class="headnote"></span><button id="hofRefresh" class="use">Refresh</button></div>
+        <p class="muted">The mini-games' best scores of everyone who plays from this web client, as on an arcade machine: the top 20 of each game and mode, and the top 10 of the day for a daily challenge. Pilot: Ace Runner.</p>
+        <details class="more"><summary>The name shown, and cheating</summary><p class="muted"><b>pokerth.net account</b>: the nickname of a registered account — the proxy hands a 90-day Hall of Fame key to the browser when the real PokerTH server accepts an authenticated login (guests never get one), so scores can be entered from the mini-games without being connected. <b>3 letters</b>: initials, as on an arcade machine, open to everyone. <b>Free nickname</b>: 2 to 12 characters, through the word filter below, open to everyone. Each setting keeps its own boards: switching back brings its scores back. Scores are counted in the browser, so they can be faked with some effort: a run needs a ticket signed here, the score must be possible in the time played, and submissions are limited per address (in memory only, never stored). Remove a line below, or block a name.</p></details>
+        <div class="defrow fld"><span>Name shown</span><select id="hofNames"><option value="account">pokerth.net account</option><option value="initials">3 letters</option><option value="free">Free nickname</option></select></div>
+        <div class="defrow fld"><span>Blocked names</span><textarea id="hofBans" rows="3" placeholder="One name per line" style="width:100%"></textarea></div>
+        <div class="defrow fld"><span>Banned words (free nickname)</span><textarea id="hofWords" rows="3" placeholder="One word per line — a name with a word starting with one of them is refused" style="width:100%"></textarea></div>
+        <p class="muted" id="hofBase"></p>
+        <div class="rowtop"><button id="hofSave" class="use" data-save>Save</button></div>
+        <div id="hofMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2>Boards</h2><label class="lsel">Setting <select id="hofView"><option value="account">pokerth.net account</option><option value="initials">3 letters</option><option value="free">Free nickname</option></select></label></div>
+        <div id="hofBoards" class="erlist"><div class="empty">Loading…</div></div>
+        <div id="hofBoardsMsg" class="msg"></div>
       </div>
     </div>
 
@@ -3428,6 +3448,7 @@
     if(t==='landir') loadLanDir();
     if(t==='arena') loadTournaments();
     if(t==='polls'){ loadPolls(); if(_isMaster) loadFeatureSwitches(); }
+    if(t==='hof') loadHof();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadStatus(!cfgAnyDirty()); } }
     if(t==='login'){ if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='login'||t==='lobby'){ loadStatus(!cfgAnyDirty()); loadFeatureSwitches(); }
@@ -8436,6 +8457,40 @@
   }
   // One card per poll: state, question, languages and answers, then one bar
   // per option (the one ahead marked) and the actions.
+  // ── Hall of Fame (proxy.js /admin/hof, server/hall-of-fame.js) ──
+  var HOF_NAMES={account:'pokerth.net account',initials:'3 letters',free:'Free nickname'};
+  var HOF_MODES={free:'Free run',daily:'Daily challenge',time:'Time attack'};
+  function _hofBoardLabel(k){ var m=/^[a-z]+\/([a-z-]+):(.+)$/.exec(k); if(!m) return k; var g=m[1]==='ace-runner'?'Ace Runner':m[1], md=m[2], d=/^daily:(.+)$/.exec(md); return g+' · '+(d?HOF_MODES.daily+' · '+d[1]:(HOF_MODES[md]||md)); }
+  function loadHof(view){
+    var v=view||($('hofView')?$('hofView').value:'');
+    api('/admin/hof'+(v?'?names='+encodeURIComponent(v):'')).then(function(r){return r.json();}).then(function(d){
+      var el=$('hofBoards'); if(!el) return;
+      if(!d||!d.ok){ el.innerHTML='<div class="empty err">'+srvEsc((d&&d.error)||'error')+'</div>'; return; }
+      if(!view){ $('hofNames').value=d.names; $('hofBans').value=(d.bans||[]).join('\n'); $('hofWords').value=(d.words||[]).join('\n'); }
+      $('hofView').value=d.shown;
+      $('hofBase').textContent='Always refused for a free nickname: '+(d.baseWords||[]).join(', ')+'.';
+      var keys=Object.keys(d.boards||{});
+      $('hofSum').textContent='Shown: '+(HOF_NAMES[d.names]||d.names)+' · '+keys.length+' board'+(keys.length===1?'':'s')+' here · '+d.tokens+' account key'+(d.tokens===1?'':'s');
+      if(!keys.length){ el.innerHTML='<div class="empty">No score yet for this setting.</div>'; return; }
+      el.innerHTML=keys.map(function(k){
+        var rows=(d.boards[k]||[]).map(function(r,i){ return '<tr><td>'+(i+1)+'</td><td>'+srvEsc(r.n)+'</td><td>'+Number(r.s).toLocaleString()+'</td><td>'+srvEsc(new Date(r.ts).toISOString().slice(0,16).replace('T',' '))+'</td><td><button class="use hofDel" data-k="'+srvEsc(k)+'" data-n="'+srvEsc(r.n)+'">Remove</button></td></tr>'; }).join('');
+        return '<h3 style="margin:10px 0 4px">'+srvEsc(_hofBoardLabel(k))+'</h3><div class="ldtblw"><table class="ldtbl"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Date (UTC)</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+      }).join('');
+      el.querySelectorAll('.hofDel').forEach(function(b){ b.addEventListener('click',function(){
+        var k=b.getAttribute('data-k'), n=b.getAttribute('data-n');
+        if(!confirm('Remove '+n+' from '+_hofBoardLabel(k)+'?')) return;
+        api('/admin/hof/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,name:n})}).then(function(r){return r.json();}).then(function(x){ $('hofBoardsMsg').textContent=x&&x.ok?'Removed':'Not found'; loadHof($('hofView').value); }).catch(function(){ $('hofBoardsMsg').textContent='Error'; });
+      }); });
+    }).catch(function(){ var el=$('hofBoards'); if(el) el.innerHTML='<div class="empty err">Could not load the Hall of Fame.</div>'; });
+  }
+  if($('hofRefresh')) $('hofRefresh').addEventListener('click',function(){ loadHof(); });
+  if($('hofView')) $('hofView').addEventListener('change',function(){ loadHof($('hofView').value); });
+  if($('hofSave')) $('hofSave').addEventListener('click',function(){
+    var lines=function(id){ return $(id).value.split('\n').map(function(x){return x.trim();}).filter(Boolean); };
+    api('/admin/hof',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({names:$('hofNames').value,bans:lines('hofBans'),words:lines('hofWords')})}).then(function(r){return r.json();}).then(function(d){
+      $('hofMsg').textContent=d&&d.ok?'Saved':((d&&d.error)||'Error'); if(d&&d.ok) loadHof(d.names);
+    }).catch(function(){ $('hofMsg').textContent='Error'; });
+  });
   function loadPolls(){
     api('/admin/polls').then(function(r){return r.json();}).then(function(d){
       var el=$('plList'); if(!el) return; el.innerHTML='';

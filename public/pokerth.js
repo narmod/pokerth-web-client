@@ -5189,6 +5189,13 @@ const App = (() => {
       try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(data.slice(8)); } catch (_e) {}
       return;
     }
+    // Hall of Fame des mini-jeux (claude/CONCEPTION_HALL_OF_FAME.md) : jeton de
+    // 90 jours émis à un login authentifié, gardé sur l'appareil pour inscrire
+    // ses scores depuis l'arcade, sans être connecté.
+    if (data.startsWith('HOFTOK:')) {
+      try { var _ht = JSON.parse(data.slice(7)); if (_ht && _ht.t && _ht.n) localStorage.setItem('pth_hof_tok', JSON.stringify({ t: String(_ht.t), n: String(_ht.n) })); } catch (_e) {}
+      return;
+    }
     // AVATAR:/AVATARIMG: (ancien relais d'avatar entre clients web) : plus
     // émis ni affichés, le proxy les absorbe — l'avatar passe uniquement
     // par le protocole PokerTH, comme pour le client QML. Une trame
@@ -12590,7 +12597,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.94'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.95'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

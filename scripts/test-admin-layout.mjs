@@ -43,7 +43,7 @@ const shellJs = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..',
 // classes, so the handlers that open a panel are the same as before.
 const GROUPS = {
   overview: ['overview'],
-  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/arcade'], community: ['board', 'polls', 'broadcast', 'arena', 'landir'],
+  live: ['sessions', 'livemap'], stats: ['traffic/overview', 'traffic/world', 'traffic/audience', 'traffic/activity', 'traffic/visitors', 'traffic/music', 'traffic/ace', 'traffic/arcade'], community: ['board', 'polls', 'hof', 'broadcast', 'arena', 'landir'],
   content: ['packages', 'music'], players: ['login', 'lobby', 'firstvisit', 'features'], infra: ['servers', 'proxy', 'database', 'identity'],
   ops: ['server', 'errors', 'deploy', 'backup'], security: ['keys', 'audit', 'blocked'],
 };
@@ -69,7 +69,7 @@ for (const [g, tabs] of Object.entries(GROUPS)) {
     tabs.length === 1 ? 'a one-section group opens its section directly' : 'a group of several unfolds its list');
   all = all.concat(got);
 }
-ok(all.length === 33 && new Set(all).size === 33, 'every one of the thirty-three sections is reachable, once');   // web.25: Mini-games
+ok(all.length === 34 && new Set(all).size === 34, 'every one of the thirty-four sections is reachable, once');   // web.25: Mini-games; web.95: Hall of Fame
 for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
   ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the move');
 }
@@ -329,7 +329,7 @@ ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries t
 // web.192: + the database Type row (76).
 // web.323: + the three rows of « Where the Arena runs » (79).
 // web.327: the Arena is its own app, only its address and key are left (78).
-ok((admin.match(/class="defrow fld/g) || []).length === 78, 'all 78 rows use it');
+ok((admin.match(/class="defrow fld/g) || []).length === 81, 'all 81 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');
