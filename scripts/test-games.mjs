@@ -77,6 +77,7 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
   ok(pr.extraCars(0, 0) === 0 && pr.extraCars(3, 0) === 3 && pr.extraCars(5, 5) === 30 && pr.swerveShare(2) === 0 && pr.swerveShare(3) === 0.25 && pr.swerveShare(5) === 0.45
     && pr.convoys(3) === 0 && pr.convoys(4) === 2 && pr.convoys(5) === 3 && pr.swerveBlend(0) === 0 && pr.swerveBlend(pr.SWERVE_MOVE) === 1 && pr.swerveBlend(pr.SWERVE_MOVE / 2) === 0.5,
     'Poker Run traffic (web.112): 5 cars a level and 1 a stage, lane changes from level 3, convoys from level 4, an eased slide');
+  ok(pr.kmhOf(0) === 0 && pr.kmhOf(-5) === 0 && pr.KMH_TOP === 240 && Math.round(pr.kmhOf(200 * 62 * 1.45)) === 348, 'Poker Run speed (web.113): 240 km/h at top speed, about 350 with the nitro');
   const c3 = await import('../public/modules/games/car3d.mjs');
   const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });
   let calls = 0; const stub = new Proxy({}, { get: (t, k) => (k in t ? t[k] : () => { calls++; return { addColorStop() {} }; }), set: (t, k, v) => { t[k] = v; return true; } });

@@ -1,4 +1,7 @@
-2026-11-16 version 2.1.11-web.112 (current series):
+2026-11-16 version 2.1.11-web.113 (current series):
+- new: Poker Run — a speedometer in the top band: your speed in km/h with a bar, and next to it the nitro left, both orange while the nitro burns; the old nitro meter at the bottom of the road is gone
+
+2026-11-16 version 2.1.11-web.112:
 - improvement: Poker Run — the harder the road, the busier: 5 more cars per level of difficulty and one more per stage; from level 2 slow trucks and fast sports cars, from level 3 cars that change lane (indicator first), from level 4 convoys with a single gap to thread
 
 2026-11-16 version 2.1.11-web.111:

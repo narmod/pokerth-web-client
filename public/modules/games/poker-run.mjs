@@ -79,6 +79,9 @@ export const branchOfLane = (l, side) => (l === 0 ? 0 : l === 2 ? 1 : side);
 // of sight ahead; from level 2 slow trucks and fast sports cars among them, from level 3 cars that change lane
 // (their indicator on for SWERVE_WARN s first), from level 4 convoys — two side by side, the third just behind
 // in the gap: a chicane. Level 0 (the easy roads) is as before but for one more car per stage.
+// The speed shown in the band (web.113): top speed is 240 km/h, the nitro's ×1.45 about 350; the bar is full at 360.
+export const KMH_TOP = 240, KMH_DIAL = 360;
+export const kmhOf = (vv) => Math.max(0, vv) / MAXV * KMH_TOP;
 export const TRAFFIC_LV = { mixed: 2, swerve: 3, convoy: 4 };
 export const SWERVE_WARN = 1, SWERVE_MOVE = 0.8;
 /** The cars a stage adds: 5 per level of its road, 1 per stage driven. */
@@ -206,14 +209,14 @@ const CSS = `
 #pth-game .prun-hearts span{color:rgba(255,255,255,.3)}
 #pth-game .prun-ghost{position:absolute;font:700 13px 'Inconsolata',monospace;color:#bfe3ff;text-shadow:0 1px 2px rgba(0,0,0,.7);white-space:nowrap}
 #pth-game .prun-ghost.ahead{color:#7ee08a}#pth-game .prun-ghost.behind{color:#ff8a7a}
-#pth-game .prun-nitro{position:absolute;left:12px;bottom:12px;z-index:397;display:flex;align-items:center;gap:7px;pointer-events:none;font:800 11px 'Inter',system-ui,sans-serif;letter-spacing:.1em;color:#d8b25a;text-shadow:0 1px 2px rgba(0,0,0,.7)}
-#pth-game.pg-touch:not(.pg-nopad) .prun-nitro{display:none}
-#pth-game .prun-nitro[hidden]{display:none}
-#pth-game .prun-nitro i{display:block;width:120px;height:9px;border-radius:5px;background:rgba(13,17,23,.65);border:1px solid rgba(216,178,90,.55);overflow:hidden}
-#pth-game .prun-nitro b{display:block;height:100%;width:0;background:linear-gradient(90deg,#b8862a,#ffd27a);transition:width .15s}
-#pth-game .prun-nitro.prun-ready{color:#ffd27a}
-#pth-game .prun-nitro.prun-burn b{background:linear-gradient(90deg,#ff8a3d,#fff1c4);box-shadow:0 0 10px #ffb347}
-#pth-game .prun-nitro small{font:700 10px 'Inter',system-ui,sans-serif;letter-spacing:0;color:#cfd8d2}
+#pth-game .prun-hud .prun-bar{display:block;height:4px;margin-top:4px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
+#pth-game .prun-hud .prun-bar b{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:#e8b84a;transition:transform .12s linear}
+#pth-game .prun-hud .prun-spd .prun-bar{width:52px}#pth-game .prun-hud .prun-nit .prun-bar{width:72px}
+#pth-game .prun-hud .prun-spd .ar-num,#pth-game .prun-hud .prun-nit .ar-num{min-width:3ch}
+#pth-game .prun-hud .prun-nit .ar-lab,#pth-game .prun-hud .prun-nit .ar-num{color:#ff9a4d}#pth-game .prun-hud .prun-nit .prun-bar b{background:#ff8a3d}
+#pth-game .prun-hud .prun-nit.prun-burn .prun-bar{height:6px;margin-top:3px}#pth-game .prun-hud .prun-nit.prun-burn .prun-bar b{box-shadow:0 0 8px #ffb347;background:linear-gradient(90deg,#ff8a3d,#fff1c4)}
+#pth-game .prun-hud .prun-spd.prun-burn .ar-num{color:#ff9a4d}#pth-game .prun-hud .prun-spd.prun-burn .prun-bar b{background:#ff8a3d}
+@media (max-width:520px){#pth-game .prun-hud .prun-spd .prun-bar{width:36px}#pth-game .prun-hud .prun-nit .prun-bar{width:44px}}
 #pth-game .prun-map{display:block;color:#f1e9d4;width:min(520px,100%);height:auto;margin:2px 0 4px}
 #pth-game .prun-hud .ar-hand{order:3}
 #pth-game .prun-mini{order:2;flex:none;margin-left:auto;width:132px;line-height:0;background:rgba(8,12,18,.55);border:1px solid rgba(232,184,74,.22);border-radius:9px;padding:1px 3px}
@@ -241,13 +244,6 @@ export function create(shell) {
   const prev = document.createElement('div');
   prev.className = 'prun-prev'; prev.hidden = true;
   shell.layer.appendChild(prev);
-  // The nitro meter on the stage, for a screen without the touch pad (web.66,
-  // narmod: « on a standard screen you can't see where the nitro is »).
-  const nitroBox = document.createElement('div');
-  nitroBox.className = 'prun-nitro'; nitroBox.hidden = true;
-  nitroBox.innerHTML = 'NITRO<i><b></b></i><small>↑ / Space · 🎮 A</small>';
-  shell.layer.appendChild(nitroBox);
-  const nitroBar = /** @type {HTMLElement} */ (nitroBox.querySelector('b'));
   const qBox = document.createElement('div');
   qBox.className = 'prun-q'; qBox.hidden = true;
   qBox.innerHTML = '<div class="prun-qc">Q<span>♥︎</span></div><div class="prun-qb"><b></b><div class="prun-qr"><span class="prun-qn"></span><div class="prun-qbar"><i></i></div><span class="prun-qt"></span></div></div>';
@@ -270,11 +266,16 @@ export function create(shell) {
   shell.hud.classList.add('on-felt', 'prun-hud');
   shell.hud.innerHTML = '<div class="ar-stats"><div><div class="ar-lab">' + esc(t('blChips')) + '</div><div class="ar-num pr-c">0</div></div>'
     + '<div><div class="ar-lab">' + esc(t('gameTimeLabel')) + '</div><div class="ar-num pr-t">' + TIME0.toFixed(1) + '</div></div>'
-    + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num pr-s">1/' + STAGES + '</div></div></div>'
+    + '<div><div class="ar-lab">' + esc(t('arLevel')) + '</div><div class="ar-num pr-s">1/' + STAGES + '</div></div>'
+    // The speed and the nitro, in the band (web.113, narmod: layout « D » of the mock-ups; it replaces the meter
+    // that was on the stage): km/h with a bar, the nitro left with its bar, both orange while it burns.
+    + '<div class="prun-spd"><div class="ar-lab">km/h</div><div class="ar-num pr-v">0</div><i class="prun-bar" aria-hidden="true"><b></b></i></div>'
+    + '<div class="prun-nit"><div class="ar-lab">Nitro</div><div class="ar-num pr-n">0%</div><i class="prun-bar" aria-hidden="true"><b></b></i></div></div>'
     + '<div class="prun-hearts" hidden></div><div class="prun-ghost" hidden></div>'
     + '<div class="prun-mini" aria-hidden="true" hidden></div>'
     + '<div class="ar-hand"><div class="ar-slots"></div><div class="ar-name"></div></div>';
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
+  const hSpd = q('.prun-spd'), hSpdN = q('.pr-v'), hSpdB = q('.prun-spd b'), hNit = q('.prun-nit'), hNitN = q('.pr-n'), hNitB = q('.prun-nit b');
   const hChips = q('.pr-c'), hTime = q('.pr-t'), hStage = q('.pr-s'), hSlots = q('.ar-slots'), hName = q('.ar-name'), hMini = q('.prun-mini'), hHearts = q('.prun-hearts'), hGhost = q('.prun-ghost');
 
   // ── Track ──────────────────────────────────────────────────────────
@@ -514,10 +515,16 @@ export function create(shell) {
     hName.innerHTML = (ev.nameKey ? esc(t(ev.nameKey)) : '') + ' <b>×' + ev.mult + '</b>';
   }
   let lastStats = '';
+  let lastGauge = '';
   function renderNitro() {
-    gauge.style.width = Math.round(nitro * 100) + '%';
-    nitroBar.style.width = Math.round(nitro * 100) + '%'; nitroBox.hidden = state !== 'run';
-    nitroBox.classList.toggle('prun-ready', nitro > 0.15 && !boost); nitroBox.classList.toggle('prun-burn', boost);
+    const kmh = Math.round(kmhOf(v)), pc = Math.round(nitro * 100), key = kmh + '|' + pc + '|' + boost;
+    if (key !== lastGauge) {
+      lastGauge = key;
+      gauge.style.width = pc + '%';
+      hSpdN.textContent = String(kmh); hSpdB.style.transform = 'scaleX(' + Math.min(1, kmh / KMH_DIAL).toFixed(3) + ')';
+      hNitN.textContent = pc + '%'; hNitB.style.transform = 'scaleX(' + (pc / 100).toFixed(2) + ')';
+      hSpd.classList.toggle('prun-burn', boost); hNit.classList.toggle('prun-burn', boost);
+    }
     if (nitroBtn) { nitroBtn.classList.toggle('prun-ready', nitro > 0.15 && !boost); nitroBtn.classList.toggle('prun-burn', boost); }
   }
   function renderStats(force) {
@@ -1016,7 +1023,7 @@ export function create(shell) {
       + '<rect x="2" y="-8" width="516" height="148" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
   }
   function over() {
-    state = 'over'; overAt = performance.now(); hMini.hidden = true; nitroBox.hidden = true;
+    state = 'over'; overAt = performance.now(); hMini.hidden = true;
     const pr = progress();
     const ra = S('auto');
     for (const g of gates) if (g.picked < 0) { g.auto = true; takeGate(g, Math.floor(ra() * 2), false); }
@@ -1572,7 +1579,7 @@ const carW = () => Math.min(W * 0.24, 100);
       clearTimeout(revealTimer);
       try { if (window.__pthRun) delete window.__pthRun; } catch (e) {}
       front.remove(); prev.remove(); ace.remove();
-      shell.root.classList.remove('prun-pad'); shell.padMode = null; qBox.remove(); nitroBox.remove();
+      shell.root.classList.remove('prun-pad'); shell.padMode = null; qBox.remove();
       if (nitroBtn && nitroWas) { gauge.remove(); nitroBtn.textContent = nitroWas.text; if (nitroWas.label) nitroBtn.setAttribute('aria-label', nitroWas.label); nitroBtn.classList.remove('prun-ready', 'prun-burn'); }
     },
   };

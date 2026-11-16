@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: speed and nitro in the band** (`web.113`, narmod: layout « D » of the mock-ups) — two more
+  columns after Chips · Time · Level: `KM/H` (`kmhOf`: 240 at top speed, ≈ 350 with the nitro; its bar full at
+  `KMH_DIAL` = 360) and `NITRO` (the % left, an orange bar), both orange while it burns; written only when a value
+  changes, the bars as `scaleX`. The stage's nitro meter (`.prun-nitro`, web.66) is removed at narmod's request;
+  the touch pad's NITRO button keeps its fill.
 - **Poker Run: traffic by difficulty** (`web.112`, narmod: « the hard roads are too easy ») — a stage adds
   `extraCars(k, lv)` = 5 × its road's level + its index cars, out of sight ahead (was 3 × level). From level 2 a third
   are slow trucks (20–30 % of top speed) and a third fast sports cars (70–85 %); from level 3 a share of the stage's

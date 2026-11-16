@@ -3,7 +3,8 @@
 // easy — more cars, at different speeds »): every right turn makes the next
 // stage busier (5 cars a level, 1 a stage); from level 2 slow trucks and fast
 // sports cars, from level 3 cars that change lane after their indicator, from
-// level 4 convoys (two side by side, the third behind in the gap).
+// level 4 convoys (two side by side, the third behind in the gap). The band
+// shows the speed and the nitro (web.113).
 // Run: node scripts/test-poker-run-traffic.mjs   (PTH_SHOTS=1: .shots/prun-swerve.png)
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
@@ -26,6 +27,11 @@ await pg.evaluate(() => { const c = document.querySelector('#pth-game .gm-art[da
 await sleep(1200);
 await pg.keyboard.press('Space'); await sleep(600);
 ok(await pg.evaluate(() => window.__pthRun.mode() === 'free' && window.__pthRun.state() === 'run'), 'a free run starts');
+// The band (web.113): km/h and the nitro with their bars; no meter left on the stage.
+await pg.evaluate(() => { const R = window.__pthRun; R.setTime(99); R.cars().forEach((c) => { c.dead = true; }); });
+const hud = await pg.evaluate(async () => { const R = window.__pthRun; for (let i = 0; i < 20; i++) { R.setV(0.5); R.setTime(99); await new Promise((r) => setTimeout(r, 16)); }
+  const q = (s) => document.querySelector('#pth-game ' + s); return { kmh: +q('.pr-v').textContent, nit: q('.pr-n').textContent, bar: q('.prun-spd b').style.transform, old: !!q('.prun-nitro') }; });
+ok(hud.kmh >= 110 && hud.kmh <= 130 && /^\d+%$/.test(hud.nit) && /scaleX/.test(hud.bar) && !hud.old, 'the band shows the speed (' + hud.kmh + ' km/h at half speed) and the nitro (' + hud.nit + '), the old meter is gone');
 const M = await pg.evaluate(async () => { const m = await import('/modules/games/poker-run.mjs'); return { ex: [0, 1, 2, 3, 4, 5].map((k) => m.extraCars(k, k)) }; });
 // Five rights in a row: levels 1 … 5.
 const took = [];
