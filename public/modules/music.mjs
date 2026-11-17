@@ -912,7 +912,21 @@ function _icon(name) {
   };
   return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + (P[name] || '') + '</svg>';
 }
+// Playing state broadcast (web.120, audit AUDIT_MUSIQUE_2026-11-15): the header
+// music buttons outside a game turn into gold equalizer bars while music plays,
+// and sounds.mjs listens to 'pth-music-state' for the table's speaker button and
+// its mini-player. Runs before the panel guard: the panel may never have been
+// opened (playback started from the speaker menu or the OS media keys).
+function _notifyState() {
+  var p = isPlaying();
+  try {
+    var bs = document.querySelectorAll('.music-hdr-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('is-playing', p);
+  } catch (e) {}
+  try { document.dispatchEvent(new CustomEvent('pth-music-state', { detail: { playing: p, id: _curId } })); } catch (e) {}
+}
 function _render() {
+  _notifyState();
   if (!_bodyEl) return;
   if (!_tracks.length) {
     _bodyEl.innerHTML = '<div class="music-empty" data-i18n="musicNoTracks">' + _esc(_t('musicNoTracks', 'No tracks available')) + '</div>';

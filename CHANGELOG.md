@@ -16,6 +16,21 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Music player: a header button outside a game, a mini-player in the speaker menu** (`web.120`, audit
+  `AUDIT_MUSIQUE_2026-11-15`, mock-ups B1/C1–C4/D1, narmod: « make the music player seen without disturbing
+  the players ») — the player was only reachable from the ••• menus. Outside a game (login, lobby, create a
+  table, mini-games) a `.music-hdr-btn` note button sits after the ranking trophy and opens the panel; at the
+  table nothing is added: the existing `#sound-toggle-btn` carries the music. One visual code everywhere: gold
+  equalizer bars (`.mus-eq`) = music playing — on the header button (`.is-playing`) and on the table's speaker
+  (`.snd-music`, plus a small badge when the game sounds are muted). `music.mjs` `_render()` now starts with
+  `_notifyState()`, which toggles the header buttons and fires `pth-music-state`; `sounds.mjs` listens to it.
+  The speaker menu gains a music section (`_musicSectionHtml`): player link, title + previous / pause / next
+  while playing, one quiet resume line when stopped (the loud invitation stays outside a game), music volume.
+  No new UI string (existing `musicPanelTitle` / `musicPlay` / `musicPause` / `musicNext` / `musicPrev` /
+  `musicNowPlaying`). Admin kill switch and `/live` hide the header buttons; the ••• entries stay. Phones: the
+  create and mini-games headers use a 4 px gap below 560 px so their title keeps its room
+  (`test-i18n-overflow` lobby + create, 83 languages, 360 px: pass). Help « Music player » gets a first
+  paragraph in all 83 languages.
 - **Poker Run: the arrival's bonus, crashes that cost time** (`web.119`, narmod: « the hard levels are not
   very hard ») — crossing the line multiplies the score by `ARRIVAL_MULT` of the arrival's row (×1 Atlantic City,
   ×1.2, ×1.4, ×1.6, ×1.8, ×2 St. Moritz; none on a time-out), shown on the end screen as « 🏁 town ×n ». A crash

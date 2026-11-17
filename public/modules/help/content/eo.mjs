@@ -386,7 +386,8 @@ export const help = {
             "Krom la etoso, pluraj elementoj estas ŝanĝeblaj sendepende: la tablofono, la kartaro, la kartdorso (aŭtomate kongrui kun la kartaro aŭ importi vian propran bildon), la diskoj de disdonanto kaj blindoj, la stilo de la agobutonoj kaj plenaj sidlokaj pakoj, kiuj ŝanĝas la aspekton de la ludantaj skatoloj. Elektu ĉion en Altnivelaj opcioj → Stilo; ŝanĝoj estas tuj videblaj ĉe la tablo."] },
         { id: "music",
           t: "Muzikludilo",
-          b: [
+          b: ["Ekster ludo, la muziknota butono en la kaplinio malfermas la ludilon; dum muziko ludas, ĝi iĝas oraj egalizilaj stangoj. Dum ludo, la laŭtparolila butono enhavas miniludilon sub la laŭteco de la ludsonoj: la nuna trako, antaŭa / paŭzo / sekva, la muzika laŭteco kaj ligilo al la plena ludilo.",
+              
             "La muzika ero en la kaplinaj menuoj malfermas etan ludilon de salonmuziko: elektu trakon el la ludlisto, ludu/paŭzu, antaŭa/sekva, miksu, kaj ripetu unu trakon, la tutan ludliston aŭ nenion. Laŭteco, elektita trako kaj ripeta reĝimo estas memorataj. La ludado neniam komenciĝas memstare — retumiloj postulas tuŝon — kaj la ludilo estas tute sendependa de la sonefektoj de la ludo.",
             "La du dikfingroj sub la nomo de la trako diras ĉu vi ŝatas tion, kio ludas. Unu anonima voĉdono por aparato, radioj inkluzivitaj, kaj vi povas ŝanĝi aŭ retiri ĝin iam ajn; krom se la operaciisto malkaŝas la sumojn, vi vidas nur vian propran dikfingron.",
             "Ĉe iPhone kaj iPad la ludilo defaŭlte uzas simplan ludadon, por ke muziko daŭru kun CarPlay, Bluetooth aŭ ŝlosita ekrano; la laŭteco tiam estas alĝustigata per la butonoj de la aparato aŭ de la aŭto. La opcio “Laŭteco en la aplikaĵo” redonas la laŭtecan ŝovilon, la ekvilibron kaj la VU-mezurilon, sed en aŭto la sono povas ŝanceliĝi."] },

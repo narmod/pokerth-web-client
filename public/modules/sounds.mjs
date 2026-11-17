@@ -569,12 +569,28 @@ var SND_OFF_SVG = '<svg viewBox="0 0 24 24" style="display:block;width:22px;heig
 // The buttons: the table's header and the mini-games' header (web.98, narmod:
 // « the sound button in the header of the mini-games and of each mini-game »).
 var SOUND_BTN_IDS = ['sound-toggle-btn', 'sound-toggle-btn-arcade'];
+// In a game the table's speaker button also carries the music (web.120, audit
+// AUDIT_MUSIQUE_2026-11-15): while a track plays it shows the same gold
+// equalizer bars as the header music buttons outside a game, plus a small badge
+// when the game sounds are muted. The mini-games header has its own music
+// button, so its speaker keeps the plain icon.
+var MUS_EQ_HTML = '<span class="mus-eq" aria-hidden="true"><i></i><i></i><i></i></span>';
+var MUS_MUTE_BADGE = '<span class="snd-mute-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>';
+function _musicAvail() {
+  return !window._musicOff && !window.LIVE_MODE && !!window.Music && typeof window.Music.isPlaying === 'function';
+}
+function _musicPlaying() {
+  try { return _musicAvail() && window.Music.isPlaying(); } catch (e) { return false; }
+}
 function _applySoundBtn() {
+  var mp = _musicPlaying();
   SOUND_BTN_IDS.forEach(function (id) {
     var btn = document.getElementById(id);
     if (!btn) return;
-    btn.innerHTML     = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
-    btn.style.opacity = _soundEnabled ? '' : '0.5';
+    var mus = mp && id === 'sound-toggle-btn';
+    btn.innerHTML     = mus ? MUS_EQ_HTML + (_soundEnabled ? '' : MUS_MUTE_BADGE) : (_soundEnabled ? SND_ON_SVG : SND_OFF_SVG);
+    btn.style.opacity = (_soundEnabled || mus) ? '' : '0.5';
+    try { btn.classList.toggle('snd-music', mus); } catch (e) {}
     btn.title         = _soundEnabled ? 'Mute' : 'Unmute';
     try { btn.setAttribute('aria-pressed', String(!_soundEnabled)); } catch (e) {}
   });
@@ -620,6 +636,75 @@ function _soundPopOutside(e) {
   if (_soundPop.contains(e.target) || (btn && btn.contains(e.target))) return;
   closeSoundPopover();
 }
+// ── Music section of the speaker menu (web.120) ──
+// Playing: the track title with the equalizer, previous / pause / next, the
+// music volume and a link to the full player. Stopped: one quiet line that
+// resumes the last track (or the first one) — a game must stay calm, so the
+// loud invitation lives in the header button outside a game, not here.
+function _mEsc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var MI_PREV = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>';
+var MI_NEXT = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>';
+var MI_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+var MI_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+var MI_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-8 8"/><path d="M18 14v5H5V6h5"/></svg>';
+function _musicNowTrack() {
+  var M = window.Music;
+  try {
+    var all = M.tracks() || [], id = M.current(), i;
+    for (i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+    for (i = 0; i < all.length; i++) if (!all[i].stream) return all[i];
+    return all[0] || null;
+  } catch (e) { return null; }
+}
+function _musicSectionHtml() {
+  var M = window.Music;
+  var playing = _musicPlaying();
+  var t = _musicNowTrack();
+  var ttl = t ? _mEsc(t.title || t.id) : '';
+  var player = _stxt('musicPanelTitle', 'Music player');
+  var h = '<button type="button" class="sp-mus-open" data-mact="open">' +
+          '<span>' + _mEsc(player) + '</span>' + MI_OPEN + '</button>';
+  if (t && playing) {
+    h += '<div class="sp-mus-now" title="' + _mEsc(_stxt('musicNowPlaying', 'Now playing')) + '">' +
+         '<span class="mus-eq" aria-hidden="true"><i></i><i></i><i></i></span>' +
+         '<span class="sp-mus-ttl">' + ttl + '</span></div>' +
+         '<div class="sp-mus-ctl">' +
+         '<button type="button" data-mact="prev" aria-label="' + _mEsc(_stxt('musicPrev', 'Previous')) + '" title="' + _mEsc(_stxt('musicPrev', 'Previous')) + '">' + MI_PREV + '</button>' +
+         '<button type="button" class="is-main" data-mact="pp" aria-label="' + _mEsc(_stxt('musicPause', 'Pause')) + '" title="' + _mEsc(_stxt('musicPause', 'Pause')) + '">' + MI_PAUSE + '</button>' +
+         '<button type="button" data-mact="next" aria-label="' + _mEsc(_stxt('musicNext', 'Next')) + '" title="' + _mEsc(_stxt('musicNext', 'Next')) + '">' + MI_NEXT + '</button>' +
+         '</div>';
+  } else if (t) {
+    var pl = _stxt('musicPlay', 'Play');
+    h += '<button type="button" class="sp-mus-start" data-mact="pp" aria-label="' + _mEsc(pl) + ' \u2014 ' + ttl + '" title="' + _mEsc(pl) + '">' +
+         MI_PLAY + '<span class="sp-mus-ttl">' + ttl + '</span></button>';
+  }
+  var mvol = 50;
+  try { mvol = Math.round((M.getVolume() || 0) * 100); } catch (e) {}
+  var mlbl = _stxt('musicVolume', 'Music');
+  h += '<div class="sp-row">' +
+       '<span class="sound-pop-ico" aria-hidden="true">🎵</span>' +
+       '<input type="range" class="sound-pop-range sp-music-range" min="0" max="100" value="' + mvol + '" aria-label="' + _mEsc(mlbl) + '">' +
+       '<span class="sound-pop-val sp-music-val">' + mvol + '%</span>' +
+       '</div>';
+  return h;
+}
+function _syncSoundPopMusic() {
+  if (!_soundPop) return;
+  var sec = _soundPop.querySelector('.sp-music');
+  if (!sec) return;
+  if (!_musicAvail()) { sec.remove(); _soundPop.classList.remove('has-music'); return; }
+  var ae = document.activeElement, keep = ae && sec.contains(ae) ? ae.getAttribute('data-mact') : null;
+  sec.innerHTML = _musicSectionHtml();
+  if (keep) {                         // keyboard users keep their place after play/pause
+    var nb = sec.querySelector('[data-mact="' + keep + '"]') || sec.querySelector('[data-mact="pp"]');
+    if (nb) try { nb.focus(); } catch (e) {}
+  }
+}
+document.addEventListener('pth-music-state', function () {
+  try { _applySoundBtn(); } catch (e) {}
+  try { _syncSoundPopMusic(); } catch (e) {}
+});
+
 function toggleSoundPopover(btn) {
   if (_soundPop) { closeSoundPopover(); return; }          // 2e tap = fermer
   btn = btn || document.getElementById('sound-toggle-btn');
@@ -637,16 +722,9 @@ function toggleSoundPopover(btn) {
     // de joignable (les entrees de menu sont masquees et /music/* repond 404).
     // Same reason on /live: the spectator tool ships no music player, so a
     // music slider would drive nothing reachable.
-    if (!window._musicOff && !window.LIVE_MODE
-        && window.Music && typeof window.Music.getVolume === 'function') {
-      var mvol = Math.round((window.Music.getVolume() || 0) * 100);
-      var mlbl = _stxt('musicVolume', 'Music');
-      musicRow =
-        '<div class="sp-row">' +
-        '<span class="sound-pop-ico" aria-hidden="true">🎵</span>' +
-        '<input type="range" class="sound-pop-range sp-music-range" min="0" max="100" value="' + mvol + '" aria-label="' + mlbl + '">' +
-        '<span class="sound-pop-val sp-music-val">' + mvol + '%</span>' +
-        '</div>';
+    if (_musicAvail() && typeof window.Music.getVolume === 'function') {
+      musicRow = '<div class="sp-music">' + _musicSectionHtml() + '</div>';
+      pop.classList.add('has-music');
     }
   } catch (e) {}
   pop.innerHTML =
@@ -677,14 +755,38 @@ function toggleSoundPopover(btn) {
   rg.addEventListener('change', function () {                // bip de test au niveau choisi
     try { _unlockAudio(); if (_soundEnabled) playTone(660, 0.08, 0.25); } catch(e) {}
   });
-  var _mrg = pop.querySelector('.sp-music-range');
-  if (_mrg) {
-    var _mval = pop.querySelector('.sp-music-val');
-    _mrg.addEventListener('input', function () {
-      var pct = parseInt(_mrg.value, 10) || 0;
-      if (_mval) _mval.textContent = pct + '%';
+  var _msec = pop.querySelector('.sp-music');
+  if (_msec) {
+    // Delegated, so the section can be re-rendered on every play/pause.
+    _msec.addEventListener('input', function (ev) {
+      var r = ev.target;
+      if (!r || !r.classList || !r.classList.contains('sp-music-range')) return;
+      var pct = parseInt(r.value, 10) || 0;
+      var mv = _msec.querySelector('.sp-music-val');
+      if (mv) mv.textContent = pct + '%';
       try { if (window.Music && typeof window.Music.setVolume === 'function') window.Music.setVolume(pct / 100); } catch (e) {}
     });
+    _msec.addEventListener('click', function (ev) {
+      var b = ev.target && ev.target.closest ? ev.target.closest('[data-mact]') : null;
+      if (!b) return;
+      ev.stopPropagation();
+      var M = window.Music, act = b.getAttribute('data-mact');
+      try {
+        if (act === 'open') { closeSoundPopover(); if (typeof window.toggleMusicPanel === 'function') window.toggleMusicPanel(); return; }
+        if (!M) return;
+        if (act === 'pp')   M.toggleTrack();
+        if (act === 'prev') M.prev();
+        if (act === 'next') M.next();
+      } catch (e) {}
+    });
+    // First open of the session: the manifest is not loaded yet, so there is no
+    // title to show. Load it, then fill the section in.
+    try {
+      if (window.Music && typeof window.Music.tracks === 'function' && !window.Music.tracks().length
+          && typeof window.Music.loadManifest === 'function') {
+        window.Music.loadManifest().then(function () { _syncSoundPopMusic(); }).catch(function () {});
+      }
+    } catch (e) {}
   }
   _soundPop = pop; _soundPopBtn = btn;
   // Fermer au clic extérieur (différé pour ne pas capter le clic d'ouverture).

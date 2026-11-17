@@ -386,7 +386,8 @@ export const help = {
             "Yàtọ̀ sí àkòrí, a lè pàrọ̀ ọ̀pọ̀ nǹkan lọ́tọ̀ọ̀tọ̀: ìsàlẹ̀ tábìlì, àwọn káàdì, ẹ̀yìn káàdì (bá àwọn káàdì mu fúnra rẹ̀ tàbí kó àwòrán tìrẹ wọlé), àwo olùpín káàdì àti blinds, ọ̀nà bọ́tìnì ìgbésẹ̀, àti àpò ìjókòó pípé tí ń yí ìrísí àpótí òṣèré padà. Yan gbogbo nǹkan nínú Àṣàyàn ìlọsíwájú → Ọ̀nà; àwọn ìyípadà ń hàn lójú ẹsẹ̀ ní tábìlì."] },
         { id: "music",
           t: "Aṣeré orin",
-          b: [
+          b: ["Ní ìta ìdíje, bọ́tìnnì àmì orin ní orí ojú-ewé ń ṣí aṣeré orin; nígbà tí orin bá ń dún, ó máa di àwọn ọ̀pá ìdọ́gba ohùn aláwọ̀ wúrà. Nígbà ìdíje, bọ́tìnnì gbohùngbohùn ní aṣeré kékeré lábẹ́ ìwọ̀n ohùn àwọn ìró ìdíje: orin tó ń dún, èyí tó ṣáájú / dá dúró / èyí tó kàn, ìwọ̀n ohùn orin àti ìjápọ̀ sí aṣeré kíkún.",
+              
             "Ohun orin nínú àkójọ orí ojú-ewé ń ṣí aṣeré orin lounge kékeré: yan orin láti inú àkójọ orin, ṣe é/dá dúró, èyí tó ṣáájú/èyí tó kàn, dà á pọ̀, àti tún orin kan ṣe, gbogbo àkójọ tàbí kò sí. A ń rántí ìró, orin tí a yàn àti ọ̀nà àtúnṣe. Ìṣeré kì í bẹ̀rẹ̀ fúnra rẹ̀ rárá — aṣàwákiri nílò ìfọwọ́kàn — aṣeré náà sì dá dúró pátápátá yàtọ̀ sí ohùn eré.",
             "Àtàǹpàkò méjì nísàlẹ̀ orúkọ orin ń sọ bóyá o fẹ́ràn ohun tí ó ń dún. Ìbò àìlórúkọ kan fún ẹ̀rọ kọ̀ọ̀kan, títí kan rédíò, o sì lè yí i padà tàbí mú un padà nígbàkúùgbà; àfi bí alábòójútó bá ṣí àpapọ̀ payá, àtàǹpàkò tìrẹ nìkan ni o ń rí.",
             "Lórí iPhone àti iPad, aṣeré ń lo ìṣeré lásán ní àkọ́kọ́, kí orin lè máa bá a lọ pẹ̀lú CarPlay, Bluetooth tàbí ojú tí a tì; a ń ṣètò ìró pẹ̀lú bọ́tìnì ẹ̀rọ tàbí ọkọ̀. Àṣàyàn “Ìró nínú ìṣàfilọ́lẹ̀” ń dá ọ̀pá ìró, ìwọ̀ntúnwọ̀nsì àti mítà VU padà, ṣùgbọ́n ohùn lè máa dá dúró nínú ọkọ̀."] },

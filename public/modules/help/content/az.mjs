@@ -386,7 +386,8 @@ export const help = {
             "Temadan əlavə, bir neçə element müstəqil şəkildə dəyişdirilə bilər: masa fonu, kart dəstəsi, kartın arxası (dəstəyə avtomatik uyğunlaşdırın və ya öz şəklinizi idxal edin), diler və blaind fişkaları, hərəkət düymələrinin üslubu və oyunçu qutularının görünüşünü dəyişən tam oturacaq paketləri. Hər şeyi Əlavə seçimlər → Üslub bölməsində seçin; dəyişikliklər masada dərhal görünür."] },
         { id: "music",
           t: "Musiqi pleyeri",
-          b: [
+          b: ["Oyundan kənarda başlıqdakı not düyməsi pleyeri açır; musiqi çalarkən qızılı ekvalayzer zolaqlarına çevrilir. Oyun zamanı dinamik düyməsində oyun səslərinin səs səviyyəsinin altında mini pleyer var: cari trek, əvvəlki / fasilə / növbəti, musiqinin səs səviyyəsi və tam pleyerə keçid.",
+              
             "Başlıq menyularındakı musiqi bəndi kiçik lounge musiqi pleyerini açır: pleylistdən trek seçin, oxut/fasilə, əvvəlki/növbəti, qarışdır və bir treki, bütün pleylisti təkrarla və ya heç nəyi. Səs səviyyəsi, seçilmiş trek və təkrar rejimi yadda saxlanılır. Oxutma heç vaxt özü başlamır — brauzerlər toxunuş tələb edir — və pleyer oyun səs effektlərindən tamamilə müstəqildir.",
             "Trekin adının altındakı iki baş barmaq oxunanın xoşunuza gəlib-gəlmədiyini bildirir. Hər cihaz üçün bir anonim səs, radiolar da daxil, istənilən vaxt onu dəyişə və ya geri götürə bilərsiniz; operator cəmləri açmasa, yalnız öz barmağınızı görürsünüz.",
             "iPhone və iPad-də pleyer standart olaraq sadə oxutmadan istifadə edir, beləliklə musiqi CarPlay, Bluetooth və ya kilidli ekranla davam edir; səs səviyyəsi o zaman cihazın və ya avtomobilin düymələri ilə tənzimlənir. “Tətbiqdaxili səs səviyyəsi” seçimi səs sürüşdürücüsünü, balansı və VU-metri geri qaytarır, lakin avtomobildə səs kəsilə bilər."] },

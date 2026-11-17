@@ -1,4 +1,8 @@
-2026-11-17 version 2.1.11-web.119 (current series):
+2026-11-17 version 2.1.11-web.120 (current series):
+- new: Music player — a music-note button in the header of the login, lobby, create-a-table and mini-games screens opens the player; it turns into gold equalizer bars while music plays
+- new: Music player — at the table, the speaker button turns into the same gold bars while music plays, and its menu now holds a mini-player: the current track, previous / pause / next, the music volume and a link to the full player; with the music stopped, one tap resumes the last track
+
+2026-11-17 version 2.1.11-web.119:
 - new: Poker Run — the arrival multiplies your score: ×1 in Atlantic City, ×1.2 Deauville, ×1.4 Macau, ×1.6 Baden-Baden, ×1.8 Sanremo, ×2 in St. Moritz
 - improvement: Poker Run — on the harder roads a crash also costs time: 1 s on level 1 up to 3 s on level 5
 

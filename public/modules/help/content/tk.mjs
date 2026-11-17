@@ -386,7 +386,8 @@ export const help = {
             "Temadan başga-da birnäçe elementi garaşsyz çalşyp bolýar: stoluň fony, kart destesi, kartyň arka tarapy (destä awtomatik laýyk ýa-da öz suratyňyzy import ediň), diler we blaýnd fişkalary, hereket düwmeleriniň stili we oýunçy gutularynyň görnüşini üýtgedýän doly orun toplumlary. Hemmesini Giňişleýin sazlamalar → Stil bölüminde saýlaň; üýtgeşmeler stolda derrew görünýär."] },
         { id: "music",
           t: "Aýdym-saz pleýeri",
-          b: [
+          b: ["Oýundan daşarda sözbaşydaky nota düwmesi pleýeri açýar; aýdym-saz çalynýarka ol altyn reňkli ekwalaýzer zolaklaryna öwrülýär. Oýun wagtynda dinamik düwmesinde oýun sesleriniň ses derejesiniň aşagynda kiçi pleýer bar: häzirki trek, öňki / arakesme / indiki, aýdym-sazyň ses derejesi we doly pleýere salgylanma.",
+              
             "Sözbaşy menýularyndaky aýdym-saz bölümi launž aýdym-sazy üçin kiçijik pleýeri açýar: çalyş sanawyndan trek saýlaň, çal/arakesme, öňki/indiki, garyşdyr we bir treki, tutuş sanawy gaýtala ýa-da hiç zady gaýtalama. Ses güýji, saýlanan trek we gaýtalama režimi ýatda saklanýar. Çalmak hiç haçan özbaşdak başlamaýar — brauzerler basmagy talap edýär — pleýer bolsa oýun seslerinden doly garaşsyz.",
             "Trekiň adynyň aşagyndaky iki başam barmak çalynýan zadyň size ýaraýandygyny ýa-da ýaramaýandygyny aýdýar. Her enjama bir anonim ses, radiolar hem, ony islän wagtyňyz üýtgedip ýa-da yzyna alyp bilersiňiz; operator jemleri açmasa, diňe öz başam barmagyňyzy görýärsiňiz.",
             "iPhone we iPad-de pleýer deslapky ýagdaýda ýönekeý çalyşy ulanýar, şonuň üçin aýdym-saz CarPlay, Bluetooth ýa-da gulplanan ekran bilen dowam edýär; ses güýji şonda enjamyň ýa-da awtoulagyň düwmeleri bilen bellenýär. «Programmanyň içindäki ses güýji» opsiýasy ses güýjüniň süýşürijisini, deňagramlylygy we VU ölçeýjini gaýtarýar, ýöne ses awtoulagda kesilip biler."] },

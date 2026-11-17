@@ -386,7 +386,8 @@ export const help = {
             "Baya ga jigo, ana iya canja abubuwa da dama ba tare da dogara da juna ba: bangon tebur, katunan, bayan kati (daidaita shi da katunan kai tsaye ko shigo da hotonka), fayafan mai rabawa da blinds, salon maɓallan motsi da cikakkun fakitin kujeru da ke canja kamannin akwatunan 'yan wasa. Zaɓi komai a Zaɓuɓɓuka na ci gaba → Salo; ana ganin canje-canje a tebur nan take."] },
         { id: "music",
           t: "Mai kunna kiɗa",
-          b: [
+          b: ["A wajen wasa, maɓallin alamar waƙa a saman shafi yana buɗe mai kunna kiɗa; yayin da kiɗa ke kunnawa, yana zama sandunan ekwalaiza masu launin zinariya. Yayin wasa, maɓallin lasifika yana da ƙaramin mai kunna kiɗa a ƙarƙashin ƙarar sautukan wasa: waƙar da ke kunnawa, ta baya / dakata / ta gaba, ƙarar kiɗa da hanyar haɗi zuwa cikakken mai kunna kiɗa.",
+              
             "Abin kiɗa a menu na saman shafi yana buɗe ƙaramin mai kunna kiɗan lounge: zaɓi waƙa daga jerin waƙoƙi, kunna/dakata, na baya/na gaba, gauraya, kuma maimaita waƙa ɗaya, dukan jerin ko babu. Ana tuna ƙara, waƙar da aka zaɓa da yanayin maimaitawa. Kunnawa ba ta taɓa farawa da kanta ba — burauzoji suna buƙatar taɓawa — kuma mai kunnawa ba ya dogara da tasirin sautin wasa ko kaɗan.",
             "Manyan yatsu biyu a ƙarƙashin sunan waƙa suna nuna ko kana son abin da ake kunnawa. Ƙuri'a ɗaya ba tare da suna ba ga kowace na'ura, har da rediyo, kuma za ka iya canja ta ko janye ta a kowane lokaci; sai dai idan mai gudanarwa ya bayyana jimla, kana ganin babban yatsanka ne kawai.",
             "A iPhone da iPad mai kunnawa yana amfani da kunnawa mai sauƙi ta asali, don kiɗa ya ci gaba da CarPlay, Bluetooth ko allon da aka kulle; ana daidaita ƙara da maɓallan na'ura ko mota a lokacin. Zaɓin “Ƙarar cikin manhaja” yana dawo da madaidaicin ƙara, daidaito da ma'aunin VU, amma sauti zai iya tsayawa-tsayawa a mota."] },
