@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: the arrival's bonus, crashes that cost time** (`web.119`, narmod: « the hard levels are not
+  very hard ») — crossing the line multiplies the score by `ARRIVAL_MULT` of the arrival's row (×1 Atlantic City,
+  ×1.2, ×1.4, ×1.6, ×1.8, ×2 St. Moritz; none on a time-out), shown on the end screen as « 🏁 town ×n ». A crash
+  costs `HIT_TIME` of the road's level (0, 1, 1.5, 2, 2.5, 3 s) on top of the 20 % of chips, with a « −n s » float.
+  The rules say both (one sentence in the 83 languages).
 - **Poker Run: St. Moritz on ice** (`web.118`) — its theme gets `grip: ICE_GRIP` (0.7) and a bluish road: the
   stick's steering rate and how fast the car answers are scaled by it, and the drift's slip builds ×1.3 sooner.
   At full speed the tightest bend (`CURVE_MAX`) pulls harder than the stick steers: brake below ≈ 0.85 of top speed.

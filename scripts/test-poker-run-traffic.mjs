@@ -62,6 +62,16 @@ const steer = async (which) => {
 };
 const dVegas = await steer(0), dIce = await steer(1);
 ok(dVegas != null && dIce != null && dIce < dVegas * 0.85, 'on the ice of St. Moritz the car answers the stick less (' + (dIce != null ? dIce.toFixed(2) : '?') + ' vs ' + (dVegas != null ? dVegas.toFixed(2) : '?') + ' in Las Vegas)');
+// A crash on the level-5 road costs 3 s (web.119).
+const crash = await pg.evaluate(() => new Promise((res) => {
+  const R = window.__pthRun, z = R.game().gates[4].seg + 200; R.setTime(50); R.setPos(z); R.setPx(0);
+  const cs = R.cars(); cs.forEach((c) => { c.dead = true; });
+  Object.assign(cs[0], { dead: false, lane: 1, z: (R.segAt() + 6) * 200, v: 200 * 62 * 0.2, ahead: true }); if (cs[0].sw) cs[0].sw.ph = 3;
+  const t0 = R.game().time; let hit = false;
+  const iv = setInterval(() => { R.setPx(0); R.setV(0.8); if (R.game().inv > 0 && !hit) { hit = true; clearInterval(iv); res(+(t0 - R.game().time).toFixed(2)); } }, 8);
+  setTimeout(() => { clearInterval(iv); if (!hit) res(null); }, 1500);
+}));
+ok(crash != null && crash >= 2.9 && crash < 3.6, 'a crash on the hardest road costs 3 s (' + crash + ' s lost)');
 // A lane change: the indicator first, then the car slides one lane over.
 const sw0 = await pg.evaluate(() => {
   const R = window.__pthRun; R.setPos(R.game().gates[4].seg + 60);
@@ -89,6 +99,8 @@ await sleep(1600);
 const still = await pg.evaluate(() => window.__pthRun.state());
 await pg.keyboard.press('Space'); await sleep(500);
 const arr = await pg.evaluate(() => ({ st: window.__pthRun.state(), sub: (document.querySelector('#pth-game .gm-end-sub, #pth-game [class*="end"] [class*="sub"]') || {}).textContent || document.querySelector('#pth-game').textContent }));
+const calcTxt = await pg.evaluate(() => (document.querySelector('#pth-game .gm-ecalc') || {}).textContent || '');
+ok(/St\. Moritz\s*×2/.test(calcTxt), 'St. Moritz doubles the score (' + calcTxt.replace(/\s+/g, ' ').trim() + ')');
 ok(st === 'outro' && still === 'outro' && arr.st === 'over' && /St\. Moritz/.test(arr.sub), 'the arrival: St. Moritz celebrates, a tap goes to the showdown, named there (' + st + ' → ' + still + ' → ' + arr.st + ')');
 ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

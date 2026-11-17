@@ -76,6 +76,10 @@ const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the r
  * (CURVE_MAX) then pulls harder than the stick can steer: brake for it (below about 0.85 of top speed).
  */
 export const ICE_GRIP = 0.7;
+/** The arrival's bonus (web.119, narmod): the score × this, by the arrival's row — Atlantic City ×1 … St. Moritz ×2. */
+export const ARRIVAL_MULT = [1, 1.2, 1.4, 1.6, 1.8, 2];
+/** A crash on a hard road costs time too (web.119, narmod: « the hard levels are not very hard »), by the road's level. */
+export const HIT_TIME = [0, 1, 1.5, 2, 2.5, 3];
 /** How long the arrival lasts before the showdown (web.117: the town's celebration); a tap skips it. */
 export const OUTRO_WIN = 4.2, OUTRO_LOSE = 1.8;
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, SPLIT = 1, MERGE = 60;
@@ -848,6 +852,8 @@ export function create(shell) {
         const side = Math.sign(px - carX(c, ps, g)) || (Math.random() < 0.5 ? -1 : 1);
         const loss = Math.ceil(stack * 0.2); stack -= loss; v = Math.max(c.v * 0.7, v * 0.55); pv = side * 3; spin = 0.6; inv = 1.1; if (!shell.reduced) shake = 0.35;
         addFx(loss ? '−' + loss : '💥', '#ff7b6b');
+        const lost = HIT_TIME[Math.min(5, lvl[ps.stage] || 0)];
+        if (lost) { time = Math.max(0, time - lost); addFx('−' + String(lost).replace('.', ',') + ' s', '#ff7b6b', false, H * 0.5); }
         sound('notifyFold'); buzz([40, 30, 60]);
       }
     }
@@ -1097,7 +1103,9 @@ export function create(shell) {
     if (quest && !quest.done) endQuest(false);
     qBox.hidden = true;
     const hearts = quests.reduce((a, q) => a + (q.h || 0), 0), hm = mode === 'queen' ? queenMult(hearts) : 1;
-    const base = stack + bonus, score = Math.round(base * ev.mult * hm);
+    // The arrival's bonus (web.119): only for crossing the line, by the row of the town reached.
+    const arow = Math.min(5, lvl[STAGES - 1] || 0), am = outroWin ? ARRIVAL_MULT[arow] : 1;
+    const base = stack + bonus, score = Math.round(base * ev.mult * hm * am);
     const qb = qBest(), dl = dLoad(), prevBest = mode === 'queen' ? qb.queen || 0 : mode === 'daily' ? dl.s || 0 : shell.best.get(), record = score > prevBest;
     hGhost.hidden = true;
     // The daily: the best run of the day kept with its line, the ghost of the next tries.
@@ -1113,7 +1121,8 @@ export function create(shell) {
       title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : mode === 'daily' ? t('psDaily') + ' · ' + day : t('adModeFree')) + ' · Poker Run'
         + (outroWin && TH[stageTheme[STAGES - 1]] ? ' · ' + TH[stageTheme[STAGES - 1]].name : ''),
       cards: ev.best, hand: t(ev.nameKey) + ' ×' + ev.mult, score, prev: prevBest,
-      calc: [[t('blChips'), fmt(stack)], [t('gameTimeLabel'), '+' + fmt(bonus)], [t(ev.nameKey), '×' + ev.mult], hm !== 1 ? ['♥ ' + hearts, '×' + String(hm).replace('.', ',')] : null],
+      calc: [[t('blChips'), fmt(stack)], [t('gameTimeLabel'), '+' + fmt(bonus)], [t(ev.nameKey), '×' + ev.mult], hm !== 1 ? ['♥ ' + hearts, '×' + String(hm).replace('.', ',')] : null,
+        am !== 1 ? ['🏁 ' + TH[stageTheme[STAGES - 1]].name, '×' + String(am).replace('.', ',')] : null],
       levels: mode === 'queen'
         ? { title: t('prQueen'), right: '♥ ' + hearts + ' / ' + STAGES * 3, html: listHtml(esc, quests.map((q) => [questText(q).replace(/\s*[!！]$/, ''), q.h ? '♥'.repeat(q.h) : '✗', !!q.h])) }
         : { title: t('gmCourse'), right: reached + '/' + STAGES + (rights ? ' · ' + rights + ' ▶' : ''), html: courseMap(pr) },

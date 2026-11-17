@@ -1,4 +1,8 @@
-2026-11-17 version 2.1.11-web.118 (current series):
+2026-11-17 version 2.1.11-web.119 (current series):
+- new: Poker Run — the arrival multiplies your score: ×1 in Atlantic City, ×1.2 Deauville, ×1.4 Macau, ×1.6 Baden-Baden, ×1.8 Sanremo, ×2 in St. Moritz
+- improvement: Poker Run — on the harder roads a crash also costs time: 1 s on level 1 up to 3 s on level 5
+
+2026-11-17 version 2.1.11-web.118:
 - new: Poker Run — the road to St. Moritz is iced over: the car answers the stick later and slides out of the bends sooner; brake for the tightest ones
 
 2026-11-17 version 2.1.11-web.117:
