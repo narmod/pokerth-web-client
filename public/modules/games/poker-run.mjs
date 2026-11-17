@@ -50,6 +50,7 @@ import { endScreen, listHtml } from './end.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { spriteCache } from './sprites.mjs';
+import { skyLayer, drawProp, PROPS, snowfall } from './poker-run-decor.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -120,22 +121,22 @@ const TH = {
   chamonix: { name: 'Chamonix', sky: ['#22487e', '#79a3cd', '#dfe9f1'], g: ['#3f7a3a', '#386f34'], r: ['#f4eedf', '#c2303a'], d: ['#33373e', '#2f333a'], fog: '#cddae8', skyT: 'peaks', side: 'pine', a: '#5b6f8a', b: '#f4f7fa' },
   // The pyramid of web.115 (narmod: « the same map as OutRun »): 16 more scenes. Their names are the places'
   // own (no translation). Flat and by the sea at the top of the map, the mountains at the bottom.
-  route66: { name: 'Route 66', sky: ['#2f6fb8', '#8cbfe6', '#f6e2b4'], g: ['#d2a868', '#c99e5f'], r: ['#f4eedf', '#c2303a'], d: ['#4a4a4e', '#444448'], fog: '#efd8ac', skyT: 'mesa', side: 'cactus', a: '#b0785a', b: '#d99a6c' },
-  miami: { name: 'Miami Beach', sky: ['#1d5f9a', '#5fc3d8', '#ffd2a8'], g: ['#e6d3a3', '#ddc898'], r: ['#f4eedf', '#2fb3a8'], d: ['#3f444c', '#3a3f47'], fog: '#bfe6ea', skyT: 'sea', side: 'palm', coast: true, a: '#2b6e9a', b: '#ffe8b8' },
-  canyon: { name: 'Grand Canyon', sky: ['#3a5f98', '#e09a5c', '#ffd49a'], g: ['#b2582e', '#a8522a'], r: ['#f4eedf', '#6b2a14'], d: ['#4b4039', '#463b35'], fog: '#e8b48a', skyT: 'mesa', side: 'cactus', a: '#8a3a1c', b: '#e07a3a' },
-  yosemite: { name: 'Yosemite', sky: ['#2a5a9a', '#88b8e0', '#e8f0f4'], g: ['#3d6e34', '#37652f'], r: ['#f4eedf', '#5a6a3a'], d: ['#3a3d42', '#35383d'], fog: '#c8d8e4', skyT: 'peaks', side: 'pine', a: '#7d8590', b: '#e9edf2' },
-  provence: { name: 'Provence', sky: ['#3c74b8', '#9cc4e8', '#f4ead8'], g: ['#8a74b4', '#8069aa'], r: ['#f4eedf', '#c4643c'], d: ['#4a474e', '#444148'], fog: '#e4dcec', skyT: 'peaks', side: 'cypress', a: '#8e9ab8', b: '#eef0f6' },
-  biarritz: { name: 'Biarritz', sky: ['#28568e', '#7ab0d6', '#f2e4c8'], g: ['#5f8a46', '#588141'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#cfe0ea', skyT: 'sea', side: 'riviera', coast: true, a: '#2f5f8e', b: '#fff1cc' },
-  toscana: { name: 'Toscana', sky: ['#4a7ab0', '#a8c8e0', '#f6dcb0'], g: ['#a8a24e', '#9e9848'], r: ['#f4eedf', '#b0502c'], d: ['#4b4741', '#46423c'], fog: '#ecdcb8', skyT: 'peaks', side: 'cypress', a: '#8c9a62', b: '#c8c890' },
-  verdon: { name: 'Verdon', sky: ['#2c64a4', '#84b6dc', '#eef0e8'], g: ['#7a8a52', '#72824c'], r: ['#f4eedf', '#2f9e8e'], d: ['#4a4a4c', '#444446'], fog: '#d8e2e0', skyT: 'mesa', side: 'cypress', a: '#c8c2b4', b: '#efeae0' },
-  dolomiti: { name: 'Dolomiti', sky: ['#24508a', '#7aa6d2', '#f2d8d0'], g: ['#4e7c3e', '#477238'], r: ['#f4eedf', '#c2303a'], d: ['#3a3c42', '#35373d'], fog: '#e2d8dc', skyT: 'peaks', side: 'pine', a: '#c89c94', b: '#fbf6f4' },
-  stelvio: { name: 'Stelvio', sky: ['#1e3f74', '#6c96c6', '#dce8f2'], g: ['#d8e0e8', '#ced7e0'], r: ['#c2303a', '#f4eedf'], d: ['#3a3e46', '#353941'], fog: '#e4ecf4', skyT: 'peaks', side: 'pine', a: '#6a7a92', b: '#ffffff' },
-  atlantic: { name: 'Atlantic City', sky: ['#0c1430', '#24346a', '#c06a8a'], g: ['#c8b48a', '#bfab82'], r: ['#e8b84a', '#f4eedf'], d: ['#2a2e36', '#262a32'], fog: '#2a3460', skyT: 'city', side: 'lamp', coast: true, night: true, a: '#141c3a', b: '#ff9ad0' },
-  deauville: { name: 'Deauville', sky: ['#4e7aa8', '#a6c4dc', '#f2ead8'], g: ['#6e9a4e', '#669148'], r: ['#f4eedf', '#2f78b8'], d: ['#42464e', '#3d4149'], fog: '#dce6ec', skyT: 'sea', side: 'riviera', coast: true, a: '#4a6e94', b: '#fff4d8' },
-  macau: { name: 'Macau', sky: ['#0a0a22', '#26184a', '#b0306a'], g: ['#2a2c3a', '#262834'], r: ['#e0384a', '#f4eedf'], d: ['#22242c', '#1f2128'], fog: '#3a1e48', skyT: 'city', side: 'lamp', night: true, a: '#120e2a', b: '#ff5ab0' },
-  baden: { name: 'Baden-Baden', sky: ['#2e4e78', '#86a6c4', '#e6e2d4'], g: ['#2f5e34', '#2a562f'], r: ['#f4eedf', '#c2303a'], d: ['#36383e', '#313339'], fog: '#c4d0d4', skyT: 'peaks', side: 'pine', a: '#2c4a3a', b: '#4c6a52' },
-  sanremo: { name: 'Sanremo', sky: ['#24467e', '#e07a6a', '#ffcf94'], g: ['#7a8e4a', '#728645'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eeb894', skyT: 'sea', side: 'riviera', coast: true, a: '#3a4f86', b: '#ffe2a8' },
-  moritz: { name: 'St. Moritz', sky: ['#183466', '#5e88bc', '#e8f0f8'], g: ['#eef2f6', '#e4e9ef'], r: ['#2f78b8', '#f4eedf'], d: ['#40454e', '#3b4049'], fog: '#eef3f8', skyT: 'peaks', side: 'pine', a: '#5a6c88', b: '#ffffff' },
+  route66: { name: 'Route 66', sky: ['#2f6fb8', '#8cbfe6', '#f6e2b4'], g: ['#d2a868', '#c99e5f'], r: ['#f4eedf', '#c2303a'], d: ['#4a4a4e', '#444448'], fog: '#efd8ac', skyT: 'plain', skyX: 'desert', side: 'route66', a: '#b0785a', b: '#d99a6c' },
+  miami: { name: 'Miami Beach', sky: ['#1d5f9a', '#5fc3d8', '#ffd2a8'], g: ['#e6d3a3', '#ddc898'], r: ['#f4eedf', '#2fb3a8'], d: ['#3f444c', '#3a3f47'], fog: '#bfe6ea', skyT: 'sea', skyX: 'deco', side: 'miami', coast: true, a: '#2b6e9a', b: '#ffe8b8' },
+  canyon: { name: 'Grand Canyon', sky: ['#3a5f98', '#e09a5c', '#ffd49a'], g: ['#b2582e', '#a8522a'], r: ['#f4eedf', '#6b2a14'], d: ['#4b4039', '#463b35'], fog: '#e8b48a', skyT: 'plain', skyX: 'canyon', side: 'cactus', a: '#8a3a1c', b: '#e07a3a' },
+  yosemite: { name: 'Yosemite', sky: ['#2a5a9a', '#88b8e0', '#e8f0f4'], g: ['#3d6e34', '#37652f'], r: ['#f4eedf', '#5a6a3a'], d: ['#3a3d42', '#35383d'], fog: '#c8d8e4', skyT: 'plain', skyX: 'dome', side: 'pine', a: '#7d8590', b: '#e9edf2' },
+  provence: { name: 'Provence', sky: ['#3c74b8', '#9cc4e8', '#f4ead8'], g: ['#8a74b4', '#8069aa'], r: ['#f4eedf', '#c4643c'], d: ['#4a474e', '#444148'], fog: '#e4dcec', skyT: 'plain', skyX: 'hills', ventoux: true, side: 'lavender', a: '#8e9ab8', b: '#eef0f6' },
+  biarritz: { name: 'Biarritz', sky: ['#28568e', '#7ab0d6', '#f2e4c8'], g: ['#5f8a46', '#588141'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#cfe0ea', skyT: 'sea', skyX: 'lighthouse', side: 'riviera', coast: true, a: '#2f5f8e', b: '#fff1cc' },
+  toscana: { name: 'Toscana', sky: ['#4a7ab0', '#a8c8e0', '#f6dcb0'], g: ['#a8a24e', '#9e9848'], r: ['#f4eedf', '#b0502c'], d: ['#4b4741', '#46423c'], fog: '#ecdcb8', skyT: 'plain', skyX: 'hills', village: true, side: 'cypress', a: '#8c9a62', b: '#c8c890' },
+  verdon: { name: 'Verdon', sky: ['#2c64a4', '#84b6dc', '#eef0e8'], g: ['#7a8a52', '#72824c'], r: ['#f4eedf', '#2f9e8e'], d: ['#4a4a4c', '#444446'], fog: '#d8e2e0', skyT: 'plain', skyX: 'cliffs', side: 'cypress', a: '#c8c2b4', b: '#efeae0' },
+  dolomiti: { name: 'Dolomiti', sky: ['#24508a', '#7aa6d2', '#f2d8d0'], g: ['#4e7c3e', '#477238'], r: ['#f4eedf', '#c2303a'], d: ['#3a3c42', '#35373d'], fog: '#e2d8dc', skyT: 'plain', skyX: 'spires', side: 'pine', a: '#c89c94', b: '#fbf6f4' },
+  stelvio: { name: 'Stelvio', sky: ['#1e3f74', '#6c96c6', '#dce8f2'], g: ['#d8e0e8', '#ced7e0'], r: ['#c2303a', '#f4eedf'], d: ['#3a3e46', '#353941'], fog: '#e4ecf4', skyT: 'plain', skyX: 'snow', snow: 0.35, side: 'snowpine', a: '#6a7a92', b: '#ffffff' },
+  atlantic: { name: 'Atlantic City', sky: ['#0c1430', '#24346a', '#c06a8a'], g: ['#c8b48a', '#bfab82'], r: ['#e8b84a', '#f4eedf'], d: ['#2a2e36', '#262a32'], fog: '#2a3460', skyT: 'harbor', skyX: 'pier', side: 'lamp', coast: true, night: true, a: '#141c3a', b: '#ff9ad0' },
+  deauville: { name: 'Deauville', sky: ['#4e7aa8', '#a6c4dc', '#f2ead8'], g: ['#6e9a4e', '#669148'], r: ['#f4eedf', '#2f78b8'], d: ['#42464e', '#3d4149'], fog: '#dce6ec', skyT: 'sea', skyX: 'normandy', side: 'riviera', coast: true, a: '#4a6e94', b: '#fff4d8' },
+  macau: { name: 'Macau', sky: ['#0a0a22', '#26184a', '#b0306a'], g: ['#2a2c3a', '#262834'], r: ['#e0384a', '#f4eedf'], d: ['#22242c', '#1f2128'], fog: '#3a1e48', skyT: 'plain', skyX: 'neon', side: 'neon', night: true, a: '#120e2a', b: '#ff5ab0' },
+  baden: { name: 'Baden-Baden', sky: ['#2e4e78', '#86a6c4', '#e6e2d4'], g: ['#2f5e34', '#2a562f'], r: ['#f4eedf', '#c2303a'], d: ['#36383e', '#313339'], fog: '#c4d0d4', skyT: 'plain', skyX: 'forest', side: 'pine', a: '#2c4a3a', b: '#4c6a52' },
+  sanremo: { name: 'Sanremo', sky: ['#24467e', '#e07a6a', '#ffcf94'], g: ['#7a8e4a', '#728645'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eeb894', skyT: 'sea', skyX: 'rivtown', side: 'riviera', coast: true, a: '#3a4f86', b: '#ffe2a8' },
+  moritz: { name: 'St. Moritz', sky: ['#183466', '#5e88bc', '#e8f0f8'], g: ['#eef2f6', '#e4e9ef'], r: ['#2f78b8', '#f4eedf'], d: ['#40454e', '#3b4049'], fog: '#eef3f8', skyT: 'plain', skyX: 'snow', lake: true, snow: 1, side: 'snowpine', a: '#5a6c88', b: '#ffffff' },
   monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', night: true, a: '#1b1430', b: '#ffd68c' },
 };
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -531,7 +532,8 @@ export function create(shell) {
   let act = { a: '', t: 0, dur: 0, prio: 0 }, bub = { s: '', t: 0, d: 1 }, wasBoost = false, wasOff = false, lowSaid = false, offCd = 0, outroT = 0, outroWin = false;
   const keys = { l: false, r: false, n: false, b: false }, pulse = { l: 0, r: 0, n: 0, b: 0 };
   let W = 640, H = 360, cy = 160, ctx = shell.g;
-  const view = { hidden: 0, far: 0 };   // road segments hidden behind a crest, the farthest one drawn (tests)
+  const view = { hidden: 0, far: 0 };
+  let snowNow = 0, snowCurve = 0;   // the snow falling now (web.116), and the bend it drifts with   // road segments hidden behind a crest, the farthest one drawn (tests)
 
   function reset() {
     stageTheme = ['vegas']; branches = []; assignBranches(0);
@@ -1152,6 +1154,8 @@ const carW = () => Math.min(W * 0.24, 100);
       ctx.fillStyle = typ === 'sea' ? 'rgba(255,224,160,.5)' : 'rgba(255,214,140,.35)';
       for (let i = 0; i < 4; i++) ctx.fillRect(W * 0.62 - 30 + i * 7, sy + 1 + i * 0.5, 60 - i * 14, 1);
     }
+    // The pyramid's new scenes (web.116): their own skyline over this one (poker-run-decor.mjs).
+    if (th.skyX) skyLayer(ctx, th, W, cy, o, alpha, performance.now() / 1000);
     ctx.globalAlpha = 1;
   }
 
@@ -1159,6 +1163,9 @@ const carW = () => Math.min(W * 0.24, 100);
     const ps = findSeg(pos + PLAYER_Z);
     const cur = themeOf(ps.stage);
     if (skyGate >= 0 && ps.i - skyGate < 80) { drawSky(TH[skyFrom], 1); drawSky(cur, clamp((ps.i - skyGate) / 80, 0, 1)); } else drawSky(cur, 1);
+    // The snow of the high Alps (web.116), fading in with the scene.
+    const sk = skyGate >= 0 && ps.i - skyGate < 80 ? clamp((ps.i - skyGate) / 80, 0, 1) : 1;
+    snowNow = (TH[skyFrom].snow || 0) * (1 - sk) + (cur.snow || 0) * sk; snowCurve = ps.curve;
     const base = findSeg(pos), bp = (pos % SEG) / SEG;
     let dx = -(base.curve * bp), x = 0, maxy = H;
     view.hidden = 0; view.far = 0;
@@ -1342,6 +1349,7 @@ const carW = () => Math.min(W * 0.24, 100);
   }
   function drawSide(kind, X, y, sc, vv, side) {
     const u = sc * 100; if (u < 0.1) return;
+    if (PROPS.has(kind)) { drawProp(ctx, kind, X, y, u, vv, side, (k) => drawSide(k, X, y, sc, vv, side)); return; }
     if (kind === 'post') {
       const h = u * 9, w = u * 3;
       ctx.fillStyle = '#0d1117'; ctx.fillRect(X - u * 0.3, y - h, u * 0.6, h);
@@ -1606,6 +1614,7 @@ const carW = () => Math.min(W * 0.24, 100);
     drawCarBack(g);
     g.restore();
     drawCarFront(gF);
+    if (!shell.reduced) snowfall(gF, W, H, snowNow, snowCurve, performance.now() / 1000);
     drawFx(gF);
     drawBubble(gF);
     placeAce();

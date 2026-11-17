@@ -52,18 +52,20 @@ ok(took[2].convoy === 0 && took[3].convoy === 6 && took[4].convoy === 9, 'convoy
 ok(took[1].sw === 0 && took[2].sw > 0, 'cars that change lane from level 3 (' + took.map((x) => x.sw).join(' ') + ')');
 // A lane change: the indicator first, then the car slides one lane over.
 const sw0 = await pg.evaluate(() => {
-  const R = window.__pthRun, me = R.segAt(), c = R.cars().find((x) => x.sw && !x.dead && x.sw.ph === 0 && x.z / 200 > me + 80);
-  if (!c) return null;
+  const R = window.__pthRun, me = R.segAt();
+  let c = R.cars().find((x) => x.sw && !x.dead && x.sw.ph === 0 && x.z / 200 > me + 80);
+  // None left ahead (they may all be behind already): one of the tagged cars, put back 120 segments ahead.
+  if (!c) { c = R.cars().find((x) => x.sw); if (!c) return null; Object.assign(c, { dead: false, z: (me + 120) * 200 }); Object.assign(c.sw, { ph: 0, t: 0, at: 70 }); }
   R.cars().forEach((x) => { if (x !== c) x.dead = true; });
   window._sw = c; const at = Math.floor(c.z / 200) - 40 - (R.segAt() - Math.floor(R.game().pos / 200));
   R.setPos(at); R.setV(0); R.setTime(99); window._swIv = setInterval(() => { R.setPos(at); R.setV(0); R.setTime(99); }, 16);
   return { lane: c.lane };
 });
 await sleep(450);
-const sw1 = await pg.evaluate(() => { const w = window._sw.sw; return { ph: w.ph, from: w.from, to: w.to }; });
+const sw1 = await pg.evaluate(() => { const w = window._sw && window._sw.sw; return w ? { ph: w.ph, from: w.from, to: w.to } : {}; });
 if (process.env.PTH_SHOTS === '1') { mkdirSync('.shots', { recursive: true }); await pg.screenshot({ path: '.shots/prun-swerve.png' }); }
 await sleep(2200);
-const sw2 = await pg.evaluate(() => { clearInterval(window._swIv); const c = window._sw; return { ph: c.sw.ph, lane: c.lane }; });
+const sw2 = await pg.evaluate(() => { clearInterval(window._swIv); const c = window._sw; return c ? { ph: c.sw.ph, lane: c.lane } : {}; });
 ok(sw0 && sw1.ph === 1 && Math.abs(sw1.to - sw1.from) === 1 && sw1.from === sw0.lane, 'a car ahead puts its indicator on (lane ' + (sw0 && sw0.lane) + ' → ' + sw1.to + ')');
 ok(sw0 && sw2.ph === 3 && sw2.lane === sw1.to, 'then changes lane (now lane ' + sw2.lane + ')');
 ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));

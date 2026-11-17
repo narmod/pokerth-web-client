@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: a landscape per new circuit** (`web.116`, lot 2 of the OutRun map) — new module
+  `games/poker-run-decor.mjs`: `skyLayer()` draws the skyline named by a theme's `skyX` over the sky (desert ridge
+  and water tower, banded canyon, Half Dome over a fir line, rolling hills with the Ventoux or Tuscan villages,
+  Verdon cliffs over emerald water, Dolomite spires, snowy Alps with St. Moritz's frozen lake, the Black Forest and
+  its spa, Macau's neon and Grand Lisboa, Atlantic City's pier and Ferris wheel, Miami's art deco hotels, the
+  Biarritz lighthouse, Sanremo's hillside, Deauville's villas and clouds), on its own fixed period and the same
+  parallax; a `plain` sky type for those without the old skylines. `drawProp()`: new roadside kinds `route66`
+  (shield, telephone poles, cacti), `miami` (lifeguard towers, palms), `lavender`, `snowpine` (snowy firs, red and
+  white snow poles), `neon` (signs, lamps). `snowfall()`: screen-space flakes on fixed paths, by the theme's `snow`
+  (Stelvio 0.35, St. Moritz 1), fading in with the scene, off with « Reduce animations ». Precached.
 - **Poker Run: the OutRun map** (`web.115`, narmod: « the same map as OutRun », six stages kept) — `GRID`: stage
   k offers k + 1 fixed scenes, the row being the rights taken so far; a fork leads to the same row (left) or the
   next one (right) — `forkScenes(k, row)`, replacing the scenes drawn at random. 21 scenes, 32 routes, 6 arrivals
