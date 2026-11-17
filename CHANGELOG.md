@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: an ending per arrival** (`web.117`, OutRun's goals) — the finish banner carries the town's
+  name; crossing the line, the outro lasts `OUTRO_WIN` = 4.2 s (was 1.8, kept as `OUTRO_LOSE` for a time-out) with the
+  town's name, « Arrivée » and its own line (`prArrive`, `prEnd_<town>`, 7 strings in the 83 languages) over
+  `arrivalFx()` (`poker-run-decor.mjs`, stateless from the outro's time: fireworks for Atlantic City, Macau and
+  St. Moritz, confetti for Deauville and Baden-Baden, petals for Sanremo; none with « Reduce animations »). A tap
+  or Space after 0.8 s goes to the showdown, whose subtitle names the arrival.
 - **Poker Run: a landscape per new circuit** (`web.116`, lot 2 of the OutRun map) — new module
   `games/poker-run-decor.mjs`: `skyLayer()` draws the skyline named by a theme's `skyX` over the sky (desert ridge
   and water tower, banded canyon, Half Dome over a fir line, rolling hills with the Ventoux or Tuscan villages,

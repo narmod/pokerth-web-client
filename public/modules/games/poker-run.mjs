@@ -50,7 +50,7 @@ import { endScreen, listHtml } from './end.mjs';
 import { rng } from './deal.mjs';
 import { dayKey } from './solitaire-rules.mjs';
 import { spriteCache } from './sprites.mjs';
-import { skyLayer, drawProp, PROPS, snowfall } from './poker-run-decor.mjs';
+import { skyLayer, drawProp, PROPS, snowfall, arrivalFx, ARRIVAL_FX } from './poker-run-decor.mjs';
 
 // ── Road ───────────────────────────────────────────────────────────
 const SEG = 200, ROAD = 2000, DRAW = 300, CAMH = 1400, FOV = 100;
@@ -70,6 +70,8 @@ const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3
 const HIT = 0.25;
 const TRAFFIC = 48, CAR_KINDS = ['car', 'van', 'sport'];
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
+/** How long the arrival lasts before the showdown (web.117: the town's celebration); a tap skips it. */
+export const OUTRO_WIN = 4.2, OUTRO_LOSE = 1.8;
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, SPLIT = 1, MERGE = 60;
 /** Segments of road before the fork of stage k (the last stage, k = FORKS, runs as long to the finish). */
 export const stageLen = (k) => 740 + k * 40;
@@ -651,6 +653,8 @@ export function create(shell) {
       if (a === 'jump' && down && performance.now() > overAt + 700) start();
       return;
     }
+    // The arrival's celebration (web.117): a tap or Space goes straight to the showdown.
+    if (state === 'outro') { if (outroWin && down && a === 'jump' && outroT > 0.8) over(); return; }
     if (state !== 'run') return;
     const sw = info && info.swipe;
     if (a === 'left' || a === 'right') { const k = a === 'left' ? 'l' : 'r'; if (sw) pulse[k] = down ? 0.25 : 0; else keys[k] = down; }
@@ -1004,7 +1008,21 @@ export function create(shell) {
     yaw *= 0.9; yawVel *= 0.9; turn *= 0.9; slide *= 0.9; pv *= 0.9;
     const ps = findSeg(pos + PLAYER_Z); camY = CAMH + ps.p1.w.y;
     stepFx(dt); stepParts(dt);
-    if (outroT > 1.8) over();
+    if (outroT > (outroWin ? OUTRO_WIN : OUTRO_LOSE)) over();
+  }
+  /** The arrival (web.117): the town's own celebration, its name and its line, over the road. */
+  function drawArrival(g) {
+    const key = stageTheme[STAGES - 1];
+    if (!key || !ARRIVAL_FX[key]) return;
+    if (!shell.reduced) arrivalFx(g, W, H, key, outroT);
+    const al = clamp(outroT / 0.4, 0, 1) * clamp((OUTRO_WIN - outroT) / 0.3, 0, 1), y = H * 0.26;
+    g.save(); g.globalAlpha = al; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.lineJoin = 'round';
+    const fit = (txt, px, weight, max) => { g.font = weight + ' ' + px + 'px Inter, system-ui, sans-serif'; const w = g.measureText(txt).width; if (w > max) g.font = weight + ' ' + Math.floor(px * max / w) + 'px Inter, system-ui, sans-serif'; };
+    const line = (txt, yy, fill, sw) => { g.lineWidth = sw; g.strokeStyle = 'rgba(8,10,16,.75)'; g.strokeText(txt, W / 2, yy); g.fillStyle = fill; g.fillText(txt, W / 2, yy); };
+    fit(t('prArrive').toUpperCase(), 13, '800', W - 40); line(t('prArrive').toUpperCase(), y - 34, '#e8b84a', 4);
+    fit(TH[key].name, 36, '800', W - 40); line(TH[key].name, y, '#ffffff', 6);
+    fit(t('prEnd_' + key), 15, '700', W - 30); line(t('prEnd_' + key), y + 26, '#f5f0e3', 4);
+    g.restore();
   }
   /** How far the car went: the stage it was in and how much of it (0 … 1). */
   function progress() {
@@ -1084,7 +1102,8 @@ export function create(shell) {
     // made, the course driven (OutRun's map) or the Queen's requests, a few numbers.
     const rights = gates.filter((g) => g.picked === 1 && !g.auto).length, reached = Math.min(STAGES, pr.stage + 1);
     endScreen(shell, {
-      title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : mode === 'daily' ? t('psDaily') + ' · ' + day : t('adModeFree')) + ' · Poker Run',
+      title: outroWin ? 'Showdown' : t('prTimeUp'), sub: (mode === 'queen' ? t('prQueen') : mode === 'daily' ? t('psDaily') + ' · ' + day : t('adModeFree')) + ' · Poker Run'
+        + (outroWin && TH[stageTheme[STAGES - 1]] ? ' · ' + TH[stageTheme[STAGES - 1]].name : ''),
       cards: ev.best, hand: t(ev.nameKey) + ' ×' + ev.mult, score, prev: prevBest,
       calc: [[t('blChips'), fmt(stack)], [t('gameTimeLabel'), '+' + fmt(bonus)], [t(ev.nameKey), '×' + ev.mult], hm !== 1 ? ['♥ ' + hearts, '×' + String(hm).replace('.', ',')] : null],
       levels: mode === 'queen'
@@ -1338,6 +1357,13 @@ const carW = () => Math.min(W * 0.24, 100);
     ctx.fillStyle = '#0d1117';
     for (let r = 0; r < 2; r++) for (let c = r % 2; c < n; c += 2) ctx.fillRect(L + c * cw, top + r * bh / 2, cw + 0.5, bh / 2 + 0.5);
     ctx.strokeStyle = '#0d1117'; ctx.lineWidth = Math.max(1, bh * 0.08); ctx.strokeRect(L, top, bw, bh);
+    // The town's name above it (web.117): the arrival this route leads to.
+    const town = TH[themeOf(STAGES - 1).key];
+    if (town && bh > 6) {
+      const ph = bh * 0.8; ctx.fillStyle = '#0d1117'; ctx.fillRect(L, top - ph, bw, ph);
+      ctx.fillStyle = '#e8b84a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '800 ' + Math.max(6, Math.round(ph * 0.62)) + 'px Inter, system-ui, sans-serif'; ctx.fillText(town.name.toUpperCase(), (L + Rr) / 2, top - ph / 2, bw * 0.92);
+    }
   }
   function drawChip(X, y, sc) {
     const r = sc * 130; if (r < 0.8) return;
@@ -1615,6 +1641,7 @@ const carW = () => Math.min(W * 0.24, 100);
     g.restore();
     drawCarFront(gF);
     if (!shell.reduced) snowfall(gF, W, H, snowNow, snowCurve, performance.now() / 1000);
+    if (state === 'outro' && outroWin) drawArrival(gF);
     drawFx(gF);
     drawBubble(gF);
     placeAce();

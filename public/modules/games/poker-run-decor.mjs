@@ -325,3 +325,51 @@ export function snowfall(g, W, H, amount, drift, now) {
   }
   g.globalAlpha = 1;
 }
+
+// ── The arrivals' celebrations (web.117) ────────────────────────────
+/** What each arrival celebrates with (the casino towns at the end of the pyramid). */
+export const ARRIVAL_FX = {
+  atlantic: { kind: 'fireworks', cols: ['#ff9ad0', '#ffe066', '#7fd8ff'] },
+  deauville: { kind: 'confetti', cols: ['#c2303a', '#2f78b8', '#f6e08a', '#2fb37c', '#f4eedf'] },
+  macau: { kind: 'fireworks', cols: ['#ff3b3b', '#ffd23a', '#ff5ab0'] },
+  baden: { kind: 'confetti', cols: ['#e8b84a', '#f4eedf', '#c99a2e'] },
+  sanremo: { kind: 'petals', cols: ['#ff7aa8', '#ffb3c8', '#e0384a', '#ffd6e2'] },
+  moritz: { kind: 'fireworks', cols: ['#ffffff', '#9fd3ff', '#e8b84a'] },
+};
+const frac = (x) => x - Math.floor(x);
+const hash = (i, s) => frac(Math.sin(i * 12.9898 + s * 78.233) * 43758.5453);
+
+/**
+ * The celebration of arrival `key` over the screen, `t` seconds after crossing the line. Stateless (everything
+ * from `t`), so it can be drawn at any frame rate and needs no reset.
+ */
+export function arrivalFx(g, W, H, key, t) {
+  const fxd = ARRIVAL_FX[key];
+  if (!fxd || t <= 0) return;
+  const cols = fxd.cols;
+  if (fxd.kind === 'fireworks') {
+    for (let i = 0; i < 12; i++) {
+      const born = i * 0.32, a = t - born;
+      if (a < 0 || a > 1.5) continue;
+      const cx = W * (0.15 + 0.7 * hash(i, 1)), cy = H * (0.12 + 0.3 * hash(i, 2)), R = (50 + 40 * hash(i, 3)) * Math.min(1, a * 2.2), c = cols[i % cols.length];
+      g.globalAlpha = Math.max(0, 1 - a / 1.5); g.fillStyle = c;
+      for (let k = 0; k < 22; k++) {
+        const an = k * Math.PI * 2 / 22 + i, x = cx + Math.cos(an) * R, y = cy + Math.sin(an) * R + a * a * 18;
+        g.beginPath(); g.arc(x, y, 2.2, 0, 7); g.fill();
+      }
+    }
+  } else {
+    const petals = fxd.kind === 'petals', n = petals ? 70 : 110;
+    for (let i = 0; i < n; i++) {
+      const sp = 0.6 + hash(i, 4) * 0.8, y = -20 + (t * 140 * sp + hash(i, 5) * H * 0.4) - (hash(i, 6) * H * 0.4);
+      if (y < -20 || y > H + 20) continue;
+      const x = W * hash(i, 7) + Math.sin(t * 2.2 * sp + i) * (petals ? 26 : 12), rot = t * 5 * sp + i;
+      g.globalAlpha = Math.min(1, (H + 20 - y) / 80); g.fillStyle = cols[i % cols.length];
+      g.save(); g.translate(x, y); g.rotate(rot);
+      if (petals) { g.beginPath(); g.ellipse(0, 0, 5, 2.6, 0, 0, 7); g.fill(); }
+      else g.fillRect(-3.5, -1.8 * Math.abs(Math.cos(rot)), 7, 3.6 * Math.abs(Math.cos(rot)) + 0.6);
+      g.restore();
+    }
+  }
+  g.globalAlpha = 1;
+}

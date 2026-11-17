@@ -68,6 +68,14 @@ await sleep(2200);
 const sw2 = await pg.evaluate(() => { clearInterval(window._swIv); const c = window._sw; return c ? { ph: c.sw.ph, lane: c.lane } : {}; });
 ok(sw0 && sw1.ph === 1 && Math.abs(sw1.to - sw1.from) === 1 && sw1.from === sw0.lane, 'a car ahead puts its indicator on (lane ' + (sw0 && sw0.lane) + ' → ' + sw1.to + ')');
 ok(sw0 && sw2.ph === 3 && sw2.lane === sw1.to, 'then changes lane (now lane ' + sw2.lane + ')');
+// The arrival (web.117): St. Moritz at the end of the all-right route, its celebration, a tap to the showdown.
+await pg.evaluate(() => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setPos(R.finish() - 30); R.setPx(0); R.setTime(99); R.setV(0.9); });
+let st = ''; for (let i = 0; i < 30 && st !== 'outro'; i++) { await sleep(100); st = await pg.evaluate(() => window.__pthRun.state()); }
+await sleep(1600);
+const still = await pg.evaluate(() => window.__pthRun.state());
+await pg.keyboard.press('Space'); await sleep(500);
+const arr = await pg.evaluate(() => ({ st: window.__pthRun.state(), sub: (document.querySelector('#pth-game .gm-end-sub, #pth-game [class*="end"] [class*="sub"]') || {}).textContent || document.querySelector('#pth-game').textContent }));
+ok(st === 'outro' && still === 'outro' && arr.st === 'over' && /St\. Moritz/.test(arr.sub), 'the arrival: St. Moritz celebrates, a tap goes to the showdown, named there (' + st + ' → ' + still + ' → ' + arr.st + ')');
 ok(errors.length === 0, 'no page error' + (errors.length ? ': ' + errors.join(' | ') : ''));
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 await b.close(); server.close();
