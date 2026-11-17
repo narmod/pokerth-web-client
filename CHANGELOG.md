@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: St. Moritz on ice** (`web.118`) — its theme gets `grip: ICE_GRIP` (0.7) and a bluish road: the
+  stick's steering rate and how fast the car answers are scaled by it, and the drift's slip builds ×1.3 sooner.
+  At full speed the tightest bend (`CURVE_MAX`) pulls harder than the stick steers: brake below ≈ 0.85 of top speed.
+  The Ace warns (❄️⚠️) on taking the fork into it. Test: the same steering moves the car about 40 % less there than
+  in Las Vegas.
 - **Poker Run: an ending per arrival** (`web.117`, OutRun's goals) — the finish banner carries the town's
   name; crossing the line, the outro lasts `OUTRO_WIN` = 4.2 s (was 1.8, kept as `OUTRO_LOSE` for a time-out) with the
   town's name, « Arrivée » and its own line (`prArrive`, `prEnd_<town>`, 7 strings in the 83 languages) over

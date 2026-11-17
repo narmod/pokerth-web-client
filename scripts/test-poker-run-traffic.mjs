@@ -50,10 +50,24 @@ ok(took.every((x, k) => x.n === M.ex[k + 1]), 'each stage adds its traffic: 5 ca
 ok(took[0].vans === 0 && took[0].fast === 0 && took[1].vans > 0 && took[1].fast > 0, 'trucks and sports cars from level 2 (level 2: ' + took[1].vans + ' trucks, ' + took[1].fast + ' fast)');
 ok(took[2].convoy === 0 && took[3].convoy === 6 && took[4].convoy === 9, 'convoys from level 4: 2 then 3 of three cars (' + took.map((x) => x.convoy).join(' ') + ')');
 ok(took[1].sw === 0 && took[2].sw > 0, 'cars that change lane from level 3 (' + took.map((x) => x.sw).join(' ') + ')');
+// The ice of St. Moritz (web.118): on a straight, the same steering moves the car less than in Las Vegas.
+const steer = async (which) => {
+  const z = await pg.evaluate((w) => { const R = window.__pthRun, G = R.game(), a = w ? G.gates[4].seg + 120 : 120, b = w ? R.finish() - 80 : G.gates[0].seg - 300;
+    // The straightest stretch (St. Moritz has hardly any straight; its pull is negligible over 0.35 s at 0.6).
+    let best = -1, bv = 1e9; for (let i = a; i < b; i++) { let m = 0; for (let j = -10; j < 40; j++) m = Math.max(m, Math.abs(R.curve(i + j))); if (m < bv) { bv = m; best = i; } if (m < 0.02) break; } return bv < 0.6 ? best : -1; }, which);
+  if (z < 0) return null;
+  await pg.evaluate((z) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); window._stIv = setInterval(() => { R.setPos(z); R.setV(0.6); R.setTime(99); }, 16); R.setPx(-0.4); }, z);
+  await sleep(150); await pg.keyboard.down('ArrowRight'); await sleep(350); await pg.keyboard.up('ArrowRight');
+  return pg.evaluate(() => { clearInterval(window._stIv); return window.__pthRun.game().px + 0.4; });
+};
+const dVegas = await steer(0), dIce = await steer(1);
+ok(dVegas != null && dIce != null && dIce < dVegas * 0.85, 'on the ice of St. Moritz the car answers the stick less (' + (dIce != null ? dIce.toFixed(2) : '?') + ' vs ' + (dVegas != null ? dVegas.toFixed(2) : '?') + ' in Las Vegas)');
 // A lane change: the indicator first, then the car slides one lane over.
 const sw0 = await pg.evaluate(() => {
-  const R = window.__pthRun, me = R.segAt();
-  let c = R.cars().find((x) => x.sw && !x.dead && x.sw.ph === 0 && x.z / 200 > me + 80);
+  const R = window.__pthRun; R.setPos(R.game().gates[4].seg + 60);
+  const me = R.segAt();
+  // Far enough from the finish for the whole manoeuvre (a car past it stops).
+  let c = R.cars().find((x) => x.sw && !x.dead && x.sw.ph === 0 && x.z / 200 > me + 80 && x.z / 200 < R.finish() - 500);
   // None left ahead (they may all be behind already): one of the tagged cars, put back 120 segments ahead.
   if (!c) { c = R.cars().find((x) => x.sw); if (!c) return null; Object.assign(c, { dead: false, z: (me + 120) * 200 }); Object.assign(c.sw, { ph: 0, t: 0, at: 70 }); }
   R.cars().forEach((x) => { if (x !== c) x.dead = true; });

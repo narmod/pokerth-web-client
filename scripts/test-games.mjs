@@ -87,6 +87,8 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
     'Poker Run scenery (web.116): the new roadside things, no snow drawn where there is none');
   ok(pr.GRID[5].every((k) => decor.ARRIVAL_FX[k]) && Object.keys(decor.ARRIVAL_FX).length === 6 && pr.OUTRO_WIN > pr.OUTRO_LOSE,
     'Poker Run arrivals (web.117): each of the six casino towns celebrates its own way, a longer outro when the line is crossed');
+  ok(pr.ICE_GRIP > 0.5 && pr.ICE_GRIP < 1 && 2.5 * pr.ICE_GRIP * 0.85 > 2.4 * 0.85 * 0.85 * pr.CURVE_MAX * 0.17,
+    'Poker Run ice (web.118): less grip at St. Moritz, still steerable through the tightest bend below 0.85 of top speed');
   ok(pr.kmhOf(0) === 0 && pr.kmhOf(-5) === 0 && pr.KMH_TOP === 240 && Math.round(pr.kmhOf(200 * 62 * 1.45)) === 348, 'Poker Run speed (web.113): 240 km/h at top speed, about 350 with the nitro');
   const c3 = await import('../public/modules/games/car3d.mjs');
   const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });

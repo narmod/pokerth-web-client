@@ -70,6 +70,12 @@ const CAR_COLS = ['#ece6d6', '#2e86de', '#f0812a', '#2fb37c', '#a066dc', '#e5cf3
 const HIT = 0.25;
 const TRAFFIC = 48, CAR_KINDS = ['car', 'van', 'sport'];
 const BR_OFF = [-0.5, 0.5];                 // the two branches of a fork: the road's left and right halves
+/**
+ * St. Moritz's ice (web.118, narmod: the last stage of the all-right route is slippery): the stick turns the car
+ * this much slower, it answers later, and slides out of a bend sooner. At full speed the tightest bend
+ * (CURVE_MAX) then pulls harder than the stick can steer: brake for it (below about 0.85 of top speed).
+ */
+export const ICE_GRIP = 0.7;
 /** How long the arrival lasts before the showdown (web.117: the town's celebration); a tap skips it. */
 export const OUTRO_WIN = 4.2, OUTRO_LOSE = 1.8;
 const STAGES = 6, FORKS = 5, TIME0 = 32, EXTEND = 22, GATE_ZONE = 170, SPLIT = 1, MERGE = 60;
@@ -138,7 +144,7 @@ const TH = {
   macau: { name: 'Macau', sky: ['#0a0a22', '#26184a', '#b0306a'], g: ['#2a2c3a', '#262834'], r: ['#e0384a', '#f4eedf'], d: ['#22242c', '#1f2128'], fog: '#3a1e48', skyT: 'plain', skyX: 'neon', side: 'neon', night: true, a: '#120e2a', b: '#ff5ab0' },
   baden: { name: 'Baden-Baden', sky: ['#2e4e78', '#86a6c4', '#e6e2d4'], g: ['#2f5e34', '#2a562f'], r: ['#f4eedf', '#c2303a'], d: ['#36383e', '#313339'], fog: '#c4d0d4', skyT: 'plain', skyX: 'forest', side: 'pine', a: '#2c4a3a', b: '#4c6a52' },
   sanremo: { name: 'Sanremo', sky: ['#24467e', '#e07a6a', '#ffcf94'], g: ['#7a8e4a', '#728645'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eeb894', skyT: 'sea', skyX: 'rivtown', side: 'riviera', coast: true, a: '#3a4f86', b: '#ffe2a8' },
-  moritz: { name: 'St. Moritz', sky: ['#183466', '#5e88bc', '#e8f0f8'], g: ['#eef2f6', '#e4e9ef'], r: ['#2f78b8', '#f4eedf'], d: ['#40454e', '#3b4049'], fog: '#eef3f8', skyT: 'plain', skyX: 'snow', lake: true, snow: 1, side: 'snowpine', a: '#5a6c88', b: '#ffffff' },
+  moritz: { name: 'St. Moritz', sky: ['#183466', '#5e88bc', '#e8f0f8'], g: ['#eef2f6', '#e4e9ef'], r: ['#2f78b8', '#f4eedf'], d: ['#5a687c', '#536176'], fog: '#eef3f8', skyT: 'plain', skyX: 'snow', lake: true, snow: 1, grip: ICE_GRIP, side: 'snowpine', a: '#5a6c88', b: '#ffffff' },
   monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', night: true, a: '#1b1430', b: '#ffd68c' },
 };
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -709,6 +715,7 @@ export function create(shell) {
     g.picked = lane; board.push(g.cards[lane]);
     const k = g.k;
     stageTheme[k + 1] = branches[k][lane]; curStage = k + 1;
+    if (TH[stageTheme[k + 1]].grip && live) say('❄️⚠️', 2);
     if (live && mode === 'queen') questGate(k, lane);
     lvl[k + 1] = Math.min(FORKS, (lvl[k] || 0) + lane);
     if (tmpl[k + 1] && applied[k + 1] !== tmpl[k + 1][lane]) applyStage(k + 1, tmpl[k + 1][lane]);
@@ -743,21 +750,22 @@ export function create(shell) {
     // you ease off; the car slides in proportion. Past 0.4 it counts as a drift
     // (chips, sparks, turbo); under 0.22 the drift is over.
     const bend = Math.sign(ps.curve), tight = clamp((Math.abs(ps.curve) - 0.5) / 2, 0, 1), fast = clamp((sp - 0.45) / 0.45, 0, 1);
+    const hold = themeOf(ps.stage).grip || 1, ice = 1 + (1 - hold);   // on ice (web.118) the car slides sooner
     let want = 0;
-    if (dir !== 0 && dir === bend) want = (0.3 + 0.7 * tight) * fast;
+    if (dir !== 0 && dir === bend) want = Math.min(1, (0.3 + 0.7 * tight) * fast * ice);
     else if (dir !== 0 && Math.abs(ps.curve) < 0.5) want = 0.18 * fast;      // a hard turn on a straight: a little looseness
     else if (dir !== 0 && slip > 0) want = slip * 0.7;                        // steering out of the bend widens and eases off
     slip += (want - slip) * Math.min(1, dt * (want > slip ? 1.6 : 2.2));
     if (dir) slipDir = dir === bend || !drift ? dir : slipDir;
     if (!drift && slip > 0.4) { drift = true; stDrifts++; driftDir = bend || dir; slipDir = driftDir; driftTick = 0; driftGain = 0; charge = 0; say('😎'); }
     if (drift) { charge += dt * (0.4 + 0.6 * slip); if (slip < 0.22 || sp < 0.4) endDrift(); }
-    const rate = 2.5 * Math.max(0.35, sp);
+    const rate = 2.5 * Math.max(0.35, sp) * hold;
     // Gripping, the stick moves the car across; sliding, holding into the bend
     // keeps its line, letting go widens it a little, steering out more.
     const cf = 2.4 * sp * sp * Math.abs(ps.curve) * CENTRI * 0.4;
     const grip = dir * rate, slideT = slipDir * (cf + (dir === slipDir ? 0.15 : dir === 0 ? -0.2 : -0.8));
     const target = grip + (slideT - grip) * slip;
-    pv += (target - pv) * Math.min(1, dt * (6 + 4 * (1 - slip)));
+    pv += (target - pv) * Math.min(1, dt * (6 + 4 * (1 - slip)) * hold);
     px += pv * dt - dt * 2.4 * sp * sp * ps.curve * CENTRI * (1 - 0.6 * slip);
     // After a fork the branch taken swings back to the middle: the car goes with it.
     if (ps.m > 0) { const cen = (envL(g) + envR(g)) / 2; if (lastCen != null) px += cen - lastCen; lastCen = cen; } else lastCen = null;
