@@ -985,7 +985,17 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(!prGap[0] && prGap[1], label + ': the car slips between two cars side by side, and crashes into one (' + prGap.join(', ') + ')');
   // Drift: into a bend at speed, it starts; a short let-go does not break it.
   // In stage 0: its road is fixed (the later ones are reshaped by the forks taken).
-  const prBend = await pg.evaluate(() => { const R = window.__pthRun, end = R.game().gates[0].seg - 260; let m = 100; for (let i = 100; i < end; i++) if (Math.abs(R.curve(i)) > Math.abs(R.curve(m))) m = i; return Math.abs(R.curve(m)) > 1 ? { i: m - 2, d: Math.sign(R.curve(m)) } : null; });
+  // Stage 0's bends are random (up to 1.6): about one run in twenty has none past 1 — then a new run.
+  const prBend = await pg.evaluate(() => {
+    const R = window.__pthRun;
+    for (let tries = 0; tries < 8; tries++) {
+      const end = R.game().gates[0].seg - 260; let m = 100;
+      for (let i = 100; i < end; i++) if (Math.abs(R.curve(i)) > Math.abs(R.curve(m))) m = i;
+      if (Math.abs(R.curve(m)) > 1) return { i: m - 2, d: Math.sign(R.curve(m)) };
+      R.start('free');
+    }
+    return null;
+  });
   if (prBend) {
     // Held on the tightest bend of the stage (the car put back on it every 0.1 s).
     await pg.evaluate((b) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); R.setTime(99); R.setPos(b.i); R.setPx(0); R.setV(0.9); }, prBend);
@@ -1024,7 +1034,7 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'phone']]) {
   ok(prE.on && /×/.test(prE.calc) && (prOver.best !== null || prE.score === '0') && prOver.board === 5 && /Drifts/.test(prE.stats),
     label + ': time out, the board is completed, score saved (' + prE.score + ' · ' + prE.calc + ')');
   ok(prOver.mini, label + ': the HUD\'s small map gone with the showdown');
-  ok(prOver.map && prOver.nodes === 11 && prOver.car && prOver.flag, label + ': the course map: start, 5 forks of 2 scenes, the car where it stopped, the finish flag (' + prOver.nodes + ' scenes)');
+  ok(prOver.map && prOver.nodes === 21 && prOver.car && prOver.flag, label + ': the course map, a pyramid as OutRun\'s (web.115): 21 scenes, the car where it stopped, the arrivals\' flags (' + prOver.nodes + ' scenes)');
   await shot(pg, label + '-prun-over');
   await hofCheck(pg, label, 'poker-run', '__pthRun', ['free', 'queen', 'daily'], () => { const R = window.__pthRun; R.start('free'); R.addStack(500); R.setTime(0.05); });
   // A new run (Space on the title), to take every fork on the right.

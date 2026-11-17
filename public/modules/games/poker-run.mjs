@@ -118,6 +118,24 @@ const TH = {
   tropez: { name: 'Saint-Tropez', sky: ['#23305e', '#d9667a', '#ffbe7a'], g: ['#6f8f45', '#678540'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eaa886', skyT: 'sea', side: 'riviera', coast: true, a: '#2f4f86', b: '#ffe0a0' },
   valley: { name: 'Monument Valley', sky: ['#2e63a8', '#86b4dc', '#f3d9a8'], g: ['#c88a4c', '#bd7f44'], r: ['#f4eedf', '#8a3b1c'], d: ['#4b4541', '#46403c'], fog: '#ecceA6', skyT: 'mesa', side: 'cactus', a: '#9c4f2c', b: '#c46a3c' },
   chamonix: { name: 'Chamonix', sky: ['#22487e', '#79a3cd', '#dfe9f1'], g: ['#3f7a3a', '#386f34'], r: ['#f4eedf', '#c2303a'], d: ['#33373e', '#2f333a'], fog: '#cddae8', skyT: 'peaks', side: 'pine', a: '#5b6f8a', b: '#f4f7fa' },
+  // The pyramid of web.115 (narmod: « the same map as OutRun »): 16 more scenes. Their names are the places'
+  // own (no translation). Flat and by the sea at the top of the map, the mountains at the bottom.
+  route66: { name: 'Route 66', sky: ['#2f6fb8', '#8cbfe6', '#f6e2b4'], g: ['#d2a868', '#c99e5f'], r: ['#f4eedf', '#c2303a'], d: ['#4a4a4e', '#444448'], fog: '#efd8ac', skyT: 'mesa', side: 'cactus', a: '#b0785a', b: '#d99a6c' },
+  miami: { name: 'Miami Beach', sky: ['#1d5f9a', '#5fc3d8', '#ffd2a8'], g: ['#e6d3a3', '#ddc898'], r: ['#f4eedf', '#2fb3a8'], d: ['#3f444c', '#3a3f47'], fog: '#bfe6ea', skyT: 'sea', side: 'palm', coast: true, a: '#2b6e9a', b: '#ffe8b8' },
+  canyon: { name: 'Grand Canyon', sky: ['#3a5f98', '#e09a5c', '#ffd49a'], g: ['#b2582e', '#a8522a'], r: ['#f4eedf', '#6b2a14'], d: ['#4b4039', '#463b35'], fog: '#e8b48a', skyT: 'mesa', side: 'cactus', a: '#8a3a1c', b: '#e07a3a' },
+  yosemite: { name: 'Yosemite', sky: ['#2a5a9a', '#88b8e0', '#e8f0f4'], g: ['#3d6e34', '#37652f'], r: ['#f4eedf', '#5a6a3a'], d: ['#3a3d42', '#35383d'], fog: '#c8d8e4', skyT: 'peaks', side: 'pine', a: '#7d8590', b: '#e9edf2' },
+  provence: { name: 'Provence', sky: ['#3c74b8', '#9cc4e8', '#f4ead8'], g: ['#8a74b4', '#8069aa'], r: ['#f4eedf', '#c4643c'], d: ['#4a474e', '#444148'], fog: '#e4dcec', skyT: 'peaks', side: 'cypress', a: '#8e9ab8', b: '#eef0f6' },
+  biarritz: { name: 'Biarritz', sky: ['#28568e', '#7ab0d6', '#f2e4c8'], g: ['#5f8a46', '#588141'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#cfe0ea', skyT: 'sea', side: 'riviera', coast: true, a: '#2f5f8e', b: '#fff1cc' },
+  toscana: { name: 'Toscana', sky: ['#4a7ab0', '#a8c8e0', '#f6dcb0'], g: ['#a8a24e', '#9e9848'], r: ['#f4eedf', '#b0502c'], d: ['#4b4741', '#46423c'], fog: '#ecdcb8', skyT: 'peaks', side: 'cypress', a: '#8c9a62', b: '#c8c890' },
+  verdon: { name: 'Verdon', sky: ['#2c64a4', '#84b6dc', '#eef0e8'], g: ['#7a8a52', '#72824c'], r: ['#f4eedf', '#2f9e8e'], d: ['#4a4a4c', '#444446'], fog: '#d8e2e0', skyT: 'mesa', side: 'cypress', a: '#c8c2b4', b: '#efeae0' },
+  dolomiti: { name: 'Dolomiti', sky: ['#24508a', '#7aa6d2', '#f2d8d0'], g: ['#4e7c3e', '#477238'], r: ['#f4eedf', '#c2303a'], d: ['#3a3c42', '#35373d'], fog: '#e2d8dc', skyT: 'peaks', side: 'pine', a: '#c89c94', b: '#fbf6f4' },
+  stelvio: { name: 'Stelvio', sky: ['#1e3f74', '#6c96c6', '#dce8f2'], g: ['#d8e0e8', '#ced7e0'], r: ['#c2303a', '#f4eedf'], d: ['#3a3e46', '#353941'], fog: '#e4ecf4', skyT: 'peaks', side: 'pine', a: '#6a7a92', b: '#ffffff' },
+  atlantic: { name: 'Atlantic City', sky: ['#0c1430', '#24346a', '#c06a8a'], g: ['#c8b48a', '#bfab82'], r: ['#e8b84a', '#f4eedf'], d: ['#2a2e36', '#262a32'], fog: '#2a3460', skyT: 'city', side: 'lamp', coast: true, night: true, a: '#141c3a', b: '#ff9ad0' },
+  deauville: { name: 'Deauville', sky: ['#4e7aa8', '#a6c4dc', '#f2ead8'], g: ['#6e9a4e', '#669148'], r: ['#f4eedf', '#2f78b8'], d: ['#42464e', '#3d4149'], fog: '#dce6ec', skyT: 'sea', side: 'riviera', coast: true, a: '#4a6e94', b: '#fff4d8' },
+  macau: { name: 'Macau', sky: ['#0a0a22', '#26184a', '#b0306a'], g: ['#2a2c3a', '#262834'], r: ['#e0384a', '#f4eedf'], d: ['#22242c', '#1f2128'], fog: '#3a1e48', skyT: 'city', side: 'lamp', night: true, a: '#120e2a', b: '#ff5ab0' },
+  baden: { name: 'Baden-Baden', sky: ['#2e4e78', '#86a6c4', '#e6e2d4'], g: ['#2f5e34', '#2a562f'], r: ['#f4eedf', '#c2303a'], d: ['#36383e', '#313339'], fog: '#c4d0d4', skyT: 'peaks', side: 'pine', a: '#2c4a3a', b: '#4c6a52' },
+  sanremo: { name: 'Sanremo', sky: ['#24467e', '#e07a6a', '#ffcf94'], g: ['#7a8e4a', '#728645'], r: ['#f4eedf', '#c2303a'], d: ['#3d424a', '#383c44'], fog: '#eeb894', skyT: 'sea', side: 'riviera', coast: true, a: '#3a4f86', b: '#ffe2a8' },
+  moritz: { name: 'St. Moritz', sky: ['#183466', '#5e88bc', '#e8f0f8'], g: ['#eef2f6', '#e4e9ef'], r: ['#2f78b8', '#f4eedf'], d: ['#40454e', '#3b4049'], fog: '#eef3f8', skyT: 'peaks', side: 'pine', a: '#5a6c88', b: '#ffffff' },
   monaco: { name: 'Monaco', sky: ['#140a2c', '#3b1d5e', '#8a3f86'], g: ['#2b2f3e', '#272a38'], r: ['#c2303a', '#f4eedf'], d: ['#24262e', '#212329'], fog: '#3c285a', skyT: 'harbor', side: 'lamp', night: true, a: '#1b1430', b: '#ffd68c' },
 };
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -128,7 +146,31 @@ for (const k in TH) {
   s.key = k; s.G = s.g.map(hex); s.R = s.r.map(hex); s.D = s.d.map(hex); s.F = hex(s.fog); s.FAR = mixA(s.G[0], s.F, 0.75);
 }
 // How hilly each scene's road is (× the base); Chamonix climbs and dives (web.64).
-const HILLS = { vegas: 0.5, tropez: 0.9, valley: 1, chamonix: 2.6, monaco: 0.8 };
+const HILLS = { vegas: 0.5, tropez: 0.9, valley: 1, chamonix: 2.6, monaco: 0.8,
+  route66: 0.25, miami: 0.2, atlantic: 0.2, biarritz: 0.5, deauville: 0.6, canyon: 1.4, provence: 1.1, toscana: 1.4, macau: 0.6,
+  yosemite: 1.8, verdon: 1.8, baden: 2, sanremo: 2.2, dolomiti: 2.8, stelvio: 3.2, moritz: 3.4 };
+// How tight each scene's bends are (× the level's), web.115: open roads by the sea, hairpins in the mountains.
+const CURV = { vegas: 1, tropez: 0.85, valley: 0.95, chamonix: 1.25, monaco: 1.2,
+  route66: 0.55, miami: 0.6, atlantic: 0.55, biarritz: 0.7, deauville: 0.8, canyon: 1, provence: 0.9, toscana: 0.95, macau: 1.05,
+  yosemite: 1.15, verdon: 1.25, baden: 1.15, sanremo: 1.3, dolomiti: 1.3, stelvio: 1.45, moritz: 1.5 };
+/** No bend tighter than this: the stick still holds it at full speed, just (centrifugal 2.04 < steering 2.5). */
+export const CURVE_MAX = 5;
+/**
+ * The map, as OutRun's (web.115, narmod: « the same map as OutRun »): stage k offers k + 1 scenes; the row is
+ * the number of rights taken so far, a fork leading to the same row (left) or the next (right). Always left:
+ * flat roads by the sea to Atlantic City; always right: harder and harder mountains to St. Moritz. 21 scenes,
+ * 32 routes, 6 arrivals — all casino towns.
+ */
+export const GRID = [
+  ['vegas'],
+  ['route66', 'valley'],
+  ['miami', 'canyon', 'yosemite'],
+  ['tropez', 'provence', 'monaco', 'chamonix'],
+  ['biarritz', 'toscana', 'verdon', 'dolomiti', 'stelvio'],
+  ['atlantic', 'deauville', 'macau', 'baden', 'sanremo', 'moritz'],
+];
+/** The two scenes a fork after stage k offers, from row `row`: left keeps it, right goes one down. */
+export const forkScenes = (k, row) => [GRID[k + 1][row], GRID[k + 1][row + 1]];
 const KEYS_TH = Object.keys(TH);
 // Skylines, the same every run (a fixed seed).
 let seed = 7;
@@ -370,7 +412,7 @@ export function create(shell) {
       else if (en + ho + le > rest) { const f = rest / (en + ho + le); en = Math.floor(en * f); le = Math.floor(le * f); ho = rest - en - le; }
       const straight = rest < 30 || r() < 0.35 - 0.05 * d;
       sg = r() < 0.35 + 0.1 * d ? -sg : (r() < 0.5 ? 1 : -1);
-      const cu = straight ? 0 : sg * ((0.8 + 0.25 * d) + r() * (0.8 + 0.3 * d));
+      const cu = straight ? 0 : sg * Math.min(CURVE_MAX, ((0.8 + 0.25 * d) + r() * (0.8 + 0.3 * d)) * (key ? CURV[key] : 1));
       // Hills pulled back towards the level, the last stage's last piece back to it (the finish is flat).
       const lastPiece = k === FORKS && i + en + ho + le >= len;
       const hill = lastPiece ? -y : clamp((r() * 2 - 1) * 420 * hk - y * 0.5, -lim - y, lim - y);
@@ -445,11 +487,8 @@ export function create(shell) {
   const nextGate = () => gates.find((g) => g.picked < 0);
   /** The branch of a fork: the one taken, the one the car is on while it comes, else the left one. */
   const chosenLane = (g) => g.picked >= 0 ? g.picked : (nextGate() === g ? hover : 0);
-  function assignBranches(k) {
-    const pool = KEYS_TH.filter((x) => x !== stageTheme[k]), r = S('br' + k + '-' + stageTheme[k]);
-    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const x = pool[i]; pool[i] = pool[j]; pool[j] = x; }
-    branches[k] = pool.slice(0, 2);
-  }
+  /** Fork k's two scenes, fixed by the map (web.115): from the row the car is on. */
+  function assignBranches(k) { branches[k] = forkScenes(k, lvl[k] || 0); }
   function themeOf(k) {
     if (stageTheme[k]) return TH[stageTheme[k]];
     const b = branches[k - 1];
@@ -850,8 +889,10 @@ export function create(shell) {
     if (!gz) { dot.setAttribute('opacity', '0'); return; }
     const i = clamp(Math.floor(gz.z), 0, segs.length - 1), k = Math.min(segs[i].stage, STAGES - 1);
     const z0 = k ? gates[k - 1].seg : 0, z1 = k < FORKS ? gates[k].seg : finishSeg, p = clamp((i - z0) / Math.max(1, z1 - z0), 0, 1);
-    const x0 = MX(k), y0 = MY(k, k ? Math.max(0, ghost.p[k - 1]) : 0), x1 = k === STAGES - 1 ? MFX : MX(k + 1);
-    dot.setAttribute('cx', (x0 + (x1 - x0) * p).toFixed(1)); dot.setAttribute('cy', (y0 + (70 - y0) * p).toFixed(1)); dot.setAttribute('opacity', '0.9');
+    // Its row: the rights it took before this stage (web.115's pyramid).
+    let row = 0; for (let i = 0; i < k; i++) row += Math.max(0, ghost.p[i]);
+    const x0 = MX(k), y0 = MY(k, Math.min(k, row));
+    dot.setAttribute('cx', (x0 + (k === STAGES - 1 ? MFX - x0 : 45) * p).toFixed(1)); dot.setAttribute('cy', y0.toFixed(1)); dot.setAttribute('opacity', '0.9');
   }
   function renderGhost() {
     const s = gGap == null ? '' : (gGap > 0 ? '+' : '−') + Math.abs(gGap).toFixed(1) + ' s';
@@ -969,58 +1010,52 @@ export function create(shell) {
     const k = curStage, z0 = k ? gates[k - 1].seg : 0, z1 = k < FORKS ? gates[k].seg : finishSeg;
     return { stage: k, p: clamp((findSeg(pos + PLAYER_Z).i - z0) / Math.max(1, z1 - z0), 0, 1) };
   }
-  /** The course like OutRun's map: Las Vegas, then at each fork its two
-   *  scenes (left above, right below), the branch taken in gold with the card
-   *  it dealt, the road not driven in grey, the car where it stopped, 🏁. */
-  const MX = (k) => 34 + k * 82, MY = (k, b) => (k === 0 ? 70 : b === 0 ? 38 : 102), MFX = MX(STAGES - 1) + 70;
-  /** Where the car is on the map: between its scene and the next fork (or the finish). */
+  /** The course as OutRun's map (web.115): a pyramid, Las Vegas on the left, stage k's k + 1 scenes in a column
+   *  (row j: j rights taken), the six arrivals on the right. The route driven in gold with the cards it dealt,
+   *  the scenes still within reach plain, the ones out of reach faded, the car where it is or stopped. */
+  const MX = (k) => 40 + k * 90, MY = (k, j) => 150 + (j - k / 2) * 52, MFX = MX(STAGES - 1) + 34;
+  // A row's colour, by how hard it gets (the map's legend): green on top … deep red at the bottom.
+  const ROW_COL = ['#3fbf74', '#a6cf45', '#f2cf4a', '#f29a3a', '#e2554a', '#b8336a'];
+  /** The row the car is on at stage k (its rights so far). */
+  const rowAt = (k) => Math.min(k, lvl[k] || 0);
+  /** Where the car is on the map: from its scene towards the next fork (or its arrival's flag). */
   function mapCar(pr) {
-    if (pr.stage >= STAGES) return { x: MFX - 16, y: 70 };
-    const k = pr.stage, x0 = MX(k), y0 = MY(k, k ? gates[k - 1].picked : 0), x1 = k === STAGES - 1 ? MFX : MX(k + 1);
-    return { x: x0 + (x1 - x0) * pr.p, y: y0 + (70 - y0) * pr.p };
+    if (pr.stage >= STAGES) return { x: MFX, y: MY(STAGES - 1, rowAt(STAGES - 1)) };
+    const k = pr.stage;
+    return { x: MX(k) + (k === STAGES - 1 ? MFX - MX(k) : 45) * pr.p, y: MY(k, rowAt(k)) };
   }
   const carSvg = (c, sc) => '<g class="prun-car" transform="translate(' + c.x.toFixed(1) + ' ' + (c.y - 6 * sc).toFixed(1) + ') scale(' + sc + ')"><rect x="-7" y="-4" width="14" height="8" rx="3" fill="#c2303a" stroke="#fff" stroke-width="1"/>'
     + '<circle cx="-4" cy="4.5" r="1.8" fill="#141414"/><circle cx="4" cy="4.5" r="1.8" fill="#141414"/></g>';
-  /** mini: the small map of the HUD while driving — no names, no cards, the
-   *  scenes of forks not reached yet unknown (grey), bolder strokes. */
+  /** mini: the small map of the HUD while driving — no names, no cards, bolder strokes. */
   function courseMap(pr, mini) {
-    const X = MX, Y = MY, FX = MFX, M = mini ? 2.4 : 1;
-    const gold = '#e8b84a', grey = 'rgba(160,170,165,.45)';
+    const X = MX, Y = MY, M = mini ? 2.4 : 1, gold = '#e8b84a', grey = 'rgba(160,170,165,.45)';
+    const here = Math.min(pr.stage, STAGES - 1), row0 = rowAt(here);
+    const driven = (k) => k <= pr.stage && (k === 0 || !gates[k - 1].auto);
+    const reach = (k, j) => (k <= here ? driven(k) && j === rowAt(k) || k === here && j === row0 : j >= row0 && j <= row0 + k - here);
     let lines = '', nodes = '';
     // Long scene names wrap on two lines so neighbouring columns never collide.
-    const label = (name, x, y, up) => {
+    const label = (name, x, y) => {
       const w = name.length > 10 && name.includes(' ') ? [name.slice(0, name.indexOf(' ')), name.slice(name.indexOf(' ') + 1)] : [name];
-      const y0 = up ? y - 16 - (w.length - 1) * 12 : y + 25;
-      return w.map((l, i) => '<tspan x="' + x + '" y="' + (y0 + i * 12) + '">' + esc(l) + '</tspan>').join('');
+      return w.map((l, i) => '<tspan x="' + x + '" y="' + (y + 23 + i * 13) + '">' + esc(l) + '</tspan>').join('');
     };
-    const node = (k, b, key, on, card) => {
-      const th = TH[key], x = X(k), y = Y(k, b);
-      nodes += '<circle cx="' + x + '" cy="' + y + '" r="' + (mini ? (on ? 16 : 12) : (on ? 12 : 8)) + '" fill="' + (th ? th.sky[on ? 2 : 1] : '#3a4150') + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 2.5 : 1.2) * M + '"' + (on ? '' : ' opacity="' + (mini ? 0.8 : 0.55) + '"') + '/>';
-      if (mini) return;
-      nodes += '<text x="' + x + '" font-size="' + (on ? 12 : 10) + '" text-anchor="middle" fill="currentColor" opacity="' + (on ? 0.95 : 0.45) + '" font-family="Inter,system-ui,sans-serif" font-weight="' + (on ? 700 : 500) + '">' + label(th.name, x, y, b === 0 && k) + '</text>';
+    for (let k = 0; k < STAGES - 1; k++) for (let j = 0; j <= k; j++) for (const jj of [j, j + 1]) {
+      const on = driven(k + 1) && j === rowAt(k) && jj === rowAt(k + 1), live = reach(k, j) && reach(k + 1, jj);
+      lines += '<path d="M' + X(k) + ' ' + Y(k, j) + ' L' + X(k + 1) + ' ' + Y(k + 1, jj) + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 3 : 1.4) * M + '"'
+        + (on ? '' : ' stroke-dasharray="' + 3 * M + ' ' + 4 * M + '"' + (live ? '' : ' opacity="0.45"')) + ' stroke-linecap="round"/>';
+    }
+    for (let k = 0; k < STAGES; k++) for (let j = 0; j <= k; j++) {
+      const key = GRID[k][j], x = X(k), y = Y(k, j), on = driven(k) && j === rowAt(k), live = reach(k, j), g = k ? gates[k - 1] : null;
+      const card = !mini && on && g && g.picked >= 0 ? g.cards[g.picked] : null;
+      nodes += '<circle cx="' + x + '" cy="' + y + '" r="' + (mini ? (on ? 16 : 11) : (on ? 12 : 8)) + '" fill="' + ROW_COL[j] + '" stroke="' + (on ? gold : 'rgba(8,12,18,.9)') + '" stroke-width="' + (on ? 2.5 : 1.2) * M + '"' + (live ? '' : ' opacity="0.35"') + '/>';
       if (card != null) nodes += '<text x="' + x + '" y="' + (y + 3.5) + '" font-size="10" text-anchor="middle" font-weight="800" font-family="Inter,system-ui,sans-serif" fill="' + (isRed(card) ? '#c62828' : '#141414') + '" paint-order="stroke" stroke="#fffdf8" stroke-width="2.5">'
         + RANKS[card % 13] + SUITS[suitOf(card)] + VS + '</text>';
-    };
-    const seg = (x1, y1, x2, y2, on) => { lines += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + (on ? gold : grey) + '" stroke-width="' + (on ? 3 : 1.5) * M + '"' + (on ? '' : ' stroke-dasharray="' + 3 * M + ' ' + 4 * M + '"') + ' stroke-linecap="round"/>'; };
-    // Driven stages follow the route taken; beyond where the car stopped every
-    // scene still links to both scenes of the next fork (the road merges between forks).
-    const from = (k) => (k === 0 ? [70] : k <= pr.stage ? [Y(k, gates[k - 1].picked)] : [38, 102]);
-    node(0, 0, 'vegas', true, null);
-    for (let k = 1; k < STAGES; k++) {
-      const g = gates[k - 1], driven = k <= pr.stage;
-      for (let b = 0; b < 2; b++) {
-        const taken = g.picked === b && !g.auto && driven;
-        for (const fy of from(k - 1)) seg(X(k - 1), fy, X(k), Y(k, b), taken);
-        node(k, b, branches[k - 1] && branches[k - 1][b], taken, taken ? g.cards[b] : null);
-      }
+      if (!mini) nodes += '<text font-size="' + (on ? 13 : 12) + '" text-anchor="middle" fill="currentColor" opacity="' + (on ? 0.95 : live ? 0.6 : 0.32) + '" font-family="Inter,system-ui,sans-serif" font-weight="' + (on ? 700 : 500) + '" paint-order="stroke" stroke="rgba(8,12,18,.85)" stroke-width="3">' + label(TH[key].name, x, y) + '</text>';
+      if (k === STAGES - 1) nodes += '<text x="' + (x + (mini ? 30 : 16)) + '" y="' + (y + (mini ? 11 : 5)) + '" font-size="' + (mini ? 30 : 13) + '"' + (live ? '' : ' opacity="0.35"') + '>🏁</text>';
     }
-    for (const fy of from(STAGES - 1)) seg(X(STAGES - 1), fy, FX, 70, pr.stage >= STAGES);
-    nodes += '<text x="' + FX + '" y="' + (mini ? 84 : 77) + '" font-size="' + (mini ? 38 : 18) + '" text-anchor="middle">🏁</text>';
-    // The car where it stopped (or where it is, on the HUD's map).
     const car = carSvg(mapCar(pr), mini ? 2.6 : 1);
-    if (mini) return '<svg viewBox="0 0 540 140">' + lines + nodes + car + '</svg>';
-    return '<svg class="prun-map" viewBox="0 0 520 152" role="img" aria-label="' + esc(stageTheme.slice(0, pr.stage + 1).map((x) => TH[x].name).join(' → ')) + '"><g transform="translate(0 10)">'
-      + '<rect x="2" y="-8" width="516" height="148" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
+    if (mini) return '<svg viewBox="0 0 560 300">' + lines + nodes + car + '</svg>';
+    return '<svg class="prun-map" viewBox="0 0 560 330" role="img" aria-label="' + esc(stageTheme.slice(0, pr.stage + 1).map((x) => TH[x].name).join(' → ')) + '"><g transform="translate(0 8)">'
+      + '<rect x="2" y="-6" width="556" height="324" rx="14" fill="rgba(8,12,18,.62)" stroke="rgba(232,184,74,.25)"/>' + lines + nodes + car + '</g></svg>';
   }
   function over() {
     state = 'over'; overAt = performance.now(); hMini.hidden = true;
@@ -1353,6 +1388,18 @@ const carW = () => Math.min(W * 0.24, 100);
         ctx.fillStyle = '#c4643c'; ctx.beginPath(); ctx.moveTo(X - w * 0.58, y - h); ctx.lineTo(X, y - h - u * 2.2); ctx.lineTo(X + w * 0.58, y - h); ctx.fill();
         ctx.fillStyle = '#4a7fa8'; for (const fx2 of [-0.28, 0.12]) ctx.fillRect(X + w * fx2, y - h * 0.72, w * 0.16, h * 0.3);
         ctx.fillStyle = '#6b4a2e'; ctx.fillRect(X - w * 0.06, y - h * 0.5, w * 0.12, h * 0.5);
+      }
+    } else if (kind === 'cypress') {
+      // Provence, Tuscany, the Verdon (web.115): a tall dark flame of a tree, now and then an olive tree.
+      if (vv % 3 === 2) {
+        const h = u * 6, cw = u * 6;
+        ctx.fillStyle = '#5a4630'; ctx.fillRect(X - u * 0.4, y - h * 0.55, u * 0.8, h * 0.55);
+        ctx.fillStyle = '#7d8a5a'; ctx.beginPath(); ctx.ellipse(X, y - h * 0.75, cw / 2, h * 0.32, 0, 0, 7); ctx.fill();
+      } else {
+        const h = u * 15, w = u * 2.6;
+        ctx.fillStyle = '#4a3424'; ctx.fillRect(X - u * 0.3, y - h * 0.08, u * 0.6, h * 0.08);
+        ctx.fillStyle = vv % 2 ? '#1e3f26' : '#24492c';
+        ctx.beginPath(); ctx.moveTo(X, y - h); ctx.quadraticCurveTo(X + w, y - h * 0.45, X + w * 0.4, y - h * 0.06); ctx.lineTo(X - w * 0.4, y - h * 0.06); ctx.quadraticCurveTo(X - w, y - h * 0.45, X, y - h); ctx.fill();
       }
     } else if (kind === 'lamp') {
       const h = u * 13, lx = X - side * u * 2.4, ly = y - h + u * 0.9;

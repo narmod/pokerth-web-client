@@ -79,6 +79,9 @@ ok(art('nope', false) === '', 'no picture for an unknown game');
     'Poker Run traffic (web.112): 5 cars a level and 1 a stage, lane changes from level 3, convoys from level 4, an eased slide');
   const ps = await import('../public/modules/games/solitaire.mjs');
   ok([24, 21, 20, 4, 1, 0].map(ps.pileLayers).join() === '6,6,5,1,1,0', 'Poker Solitaire (web.114): the pile thins out as it empties, a back per 4 cards under the one to place');
+  ok(pr.GRID.every((c, k) => c.length === k + 1) && new Set(pr.GRID.flat()).size === 21 && pr.GRID[0][0] === 'vegas'
+    && pr.forkScenes(0, 0).join() === 'route66,valley' && pr.forkScenes(4, 4).join() === 'sanremo,moritz' && pr.forkScenes(3, 0).join() === 'biarritz,toscana' && pr.CURVE_MAX === 5,
+    'Poker Run map (web.115): a pyramid as OutRun\'s — stage k has k + 1 scenes, left keeps the row, right goes one down; 21 scenes, 6 arrivals');
   ok(pr.kmhOf(0) === 0 && pr.kmhOf(-5) === 0 && pr.KMH_TOP === 240 && Math.round(pr.kmhOf(200 * 62 * 1.45)) === 348, 'Poker Run speed (web.113): 240 km/h at top speed, about 350 with the nitro');
   const c3 = await import('../public/modules/games/car3d.mjs');
   const o = { x: 100, y: 200, w: 60, yaw: 0, pitch: 0.22 }, s0 = c3.seatPoint(o), sR = c3.seatPoint({ ...o, yaw: 0.4 }), sL = c3.seatPoint({ ...o, yaw: -0.4 });

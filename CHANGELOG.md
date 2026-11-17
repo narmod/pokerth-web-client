@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Poker Run: the OutRun map** (`web.115`, narmod: « the same map as OutRun », six stages kept) — `GRID`: stage
+  k offers k + 1 fixed scenes, the row being the rights taken so far; a fork leads to the same row (left) or the
+  next one (right) — `forkScenes(k, row)`, replacing the scenes drawn at random. 21 scenes, 32 routes, 6 arrivals
+  (casino towns). 16 new scenes (palettes on the existing skylines and roadside props, a new `cypress` prop for
+  Provence, Toscana and the Verdon), each with its hills (`HILLS`) and how tight its bends are (`CURV`, × the
+  level's, capped at `CURVE_MAX` = 5 so the stick still holds a bend at full speed): flat and open by the sea at
+  the top, hairpins in the mountains at the bottom. The course map (end screen and HUD) is drawn as the pyramid:
+  rows coloured green → deep red, the route driven in gold with its cards, the scenes out of reach faded, a 🏁 per
+  arrival; the ghost's dot follows its own row.
 - **Poker Solitaire: the cards left on the pile** (`web.114`, narmod: mock-up « A ») — the badge of Higher or
   Lower's shoe, now `ui.mjs` `countBadge()` (used by both), at the pile's bottom-right corner: the cards left to place,
   the one showing included (25 − placed). The pile is drawn with the player's card backs (`drawBackCard`) instead of

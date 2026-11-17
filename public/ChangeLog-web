@@ -1,4 +1,8 @@
-2026-11-16 version 2.1.11-web.114 (current series):
+2026-11-17 version 2.1.11-web.115 (current series):
+- new: Poker Run — the map is now a pyramid, as in OutRun: 21 circuits and 6 arrivals, all casino towns. Always left, flat roads by the sea to Atlantic City; always right, harder and harder mountains to St. Moritz
+- new: Poker Run — 16 new circuits: Route 66, Miami Beach, Grand Canyon, Yosemite, Provence, Biarritz, Toscana, Verdon, Dolomiti, Stelvio, Atlantic City, Deauville, Macau, Baden-Baden, Sanremo and St. Moritz, each with its own bends and hills
+
+2026-11-16 version 2.1.11-web.114:
 - improvement: Poker Solitaire — the pile shows how many cards are left to place on a small badge, as in Higher or Lower, and is drawn with your card backs, thinner as it empties
 
 2026-11-16 version 2.1.11-web.113:

@@ -44,6 +44,8 @@ for (let k = 0; k < 5; k++) {
     convoy: cs.filter((c) => c.convoy).length, sw: R.cars().filter((c) => c.sw && !c.dead).length }; }, { k, before }));
 }
 ok(took.every((x, k) => x.picked === 1 && x.lv === k + 1), 'five rights taken: levels ' + took.map((x) => x.lv).join(' '));
+const route = await pg.evaluate(() => window.__pthRun.game().stageTheme.join(' > '));
+ok(route === 'vegas > valley > yosemite > chamonix > stelvio > moritz', 'always right: the mountains of the pyramid\'s bottom row (' + route + ')');
 ok(took.every((x, k) => x.n === M.ex[k + 1]), 'each stage adds its traffic: 5 cars a level, 1 a stage (' + took.map((x) => x.n).join(' ') + ' = ' + M.ex.slice(1).join(' ') + ')');
 ok(took[0].vans === 0 && took[0].fast === 0 && took[1].vans > 0 && took[1].fast > 0, 'trucks and sports cars from level 2 (level 2: ' + took[1].vans + ' trucks, ' + took[1].fast + ' fast)');
 ok(took[2].convoy === 0 && took[3].convoy === 6 && took[4].convoy === 9, 'convoys from level 4: 2 then 3 of three cars (' + took.map((x) => x.convoy).join(' ') + ')');
