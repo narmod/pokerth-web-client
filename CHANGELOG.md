@@ -227,6 +227,17 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **Xiaomi browser: the translator no longer breaks the login and the table** (`web.121`, Admin › Errors on
+  web.20, Android 16 · Xiaomi) — the browser's page translator renames element ids to `MI_TRANS_ID-<n>`: the
+  login form held `MI_TRANS_ID-95` where `#nick` should be, then `#g-round` was null on every turn and street
+  (`msg-hand.mjs` `onPlayersTurn` / `onDealRiver`). `<html translate="no">`; an inline id guard (right after
+  the error collector) puts a renamed id back at once, capped at 2000 restores, and sends one Diagnostic line
+  « Id guard: restored N id(s) » so its effect shows on Admin › Errors; `msg-hand.mjs` writes the round label
+  through a null-safe `_setRound()`.
+- **Fullscreen refused by some Android WebViews** (`web.121`, « Unhandled rejection: Fullscreen is not
+  supported », WebView 138) — `toggleFullscreen()` catches the promise of the request and of the exit; on a
+  refusal the fullscreen buttons are hidden, as already done when the API is missing. They are also hidden up
+  front when `document.fullscreenEnabled` is `false` (iframe without `allowfullscreen`, some WebViews).
 - **Tapis!: the columns close up again, as on the arcade machine** (`web.90`, narmod: the video at 0:56-1:08, looked
   at again with the moon as a fixed point) — web.86 had read the video wrong (« columns never move »). An emptied
   column now goes once its friend is in his hole and the others close up in the middle (`G.xs` eases them, the

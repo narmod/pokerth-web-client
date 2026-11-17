@@ -49,6 +49,14 @@ import { _hlEliminatedPids, _snapshotHandResults, showWinnerOverlay, showWinHand
 
 const T = MSG.T;
 
+// Round label (« Pre-flop », « Flop »…). A browser translator can rename
+// #g-round (Xiaomi: MI_TRANS_ID-<n>, web.121): a missing label must not stop
+// the hand from being handled, so the write is skipped when it is gone.
+function _setRound(txt) {
+  const el = document.getElementById('g-round');
+  if (el) el.textContent = txt;
+}
+
 function onGameStartInitial(sub) {
     S._gameStarted = true;
     try { _updateLobbyWaitStatus(); } catch(e) {}
@@ -168,7 +176,7 @@ function onGameStartInitial(sub) {
 
     S.commCards = [null, null, null, null, null];
     S.amInGame  = true;
-    document.getElementById('g-round').textContent = t('gameStart');
+    _setRound(t('gameStart'));
 
     // Demander les infos des joueurs inconnus
     for (const pid of S.seats) {
@@ -419,7 +427,7 @@ function onHandStart(sub) {
     var _ghn = document.getElementById('g-handn');  if (_ghn) _ghn.textContent = S.handNum;
     var _ggi = document.getElementById('g-gameid'); if (_ggi) _ggi.textContent = S.gId || '\u2013';
     var _gbs = document.getElementById('g-blinds-slot'); if (_gbs) _gbs.innerHTML = '';
-    document.getElementById('g-round').textContent = t('preflop');
+    _setRound(t('preflop'));
     S.gameState = 0; // preflop
     S.commCards = [null, null, null, null, null];
     S.pot = 0; S.collectedPot = 0; S.highestBet = 0; S.minRaise = 0;
@@ -672,7 +680,7 @@ function onPlayersTurn(sub) {
     // who joined mid-hand and missed the HandStart reset.
     if (S.turnPid && S.seatData[S.turnPid]) S.seatData[S.turnPid].active = true;
     const rounds = [t('preflop'),t('flop'),t('turn'),t('river'),t('preflop')+' (SB)',t('preflop')+' (BB)'];
-    document.getElementById('g-round').textContent = rounds[S.gameState] || t('preflop');
+    _setRound(rounds[S.gameState] || t('preflop'));
     startTurnTimer();
     if (S.turnPid === S.myId) {
       // Mobile loupe (QML onMyTurnChanged): show the self box zone at once.
@@ -839,7 +847,7 @@ function onDealFlop(sub) {
     const dbg = 'FLOP sub:'+allVals+' →['+S.commCards.join(',')+']';
     if (document.getElementById('g-debug')) document.getElementById('g-debug').textContent = dbg;
     try { if (window._handlog) window._handlog.onFlop(S.commCards.slice(0, 3)); } catch (_e) {}
-    document.getElementById('g-round').textContent = t('flop');
+    _setRound(t('flop'));
     S.gameState = 1;
     // Collect preflop bets into pot
     let flopBets = 0;
@@ -876,7 +884,7 @@ function onDealTurn(sub) {
     // from [] (push put the turn in slot 0).
     S.commCards[3] = tv;
     try { if (window._handlog) window._handlog.onTurn(tv); } catch (_e) {}
-    document.getElementById('g-round').textContent = t('turn');
+    _setRound(t('turn'));
     S.gameState = 2;
     let turnBets = 0;
     for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { turnBets += S.seatData[p].bet; S.seatData[p].bet = 0; }
@@ -904,7 +912,7 @@ function onDealRiver(sub) {
     const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
     S.commCards[4] = rv;   // by index, as the turn
     try { if (window._handlog) window._handlog.onRiver(rv); } catch (_e) {}
-    document.getElementById('g-round').textContent = t('river');
+    _setRound(t('river'));
     S.gameState = 3;
     let rvBets = 0;
     for (const p of S.seats) if (S.seatData[p] && S.seatData[p].bet) { rvBets += S.seatData[p].bet; S.seatData[p].bet = 0; }

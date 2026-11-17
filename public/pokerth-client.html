@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
 <meta charset="UTF-8">
 <!--__LIVE_BOOT__-->
@@ -477,6 +477,39 @@
     push({ msg: 'Unhandled rejection: ' + String((r && r.message) || r || '?'),
            src: '', line: 0, col: 0, stack: stk });
   });
+})();
+</script>
+<script>
+/* Id guard (web.121). The Xiaomi browser's page translator renames element ids
+   to MI_TRANS_ID-<n> (Admin › Errors, Android 16 · Xiaomi: the login form held
+   « MI_TRANS_ID-95 » where #nick should be, then #g-round went null on every
+   turn and street). The client finds everything by id, so the original id is
+   put back as soon as it is renamed. translate="no" on <html> asks translators
+   to leave the page alone; this covers the ones that ignore it. Capped, so a
+   translator that renames again cannot loop for ever; one Diagnostic line
+   tells Admin › Errors that it happened. */
+(function () {
+  try {
+    if (!window.MutationObserver) return;
+    var RE = /^MI_TRANS_ID-/, n = 0, sent = 0;
+    var mo = new MutationObserver(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var m = list[i], el = m.target, old = m.oldValue;
+        if (!old || RE.test(old) || !RE.test(String(el.id || ''))) continue;
+        if (++n > 2000) { mo.disconnect(); return; }
+        try { el.setAttribute('id', old); } catch (_) {}
+      }
+      if (n && !sent) {
+        sent = 1;
+        setTimeout(function () {
+          var q = window.__pthErrQ;
+          if (q && q.length < 20) q.push({ msg: 'Id guard: restored ' + n + ' id(s) renamed MI_TRANS_ID-*', src: '', line: 0, col: 0, stack: '' });
+          if (window.__pthErrFlush) { try { window.__pthErrFlush(); } catch (_) {} }
+        }, 5000);
+      }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['id'], attributeOldValue: true, subtree: true });
+  } catch (_) {}
 })();
 </script>
 <script>

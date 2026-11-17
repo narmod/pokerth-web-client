@@ -3465,17 +3465,26 @@ function toggleFullscreen() {
       !document.webkitFullscreenElement &&
       !document.mozFullScreenElement) {
     // Enter fullscreen
-    var el = document.documentElement;
-    if      (el.requestFullscreen)       el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
-    else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+    var el = document.documentElement, p;
+    try {
+      if      (el.requestFullscreen)       p = el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) p = el.webkitRequestFullscreen();
+      else if (el.mozRequestFullScreen)    p = el.mozRequestFullScreen();
+      else if (el.msRequestFullscreen)     p = el.msRequestFullscreen();
+    } catch (e) { _hideFullscreenButtons(); return; }
+    // Some Android WebViews expose the API but refuse it (« Fullscreen is not
+    // supported », an unhandled rejection on Admin › Errors, web.121): the
+    // button cannot work there, so it goes away instead of doing nothing.
+    if (p && typeof p.catch === 'function') p.catch(function () { _hideFullscreenButtons(); });
   } else {
     // Exit fullscreen
-    if      (document.exitFullscreen)       document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    else if (document.mozCancelFullScreen)  document.mozCancelFullScreen();
-    else if (document.msExitFullscreen)     document.msExitFullscreen();
+    try {
+      if      (document.exitFullscreen)       p = document.exitFullscreen();
+      else if (document.webkitExitFullscreen) p = document.webkitExitFullscreen();
+      else if (document.mozCancelFullScreen)  p = document.mozCancelFullScreen();
+      else if (document.msExitFullscreen)     p = document.msExitFullscreen();
+    } catch (e) {}
+    if (p && typeof p.catch === 'function') p.catch(function () {});
   }
 }
 
@@ -3499,16 +3508,24 @@ function _updateFsButtons() {
 // bouton ⛶ ne faisait donc rien. On masque toutes les commandes plein écran
 // quand l'API est absente (détection de capacité, pas de sniff d'UA → on
 // garde le bouton sur desktop / Android / iPad qui, eux, le supportent).
-function _hideFullscreenIfUnsupported() {
-  var de = document.documentElement;
-  var supported = !!(de.requestFullscreen || de.webkitRequestFullscreen
-                     || de.mozRequestFullScreen || de.msRequestFullscreen);
-  if (supported) return;
+function _hideFullscreenButtons() {
   try {
     document.querySelectorAll('[onclick*="toggleFullscreen"]').forEach(function(el) {
       el.style.display = 'none';
     });
   } catch(e) {}
+}
+function _hideFullscreenIfUnsupported() {
+  var de = document.documentElement;
+  var supported = !!(de.requestFullscreen || de.webkitRequestFullscreen
+                     || de.mozRequestFullScreen || de.msRequestFullscreen);
+  // The API can be present yet switched off (an iframe without
+  // allowfullscreen, some WebViews): fullscreenEnabled says so up front.
+  // Undefined (older engines) counts as enabled.
+  if (supported && (document.fullscreenEnabled === false ||
+      (document.fullscreenEnabled === undefined && document.webkitFullscreenEnabled === false))) supported = false;
+  if (supported) return;
+  _hideFullscreenButtons();
 }
 _hideFullscreenIfUnsupported();
 
@@ -12606,7 +12623,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.120'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.121'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

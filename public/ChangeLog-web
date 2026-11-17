@@ -1,4 +1,8 @@
-2026-11-17 version 2.1.11-web.120 (current series):
+2026-11-17 version 2.1.11-web.121 (current series):
+- bugfix: Xiaomi phones — the browser's page translator no longer breaks the login screen or the table (an error on every turn)
+- bugfix: Fullscreen — on devices that refuse it, the fullscreen button is hidden instead of doing nothing
+
+2026-11-17 version 2.1.11-web.120:
 - new: Music player — a music-note button in the header of the login, lobby, create-a-table and mini-games screens opens the player; it turns into gold equalizer bars while music plays
 - new: Music player — at the table, the speaker button turns into the same gold bars while music plays, and its menu now holds a mini-player: the current track, previous / pause / next, the music volume and a link to the full player; with the music stopped, one tap resumes the last track
 
