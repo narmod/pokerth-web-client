@@ -15934,7 +15934,7 @@ const httpServer = http.createServer((req, res) => {
         return tk ? _hj(200, { ok: true, ticket: tk, names: hofNames() }) : _hj(400, { ok: false, error: 'game' });
       }
       const _bt = /^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '');
-      const r = HOF.submit(_hof, { now: now, names: hofNames(), g: d.g, m: d.m, s: d.s, day: d.day, ticket: d.ticket,
+      const r = HOF.submit(_hof, { now: now, names: hofNames(), g: d.g, m: d.m, s: d.s, lv: d.lv, day: d.day, ticket: d.ticket,
         token: _bt ? _bt[1] : '', name: d.name, dev: d.dev, words: hofWords(), bans: hofBans() });
       if (!r.ok) return _hj(r.err === 'rate' ? 429 : r.err === 'account' ? 401 : 400, { ok: false, error: r.err });
       if (r.improved) saveHofSoon();

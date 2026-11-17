@@ -491,7 +491,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: () => { state = 'title'; newRun(); setKing(false); setMood('mc-m-smile'); setPose('run'); titlePanel(); refreshHof(); },
     });
-    hofEnd(shell, { g: 'ace-runner', m: G.mode, s: score, run: G.hof, day: G.day, daily: G.mode === 'daily' });
+    hofEnd(shell, { g: 'ace-runner', m: G.mode, s: score, lv: G.level, run: G.hof, day: G.day, daily: G.mode === 'daily' });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────

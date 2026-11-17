@@ -1279,7 +1279,7 @@ export const strings = {
     "adModeFreeD": "能跑多遠跑多遠",
     "adModeDailyD": "今天大家同一條路線",
     "adModeTime": "計時賽",
-    "adModeTimeD": "60秒贏取最多籌碼；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多遠跑多遠；每次碰撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：需要 {s} 才能上榜", "hofLogin": "用你的 pokerth.net 帳號登入一次即可進入名人堂", "hofName3": "你的縮寫", "hofNameFree": "你的暱稱", "hofBad": "此名稱不可使用", "hofEmpty": "還沒有成績——輪到你了！", "hofAsk": "名人堂第 {r} 名！要登記你的成績嗎？", "hofPublic": "你的名字、成績和日期將對所有玩家可見。", "hofYes": "登記", "hofNo": "不用了", "hofRemember": "記住我的選擇", "hofInfo": "公開：名字、成績和日期對所有玩家可見。未經你同意不會傳送任何內容（{w}）。", "hofForget": "刪除我的成績", "hofForgetQ": "要從 Hall of Fame 刪除你的所有分數嗎？下次你上榜時，會再次詢問你。", "hofRejoin": "重新參加 Hall of Fame", "hofForgot": "已刪除成績：{n}", "hofOpt": "小遊戲名人堂", "hofOptAsk": "每次詢問", "hofOptYes": "總是", "hofOptNo": "從不",
+    "adModeTimeD": "60秒贏取最多籌碼；每次碰撞扣5秒", "arModeTimeD": "90秒能跑多遠跑多遠；每次碰撞扣5秒", "hofTitle": "名人堂", "hofRank": "名人堂第 {n} 名！", "hofOut": "名人堂：需要 {s} 才能上榜", "hofLogin": "用你的 pokerth.net 帳號登入一次即可進入名人堂", "hofName3": "你的縮寫", "hofNameFree": "你的暱稱", "hofBad": "此名稱不可使用", "hofEmpty": "還沒有成績——輪到你了！", "hofLv": "第{n}級", "hofAsk": "名人堂第 {r} 名！要登記你的成績嗎？", "hofPublic": "你的名字、成績和日期將對所有玩家可見。", "hofYes": "登記", "hofNo": "不用了", "hofRemember": "記住我的選擇", "hofInfo": "公開：名字、成績和日期對所有玩家可見。未經你同意不會傳送任何內容（{w}）。", "hofForget": "刪除我的成績", "hofForgetQ": "要從 Hall of Fame 刪除你的所有分數嗎？下次你上榜時，會再次詢問你。", "hofRejoin": "重新參加 Hall of Fame", "hofForgot": "已刪除成績：{n}", "hofOpt": "小遊戲名人堂", "hofOptAsk": "每次詢問", "hofOptYes": "總是", "hofOptNo": "從不",
     "adTime": "時間",
     "adSalto": "空翻！",
     "adStreak": "連串",

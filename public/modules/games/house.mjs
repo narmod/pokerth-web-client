@@ -413,13 +413,13 @@ export function create(shell) {
       endScreen(shell, {
         title: fell ? t('hcCollapse') : '🏰 ' + fmt(floorsN) + ' ' + t('hcFloors'), sub: t(MODES.find((m) => m.id === mode).key) + ' · ' + t('hcName'),
         cards, hand: G.best ? t(G.best.ev.nameKey) : '', score, prev: prevBest,
-        calc: [[t('hcFloors'), fmt(floorsN)], G.best ? [t('gmBestHand'), t(G.best.ev.nameKey)] : null, met ? ['🎯', fmt(met)] : null],
+        calc: [[t('arLevel'), fmt(G.level)], [t('hcFloors'), fmt(floorsN)], G.best ? [t('gmBestHand'), t(G.best.ev.nameKey)] : null, met ? ['🎯', fmt(met)] : null],
         levels: floorsN ? { title: t('hcFloors'), right: fmt(floorsN) + (met ? ' · 🎯 ' + met : ''), html: barsHtml(built.slice(-40).map((f) => ({ h: 0.18 + 0.82 * Math.min(9, f.ev.cat) / 9, cls: f.met ? 'gold' : '' }))) } : null,
         stats: [[fmt(floorsN), t('hcFloors')], [met, t('hcGoalMet')], [G.best ? t(G.best.ev.nameKey) : '—', t('gmBestHand')]],
         onAgain: () => start(),
         onMenu: () => { state = 'title'; newRun(); ace.king(false); ace.mood('mc-m-smile'); ace.pose('idle'); titlePanel(); refreshHof(); },
       });
-      hofEnd(shell, { g: 'house', m: mode, s: score, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
+      hofEnd(shell, { g: 'house', m: mode, s: score, lv: G.level, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
     };
     revealTimer = setTimeout(show, 900);
   }

@@ -512,7 +512,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: toTitle,
     });
-    hofEnd(shell, { g: 'tapis', m: mode, s: score, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
+    hofEnd(shell, { g: 'tapis', m: mode, s: score, lv: G.lv, run: G.hof, day: G.hofDay, daily: mode === 'daily' });
   }
 
   // ── Input ─────────────────────────────────────────────────────────

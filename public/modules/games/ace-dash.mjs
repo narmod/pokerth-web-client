@@ -936,7 +936,7 @@ export function create(shell) {
       onAgain: () => start(),
       onMenu: () => { clearTimeout(revealTimer); state = 'title'; newRun(); buildHud('free'); turnBack(false); ace.king(false); ace.mood('mc-m-smile'); ace.pose('wave'); titlePanel(); refreshHof(); },
     });
-    hofEnd(shell, { g: 'ace-dash', m: mode, s: score, run: G.hof, day: G.day, daily: mode === 'daily' });
+    hofEnd(shell, { g: 'ace-dash', m: mode, s: score, lv: G.level, run: G.hof, day: G.day, daily: mode === 'daily' });
   }
 
   // ── Drawing ───────────────────────────────────────────────────────

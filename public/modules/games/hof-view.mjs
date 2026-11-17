@@ -101,8 +101,8 @@ export async function renderHofTab(el) {
     const list = rows == null ? '<div class="rk-msg">' + esc(tr('rankingLoading')) + '</div>'
       : !view.names || view.names === 'off' ? '<div class="rk-msg">' + esc(tr('rankingError')) + '</div>'
       : !rows.length ? '<div class="rk-msg">' + esc(tr('hofEmpty')) + '</div>'
-      : '<table class="rk-table"><thead><tr><th>#</th><th>' + esc(tr('rankingColPlayer')) + '</th><th>' + esc(tr('rankingColScore')) + '</th><th></th></tr></thead><tbody>'
-        + rows.map((r, i) => '<tr class="' + (i < 3 ? 'top' : '') + (mine && String(r.n).toLowerCase() === mine ? ' me' : '') + '"><td>' + (i + 1) + '</td><td>' + esc(r.n) + '</td><td>' + esc(fmt(r.s)) + '</td><td>'
+      : '<table class="rk-table"><thead><tr><th>#</th><th>' + esc(tr('rankingColPlayer')) + '</th><th>' + esc(tr('rankingColScore')) + '</th>' + (rows.some((r) => r.lv) ? '<th>' + esc(tr('arLevel')) + '</th>' : '') + '<th></th></tr></thead><tbody>'
+        + rows.map((r, i) => '<tr class="' + (i < 3 ? 'top' : '') + (mine && String(r.n).toLowerCase() === mine ? ' me' : '') + '"><td>' + (i + 1) + '</td><td>' + esc(r.n) + '</td><td>' + esc(fmt(r.s)) + '</td>' + (rows.some((x) => x.lv) ? '<td>' + (r.lv ? esc(String(r.lv)) : '') + '</td>' : '') + '<td>'
           + esc(daily ? new Date(r.ts).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' }) : new Date(r.ts).toLocaleDateString(lang, { day: 'numeric', month: 'short' })) + '</td></tr>').join('')
         + '</tbody></table>';
     el.innerHTML = '<div class="hofv">'

@@ -1,4 +1,8 @@
-2026-11-17 version 2.1.11-web.122 (current series):
+2026-11-17 version 2.1.11-web.123 (current series):
+- new: Hall of Fame — the level reached now shows beside the score (« Lv. 7 ») in every game that has levels: Tapis!, Ace Runner, Ace Dash, House of Cards, Poker Run and Who Wins? endless; the score still decides the rank
+- improvement: House of Cards — the end screen shows the level reached
+
+2026-11-17 version 2.1.11-web.122:
 - improvement: Tapis! — smaller scores (about 30 times smaller in a long game): the chips are worth 1, 2, 5, 20 and 100, and each level pays a quarter more instead of multiplying everything by the level; the records start again
 - bugfix: Tapis! — with a big score the band no longer runs into the hand's five card slots, the level always shows, and the blinds are written short (60K/120K)
 

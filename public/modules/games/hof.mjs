@@ -91,7 +91,8 @@ const CSS = `
 #pth-game .gm-htabs button{appearance:none;border:1.5px solid rgba(255,255,255,.18);border-radius:999px;padding:5px 11px;background:rgba(255,255,255,.06);color:#e9e4d6;font:700 12px 'Inter',system-ui,sans-serif;cursor:pointer}
 #pth-game .gm-htabs button.on{background:linear-gradient(180deg,#ffd27a,#d8a93e);color:#1b1408;border-color:transparent}
 #pth-game .gm-hlist{margin:0;padding:0;list-style:none;font:700 14px/1.75 'Inconsolata',ui-monospace,monospace;text-align:left;max-height:min(52vh,470px);overflow:auto}
-#pth-game .gm-hlist li{display:grid;grid-template-columns:2.4em 1fr auto 5.6em;gap:8px;padding:0 8px;border-radius:7px;color:#e9e4d6}
+#pth-game .gm-hlist li{display:grid;grid-template-columns:2.4em 1fr auto auto;gap:8px;padding:0 8px;border-radius:7px;color:#e9e4d6}
+#pth-game .gm-hlist li small .gm-hlv{font-weight:700;color:#e8d9b0;margin-right:4px}
 #pth-game .gm-hlist li:nth-child(-n+3){color:#ffd27a}
 #pth-game .gm-hlist li.me{background:rgba(232,184,74,.2);outline:1px solid rgba(232,184,74,.6)}
 #pth-game .gm-hlist li span:first-child{text-align:right;color:#9fb0a6}
@@ -188,7 +189,9 @@ export function hofEnd(shell, o) {
   let run = null;
   const send = async (name) => {
     const acct = run.names === 'account' ? hofAccount() : null;
-    try { return await call('/__hof/score', { g: o.g, m: o.m, s: o.s, ticket: run.ticket, day: o.day, name, dev: devKey(true) }, acct ? acct.t : ''); } catch (e) { return null; }
+    const body = { g: o.g, m: o.m, s: o.s, ticket: run.ticket, day: o.day, name, dev: devKey(true) };
+    if (o.lv > 0) body.lv = Math.round(o.lv);   // the level reached (web.123), shown beside the score
+    try { return await call('/__hof/score', body, acct ? acct.t : ''); } catch (e) { return null; }
   };
   const ranked = (d, editable) => {
     if (d.rank > 0) show('🏆 <b>' + esc(t('hofRank', { n: d.rank })) + '</b> · ' + esc(d.name) + (editable ? '<button type="button" class="gm-hedit">✎</button>' : ''));
@@ -271,7 +274,7 @@ export function hofPanel(shell, o) {
     if (gone) return;
     const m = o.modes[sel], rows = view ? view.boards[m.id] || [] : null, mine = String(me()).toLowerCase();
     const list = rows == null ? '<div class="gm-hnone">…</div>' : !rows.length ? '<div class="gm-hnone">' + esc(t('hofEmpty')) + '</div>'
-      : '<ol class="gm-hlist">' + rows.map((r, i) => '<li class="' + (mine && String(r.n).toLowerCase() === mine ? 'me' : '') + '"><span>' + (i + 1) + '</span><span>' + esc(r.n) + '</span><span>' + esc(fmt(r.s)) + '</span><small>' + esc(new Date(r.ts).toLocaleDateString(document.documentElement.lang || undefined, { day: 'numeric', month: 'short' })) + '</small></li>').join('') + '</ol>';
+      : '<ol class="gm-hlist">' + rows.map((r, i) => '<li class="' + (mine && String(r.n).toLowerCase() === mine ? 'me' : '') + '"><span>' + (i + 1) + '</span><span>' + esc(r.n) + '</span><span>' + esc(fmt(r.s)) + '</span><small>' + (r.lv ? '<b class="gm-hlv">' + esc(t('hofLv', { n: r.lv })) + '</b> ' : '') + esc(new Date(r.ts).toLocaleDateString(document.documentElement.lang || undefined, { day: 'numeric', month: 'short' })) + '</small></li>').join('') + '</ol>';
     shell.panel('<div class="gm-endc" role="dialog" aria-label="' + esc(t('hofTitle')) + '"><h2>🏆 ' + esc(t('hofTitle')) + '</h2><div class="gm-esub">' + esc(o.name || '') + '</div>'
       + '<div class="gm-htabs">' + o.modes.map((x, i) => '<button type="button" data-e="tab" data-h="' + i + '" class="' + (i === sel ? 'on' : '') + '">' + esc(x.label) + '</button>').join('') + '</div>'
       + '<p class="gm-hinfo">ⓘ ' + esc(t('hofInfo', { w: t('advTitle') + ' › ' + t('advSecCommunity') })) + '</p>'

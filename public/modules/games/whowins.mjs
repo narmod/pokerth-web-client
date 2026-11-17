@@ -489,7 +489,7 @@ export function create(shell) {
         stats: [[fmt(G.right), '✓'], ['×' + fmt(G.bestStreak), '🔥'], [G.level + 1, t('wwLevelLab')]],
       }, common));
     }
-    hofEnd(shell, { g: 'whowins', m: mode, s: tv() ? G.won : G.score, run: G.hof, day: G.day, daily: daily() });
+    hofEnd(shell, { g: 'whowins', m: mode, s: tv() ? G.won : G.score, lv: mode === 'endless' ? G.level + 1 : 0, run: G.hof, day: G.day, daily: daily() });
   }
   function act(what) {
     if (state !== 'over') return;

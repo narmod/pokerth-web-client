@@ -54,7 +54,8 @@ ok(took[1].sw === 0 && took[2].sw > 0, 'cars that change lane from level 3 (' + 
 const steer = async (which) => {
   const z = await pg.evaluate((w) => { const R = window.__pthRun, G = R.game(), a = w ? G.gates[4].seg + 120 : 120, b = w ? R.finish() - 80 : G.gates[0].seg - 300;
     // The straightest stretch (St. Moritz has hardly any straight; its pull is negligible over 0.35 s at 0.6).
-    let best = -1, bv = 1e9; for (let i = a; i < b; i++) { let m = 0; for (let j = -10; j < 40; j++) m = Math.max(m, Math.abs(R.curve(i + j))); if (m < bv) { bv = m; best = i; } if (m < 0.02) break; } return bv < 0.6 ? best : -1; }, which);
+    let best = -1, bv = 1e9; for (let i = a; i < b; i++) { let m = 0; for (let j = -10; j < 40; j++) m = Math.max(m, Math.abs(R.curve(i + j))); if (m < bv) { bv = m; best = i; } if (m < 0.02) break; } if (bv >= 0.6) R.flat(best - 10, best + 40); // the course's bends are drawn at random: no straight there this time, make one
+    return best; }, which);
   if (z < 0) return null;
   await pg.evaluate((z) => { const R = window.__pthRun; R.cars().forEach((c) => { c.dead = true; }); window._stIv = setInterval(() => { R.setPos(z); R.setV(0.6); R.setTime(99); }, 16); R.setPx(-0.4); }, z);
   await sleep(150); await pg.keyboard.down('ArrowRight'); await sleep(350); await pg.keyboard.up('ArrowRight');

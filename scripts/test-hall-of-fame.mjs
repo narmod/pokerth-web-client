@@ -53,6 +53,17 @@ r = sub({ s: 50, name: 'LOW', now: T0 + 900000 });
 ok(r.ok && r.rank === 0 && !b.some((x) => x.n === 'LOW'), 'a score under the 20th is not on the board (rank 0)');
 ok(!sub({ s: 99999999, name: 'CHT', now: T0 + 1000000 }).ok, 'an impossible score for the time played is refused');
 ok(sub({ s: 3000, name: 'ZZZ', bans: ['zzz'], now: T0 + 1000000 }).err === 'banned', 'a blocked name is refused');
+// The level reached (web.123): kept and shown beside the score, the score still ranks.
+const stl = H.normalize(null), tkl = H.ticket(stl, 'ace-runner', 'time', T0);
+const subl = (o) => H.submit(stl, Object.assign({ names: 'initials', g: 'ace-runner', m: 'time', ticket: tkl }, o));
+subl({ s: 3000, name: 'LVA', lv: 7, now: T0 + 1100000 });
+subl({ s: 2000, name: 'LVB', lv: 1.5, now: T0 + 1100000 });
+subl({ s: 1000, name: 'LVC', lv: 5000, now: T0 + 1100000 });
+subl({ s: 900, name: 'LVA', lv: 2, now: T0 + 1110000 });
+const bl = stl.boards['initials/ace-runner:time'], pl = H.view(stl, 'initials', 'ace-runner', T0).boards.time;
+ok(bl[0].lv === 7 && pl[0].lv === 7 && pl[0].n === 'LVA' && pl[0].s === 3000, 'a level is kept with its score and shown (lv)');
+ok(!('lv' in bl[1]) && !('lv' in pl[1]) && !('lv' in bl[2]), 'a level that is not a whole number 1…999 is left out');
+ok(bl.length === 3 && bl[0].lv === 7, 'a lower score keeps the best line, with its own level');
 // Daily: today or yesterday only, its own board, top 10.
 const tkd = H.ticket(st, 'ace-runner', 'daily', T0);
 ok(sub({ m: 'daily', ticket: tkd, s: 3000, name: 'DAY', day: '2026-11-16' }).rank === 1 && st.boards['initials/ace-runner:daily:2026-11-16'].length === 1, 'daily challenge: the board of the day');
@@ -176,5 +187,10 @@ ok(/<select id="adv-hofopt"[^>]*>\s*<option value="ask"[^>]*>[^<]*<\/option><opt
 ok(/S\.isAuthLogin && S\.chatNick\) \{ _issueSyncToken\(S\); _issueHofToken\(S\); \}/.test(pxs) && /if \(S\.hofFrame \|\| hofNames\(\) !== 'account'\) return;/.test(pxs),
   'the proxy hands the key out only after an authenticated login (as the sync token), and only while the setting is « account »');
 
+const hofc = fs.readFileSync(path.join(root, 'public/modules/games/hof.mjs'), 'utf8');
+ok(/if \(o\.lv > 0\) body\.lv = Math\.round\(o\.lv\)/.test(hofc) && /t\('hofLv', \{ n: r\.lv \}\)/.test(hofc) && /lv: d\.lv/.test(pxs),
+  'the level goes from the game to the board (hofEnd → proxy → board) and is shown as « Lv. n »');
+for (const g of ['tapis', 'ace-runner', 'ace-dash', 'house', 'poker-run', 'whowins'])
+  ok(/hofEnd\(shell, \{[^}]*\blv: /.test(fs.readFileSync(path.join(root, 'public/modules/games/' + g + '.mjs'), 'utf8')), g + ': the level is sent with the score');
 console.log((fail ? 'FAIL ' : 'OK ') + pass + '/' + (pass + fail));
 process.exit(fail ? 1 : 0);

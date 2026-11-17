@@ -214,6 +214,9 @@ function submit(st, o) {
   if (i >= 0) b.splice(i, 1);
   const line = { n: name, s, ts: now, at: now };
   if (o2) line.o = o2;
+  // The level reached, shown beside the score (web.123, narmod) — the score still ranks.
+  const lv = levelOf(o.lv);
+  if (lv) line.lv = lv;
   let at = b.findIndex((r) => r.s < s);
   if (at < 0) at = b.length;
   if (at >= max) return { ok: true, key, rank: 0, best: s, name, improved: true };
@@ -221,7 +224,9 @@ function submit(st, o) {
   b.length = Math.min(b.length, max);
   return { ok: true, key, rank: at + 1, best: s, name, improved: true };
 }
-const pub = (b) => (Array.isArray(b) ? b.map((r) => ({ n: r.n, s: r.s, ts: r.ts })) : []);
+const pub = (b) => (Array.isArray(b) ? b.map((r) => (r.lv ? { n: r.n, s: r.s, ts: r.ts, lv: r.lv } : { n: r.n, s: r.s, ts: r.ts })) : []);
+/** A run's level as sent (web.123): a whole number 1 … 999, else none. */
+function levelOf(v) { return Number.isInteger(v) && v >= 1 && v <= 999 ? v : 0; }
 /** What a game's title shows: the setting, each mode's board, today's daily board. */
 function view(st, names, g, now) {
   const G = GAMES[g];

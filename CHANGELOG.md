@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Hall of Fame: the level beside the score** (`web.123`, narmod: « put the level number next to the score
+  everywhere, even if the score decides ») — `hofEnd` sends `lv` (Tapis!, Ace Runner, Ace Dash, House of Cards,
+  Poker Run, Who Wins? endless); `/__hof/score` passes it on; `hall-of-fame.js` keeps a whole level 1…999 on the
+  line (`levelOf`) and publishes it; the board shows « Lv. n » (`hofLv`, 83 languages) and the Ranking tab a level
+  column when a board has one. House of Cards' end screen gains a level chip.
 - **Tapis!: smaller scores, a band that holds them** (`web.122`, narmod: « too many digits, from 3-4 million the
   level does not show ») — `tapis-rules.mjs` `lvFactor(lv)` = 1 + (lv − 1)/4 replaces × the level in every pay
   (holes 10, spirits 10, a cleared table 50, 1 a second left, a card hand 10 × its multiplier, a power 3 a chip,
