@@ -45,9 +45,9 @@ const NAME_GAP_MS = 5000;                 // one score per name every 5 s at mos
 // can bring (Ace Runner: ≈ 99 m/s at top speed, ×2 in All-In, ×4 with a royal flush).
 const GAMES = Object.freeze({
   'ace-runner': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 800, base: 2000 },
-  // Tapis! (web.99): a round of ≈ 60 s pays ≈ 30 000 at level 10, ≈ 70 000 at 16 (groups, holes,
-  // spirits, the time left), a royal flush of cards 100 × level × 50 — the Duel is not ranked.
-  tapis: { modes: ['classic', 'folie', 'daily', 'zen'], daily: 'daily', perSec: 4000, base: 100000 },
+  // Tapis! (web.122: every pay ÷10 or so, the level's weight ×(1 + (level − 1)/4)): a round of ≈ 60 s pays
+  // ≈ 2 000 at level 10, a royal flush of cards 10 × 50 × that — the Duel is not ranked. Kept loose.
+  tapis: { modes: ['classic', 'folie', 'daily', 'zen'], daily: 'daily', perSec: 1000, base: 20000 },
   // Ace Dash (web.99): ≈ 29 m/s at top speed, ×2 in All-In, chips 10 × a streak of 5 × 2 (gold),
   // the pool's rows, all × 4 with a royal flush.
   'ace-dash': { modes: ['free', 'daily', 'time'], daily: 'daily', perSec: 3000, base: 5000 },
@@ -84,6 +84,10 @@ function normalize(st) {
   if (typeof s.secret !== 'string' || s.secret.length < 32) s.secret = crypto.randomBytes(32).toString('hex');
   if (!s.boards || typeof s.boards !== 'object') s.boards = {};
   if (!s.tokens || typeof s.tokens !== 'object') s.tokens = {};
+  if (!s.resets || typeof s.resets !== 'object') s.resets = {};
+  // Tapis!'s score was cut about 30 times (web.122, narmod: « too many digits »): its old boards could no
+  // longer be beaten — dropped once (narmod's choice, as the browsers' own records).
+  if (!s.resets.tapis122) { Object.keys(s.boards).forEach((k) => { if (/\/tapis:/.test(k)) delete s.boards[k]; }); s.resets.tapis122 = 1; }
   return s;
 }
 const namesOf = (v) => (NAMES.indexOf(v) >= 0 ? v : 'off');

@@ -29,7 +29,7 @@
 //             pays more for its 5th to 8th chips (×2) and from its 9th (×3),
 //             each chip's points written on it as it goes (tierOf)
 //   Spirits   round won: each friend's spirit flies up out of his hole,
-//             SPIRIT_PAY × level each (Monster Madness' 1 000 a monster)
+//             SPIRIT_PAY × lvFactor each (web.122; Monster Madness' 1 000 a monster)
 //   Columns   as in Monster Madness (narmod, the arcade video at 0:56-1:08,
 //             web.90): an emptied column goes once its friend is in his hole,
 //             and the others close up in the middle; « No more moves! » brings
@@ -72,7 +72,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
-import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove,
+import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
@@ -104,7 +104,7 @@ export const MODES = [
 export const ZEN_ROUNDS = 5;
 export const DUEL_ROUNDS = 3, TURN_S = 10;
 export const TROPHY_LV = 5;
-export const SPIRIT_PAY = 100;
+export const SPIRIT_PAY = 10;   // × lvFactor (web.122: was 100 × level)
 const SIGN_S = 2.4;                        // « Couché ! » stays this long by his hole            // × level: each friend's spirit at the round's end (Monster Madness: 1 000 a monster)              // « Table rase »: from this level
 const HANDOVER_S = 0.9;                     // a move made: the turn passes once its chips and cards have landed
 const P_COLOR = ['#e8b84a', '#7fc8ff'];     // player 1 gold, player 2 blue (as in Poker Drop)
@@ -140,6 +140,19 @@ export function create(shell) {
   const q = (s) => /** @type {HTMLElement} */ (shell.hud.querySelector(s));
   const hScore = q('.tp-score'), hLv = q('.tp-lv'), hBlinds = q('.tp-blinds'), hTimeBox = q('.tp-time'), hTime = q('.tp-time i');
   const hLabs = /** @type {HTMLElement[]} */ (Array.from(shell.hud.querySelectorAll('.ar-stats .ar-lab')));
+  const hStats = q('.ar-stats'), hRight = q('.ar-hand');
+  // Where the band's two blocks end, in the stage's units (web.122): the hand's 5 slots go between them,
+  // never over the score or the level (narmod: « the level hidden past 3-4 million »).
+  let hudL = 0, hudR = 0;
+  function measureHud() {
+    try {
+      const sr = shell.stage.getBoundingClientRect(), k = shell.k || 1;
+      if (!(k > 0)) return;
+      hudL = (hStats.getBoundingClientRect().right - sr.left) / k; hudR = (hRight.getBoundingClientRect().left - sr.left) / k;
+    } catch (e) { hudL = hudR = 0; }
+  }
+  /** Blinds as the band shows them: 60K/120K past 10 000 (the banners keep the full figures). */
+  const shortBlinds = (b) => b.split('/').map((x) => { const n = +x; return n >= 10000 && n % 1000 === 0 ? n / 1000 + 'K' : x; }).join('/');
 
   let state = 'title', time = 0, timer = 0, check = 0, sel = 0, mode = 'classic', R = Math.random;
   /** The title, or the Hall of Fame's boards opened from it (the same scene behind). */
@@ -207,7 +220,11 @@ export function create(shell) {
     renderHud();
   }
   function renderHud() {
-    hBlinds.textContent = blindsAt(G.lv);
+    hBlinds.textContent = shortBlinds(blindsAt(G.lv));
+    renderHudText();
+    measureHud();
+  }
+  function renderHudText() {
     if (duel() && G.players) {             // Duel: the two scores, the player to play lit
       const sc = (i) => (i === G.turn ? G.score : G.players[i].score);
       hLabs[0].textContent = (G.turn === 0 ? '▶ ' : '') + t('pdPlayer', { n: 1 }); hLabs[1].textContent = (G.turn === 1 ? '▶ ' : '') + t('pdPlayer', { n: 2 });
@@ -314,7 +331,7 @@ export function create(shell) {
     if (!cells.length || G.inv[p] <= 0) return;
     G.inv[p]--;
     const L = geom();
-    G.score += takeCells(L, cells) * 30 * G.lv;
+    G.score += takeCells(L, cells) * lvPay(3, G.lv);
     sound('notifyAllIn');
     moved(); renderHud(); afterMove();
   }
@@ -386,7 +403,7 @@ export function create(shell) {
   function addCard(n) {
     G.hand.push(n);
     if (G.hand.length < 5) return;
-    const e = evalCards(G.hand), cat = Math.max(0, e.cat), pts = 100 * G.lv * MULT[cat];
+    const e = evalCards(G.hand), cat = Math.max(0, e.cat), pts = lvPay(10 * MULT[cat], G.lv);
     G.score += pts; renderHud();
     G.handFull = { cards: G.hand.slice(), best: e.best || [], name: t(NAME_KEYS[cat]), t: 0 };
     if (!G.bestHand || cat > G.bestHand.cat) G.bestHand = { cards: G.hand.slice(), best: e.best || [], cat };
@@ -407,7 +424,7 @@ export function create(shell) {
   function roundClear() {
     state = 'clear';
     const L = geom(), left = chipsLeft(G.grid), secs = timed() ? Math.ceil(G.timeLeft) : 0;
-    const bonus = secs * TIME_PAY * G.lv, clean = left === 0 && !duel() ? cleanPay(G.lv) : 0;
+    const bonus = lvPay(secs * TIME_PAY, G.lv), clean = left === 0 && !duel() ? cleanPay(G.lv) : 0;
     // « Table rase » (secret trophy, narmod: choice A): a round from level 5 without a recave, Classic or Daily.
     if (timed() && G.lv >= TROPHY_LV && !G.recaved) { shell.grant('tapis'); G.trophy = true; }
     G.score += bonus + clean;
@@ -693,7 +710,7 @@ export function create(shell) {
       if (ch.spT < 0) return;
       if (!ch.spPaid) {
         ch.spPaid = true; ch.ace.show(true); ch.ace.clip(null); ch.ace.pose('air'); ch.ace.mood('yay'); ch.ace.sweat(false);
-        const pay = duel() ? 0 : SPIRIT_PAY * G.lv;
+        const pay = duel() ? 0 : lvPay(SPIRIT_PAY, G.lv);
         if (pay) { G.score += pay; renderHud(); }
         G.fx.push({ s: pay ? '+' + fmt(pay) : '✦', x: ch.spX, y: L.base - L.cw * 1.4, t: 0, life: 1.1, green: true });
         sound('notifyTick');
@@ -728,8 +745,16 @@ export function create(shell) {
   const img = imageCache();
   /** Slot i of the hand of 5, in the middle of the HUD's line. */
   function handSlot(L, i) {
-    const room = Math.max(60, Math.min(150, L.W - 110)), w = Math.min(18, room / 5.6), h = w * 1.4;
-    return { x: L.W / 2 + (i - 2) * (w + 3), y: 21, w, h };
+    const room = Math.max(60, Math.min(150, L.W - 110));
+    let w = Math.min(18, room / 5.6), cx = L.W / 2;
+    // Between the score and the blinds (web.122): smaller if need be, off the centre if need be.
+    const lo = hudL + 6, hi = (hudR > hudL ? hudR : L.W) - 6;
+    if (hudL > 0 && hi - lo >= 50) {
+      w = Math.min(w, (hi - lo) / 5.6);
+      const half = 2.5 * (w + 3);
+      cx = Math.max(lo + half, Math.min(hi - half, cx));
+    }
+    return { x: cx + (i - 2) * (w + 3), y: 21, w, h: w * 1.4 };
   }
   /** A card standing in a stack: a cream « card chip », the card's rank and suit on its side. */
   function drawCardCell(g, L, x, yb, n, hl, sc) {
@@ -998,7 +1023,7 @@ export function create(shell) {
 
   try { if (navigator.webdriver) window.__pthTapis = { run: () => G, state: () => state, act, check: afterMove, level: (n) => { G.lv = n; newRound(); }, timeUp: () => { if (state === 'run') { if (timed()) G.timeLeft = 0.01; else gameOver(t(mode === 'folie' ? 'tpOver' : 'tpAllIn')); } }, turn: () => G.turn, picked: () => G.picked, screenOf: (c, r) => { const L = geom(), rc = shell.stage.getBoundingClientRect(), k = shell.k || 1; return { x: rc.left + colX(L, c) * k, y: rc.top + (chipY(L, c, r) - L.bh / 2) * k }; }, trophy: () => !!G.trophy, pass: () => turnTo(1 - G.turn), mode: () => mode, hof: () => openHof(), start: (m) => { sel = Math.max(0, MODES.findIndex((x) => x.id === m)); start(); } }; } catch (e) {}
   return {
-    update, draw, input, resize: () => {},
+    update, draw, input, resize: () => { measureHud(); },
     running: () => state === 'run' || state === 'clear',
     destroy() {
       clearTimeout(timer); clearTimeout(check);

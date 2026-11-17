@@ -57,7 +57,8 @@ resetDashRecord();
 // gentler hand multipliers, ×3 instead of ×5 from a group's 9th chip, less for a
 // character in his hole): its records restart (Classic, Madness, Zen, Daily),
 // once per device; a device that had played it keeps it as played.
-export const TP_SCORE_KEY = 'pth_tp_score2';
+// Again in web.122 (narmod: « too many digits »): every pay ÷10, the level's weight gentler (lvFactor).
+export const TP_SCORE_KEY = 'pth_tp_score3';
 export function resetTapisRecord() {
   try {
     if (localStorage.getItem(TP_SCORE_KEY)) return false;

@@ -1,4 +1,8 @@
-2026-11-17 version 2.1.11-web.121 (current series):
+2026-11-17 version 2.1.11-web.122 (current series):
+- improvement: Tapis! — smaller scores (about 30 times smaller in a long game): the chips are worth 1, 2, 5, 20 and 100, and each level pays a quarter more instead of multiplying everything by the level; the records start again
+- bugfix: Tapis! — with a big score the band no longer runs into the hand's five card slots, the level always shows, and the blinds are written short (60K/120K)
+
+2026-11-17 version 2.1.11-web.121:
 - bugfix: Xiaomi phones — the browser's page translator no longer breaks the login screen or the table (an error on every turn)
 - bugfix: Fullscreen — on devices that refuse it, the fullscreen button is hidden instead of doing nothing
 

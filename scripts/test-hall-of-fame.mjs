@@ -80,8 +80,8 @@ ok(H.forget(st, { dev: 'short', now: T0 }) === 0, 'forget(): no key, nothing goe
 ok(H.view(st, 'initials', 'tapis', T0) && Object.keys(H.view(st, 'initials', 'tapis', T0).boards).join() === 'classic,folie,daily,zen' && H.ticket(st, 'tapis', 'duel', T0) === null
   && Object.keys(H.view(st, 'initials', 'ace-dash', T0).boards).join() === 'free,daily,time',
   'Tapis! (classic, Madness, daily, Zen — not the Duel) and Ace Dash (free, daily, time attack) are ranked');
-ok(H.plausible('tapis', 100000 + 4000 * 60, 60) && !H.plausible('tapis', 100001 + 4000 * 60, 60) && H.plausible('ace-dash', 5000 + 3000 * 60, 60) && !H.plausible('ace-dash', 5001 + 3000 * 60, 60),
-  'each game its own ceiling (Tapis! 100 000 + 4 000 a second, Ace Dash 5 000 + 3 000 a second)');
+ok(H.plausible('tapis', 20000 + 1000 * 60, 60) && !H.plausible('tapis', 20001 + 1000 * 60, 60) && H.plausible('ace-dash', 5000 + 3000 * 60, 60) && !H.plausible('ace-dash', 5001 + 3000 * 60, 60),
+  'each game its own ceiling (Tapis! 20 000 + 1 000 a second since web.122, Ace Dash 5 000 + 3 000 a second)');
 ok(Object.keys(H.view(st, 'initials', 'poker-run', T0).boards).join() === 'free,queen,daily' && Object.keys(H.view(st, 'initials', 'videopoker', T0).boards).length === 8,
   'Poker Run (free, Queen, daily) and Video Poker (four machines, free and daily) are ranked (web.100)');
 const tvp = H.ticket(st, 'videopoker', 'day-deuces', T0);
@@ -96,6 +96,12 @@ ok(Object.keys(H.view(st, 'initials', 'solitaire', T0).boards).join() === 'daily
   'Poker Solitaire (a ceiling of 1 000 whatever the time), the Ace\'s Bluff and the House of Cards are ranked (web.102), not Poker Drop');
 const tkt = H.ticket(st, 'tapis', 'daily', T0);
 ok(sub({ g: 'tapis', m: 'daily', ticket: tkt, s: 40000, name: 'TAP', day: '2026-11-16' }).rank === 1 && st.boards['initials/tapis:daily:2026-11-16'].length === 1, 'Tapis!: its daily board');
+{ // web.122: Tapis!'s old boards dropped once (its score cut ~30 times), the other games' kept; never again after.
+  const o = H.normalize({ boards: { 'initials/tapis:classic': [{ n: 'OLD', s: 3456789 }], 'initials/ace-runner:free': [{ n: 'AR', s: 5 }] } });
+  o.boards['initials/tapis:zen'] = [{ n: 'NEW', s: 9 }];
+  const o2 = H.normalize(o);
+  ok(!o2.boards['initials/tapis:classic'] && o2.boards['initials/ace-runner:free'] && o2.boards['initials/tapis:zen'] && o2.resets.tapis122 === 1, 'Tapis!: its old boards dropped once (web.122), the others kept, new scores kept after');
+}
 // Off (the default): nothing taken, nothing shown.
 ok(H.namesOf(undefined) === 'off' && H.namesOf('nope') === 'off' && sub({ names: 'off', s: 3000, name: 'OFF' }).err === 'off' && Object.keys(H.view(st, 'off', 'ace-runner', T0).boards).length === 0 && Object.keys(H.adminView(st, 'off')).length === 0,
   'off is the default: no score taken, no board shown');

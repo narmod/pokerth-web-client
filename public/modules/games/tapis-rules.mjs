@@ -26,14 +26,14 @@
 //             from the felt from 13 (riseRow). A venue every 4 levels (venueAt).
 // ═══════════════════════════════════════════════════════════════════
 
-/** The chips: colour (side, dark side, marks), suit printed on them, value. */
+/** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50). */
 export const CHIPS = [
-  { id: 'red', top: '#d23a30', side: '#8e1c15', mark: '#f7f1e3', suit: '♥', v: 5 },
-  { id: 'blue', top: '#2f6bd0', side: '#173c80', mark: '#f7f1e3', suit: '♦', v: 10 },
-  { id: 'green', top: '#27a058', side: '#115a2e', mark: '#f7f1e3', suit: '♣', v: 25 },
-  { id: 'black', top: '#33363c', side: '#121316', mark: '#e3c06a', suit: '♠', v: 100 },
-  { id: 'purple', top: '#9a5ae0', side: '#542a8f', mark: '#f7f1e3', suit: '★', v: 500 },
-  { id: 'wild', top: '#f5f0e3', side: '#b8902e', mark: '#141414', suit: 'J', v: 50 },
+  { id: 'red', top: '#d23a30', side: '#8e1c15', mark: '#f7f1e3', suit: '♥', v: 1 },
+  { id: 'blue', top: '#2f6bd0', side: '#173c80', mark: '#f7f1e3', suit: '♦', v: 2 },
+  { id: 'green', top: '#27a058', side: '#115a2e', mark: '#f7f1e3', suit: '♣', v: 5 },
+  { id: 'black', top: '#33363c', side: '#121316', mark: '#e3c06a', suit: '♠', v: 20 },
+  { id: 'purple', top: '#9a5ae0', side: '#542a8f', mark: '#f7f1e3', suit: '★', v: 100 },
+  { id: 'wild', top: '#f5f0e3', side: '#b8902e', mark: '#141414', suit: 'J', v: 10 },
 ];
 /** The Joker chip (CHIPS[WILD]): it goes with every colour (from level 3). */
 export const WILD = 5;
@@ -71,11 +71,19 @@ export const perChipAt = (lv) => Math.max(0.7, 0.9 - 0.015 * (Math.max(1, lv) - 
  * for each colour past 3 (more colours, more moves: level 13 is no wall).
  */
 export const timeFor = (total, lv) => Math.max(35, Math.round(total * perChipAt(lv) * (1 + 0.12 * (colorsAt(lv) - 3))));
-/** A character in its hole pays this (web.93: 100 × level, was 250); the round's leftover seconds pay TIME_PAY each. */
-export const inPay = (lv) => 100 * Math.max(1, lv);
-export const TIME_PAY = 10;
+/**
+ * How much more a level pays (web.122, narmod: « too many digits, millions by level 20 »): ×1 at level 1, a
+ * quarter more a level — ×6.5 at level 23 (was × the level: ×23). With every pay ÷10 the scores of a long
+ * game are about 30 times smaller (3.4 million → about 100 000).
+ */
+export const lvFactor = (lv) => 1 + (Math.max(1, lv) - 1) / 4;
+/** What the level pays for `base` (the old pays ÷10, scaled by lvFactor), rounded. */
+export const lvPay = (base, lv) => Math.round(base * lvFactor(lv));
+/** A character in its hole pays this (10 at level 1; web.93: was 100 × level); the round's leftover seconds pay TIME_PAY each. */
+export const inPay = (lv) => lvPay(10, lv);
+export const TIME_PAY = 1;
 /** A round left without a single chip (the « Table rase »). */
-export const cleanPay = (lv) => 500 * Math.max(1, lv);
+export const cleanPay = (lv) => lvPay(50, lv);
 /** Seconds a recave costs. */
 export const RECAVE_S = 5;
 /** The blinds shown for a level (as in the other games: 10/20, 20/40…). */

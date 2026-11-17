@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: smaller scores, a band that holds them** (`web.122`, narmod: « too many digits, from 3-4 million the
+  level does not show ») — `tapis-rules.mjs` `lvFactor(lv)` = 1 + (lv − 1)/4 replaces × the level in every pay
+  (holes 10, spirits 10, a cleared table 50, 1 a second left, a card hand 10 × its multiplier, a power 3 a chip,
+  each × `lvFactor` via `lvPay`), and the chips are worth 1 / 2 / 5 / 20 / 100 (the Joker 10; were 5 / 10 / 25 /
+  100 / 500 and 50): a long game's score is about 30 times smaller. The records restart once (`TP_SCORE_KEY` =
+  `pth_tp_score3`; the server drops the old Tapis! boards once, `resets.tapis122`, and its ceiling becomes
+  20 000 + 1 000 a second). The band: the hand's five slots sit between the score and the blinds, smaller if need
+  be (`measureHud`, on every score and on resize), the blinds written 60K/120K past 10 000. The rules' chip values
+  updated in the 83 languages.
 - **Music player: a header button outside a game, a mini-player in the speaker menu** (`web.120`, audit
   `AUDIT_MUSIQUE_2026-11-15`, mock-ups B1/C1–C4/D1, narmod: « make the music player seen without disturbing
   the players ») — the player was only reachable from the ••• menus. Outside a game (login, lobby, create a
