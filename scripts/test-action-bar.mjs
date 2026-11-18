@@ -328,6 +328,23 @@ S._preAction = '';
   S._preAction = ''; S.commCards = [null, null, null, null, null];
 }
 
+// ── Action envoyée, réponse serveur pas encore là : la barre est tout de
+// suite une zone morte (narmod 18/11), puis redevient normale quand
+// _actionSent retombe (msg-hand : ActionDone / PlayersTurn / rejet).
+{
+  S.seatData = { 1: { money: 1000, bet: 0, folded: false }, 2: { money: 1000, bet: 0 } };
+  S.highestBet = 0; S.commCards = [10, 20, 30]; S._actedStreet = -1; S.turnPid = 1;
+  S._inShowdown = false; S._boardDealing = false; S._roundEnded = false; S._foldBarFrozen = false;
+  S._actionSent = false;
+  ok(window._barLocked() === false, 'avant envoi : barre active');
+  A.doAction(2, 0);
+  ok(S._actionSent === true && window._barLocked() === true
+     && document.getElementById('g-actions').innerHTML.includes('no-action'),
+     'doAction : action en vol → barre morte immédiatement');
+  S._actionSent = false;
+  ok(window._barLocked() === false, 'réponse serveur (drapeau levé) : la barre suit de nouveau ses règles');
+}
+
 // ── Gel du fold (rapport forum) : « the action key labels continue to update
 // after you have folded ». La barre doit rester EXACTEMENT celle de l'instant
 // du fold — zone morte ET montants figés — jusqu'à la main suivante.

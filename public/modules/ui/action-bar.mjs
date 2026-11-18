@@ -294,6 +294,10 @@ window._minRaiseRel = _minRaiseRel;
 
 function _barLocked() {
   if (S._inShowdown || S._boardDealing || S._roundEnded) return true;
+  // My action is on its way: nothing to decide until the server answers —
+  // the bar takes at once the dead look it gets on that answer (narmod
+  // 18/11: it looked live for a round trip while every click was ignored).
+  if (S._actionSent) return true;
   var sd = (S.seatData && S.seatData[S.myId]) || null;
   if (!sd) return false;
   if (sd.folded) return true;
@@ -682,6 +686,7 @@ function doAction(action, bet) {
   }
   window.setMyTurnActive(false);
   send(MSG.buildMyAction(S.gId, S.handNum, S.gameState, action, bet));
+  S._actionSent = true;   // cleared by the server's answer (msg-hand.mjs)
   // Barre d'action TOUJOURS présente (demande narmod 2026-07-17) : le
   // remplacement de la grille par « Action envoyée » effondrait la hauteur
   // de #g-actions → re-layout de la table = zoom/dézoom désagréable. On

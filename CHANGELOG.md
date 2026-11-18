@@ -224,6 +224,11 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Action bar dead as soon as my action leaves** (`web.130`, narmod: « grey it right away ») — after `doAction`
+  the preview bar looked live for a server round trip (until the next `PlayersTurn` re-render applied
+  `_actedStreet`) while every click was ignored. `S._actionSent` (set after the send) makes `_barLocked()` true
+  at once; it falls on my `PlayersActionDone`, any `PlayersTurn`, `YourActionRejected` (live bar back), a new
+  street and `HandStart`. Same end state as before, reached a round trip earlier.
 - **Game log: one row inserted, not 500 rebuilt** (`web.129`) — `renderLog(1)` re-ran every thunk and rewrote up
   to 500 rows for each new line (every street by default, every move with « log every action »): ~35 ms with
   CPU ×4 and the panel open, 6.5 ms now. The new row is inserted at the head and the oldest dropped at the cap;

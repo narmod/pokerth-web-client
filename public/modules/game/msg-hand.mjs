@@ -314,6 +314,7 @@ function onHandStart(sub) {
     // pas de reset par main. Le joueur le change via le dropdown ou un
     // clic manuel sur une action.
     S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
+    S._actionSent = false;    // aucune action en vol au début d'une main
     S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
     S._actedStreet = -1;      // je n'ai pas encore parlé dans cette main
     S._handSbPid = 0; S._handBbPid = 0; // blinds of this hand: set by PlayersActionDone
@@ -661,6 +662,7 @@ function onPlayersTurn(sub) {
     // Quelqu'un reprend la parole : les montants de la nouvelle manche sont
     // à jour (équivalent de onRoundValuesReady côté QML) → verrou de manche levé.
     S._roundEnded = false;
+    S._actionSent = false;   // a new turn: whatever I sent has been answered
     S.turnPid   = Proto.u32(sub, 2);
     S.gameState = Proto.u32(sub, 3);
     // Defensive guard: if the server (older PokerTH versions, e.g.
@@ -759,6 +761,7 @@ function onPlayersActionDone(sub) {
     if (aLabel) window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
     announce(voiceActionPhrase(action, pid, bet));
     if (pid === S.myId) {
+      S._actionSent = false;   // the server took my action (_actedStreet takes over below)
       // Street de ma prise de parole : la barre d'action reste inerte tant
       // que rien ne me redonne la parole (relance adverse ou street
       // suivante) — comportement des clients Qt-Widgets et QML.
@@ -814,6 +817,7 @@ function onPlayersActionDone(sub) {
 // (S._roundEnded, levé par onPlayersTurn).
 function _beginStreet(dealMs) {
     S._preAction    = '';
+    S._actionSent   = false;
     S._actedStreet  = -1;
     S._roundEnded   = true;
     S._boardDealing = true;
@@ -1216,6 +1220,7 @@ function onEndOfHandHide(sub) {
 }
 
 function onYourActionRejected(sub) {
+    S._actionSent = false;   // refused: the live bar comes back (below)
     // YourActionRejectedMessage: gameId=1, gameState=2, yourAction=3,
     //   yourRelativeBet=4, rejectionReason=5
     // Sent by the server when our MyActionRequest is invalid (game state

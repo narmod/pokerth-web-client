@@ -1,4 +1,7 @@
-2026-11-18 version 2.1.11-web.129 (current series):
+2026-11-18 version 2.1.11-web.130 (current series):
+- improvement: Action buttons — right after you act, the buttons turn grey at once (as they do a moment later anyway) instead of looking clickable while the server has not answered yet
+
+2026-11-18 version 2.1.11-web.129:
 - improvement: Game log — a new line is added on its own instead of redrawing the whole log (up to 500 lines): no more small jerk at each street with the log open, nor at each move when it logs every action
 
 2026-11-18 version 2.1.11-web.128:
