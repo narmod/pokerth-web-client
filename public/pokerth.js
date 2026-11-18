@@ -4726,8 +4726,16 @@ const App = (() => {
   // Max game-name length accepted, aligned with the official PokerTH client
   // (createInternetGameDialog uses maxLength=48). The web client refuses to
   // create a table when the typed name exceeds it, with a translated message.
+  // Since upstream cb2d21a (2026-11-18) the official server also refuses
+  // '<' and '>' anywhere in a game name (some clients render names as rich
+  // text). They are swapped for the look-alike angle quotes, silently, so a
+  // typed name or an auto name built from a nick that contains them
+  // (« Table {name} », « WebGame-{name}-xyz ») is still created.
+  function _noAngleBrackets(str) {
+    return String(str == null ? '' : str).replace(/</g, '\u2039').replace(/>/g, '\u203A');
+  }
   function _safeGameName(raw) {
-    var s = (raw || '').trim();
+    var s = _noAngleBrackets(raw).trim();
     var leadOk = function(str) {
       if (!str) return false;
       var c = str.charCodeAt(0);
@@ -4735,7 +4743,7 @@ const App = (() => {
     };
     if (leadOk(s)) return s;
     if (!s) {                              // empty after trim
-      var nm = (S.myName || '').trim();
+      var nm = _noAngleBrackets(S.myName).trim();
       return leadOk(nm) ? nm : 'PokerTH';
     }
     return 'PokerTH - ' + s;               // keep the user's text, ASCII lead
@@ -12623,7 +12631,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.123'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.124'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

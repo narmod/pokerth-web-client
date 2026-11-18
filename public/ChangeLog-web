@@ -1,4 +1,7 @@
-2026-11-17 version 2.1.11-web.123 (current series):
+2026-11-18 version 2.1.11-web.124 (current series):
+- bugfix: Create a table — a name containing < or > (typed, or taken from your nickname) is no longer refused by the server: these two signs become ‹ and ›
+
+2026-11-17 version 2.1.11-web.123:
 - new: Hall of Fame — the level reached now shows beside the score (« Lv. 7 ») in every game that has levels: Tapis!, Ace Runner, Ace Dash, House of Cards, Poker Run and Who Wins? endless; the score still decides the rank
 - improvement: House of Cards — the end screen shows the level reached
 

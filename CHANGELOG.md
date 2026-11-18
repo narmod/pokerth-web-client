@@ -241,6 +241,9 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **Game names with `<` or `>`** (`web.124`) — upstream `cb2d21a` makes the official server refuse them
+  (`badGameName`); `_safeGameName` now swaps them for `‹` `›`, typed names and auto names built from the nick
+  (« Table {name} », quick game) alike, including the empty-name fallback.
 - **Xiaomi browser: the translator no longer breaks the login and the table** (`web.121`, Admin › Errors on
   web.20, Android 16 · Xiaomi) — the browser's page translator renames element ids to `MI_TRANS_ID-<n>`: the
   login form held `MI_TRANS_ID-95` where `#nick` should be, then `#g-round` was null on every turn and street
