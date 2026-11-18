@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Rovnaký čas ako server",
     "lsbClockNote": "Komunitné podujatia (BBC, WEC, Monthly Cup) sa plánujú v čase servera.",
     "advLobbyClock": "Čas servera v stavovom riadku lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Prihlásenie je zatiaľ odmietnuté: príliš veľa pokusov. Po nesprávnych heslách trvá blokovanie až 15 minút pre účet a 1 hodinu pre túto sieť. Prihlásenie ako hosť stále funguje.",
+    "errCreateLimited": "Stôl nebol vytvorený: príliš veľa nových stolov v krátkom čase. Počkajte niekoľko sekúnd a skúste to znova.",
 };
 
 export default { meta, strings };

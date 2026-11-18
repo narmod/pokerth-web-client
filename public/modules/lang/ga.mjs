@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'An t-am céanna leis an bhfreastalaí',
     "lsbClockNote": 'Sceidealtar imeachtaí pobail (BBC, WEC, Monthly Cup) de réir am an fhreastalaí.',
     "advLobbyClock": 'Am an fhreastalaí i mbarra stádais an fhorhalla (pokerth.net)',
+    "connErrPwBlocked": "⏳ Logáil isteach diúltaithe faoi láthair: an iomarca iarrachtaí. Tar éis pasfhocal mícheart maireann an bac suas le 15 nóiméad don chuntas agus 1 uair an chloig don líonra seo. Is féidir logáil isteach mar aoi fós.",
+    "errCreateLimited": "Níor cruthaíodh an bord: an iomarca bord nua in achar gearr. Fan cúpla soicind agus bain triail eile as.",
 };
 
 export default { meta, strings };

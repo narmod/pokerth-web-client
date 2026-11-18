@@ -70,6 +70,7 @@ function onGameSpectatorLeft(sub) {
 
 function onJoinGameAck(sub) {
     S.gId = Proto.u32(sub, 1);
+    S._createSentAt = 0;   // our CreateGame (if any) went through — see onJoinGameFailed
     // Our own seat reclaimed (RejoinExistingGame), not a fresh join or a
     // re-spectate: read before _pendingRejoin is cleared below.
     const _wasRejoin = !!S._pendingRejoin && S._pendingRejoin === S.gId && !S._pendingRejoinSpec;
@@ -261,6 +262,13 @@ function onJoinGameFailed(sub) {
     const failCode = Proto.u32(sub, 2);
     // Disarm the join watchdog (armed by _sendJoin in pokerth.js).
     if (S._joinWd) { clearTimeout(S._joinWd); S._joinWd = 0; }
+    // Answer to our own CreateGame? (stamped where pokerth.js sends it). Since
+    // upstream 4530ce0 the server rate-limits table creation (3 in a row, then
+    // one every 5 s, per account or per address for guests) and caps the open
+    // tables; both refusals come back as invalidGame (1), which older clients
+    // already understand — so the reason is told apart here, by the timing.
+    const _ownCreate = !!(S._createSentAt && Date.now() - S._createSentAt < 15000);
+    S._createSentAt = 0;
     if (S._pendingRejoin) {
       // We were reclaiming our seat but it's gone (grace window elapsed)
       // or the rejoin was refused — drop cleanly to the lobby. Clear the
@@ -296,6 +304,7 @@ function onJoinGameFailed(sub) {
     // « Play nearby »: one table at a time (lan/local-server.mjs refuses a
     // second creation with invalidSettings).
     if (window._nearbyMode && failCode === 9) errMsgs[9] = t('nbOneTable');
+    if (_ownCreate && failCode === 1 && !window._nearbyMode && !window._offlineMode) errMsgs[1] = t('errCreateLimited');
     const errMsg = errMsgs[failCode] || 'Join failed for game '+failedGameId+' (code '+failCode+')';
     setStatus('⚠ ' + errMsg, 'err');
     // Re-show password prompt if wrong password

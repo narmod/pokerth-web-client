@@ -990,6 +990,8 @@ export const strings = {
     playersSearchPlaceholder:'Otsi\u2026',
     plSearchClear:'Tühjenda otsing',
     tableCount:'laud(a)',
+    "connErrPwBlocked": "⏳ Sisselogimine praegu keelatud: liiga palju katseid. Pärast valesid paroole kestab blokeering kuni 15 minutit konto ja 1 tund selle võrgu jaoks. Külalisena sisselogimine töötab endiselt.",
+    "errCreateLimited": "Lauda ei loodud: liiga palju uusi laudu lühikese aja jooksul. Oota mõni sekund ja proovi uuesti.",
 };
 
 export default { meta, strings };

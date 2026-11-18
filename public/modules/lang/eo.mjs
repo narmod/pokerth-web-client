@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Sama horo kiel la servilo',
     "lsbClockNote": 'Komunumaj eventoj (BBC, WEC, Monthly Cup) estas planataj laŭ la servila horo.',
     "advLobbyClock": 'Servila horo en la statobreto de la halo (pokerth.net)',
+    "connErrPwBlocked": "⏳ Ensaluto rifuzita nuntempe: tro da provoj. Post malĝustaj pasvortoj la bloko daŭras ĝis 15 minutoj por la konto kaj 1 horon por ĉi tiu reto. Ensaluto kiel gasto ankoraŭ funkcias.",
+    "errCreateLimited": "Tablo ne kreita: tro da novaj tabloj en mallonga tempo. Atendu kelkajn sekundojn kaj reprovu.",
 };
 
 export default { meta, strings };

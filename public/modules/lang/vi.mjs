@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Cùng giờ với máy chủ",
     "lsbClockNote": "Các sự kiện cộng đồng (BBC, WEC, Monthly Cup) được lên lịch theo giờ máy chủ.",
     "advLobbyClock": "Giờ máy chủ trên thanh trạng thái của sảnh (pokerth.net)",
+    "connErrPwBlocked": "⏳ Tạm thời từ chối đăng nhập: quá nhiều lần thử. Sau khi nhập sai mật khẩu, việc chặn kéo dài tới 15 phút cho tài khoản và 1 giờ cho mạng này. Vẫn có thể đăng nhập với tư cách khách.",
+    "errCreateLimited": "Chưa tạo bàn: quá nhiều bàn mới trong thời gian ngắn. Hãy đợi vài giây rồi thử lại.",
 };
 
 export default { meta, strings };

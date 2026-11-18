@@ -989,6 +989,8 @@ export const strings = {
     "lsbClockSame": "Saa sawa na seva",
     "lsbClockNote": "Matukio ya jamii (BBC, WEC, Monthly Cup) hupangwa kwa saa ya seva.",
     "advLobbyClock": "Saa ya seva kwenye upau wa hali wa ukumbi (pokerth.net)",
+    "connErrPwBlocked": "⏳ Kuingia kumekataliwa kwa sasa: majaribio mengi mno. Baada ya nywila zisizo sahihi, kizuizi hudumu hadi dakika 15 kwa akaunti na saa 1 kwa mtandao huu. Kuingia kama mgeni bado kunawezekana.",
+    "errCreateLimited": "Meza haikuundwa: meza mpya nyingi mno kwa muda mfupi. Subiri sekunde chache kisha ujaribu tena.",
 };
 
 export default { meta, strings };

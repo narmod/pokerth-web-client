@@ -1360,6 +1360,8 @@ export const strings = {
     "lsbClockSame": "Samme tid som serveren",
     "lsbClockNote": "Fellesskapsarrangementer (BBC, WEC, Monthly Cup) planlegges i servertid.",
     "advLobbyClock": "Servertid i lobbyens statuslinje (pokerth.net)",
+    "connErrPwBlocked": "⏳ Innlogging avvist inntil videre: for mange forsøk. Etter feil passord varer sperringen opptil 15 minutter for kontoen og 1 time for dette nettverket. Innlogging som gjest fungerer fortsatt.",
+    "errCreateLimited": "Bordet ble ikke opprettet: for mange nye bord på kort tid. Vent noen sekunder og prøv igjen.",
 };
 
 export default { meta, strings };

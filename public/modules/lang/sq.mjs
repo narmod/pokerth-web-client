@@ -990,6 +990,8 @@ export const strings = {
     "lsbClockSame": "E njëjta orë si serveri",
     "lsbClockNote": "Ngjarjet e komunitetit (BBC, WEC, Monthly Cup) planifikohen sipas orës së serverit.",
     "advLobbyClock": "Ora e serverit në shiritin e gjendjes së holit (pokerth.net)",
+    "connErrPwBlocked": "⏳ Hyrja u refuzua për momentin: shumë përpjekje. Pas fjalëkalimeve të gabuara, bllokimi zgjat deri në 15 minuta për llogarinë dhe 1 orë për këtë rrjet. Hyrja si mysafir funksionon ende.",
+    "errCreateLimited": "Tavolina nuk u krijua: shumë tavolina të reja në pak kohë. Prisni disa sekonda dhe provoni përsëri.",
 };
 
 export default { meta, strings };

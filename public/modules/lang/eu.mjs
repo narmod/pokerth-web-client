@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Zerbitzariaren ordu bera',
     "lsbClockNote": 'Komunitateko ekitaldiak (BBC, WEC, Monthly Cup) zerbitzariaren orduan programatzen dira.',
     "advLobbyClock": 'Zerbitzariaren ordua egongelaren egoera-barran (pokerth.net)',
+    "connErrPwBlocked": "⏳ Saioa hastea ukatu da oraingoz: saiakera gehiegi. Pasahitz okerren ondoren, blokeoak 15 minutu arte irauten du kontuarentzat eta ordubete sare honentzat. Gonbidatu gisa sartzeak funtzionatzen du oraindik.",
+    "errCreateLimited": "Mahaia ez da sortu: mahai berri gehiegi denbora laburrean. Itxaron segundo batzuk eta saiatu berriro.",
 };
 
 export default { meta, strings };

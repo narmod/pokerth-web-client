@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Server ilə eyni vaxt',
     "lsbClockNote": 'İcma tədbirləri (BBC, WEC, Monthly Cup) server vaxtı ilə planlaşdırılır.',
     "advLobbyClock": 'Lobbinin vəziyyət zolağında server vaxtı (pokerth.net)',
+    "connErrPwBlocked": "⏳ Giriş hələlik rədd edildi: həddindən çox cəhd. Səhv parollardan sonra bloklama hesab üçün 15 dəqiqəyə, bu şəbəkə üçün 1 saata qədər davam edir. Qonaq kimi giriş hələ də mümkündür.",
+    "errCreateLimited": "Masa yaradılmadı: qısa müddətdə həddindən çox yeni masa. Bir neçə saniyə gözləyin və yenidən cəhd edin.",
 };
 
 export default { meta, strings };

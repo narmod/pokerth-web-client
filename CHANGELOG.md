@@ -241,6 +241,11 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **Messages for the new server limits** (`web.126`) — `initBlocked` (7) on a password login now shows
+  `connErrPwBlocked` (upstream `d2ef9e2`: up to 15 min per account, 1 h per address, guest login still open) with
+  no one-minute countdown nor connect gate; `invalidGame` (1) answering our own CreateGame within 15 s
+  (`S._createSentAt`) shows `errCreateLimited` (upstream `4530ce0`: 3 creates in a row then 1 per 5 s, open-table
+  cap). Two keys in the 83 languages.
 - **PROXY protocol: IPv6 players kept their own address** (`web.125`) — an IPv6 browser on an IPv4 game
   server got `PROXY UNKNOWN`, so the server saw the proxy's address for every IPv6 player and put them all in one
   per-address bucket (guest game creation, failed password logins, upstream `4530ce0`/`d2ef9e2`); `_ppHeader` now

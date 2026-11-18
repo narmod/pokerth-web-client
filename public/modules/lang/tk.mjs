@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Serwer bilen birmeňzeş wagt',
     "lsbClockNote": 'Jemgyýet çäreleri (BBC, WEC, Monthly Cup) serweriň wagty boýunça meýilleşdirilýär.',
     "advLobbyClock": 'Lobbi ýagdaý zolagynda serweriň wagty (pokerth.net)',
+    "connErrPwBlocked": "⏳ Giriş häzirlikçe ret edildi: synanyşyk gaty köp. Nädogry parollardan soň petik hasap üçin 15 minuda, bu tor üçin 1 sagada çenli dowam edýär. Myhman hökmünde giriş henizem işleýär.",
+    "errCreateLimited": "Stol döredilmedi: gysga wagtda täze stol gaty köp. Birnäçe sekunt garaşyň we täzeden synanyşyň.",
 };
 
 export default { meta, strings };

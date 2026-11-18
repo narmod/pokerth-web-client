@@ -990,6 +990,8 @@ export const strings = {
     "lsbClockSame": "Enak čas kot na strežniku",
     "lsbClockNote": "Dogodki skupnosti (BBC, WEC, Monthly Cup) so načrtovani po času strežnika.",
     "advLobbyClock": "Čas strežnika v vrstici stanja preddverja (pokerth.net)",
+    "connErrPwBlocked": "⏳ Prijava je za zdaj zavrnjena: preveč poskusov. Po napačnih geslih blokada traja do 15 minut za račun in 1 uro za to omrežje. Prijava kot gost še vedno deluje.",
+    "errCreateLimited": "Miza ni bila ustvarjena: preveč novih miz v kratkem času. Počakajte nekaj sekund in poskusite znova.",
 };
 
 export default { meta, strings };

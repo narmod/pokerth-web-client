@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Sunucuyla aynı saat",
     "lsbClockNote": "Topluluk etkinlikleri (BBC, WEC, Monthly Cup) sunucu saatine göre planlanır.",
     "advLobbyClock": "Lobi durum çubuğunda sunucu saati (pokerth.net)",
+    "connErrPwBlocked": "⏳ Giriş şimdilik reddedildi: çok fazla deneme. Yanlış şifrelerden sonra engel hesap için 15 dakikaya, bu ağ için 1 saate kadar sürer. Misafir girişi hâlâ mümkün.",
+    "errCreateLimited": "Masa oluşturulmadı: kısa sürede çok fazla yeni masa. Birkaç saniye bekleyip tekrar deneyin.",
 };
 
 export default { meta, strings };

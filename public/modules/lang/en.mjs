@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": "Same time as the server",
     "lsbClockNote": "Community events (BBC, WEC, Monthly Cup) are scheduled in server time.",
     "advLobbyClock": "Server time in the lobby status bar (pokerth.net)",
+    "connErrPwBlocked": "⏳ Login refused for now: too many attempts. After wrong passwords it lasts up to 15 minutes for the account and 1 hour for this network. Guest login still works.",
+    "errCreateLimited": "Table not created: too many new tables in a short time. Wait a few seconds and try again.",
 };
 
 export default { meta, strings };

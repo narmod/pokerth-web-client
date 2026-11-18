@@ -1358,6 +1358,8 @@ export const strings = {
     "lsbClockSame": "与服务器时间相同",
     "lsbClockNote": "社区活动（BBC、WEC、Monthly Cup）均按服务器时间安排。",
     "advLobbyClock": "在大厅状态栏显示服务器时间（pokerth.net）",
+    "connErrPwBlocked": "⏳ 暂时拒绝登录：尝试次数过多。密码错误后，账户最多封锁 15 分钟，此网络最多封锁 1 小时。仍可以游客身份登录。",
+    "errCreateLimited": "未创建牌桌：短时间内新建牌桌过多。请等待几秒后重试。",
 };
 
 export default { meta, strings };

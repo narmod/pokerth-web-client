@@ -8134,6 +8134,7 @@ const App = (() => {
       // qui traînerait encore (session « fantôme » gardée par la grâce proxy),
       // ce qui ferait échouer/fermer la création côté serveur.
       var _autoName = 'WebGame-' + S.myName + '-' + Math.random().toString(36).slice(2, 5);
+      S._createSentAt = Date.now();   // tells a rate-limit refusal apart (net/msg-game-join.mjs)
       send(MSG.buildCreateGame(_safeGameName(_autoName), n, d.blind, d.stack, d.timeout));
     },
 
@@ -9329,6 +9330,7 @@ const App = (() => {
         var _av = App._activeVorlage;
         window._botSuggest.setCreatedSuggestType((_av && _av.suggestType) ? _av.suggestType : '');
       } catch (eSg) {}
+      S._createSentAt = Date.now();   // tells a rate-limit refusal apart (net/msg-game-join.mjs)
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
       // Entrainement : « Creer une table » lance directement la partie —
       // startWithBots() est declenche par le hook JoinGameAck des que gId
@@ -12631,7 +12633,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.125'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.126'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

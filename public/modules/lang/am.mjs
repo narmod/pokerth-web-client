@@ -988,6 +988,8 @@ export const strings = {
     "lsbClockSame": "ከአገልጋዩ ጋር ተመሳሳይ ሰዓት",
     "lsbClockNote": "የማህበረሰብ ዝግጅቶች (BBC, WEC, Monthly Cup) በአገልጋይ ሰዓት ይዘጋጃሉ።",
     "advLobbyClock": "የአገልጋይ ሰዓት በሎቢው የሁኔታ አሞሌ (pokerth.net)",
+    "connErrPwBlocked": "⏳ መግባት ለጊዜው ተከልክሏል፦ በጣም ብዙ ሙከራዎች። ከተሳሳቱ የይለፍ ቃሎች በኋላ እገዳው ለመለያው እስከ 15 ደቂቃ ለዚህ አውታረ መረብ እስከ 1 ሰዓት ይቆያል። እንደ እንግዳ መግባት አሁንም ይቻላል።",
+    "errCreateLimited": "ጠረጴዛው አልተፈጠረም፦ በአጭር ጊዜ ውስጥ በጣም ብዙ አዳዲስ ጠረጴዛዎች። ጥቂት ሰከንዶች ይጠብቁና እንደገና ይሞክሩ።",
 };
 
 export default { meta, strings };

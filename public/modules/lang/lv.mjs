@@ -990,6 +990,8 @@ export const strings = {
     "lsbClockSame": "Tāds pats laiks kā serverī",
     "lsbClockNote": "Kopienas pasākumi (BBC, WEC, Monthly Cup) tiek plānoti servera laikā.",
     "advLobbyClock": "Servera laiks vestibila statusa joslā (pokerth.net)",
+    "connErrPwBlocked": "⏳ Pieteikšanās pagaidām atteikta: pārāk daudz mēģinājumu. Pēc nepareizām parolēm bloķēšana ilgst līdz 15 minūtēm kontam un 1 stundu šim tīklam. Pieteikšanās kā viesim joprojām darbojas.",
+    "errCreateLimited": "Galds nav izveidots: pārāk daudz jaunu galdu īsā laikā. Pagaidiet dažas sekundes un mēģiniet vēlreiz.",
 };
 
 export default { meta, strings };

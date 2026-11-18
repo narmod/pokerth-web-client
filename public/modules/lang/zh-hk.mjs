@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": '與伺服器時間相同',
     "lsbClockNote": '社群活動（BBC、WEC、Monthly Cup）皆依伺服器時間安排。',
     "advLobbyClock": '在大廳狀態列顯示伺服器時間（pokerth.net）',
+    "connErrPwBlocked": "⏳ 暫時拒絕登入：嘗試次數太多。密碼錯誤後，帳戶最多封鎖 15 分鐘，此網絡最多封鎖 1 小時。仍可以訪客身分登入。",
+    "errCreateLimited": "未建立牌桌：短時間內新開牌桌太多。請等幾秒後再試。",
 };
 
 export default { meta, strings };

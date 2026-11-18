@@ -989,6 +989,8 @@ export const strings = {
     "lsbClockSame": "Kapareho ng oras ng server",
     "lsbClockNote": "Ang mga event ng komunidad (BBC, WEC, Monthly Cup) ay nakaiskedyul sa oras ng server.",
     "advLobbyClock": "Oras ng server sa status bar ng lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Tinanggihan muna ang pag-login: masyadong maraming pagsubok. Pagkatapos ng maling password, tumatagal ang block nang hanggang 15 minuto para sa account at 1 oras para sa network na ito. Puwede pa ring mag-login bilang bisita.",
+    "errCreateLimited": "Hindi nagawa ang mesa: masyadong maraming bagong mesa sa maikling panahon. Maghintay ng ilang segundo at subukang muli.",
 };
 
 export default { meta, strings };

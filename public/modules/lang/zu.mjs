@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Isikhathi esifanayo neseva',
     "lsbClockNote": 'Imicimbi yomphakathi (BBC, WEC, Monthly Cup) ihlelwa ngesikhathi seseva.',
     "advLobbyClock": 'Isikhathi seseva kubha yesimo yelobhi (pokerth.net)',
+    "connErrPwBlocked": "⏳ Ukungena kwenqatshiwe okwamanje: imizamo eminingi kakhulu. Ngemuva kwamaphasiwedi angalungile, ukuvimba kuthatha kuze kufike emizuzwini engu-15 ye-akhawunti nehora elingu-1 laleli nethiwekhi. Ukungena njengesivakashi kusasebenza.",
+    "errCreateLimited": "Itafula alidalwanga: amatafula amasha amaningi kakhulu ngesikhathi esifushane. Linda imizuzwana embalwa bese uzama futhi.",
 };
 
 export default { meta, strings };

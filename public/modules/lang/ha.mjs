@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Lokaci ɗaya da sabar',
     "lsbClockNote": 'Ana tsara abubuwan al\'umma (BBC, WEC, Monthly Cup) bisa lokacin sabar.',
     "advLobbyClock": 'Lokacin sabar a sandar yanayin zaure (pokerth.net)',
+    "connErrPwBlocked": "⏳ An ƙi shiga a yanzu: ƙoƙari ya yi yawa. Bayan kalmomin sirri marasa daidai, toshewar tana ɗaukar har mintuna 15 ga asusun da awa 1 ga wannan hanyar sadarwa. Shiga a matsayin baƙo yana aiki har yanzu.",
+    "errCreateLimited": "Ba a ƙirƙiri tebur ba: sababbin tebura sun yi yawa cikin ɗan lokaci. Jira 'yan daƙiƙoƙi sannan ka sake gwadawa.",
 };
 
 export default { meta, strings };

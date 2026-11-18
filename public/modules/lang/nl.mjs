@@ -1366,6 +1366,8 @@ export const strings = {
     "lsbClockSame": "Zelfde tijd als de server",
     "lsbClockNote": "Community-evenementen (BBC, WEC, Monthly Cup) worden in servertijd gepland.",
     "advLobbyClock": "Servertijd in de statusbalk van de lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Inloggen voorlopig geweigerd: te veel pogingen. Na verkeerde wachtwoorden duurt de blokkade tot 15 minuten voor het account en 1 uur voor dit netwerk. Inloggen als gast kan nog steeds.",
+    "errCreateLimited": "Tafel niet aangemaakt: te veel nieuwe tafels in korte tijd. Wacht een paar seconden en probeer het opnieuw.",
 };
 
 export default { meta, strings };

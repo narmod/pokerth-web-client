@@ -987,6 +987,8 @@ export const strings = {
     "lsbClockSame": "Sami tími og á netþjóninum",
     "lsbClockNote": "Samfélagsviðburðir (BBC, WEC, Monthly Cup) eru tímasettir eftir tíma netþjónsins.",
     "advLobbyClock": "Tími netþjóns í stöðustiku anddyrisins (pokerth.net)",
+    "connErrPwBlocked": "⏳ Innskráningu hafnað í bili: of margar tilraunir. Eftir röng lykilorð varir lokunin í allt að 15 mínútur fyrir aðganginn og 1 klukkustund fyrir þetta net. Innskráning sem gestur virkar enn.",
+    "errCreateLimited": "Borð ekki búið til: of mörg ný borð á stuttum tíma. Bíddu í nokkrar sekúndur og reyndu aftur.",
 };
 
 export default { meta, strings };

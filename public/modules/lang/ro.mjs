@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Aceeași oră ca serverul",
     "lsbClockNote": "Evenimentele comunității (BBC, WEC, Monthly Cup) sunt programate după ora serverului.",
     "advLobbyClock": "Ora serverului în bara de stare a lobby-ului (pokerth.net)",
+    "connErrPwBlocked": "⏳ Autentificare refuzată deocamdată: prea multe încercări. După parole greșite, blocarea durează până la 15 minute pentru cont și 1 oră pentru această rețea. Autentificarea ca invitat funcționează în continuare.",
+    "errCreateLimited": "Masa nu a fost creată: prea multe mese noi într-un timp scurt. Așteptați câteva secunde și încercați din nou.",
 };
 
 export default { meta, strings };

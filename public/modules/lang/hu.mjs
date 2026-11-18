@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Ugyanaz az idő, mint a szerveren",
     "lsbClockNote": "A közösségi események (BBC, WEC, Monthly Cup) szerveridő szerint vannak ütemezve.",
     "advLobbyClock": "Szerveridő a lobbi állapotsorában (pokerth.net)",
+    "connErrPwBlocked": "⏳ A bejelentkezés egyelőre elutasítva: túl sok próbálkozás. Hibás jelszavak után a tiltás legfeljebb 15 percig tart a fióknál és 1 óráig ennél a hálózatnál. Vendégként továbbra is be lehet lépni.",
+    "errCreateLimited": "Az asztal nem jött létre: túl sok új asztal rövid idő alatt. Várj néhány másodpercet, és próbáld újra.",
 };
 
 export default { meta, strings };

@@ -989,6 +989,8 @@ export const strings = {
     "lsbClockSame": "Sama dengan waktu server",
     "lsbClockNote": "Acara komunitas (BBC, WEC, Monthly Cup) dijadwalkan dalam waktu server.",
     "advLobbyClock": "Waktu server di bilah status lobi (pokerth.net)",
+    "connErrPwBlocked": "⏳ Login ditolak untuk sementara: terlalu banyak percobaan. Setelah kata sandi salah, pemblokiran berlangsung hingga 15 menit untuk akun dan 1 jam untuk jaringan ini. Login sebagai tamu tetap bisa.",
+    "errCreateLimited": "Meja tidak dibuat: terlalu banyak meja baru dalam waktu singkat. Tunggu beberapa detik lalu coba lagi.",
 };
 
 export default { meta, strings };

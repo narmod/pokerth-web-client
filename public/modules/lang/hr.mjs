@@ -1361,6 +1361,8 @@ export const strings = {
     "lsbClockSame": "Isto vrijeme kao poslužitelj",
     "lsbClockNote": "Događanja zajednice (BBC, WEC, Monthly Cup) zakazuju se po vremenu poslužitelja.",
     "advLobbyClock": "Vrijeme poslužitelja u statusnoj traci predvorja (pokerth.net)",
+    "connErrPwBlocked": "⏳ Prijava je zasad odbijena: previše pokušaja. Nakon pogrešnih lozinki blokada traje do 15 minuta za račun i 1 sat za ovu mrežu. Prijava kao gost i dalje radi.",
+    "errCreateLimited": "Stol nije stvoren: previše novih stolova u kratkom vremenu. Pričekajte nekoliko sekundi i pokušajte ponovno.",
 };
 
 export default { meta, strings };

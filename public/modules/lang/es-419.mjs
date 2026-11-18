@@ -1371,6 +1371,8 @@ export const strings = {
     "lsbClockSame": "Misma hora que el servidor",
     "lsbClockNote": "Los eventos de la comunidad (BBC, WEC, Monthly Cup) se programan en hora del servidor.",
     "advLobbyClock": "Hora del servidor en la barra de estado del lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Inicio de sesión rechazado por ahora: demasiados intentos. Después de contraseñas incorrectas, el bloqueo dura hasta 15 minutos para la cuenta y 1 hora para esta red. El acceso como invitado sigue disponible.",
+    "errCreateLimited": "Mesa no creada: demasiadas mesas nuevas en poco tiempo. Espera unos segundos y vuelve a intentarlo.",
 };
 
 export default { meta, strings };

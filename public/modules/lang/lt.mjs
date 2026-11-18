@@ -1362,6 +1362,8 @@ export const strings = {
     "lsbClockSame": "Toks pat laikas kaip serveryje",
     "lsbClockNote": "Bendruomenės renginiai (BBC, WEC, Monthly Cup) planuojami serverio laiku.",
     "advLobbyClock": "Serverio laikas vestibiulio būsenos juostoje (pokerth.net)",
+    "connErrPwBlocked": "⏳ Prisijungimas kol kas atmestas: per daug bandymų. Po neteisingų slaptažodžių blokavimas trunka iki 15 minučių paskyrai ir 1 valandą šiam tinklui. Prisijungti kaip svečias vis dar galima.",
+    "errCreateLimited": "Stalas nesukurtas: per daug naujų stalų per trumpą laiką. Palaukite kelias sekundes ir bandykite dar kartą.",
 };
 
 export default { meta, strings };

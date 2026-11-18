@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": "Server bilan bir xil vaqt",
     "lsbClockNote": "Hamjamiyat tadbirlari (BBC, WEC, Monthly Cup) server vaqti bo‘yicha rejalashtiriladi.",
     "advLobbyClock": "Lobbi holat panelida server vaqti (pokerth.net)",
+    "connErrPwBlocked": "⏳ Kirish hozircha rad etildi: urinishlar juda koʻp. Notoʻgʻri parollardan soʻng bloklash hisob uchun 15 daqiqagacha, bu tarmoq uchun 1 soatgacha davom etadi. Mehmon sifatida kirish hali ham ishlaydi.",
+    "errCreateLimited": "Stol yaratilmadi: qisqa vaqt ichida juda koʻp yangi stol. Bir necha soniya kuting va qayta urinib koʻring.",
 };
 
 export default { meta, strings };

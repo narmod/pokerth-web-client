@@ -1167,6 +1167,8 @@ export const strings = {
     "lsbClockSame": "서버와 같은 시간",
     "lsbClockNote": "커뮤니티 이벤트(BBC, WEC, Monthly Cup)는 서버 시간 기준으로 예정됩니다.",
     "advLobbyClock": "로비 상태 표시줄에 서버 시간 표시 (pokerth.net)",
+    "connErrPwBlocked": "⏳ 로그인이 일시적으로 거부되었습니다: 시도가 너무 많습니다. 비밀번호가 틀린 뒤에는 계정은 최대 15분, 이 네트워크는 최대 1시간 동안 차단됩니다. 게스트 로그인은 계속 가능합니다.",
+    "errCreateLimited": "테이블이 생성되지 않았습니다: 짧은 시간에 새 테이블이 너무 많습니다. 몇 초 기다린 후 다시 시도하세요.",
 };
 
 export default { meta, strings };

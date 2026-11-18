@@ -992,6 +992,8 @@ export const strings = {
     "lsbClockSame": "Même heure que le serveur",
     "lsbClockNote": "Les événements communautaires (BBC, WEC, Monthly Cup) sont programmés à l'heure du serveur.",
     "advLobbyClock": "Heure du serveur dans la barre d'état du lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Connexion refusée pour l'instant : trop de tentatives. Après des mots de passe erronés, le blocage dure jusqu'à 15 minutes pour le compte et 1 heure pour ce réseau. La connexion invité reste possible.",
+    "errCreateLimited": "Table non créée : trop de nouvelles tables en peu de temps. Attendez quelques secondes puis réessayez.",
 };
 
 export default { meta, strings };

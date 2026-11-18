@@ -1358,6 +1358,8 @@ export const strings = {
     "lsbClockSame": "サーバーと同じ時刻",
     "lsbClockNote": "コミュニティイベント（BBC、WEC、Monthly Cup）はサーバー時刻で予定されています。",
     "advLobbyClock": "ロビーのステータスバーにサーバー時刻を表示（pokerth.net）",
+    "connErrPwBlocked": "⏳ ログインを一時的に拒否しました：試行回数が多すぎます。パスワードを間違えた後のブロックは、アカウントで最大15分、このネットワークで最大1時間続きます。ゲストログインは引き続き利用できます。",
+    "errCreateLimited": "テーブルを作成できませんでした：短時間に新しいテーブルが多すぎます。数秒待ってからもう一度お試しください。",
 };
 
 export default { meta, strings };

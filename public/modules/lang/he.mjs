@@ -987,6 +987,8 @@ export const strings = {
     "lsbClockSame": "אותה שעה כמו בשרת",
     "lsbClockNote": "אירועי הקהילה (BBC, WEC, Monthly Cup) מתוזמנים לפי שעת השרת.",
     "advLobbyClock": "שעת השרת בשורת המצב של הלובי (pokerth.net)",
+    "connErrPwBlocked": "⏳ ההתחברות נדחתה כרגע: יותר מדי ניסיונות. אחרי סיסמאות שגויות החסימה נמשכת עד 15 דקות לחשבון ועד שעה לרשת זו. התחברות כאורח עדיין אפשרית.",
+    "errCreateLimited": "השולחן לא נוצר: יותר מדי שולחנות חדשים בזמן קצר. המתינו כמה שניות ונסו שוב.",
 };
 
 export default { meta, strings };

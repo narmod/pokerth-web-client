@@ -1365,6 +1365,8 @@ export const strings = {
     "lsbClockSame": "Ten sam czas co na serwerze",
     "lsbClockNote": "Wydarzenia społeczności (BBC, WEC, Monthly Cup) są planowane według czasu serwera.",
     "advLobbyClock": "Czas serwera na pasku stanu lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Logowanie na razie odrzucone: zbyt wiele prób. Po błędnych hasłach blokada trwa do 15 minut dla konta i 1 godzinę dla tej sieci. Logowanie jako gość nadal działa.",
+    "errCreateLimited": "Stół nie został utworzony: zbyt wiele nowych stołów w krótkim czasie. Odczekaj kilka sekund i spróbuj ponownie.",
 };
 
 export default { meta, strings };

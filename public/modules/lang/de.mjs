@@ -1366,6 +1366,8 @@ export const strings = {
     "lsbClockSame": "Gleiche Zeit wie der Server",
     "lsbClockNote": "Community-Events (BBC, WEC, Monthly Cup) werden in Serverzeit angesetzt.",
     "advLobbyClock": "Serverzeit in der Statusleiste der Lobby (pokerth.net)",
+    "connErrPwBlocked": "⏳ Anmeldung vorerst abgelehnt: zu viele Versuche. Nach falschen Passwörtern dauert die Sperre bis zu 15 Minuten für das Konto und 1 Stunde für dieses Netzwerk. Gast-Login ist weiterhin möglich.",
+    "errCreateLimited": "Tisch nicht erstellt: zu viele neue Tische in kurzer Zeit. Warte ein paar Sekunden und versuche es erneut.",
 };
 
 export default { meta, strings };

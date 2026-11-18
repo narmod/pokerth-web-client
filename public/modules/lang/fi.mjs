@@ -1362,6 +1362,8 @@ export const strings = {
     "lsbClockSame": "Sama aika kuin palvelimella",
     "lsbClockNote": "Yhteisön tapahtumat (BBC, WEC, Monthly Cup) ajoitetaan palvelimen aikaan.",
     "advLobbyClock": "Palvelimen aika aulan tilarivillä (pokerth.net)",
+    "connErrPwBlocked": "⏳ Kirjautuminen estetty toistaiseksi: liian monta yritystä. Väärien salasanojen jälkeen esto kestää enintään 15 minuuttia tilille ja 1 tunnin tälle verkolle. Vieraana kirjautuminen toimii edelleen.",
+    "errCreateLimited": "Pöytää ei luotu: liian monta uutta pöytää lyhyessä ajassa. Odota muutama sekunti ja yritä uudelleen.",
 };
 
 export default { meta, strings };

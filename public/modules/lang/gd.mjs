@@ -1366,6 +1366,8 @@ export const strings = {
     "lsbClockSame": "An aon àm ris an fhrithealaiche",
     "lsbClockNote": "Tha tachartasan na coimhearsnachd (BBC, WEC, Monthly Cup) air an clàradh a rèir àm an fhrithealaiche.",
     "advLobbyClock": "Àm an fhrithealaiche ann am bàr-staid an lobaidh (pokerth.net)",
+    "connErrPwBlocked": "⏳ Chaidh an clàradh a-steach a dhiùltadh an-dràsta: cus oidhirpean. Às dèidh faclan-faire ceàrr, mairidh am bacadh suas ri 15 mionaid airson a' chunntais agus 1 uair a thìde airson an lìonraidh seo. Gabhaidh clàradh a-steach mar aoigh fhathast.",
+    "errCreateLimited": "Cha deach am bòrd a chruthachadh: cus bhòrdan ùra ann an ùine ghoirid. Fuirich diog no dhà is feuch ris a-rithist.",
 };
 
 export default { meta, strings };

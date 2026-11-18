@@ -1363,6 +1363,8 @@ export const strings = {
     "lsbClockSame": "Dieselfde tyd as die bediener",
     "lsbClockNote": "Gemeenskapsgeleenthede (BBC, WEC, Monthly Cup) word in bedienertyd geskeduleer.",
     "advLobbyClock": "Bedienertyd in die lobby se statusbalk (pokerth.net)",
+    "connErrPwBlocked": "⏳ Aanmelding voorlopig geweier: te veel pogings. Ná verkeerde wagwoorde duur die blokkering tot 15 minute vir die rekening en 1 uur vir hierdie netwerk. Gasaanmelding werk steeds.",
+    "errCreateLimited": "Tafel nie geskep nie: te veel nuwe tafels in 'n kort tyd. Wag 'n paar sekondes en probeer weer.",
 };
 
 export default { meta, strings };

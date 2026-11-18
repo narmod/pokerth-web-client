@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Yr un amser â\'r gweinydd',
     "lsbClockNote": 'Mae digwyddiadau cymunedol (BBC, WEC, Monthly Cup) yn cael eu trefnu yn ôl amser y gweinydd.',
     "advLobbyClock": 'Amser y gweinydd ym mar statws y lobi (pokerth.net)',
+    "connErrPwBlocked": "⏳ Mewngofnodi wedi'i wrthod am y tro: gormod o ymdrechion. Ar ôl cyfrineiriau anghywir mae'r bloc yn para hyd at 15 munud i'r cyfrif ac 1 awr i'r rhwydwaith hwn. Mae mewngofnodi fel gwestai yn dal i weithio.",
+    "errCreateLimited": "Bwrdd heb ei greu: gormod o fyrddau newydd mewn amser byr. Arhoswch ychydig eiliadau a rhowch gynnig arall arni.",
 };
 
 export default { meta, strings };

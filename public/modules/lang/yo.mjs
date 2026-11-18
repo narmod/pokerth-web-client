@@ -991,6 +991,8 @@ export const strings = {
     "lsbClockSame": 'Àkókò kan náà pẹ̀lú olùpín',
     "lsbClockNote": 'A ń ṣètò àwọn ìṣẹ̀lẹ̀ àwùjọ (BBC, WEC, Monthly Cup) gẹ́gẹ́ bí àkókò olùpín.',
     "advLobbyClock": 'Àkókò olùpín nínú ọ̀pá ipò gbọ̀ngàn (pokerth.net)',
+    "connErrPwBlocked": "⏳ A kọ ìwọlé fún báyìí: ìgbìyànjú pọ̀ jù. Lẹ́yìn ọ̀rọ̀ aṣínà tí kò tọ́, ìdènà náà máa ń pẹ́ tó ìṣẹ́jú 15 fún àkáǹtì àti wákàtí 1 fún nẹ́tíwọ̀ọ̀kì yìí. Ìwọlé gẹ́gẹ́ bí àlejò ṣì ń ṣiṣẹ́.",
+    "errCreateLimited": "A kò ṣẹ̀dá tábìlì: tábìlì tuntun pọ̀ jù láàárín àkókò kúkúrú. Dúró fún ìṣẹ́jú-àáyá díẹ̀ kí o sì gbìyànjú lẹ́ẹ̀kan sí i.",
 };
 
 export default { meta, strings };

@@ -450,6 +450,12 @@ function onError(sub) {
       S._intentionalDisconnect = true;
       S._wasAuthenticated = false;
       window._hideBanner();
+      // Password login (upstream d2ef9e2, 2026-11-18): the same initBlocked also
+      // answers once wrong passwords piled up — up to 15 min for the account,
+      // 1 h for the address, and every new failure extends it. The one-minute
+      // countdown below would announce « you can reconnect » far too early,
+      // and its gate would also bar the guest login, which stays open.
+      if (S._currentLoginMode === 'auth') { setStatus(t('connErrPwBlocked'), 'err'); return; }
       S._ipBlockUntil = Date.now() + 1 * 60 * 1000; // 1 minute (was 5 — server usually clears earlier)
       window._startIpBlockCountdown();
       setStatus(t('ipBlockedRetry'), 'err'); return;
