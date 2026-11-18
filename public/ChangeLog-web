@@ -1,4 +1,7 @@
-2026-11-18 version 2.1.11-web.128 (current series):
+2026-11-18 version 2.1.11-web.129 (current series):
+- improvement: Game log — a new line is added on its own instead of redrawing the whole log (up to 500 lines): no more small jerk at each street with the log open, nor at each move when it logs every action
+
+2026-11-18 version 2.1.11-web.128:
 - bugfix: Action buttons — a pre-action clicked while it was not your turn was sometimes ignored: the click got lost when another player acted during the press
 - bugfix: Action buttons — a Bet pre-selected on a street where nobody had bet yet was refused by the server; it is now played
 - bugfix: Action buttons — after a pre-selected action was played, its button no longer stays gold as if it were still armed

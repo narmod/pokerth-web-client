@@ -224,6 +224,13 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Game log: one row inserted, not 500 rebuilt** (`web.129`) — `renderLog(1)` re-ran every thunk and rewrote up
+  to 500 rows for each new line (every street by default, every move with « log every action »): ~35 ms with
+  CPU ×4 and the panel open, 6.5 ms now. The new row is inserted at the head and the oldest dropped at the cap;
+  rows whose role is a function (main pot / side pot) are still re-resolved on every render. Any other case —
+  retranslation, clear, a DOM or list it did not write — re-renders it all, as before. Old rows keep the text
+  they were written with (a later full render — language change — still replays them). Checked by
+  `test-gamelog-browser` (1300 random lines: same DOM as a full render; paused reader keeps its row).
 - **Smoother table on every opponent move** (`web.128`) — per opponent message the preview bar was rebuilt and
   `updateBottomLayout` ran twice; z-order's `<body>` observer swept the whole document on every chip / flash
   node added or removed. Now: unchanged preview markup keeps its DOM, the duplicate layout pass is skipped, and

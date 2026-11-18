@@ -5933,20 +5933,61 @@ const App = (() => {
   // le plafond de 500 entrees atteint : chaque nouvelle ligne en chasse une en
   // queue, le nombre de lignes ne bouge donc plus et la seule geometrie ne
   // suffit plus a retrouver la ligne que le joueur est en train de lire.
+  // Role de la ligne (cf. logAction) : resolu A CHAQUE rendu, donc un role
+  // fonction voit l'etat final de la main meme si la ligne a ete ecrite
+  // pendant l'abattage.
+  function _logLineCls(fn) {
+    var r = fn && fn.role; if (typeof r === 'function') { try { r = r(); } catch (_e2) { r = null; } }
+    return 'log-line' + ((r === 'board' || r === 'win' || r === 'win-side') ? ' lg-' + r : '');
+  }
+  function _logLineHtml(fn) {
+    var s; try { s = fn(); } catch (_e) { s = ''; }
+    return '<div class="' + _logLineCls(fn) + '">' + esc(s) + '</div>';
+  }
+  // Rows on screen, newest first: the entry behind each row, plus the rows
+  // whose role is a function (they are re-resolved on every render). Lets one
+  // new line be inserted instead of rebuilding up to 500 rows (~9 ms on a
+  // phone, ~35 ms with CPU x4 and the panel open, at every street).
+  var _logShown = null;
   function renderLog(addedTop) {
     const el = document.getElementById('g-log-body');
     if (!el) return;
     var _n = (typeof addedTop === 'number') ? addedTop : 0;
     var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
-    el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
-      var s; try { s = fn(); } catch (_e) { s = ''; }
-      // Role de la ligne (cf. logAction) : resolu A CHAQUE rendu, donc un role
-      // fonction voit l'etat final de la main meme si la ligne a ete ecrite
-      // pendant l'abattage.
-      var r = fn && fn.role; if (typeof r === 'function') { try { r = r(); } catch (_e2) { r = null; } }
-      var cls = (r === 'board' || r === 'win' || r === 'win-side') ? ' lg-' + r : '';
-      return '<div class="log-line'+cls+'">'+esc(s)+'</div>';
-    }).join('');
+    var L = S.actionLog, sh = _logShown, k = sh ? sh.fns.length : 0;
+    // Incremental path: exactly one entry pushed (and the oldest one dropped
+    // at the cap) since OUR last render, and the DOM still the one we wrote.
+    // Anything else (retranslation, clear, unknown change) re-renders it all.
+    var _drop = sh && L.length === k;
+    var _inc = _n === 1 && sh && sh.el === el && k > 0
+      && el.children.length === k && el.firstElementChild === sh.first
+      && (L.length === k + 1 || _drop) && L[L.length - 2] === sh.fns[0]
+      && L[0] === sh.fns[_drop ? k - 2 : k - 1];
+    if (_inc) {
+      var nf = L[L.length - 1];
+      el.insertAdjacentHTML('afterbegin', _logLineHtml(nf));
+      sh.fns.unshift(nf);
+      if (typeof (nf && nf.role) === 'function') sh.dyn.push({ fn: nf, row: el.firstElementChild });
+      if (_drop) { el.removeChild(el.lastElementChild); sh.fns.pop(); }
+      var dyn = [];
+      for (var di = 0; di < sh.dyn.length; di++) {
+        var d = sh.dyn[di];
+        if (d.row.parentNode !== el) continue;           // dropped at the cap
+        dyn.push(d);
+        var c = _logLineCls(d.fn);
+        if (d.row.className !== c) d.row.className = c;
+      }
+      sh.dyn = dyn;
+      sh.first = el.firstElementChild;
+    } else {
+      var fns = L.slice().reverse();
+      el.innerHTML = fns.map(_logLineHtml).join('');
+      var rows = el.children, dyn2 = [];
+      if (rows.length === fns.length) {
+        for (var ri = 0; ri < fns.length; ri++) if (typeof (fns[ri] && fns[ri].role) === 'function') dyn2.push({ fn: fns[ri], row: rows[ri] });
+        _logShown = { el: el, fns: fns, dyn: dyn2, first: el.firstElementChild };
+      } else _logShown = null;
+    }
     if (_ls) window._liveAfter(el, _ls, _n);
     else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
   }
@@ -12644,7 +12685,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.128'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.129'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
