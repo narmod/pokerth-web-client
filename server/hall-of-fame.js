@@ -71,6 +71,11 @@ const GAMES = Object.freeze({
   house: { modes: ['free', 'daily', 'zen'], daily: 'daily', perSec: 2000, base: 20000 },
 });
 /** Is mode m of game G a daily challenge (its board of the day)? G.daily is a mode or a list of them. */
+// The game's entry, own keys only: a name from the request (« constructor »,
+// « __proto__ »…) must never reach Object.prototype (web.131 — GET
+// /__hof?g=constructor threw in view() and took the whole proxy down).
+const own = (o, k) => typeof k === 'string' && !!o && Object.prototype.hasOwnProperty.call(o, k);
+const gameOf = (g) => (own(GAMES, g) ? GAMES[g] : null);
 const isDaily = (G, m) => !!G && (Array.isArray(G.daily) ? G.daily.indexOf(m) >= 0 : m === G.daily);
 // Words a free nickname may not contain (the admin adds more: _adminConfig.hofWords).
 // A word of the name (or the whole name) that STARTS with one of them is refused —
@@ -97,10 +102,10 @@ function dayOk(day, now) {
   return typeof day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(day) && (day === dayOf(now) || day === dayOf(now - 86400000));
 }
 function boardKey(names, g, m, day) {
-  const G = GAMES[g];
+  const G = gameOf(g);
   return namesOf(names) + '/' + g + ':' + (isDaily(G, m) ? m + ':' + day : m);
 }
-const validGame = (g, m) => !!(GAMES[g] && GAMES[g].modes.indexOf(m) >= 0);
+const validGame = (g, m) => { const G = gameOf(g); return !!G && typeof m === 'string' && G.modes.indexOf(m) >= 0; };
 
 // ── Tickets ──────────────────────────────────────────────────────────
 const sign = (st, s) => crypto.createHmac('sha256', st.secret).update(s).digest('base64url').slice(0, 22);
@@ -126,7 +131,7 @@ function ticketStart(st, tk, g, m, now) {
 }
 /** Could this score be made in `secs` seconds of this game? */
 function plausible(g, s, secs, m) {
-  const G = GAMES[g], C = G && G.caps && m && G.caps[m] ? G.caps[m] : G;
+  const G = gameOf(g), C = G && own(G.caps, m) ? G.caps[m] : G;
   return !!G && Number.isInteger(s) && s > 0 && s <= C.base + C.perSec * Math.max(0, secs);
 }
 
@@ -195,7 +200,7 @@ function submit(st, o) {
   const now = o.now, names = namesOf(o.names), g = o.g, m = o.m, s = o.s;
   if (names === 'off') return { ok: false, err: 'off' };
   if (!validGame(g, m)) return { ok: false, err: 'game' };
-  const G = GAMES[g];
+  const G = gameOf(g);
   const daily = isDaily(G, m), day = daily ? o.day : '';
   if (daily && !dayOk(day, now)) return { ok: false, err: 'day' };
   const t0 = ticketStart(st, o.ticket, g, m, now);
@@ -210,7 +215,15 @@ function submit(st, o) {
   const i = b.findIndex((r) => same(r.n, name));
   if (i >= 0 && now - (b[i].at || 0) < NAME_GAP_MS) return { ok: false, err: 'rate' };
   const o2 = ownerOf(st, o.dev);
-  if (i >= 0 && b[i].s >= s) { b[i].at = now; if (o2) b[i].o = o2; return { ok: true, key, rank: i + 1, best: b[i].s, name, improved: !!o2 }; }
+  // A lower score under a name already on the board does not take its line over:
+  // with initials or a free name anyone may type that name, and the owner mark
+  // decides who can later remove the line (/__hof/forget). Only an unmarked line
+  // (made before web.97) or an account name, proved by its token, is re-marked.
+  if (i >= 0 && b[i].s >= s) {
+    const take = !!o2 && b[i].o !== o2 && (!b[i].o || names === 'account');
+    b[i].at = now; if (take) b[i].o = o2;
+    return { ok: true, key, rank: i + 1, best: b[i].s, name, improved: take };
+  }
   if (i >= 0) b.splice(i, 1);
   const line = { n: name, s, ts: now, at: now };
   if (o2) line.o = o2;
@@ -229,7 +242,7 @@ const pub = (b) => (Array.isArray(b) ? b.map((r) => (r.lv ? { n: r.n, s: r.s, ts
 function levelOf(v) { return Number.isInteger(v) && v >= 1 && v <= 999 ? v : 0; }
 /** What a game's title shows: the setting, each mode's board, today's daily board. */
 function view(st, names, g, now) {
-  const G = GAMES[g];
+  const G = gameOf(g);
   if (!G) return null;
   const n = namesOf(names), day = dayOf(now), boards = {};
   if (n !== 'off') for (const m of G.modes) boards[m] = pub(st.boards[boardKey(n, g, m, day)]);

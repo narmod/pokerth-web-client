@@ -258,6 +258,20 @@ highlights below.
   and goes after `SIGN_S` (2.4 s), drawn over the chips and under the friends; the « RIP » headstone is gone.
   `tpFolded` in the 83 catalogues.
 
+### Security
+- **Security audit of 2026-11-18** (`web.131`) — (1) `GET /__hof?g=constructor` (or `POST /__hof/start` with
+  `g: "__proto__"`) threw in `hall-of-fame.js` (`GAMES[g]` read `Object.prototype`) and **stopped the whole
+  proxy** — every player cut off, by one anonymous request, whenever the Hall of Fame is on: games and modes
+  are now looked up as own keys only (`gameOf`, `own`); (2) the Hall of Fame account key (`HOFTOK:`) was
+  handed out after an authenticated login to *any* server the proxy can reach, so a LAN server of the
+  directory could vouch for any pokerth.net nickname and post scores as, or erase the lines of, that player:
+  it is now issued only for a login to the active game server (`_hofFromActiveServer`); (3) with a free name
+  or initials, a lower score typed under someone else's name took the owner mark of his line, and
+  `/__hof/forget` then erased it: an existing mark is kept; (4) dashboard polls (`/admin/status`, `/logs`,
+  `/sessions`, `/broadcasts`, `/clock`) never counted wrong keys, an unlimited oracle for guessing the admin
+  key: the same stale key repeated stays free, each new wrong key now counts toward the block (10 / 15 min).
+  Tests: `test-hall-of-fame` (+6), `test-admin-safety` (+3), `test-admin-clock` updated.
+
 ### Fixed
 - **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —
   (1) any opponent message rebuilt `#g-actions`, so a press whose mousedown and mouseup landed on two different

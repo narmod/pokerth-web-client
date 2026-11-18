@@ -1,4 +1,9 @@
-2026-11-18 version 2.1.11-web.130 (current series):
+2026-11-18 version 2.1.11-web.131 (current series):
+- bugfix: Security — one crafted request could stop the web client's server and cut every player off when the mini-games Hall of Fame is on; fixed
+- bugfix: Hall of Fame — scores under a pokerth.net nickname can only come from a login to pokerth.net, and nobody can erase someone else's line any more
+- improvement: Admin page — guessing the admin key is now blocked after a few tries on every page
+
+2026-11-18 version 2.1.11-web.130:
 - improvement: Action buttons — right after you act, the buttons turn grey at once (as they do a moment later anyway) instead of looking clickable while the server has not answered yet
 
 2026-11-18 version 2.1.11-web.129:

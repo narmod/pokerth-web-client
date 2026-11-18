@@ -37,8 +37,8 @@ ok(/if \(!_anyAdminKey\(query\)\) return adminJson\(res, 403/.test(proxy),
   'rather than on a scope, so a delegate key does not see a row of dashes');
 ok(/now: Date\.now\(\), tz: _serverTz\(\), zones: _clockZones\(\), ref: _clockRef\(\)/.test(proxy),
   'the answer carries the instant, the zone, the selection and the reference');
-ok(/reqPathOnly === '\/admin\/clock'\)\) res\._rlNoPenalty = true/.test(proxy),
-  'and a stale token polling it never counts toward the brute-force block');
+ok(/reqPathOnly === '\/admin\/clock'\)\) \{\n\s*res\._rlNoPenalty = true;/.test(proxy) && /_pollKeyIsNew\(res\._rlIp, res\._rlPollSig\)/.test(proxy),
+  'and a stale token polling it never counts toward the brute-force block (a new wrong key does, web.131)');
 
 ok(/now: Date\.now\(\), tz: _serverTz\(\), clockZones: _clockZones\(\), clockRef: _clockRef\(\)/.test(proxy),
   '/admin/status carries the same fields, so the controls sync like every other one');

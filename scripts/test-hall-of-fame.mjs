@@ -87,6 +87,26 @@ ok(lineDev && typeof lineDev.o === 'string' && lineDev.o !== DEV && !('o' in H.v
 ok(H.forget(st, { dev: DEV, now: T0 }) === 2 && !st.boards['initials/ace-runner:free'].some((x) => x.n === 'DEV') && st.boards['initials/ace-runner:free'].some((x) => x.n === 'OTH') && !st.boards['initials/ace-runner:time'],
   'forget(): the browser\'s lines go (all boards), the others stay');
 ok(H.forget(st, { dev: 'short', now: T0 }) === 0, 'forget(): no key, nothing goes');
+// web.131: a lower score typed under someone else's name does not take his line over.
+{
+  const sx = H.normalize(null), VIC = 'v'.repeat(32), ATK = 'a'.repeat(32);
+  const tkx = H.ticket(sx, 'ace-runner', 'free', T0);
+  H.submit(sx, { now: T0 + 600000, names: 'free', g: 'ace-runner', m: 'free', s: 5000, ticket: tkx, name: 'Victim', dev: VIC });
+  H.submit(sx, { now: T0 + 700000, names: 'free', g: 'ace-runner', m: 'free', s: 10, ticket: tkx, name: 'Victim', dev: ATK });
+  ok(H.forget(sx, { dev: ATK, now: T0 }) === 0 && sx.boards['free/ace-runner:free'][0].s === 5000 && H.forget(sx, { dev: VIC, now: T0 }) === 1,
+    'free name: a lower score under the same name keeps the owner mark — the other browser cannot erase the line');
+}
+// web.131: names from the request never reach Object.prototype (GET /__hof?g=constructor crashed the proxy).
+{
+  let threw = false;
+  try {
+    ok(['constructor', '__proto__', 'toString', 'hasOwnProperty'].every((g) => H.view(st, 'initials', g, T0) === null && H.ticket(st, g, 'free', T0) === null && H.boardKey('initials', 'ace-runner', g, '') === 'initials/ace-runner:' + g),
+      'view() / ticket(): « constructor », « __proto__ »… are unknown games');
+    ok(H.submit(st, { now: T0, names: 'initials', g: 'constructor', m: 'free', s: 1, ticket: 'x', name: 'ABC' }).err === 'game'
+      && H.submit(st, { now: T0, names: 'initials', g: 'whowins', m: 'constructor', s: 1, ticket: 'x', name: 'ABC' }).err === 'game', 'submit(): a prototype name as game or mode is refused');
+  } catch (e) { threw = true; }
+  ok(!threw, 'no prototype name throws');
+}
 // More games (web.99): Tapis! (not its Duel) and Ace Dash, each with its own ceiling.
 ok(H.view(st, 'initials', 'tapis', T0) && Object.keys(H.view(st, 'initials', 'tapis', T0).boards).join() === 'classic,folie,daily,zen' && H.ticket(st, 'tapis', 'duel', T0) === null
   && Object.keys(H.view(st, 'initials', 'ace-dash', T0).boards).join() === 'free,daily,time',
@@ -145,6 +165,8 @@ try {
   g = await (await fetch(base + '/__hof?g=ace-runner')).json();
   ok(g.ok && g.names === 'account' && g.boards.free.length === 0 && g.top === 20 && g.topDay === 10, 'GET /__hof: on, empty boards');
   ok((await fetch(base + '/__hof?g=nope')).status === 404, 'GET /__hof: an unknown game is a 404');
+  ok((await fetch(base + '/__hof?g=constructor')).status === 404 && (await post('/__hof/start', { g: '__proto__', m: 'x' })).status === 400
+    && (await fetch(base + '/__hof?g=ace-runner')).status === 200, 'GET /__hof?g=constructor, POST /__hof/start __proto__: refused, the proxy keeps running (web.131)');
   const s1 = await post('/__hof/start', { g: 'ace-runner', m: 'free' });
   ok(s1.status === 200 && typeof s1.d.ticket === 'string', 'POST /__hof/start: a ticket');
   let sc = await post('/__hof/score', { g: 'ace-runner', m: 'free', s: 1500, ticket: s1.d.ticket });
@@ -186,6 +208,8 @@ ok(/<select id="adv-hofopt"[^>]*>\s*<option value="ask"[^>]*>[^<]*<\/option><opt
   'Advanced options › Community: « Hall of Fame: ask me / always / never », synced with the account');
 ok(/S\.isAuthLogin && S\.chatNick\) \{ _issueSyncToken\(S\); _issueHofToken\(S\); \}/.test(pxs) && /if \(S\.hofFrame \|\| hofNames\(\) !== 'account'\) return;/.test(pxs),
   'the proxy hands the key out only after an authenticated login (as the sync token), and only while the setting is « account »');
+ok(/function _issueHofToken\(S\) \{[^}]*\n  if \(!_hofFromActiveServer\(S\)\) return;/.test(pxs) && /function _hofFromActiveServer\(S\) \{\n  var srv = _activePokerthnetServer\(\);/.test(pxs),
+  'the key only for a login to the active game server — a LAN server cannot vouch for a pokerth.net nickname (web.131)');
 
 const hofc = fs.readFileSync(path.join(root, 'public/modules/games/hof.mjs'), 'utf8');
 ok(/if \(o\.lv > 0\) body\.lv = Math\.round\(o\.lv\)/.test(hofc) && /t\('hofLv', \{ n: r\.lv \}\)/.test(hofc) && /lv: d\.lv/.test(pxs),

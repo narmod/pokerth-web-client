@@ -109,6 +109,18 @@ try {
   ok((au.entries || au.log || []).some((x) => x.action === 'config'), 'without the brute-force limiter, a settings write is still audited');
 } finally { s.px.kill(); }
 
+// ── 2b. Dashboard polls: a stale key is free, guessing is not (web.131) ──
+s = await start({});
+try {
+  await waitForServer(s.base, s.px);
+  const poll = (k, p) => fetch(s.base + (p || '/admin/status'), { headers: { Authorization: 'Bearer ' + k } }).then((r) => r.status);
+  const st = []; for (let i = 0; i < 30; i++) st.push(await poll('stale-key', ['/admin/status', '/admin/logs', '/admin/sessions'][i % 3]));
+  ok(st.every((c) => c === 403), 'a panel left open with a stale key polls 30 times and is never blocked');
+  ok((await poll(TOK)) === 200, 'and the right key still gets in');
+  let lastG = 0; for (let i = 0; i < 12; i++) lastG = await poll('guess-' + i);
+  ok(lastG === 429, 'a new wrong key at each poll counts: blocked after ten (' + lastG + ')');
+} finally { s.px.kill(); }
+
 // ── 3. Dashboard ────────────────────────────────────────────────────────
 const html = fs.readFileSync(path.join(root, 'public', 'admin.html'), 'utf8');
 ok(/id="plListMsg"/.test(html) && /function plPost[\s\S]{0,700}Failed: /.test(html) && /function plPost[\s\S]{0,900}Network error/.test(html), 'poll actions say when they fail');

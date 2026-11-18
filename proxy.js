@@ -711,8 +711,17 @@ function hofBans() { return Array.isArray(_adminConfig && _adminConfig.hofBans) 
 // jeton Hall of Fame de 90 jours pour ce pseudo, gardé par le navigateur, qui
 // permet d'inscrire ses scores depuis l'arcade sans être connecté. Trame texte
 // HOFTOK:{"t":jeton,"n":pseudo} (les anciens clients l'ignorent).
+// Only when that login went to the ACTIVE game server (web.131): a LAN server of
+// the directory, or one on this machine, is run by someone else and may answer
+// InitAck to an "authenticated" login of any nickname — its token would let
+// that person post scores as, or erase the lines of, any pokerth.net player.
+function _hofFromActiveServer(S) {
+  var srv = _activePokerthnetServer();
+  return !!(srv && S && String(S.host || '').trim().toLowerCase() === String(srv.host || '').trim().toLowerCase());
+}
 function _issueHofToken(S) {
   if (S.hofFrame || hofNames() !== 'account') return;   // only while the Hall of Fame shows account nicknames
+  if (!_hofFromActiveServer(S)) return;
   const tok = HOF.issueToken(_hof, S.chatNick, Date.now());
   if (!tok) return;
   saveHofSoon();
@@ -12144,13 +12153,23 @@ function _statsAdminGate(req, res, query, action, go) {
 function _statsAdminFail(res) {
   if (_rlAdminFail && res._rlIp) { _rlAdminFail.consume(res._rlIp).catch(function () {}); _noteAdminFail(res._rlIp); }
 }
+// Dashboard polls refused with a key: is it a different key from the last one
+// this address was refused with on a poll? (A stale panel repeats one key.)
+const _pollLastSig = new Map();   // ip → hash of the last refused poll key
+function _pollKeyIsNew(ip, sig) {
+  if (!sig) return false;
+  const was = _pollLastSig.get(ip);
+  _pollLastSig.delete(ip); _pollLastSig.set(ip, sig);
+  if (_pollLastSig.size > 2000) _pollLastSig.delete(_pollLastSig.keys().next().value);
+  return was !== undefined && was !== sig;
+}
 function adminJson(res, code, obj) {
   // Penalize failed admin auth (brute-force guard). res._rlIp is attached by
   // the /admin routing in the HTTP handler; consume() is fire-and-forget.
   // res._rlNoPenalty marks idempotent read-only polls (dashboard auto-refresh:
   // /admin/status, /admin/logs) so a stale token in a still-open panel can't
   // rack up "failed attempts" every few seconds and lock its own IP out.
-  if (code === 403 && _rlAdminFail && res._rlIp && !res._rlNoPenalty) { _rlAdminFail.consume(res._rlIp).catch(function () {}); _noteAdminFail(res._rlIp); }
+  if (code === 403 && _rlAdminFail && res._rlIp && (!res._rlNoPenalty || _pollKeyIsNew(res._rlIp, res._rlPollSig))) { _rlAdminFail.consume(res._rlIp).catch(function () {}); _noteAdminFail(res._rlIp); }
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(obj));
 }
@@ -15467,7 +15486,14 @@ const httpServer = http.createServer((req, res) => {
       // is a high-entropy value from the environment, not a guessable password.
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
           || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
-          || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
+          || reqPathOnly === '/admin/clock')) {
+        res._rlNoPenalty = true;
+        // …but only the SAME wrong key, repeated: a panel left open with a stale
+        // key sends one value over and over, a guesser a new one each time
+        // (web.131 — 100 different keys on /admin/status were never blocked).
+        const _pt = q.token || ((/^\s*Bearer\s+(.+?)\s*$/i.exec(req.headers['authorization'] || '') || [])[1]) || '';
+        res._rlPollSig = crypto.createHash('sha256').update(String(_pt)).digest('base64').slice(0, 16);
+      }
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
