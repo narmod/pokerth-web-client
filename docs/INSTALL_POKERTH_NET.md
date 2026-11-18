@@ -101,9 +101,11 @@ All in the admin panel — applied live, no restart:
 6. Optional, **Server tab → Proxy**: tune the **session-grace window** (default 120 s —
    how long a dropped player's seat survives a disconnection).
 
-Registered pokerth.net accounts log in through the proxy with SCRAM; the password is
-protected end-to-end (WSS on the browser leg, SCRAM challenge–response beyond), and card
-decryption for authenticated players works as with the official clients.
+Registered pokerth.net accounts log in through the proxy. The password travels in the
+login message, as with the official clients: encrypted by WSS on the browser leg and by TLS
+on the proxy → game server leg when the server entry has **TLS** ticked (on a plain
+loopback target it never leaves the machine). Card decryption for authenticated players
+works as with the official clients.
 
 ## 6. Exempt the proxy from the login rate limit (game server 2.1.5+)
 
@@ -132,6 +134,42 @@ network blip, a scheduled restart) exhausts the burst and the rest are refused w
 `ERR_NET_INIT_BLOCKED` until the bucket refills. The server logs one line per address and
 lockout, not per attempt.
 
+### Real player addresses: PROXY protocol (recommended)
+
+Without it, the game server sees the proxy's address for every web player, and since
+**2.1.11** (upstream `4530ce0`, `d2ef9e2`) it keeps more than the login bucket per address:
+
+- **table creation** — 3 in a row, then one every 5 s, per account, or **per address for
+  guests**. `ServerBruteForceProtectionExempt` does **not** cover it: without the PROXY
+  protocol all web guests share one bucket;
+- **failed password logins** — 5 failures from one address block password logins from it
+  for 1 h (exempt addresses are skipped), 10 failures for one account block that account
+  for 15 min from everywhere. Both answer `ERR_NET_INIT_BLOCKED`; guest logins stay open.
+
+With the PROXY protocol the proxy announces each player's own address, so every limit, the
+ban list and the logs apply per player:
+
+1. Game server configuration — the address the game server sees the proxy connect from:
+
+   ```
+   ServerProxyProtocolTrustedIPs = 127.0.0.1
+   ```
+
+   Same list format as above. Only trusted peers are inspected; for them the header is
+   optional (a connection without it is accepted as before). Restart the game server.
+2. Admin panel → **Game servers** → tick **Send PROXY protocol header**. It goes to the
+   **active** server only; LAN / dedicated addresses typed by players never receive it.
+   Tick it only once step 1 is live, otherwise every connection to that server fails.
+
+Notes:
+- IPv6 players on an IPv4 game server are announced as `TCP6` with the server side
+  IPv4-mapped (`::ffff:a.b.c.d`), since `2.1.11-web.125`; before, they were sent as
+  `PROXY UNKNOWN` and the server fell back to the proxy's address.
+- Toward that server the proxy no longer spaces its connections (*Connection gap*), since
+  `web.127`: the server rate-limits each player's own address.
+- Keep the exemption above: it still covers any connection that arrives without a usable
+  header.
+
 ## 7. Verify
 
 - Open the site → only the intended modes appear on the connect screen.
@@ -141,6 +179,9 @@ lockout, not per attempt.
   re-attached to your seat with your stack — no disconnect on the server side.
 - Registered login: sign in with a pokerth.net account, play a hand, check your own
   cards decrypt correctly.
+- PROXY protocol: the game server log should not show `PROXY protocol header from … without
+  usable client address`, and on the official server the `ip` column of the `server_log`
+  table (upstream `fe95d89`) shows the players' own addresses, not the proxy's.
 
 ## 8. Updating later
 
