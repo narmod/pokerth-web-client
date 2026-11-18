@@ -1,4 +1,11 @@
-2026-11-18 version 2.1.11-web.126 (current series):
+2026-11-18 version 2.1.11-web.128 (current series):
+- bugfix: Action buttons — a pre-action clicked while it was not your turn was sometimes ignored: the click got lost when another player acted during the press
+- bugfix: Action buttons — a Bet pre-selected on a street where nobody had bet yet was refused by the server; it is now played
+- bugfix: Action buttons — after a pre-selected action was played, its button no longer stays gold as if it were still armed
+- bugfix: Action buttons — if a bet arrives while you are pressing Check, the click no longer pre-selects a Call you did not see
+- improvement: Table — smoother play: each move of the other players costs the browser much less work, fewer jerks on phones
+
+2026-11-18 version 2.1.11-web.126:
 - improvement: Login — after too many wrong passwords the message now says how long the server holds password logins back (up to 15 minutes for the account, 1 hour for the network) and that guest login still works, instead of « wait 1 minute »
 - improvement: Create a table — when the server refuses because too many tables were created in a short time, the message says so instead of « Invalid game »
 

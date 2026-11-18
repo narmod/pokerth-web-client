@@ -262,9 +262,31 @@ export function initZOrder() {
   // à <body> : on surveille ses enfants directs pour les prendre en charge.
   try { _obs.observe(document.body, { childList: true }); } catch (e) {}
   // Une surface ajoutée après coup doit aussi être observée en attributs.
+  // A whole-document querySelectorAll ran on EVERY change of <body>'s
+  // children — chip, flash and pot animations add and remove nodes several
+  // times per action. Removals cannot bring a surface: ignored. Added nodes
+  // are checked at once (they and their subtree); the full sweep, which
+  // only catches surfaces created elsewhere in the meantime, runs once when
+  // the page is idle.
   try {
-    new MutationObserver(() => {
-      try { document.querySelectorAll(SEL + ',' + HOSTS).forEach(_watch); } catch (e) {}
+    let _sweepQ = false;
+    const _sweep = () => { _sweepQ = false; try { document.querySelectorAll(SEL + ',' + HOSTS).forEach(_watch); } catch (e) {} };
+    new MutationObserver((muts) => {
+      let added = false;
+      for (const m of muts) {
+        for (const n of m.addedNodes) {
+          try {                                    // a foreign node (see _matches) throws on any read
+            if (n.nodeType !== 1) continue;
+            added = true;
+            if (n.matches(SEL + ',' + HOSTS)) _watch(n);
+            n.querySelectorAll(SEL + ',' + HOSTS).forEach(_watch);
+          } catch (e) {}
+        }
+      }
+      if (!added || _sweepQ) return;
+      _sweepQ = true;
+      if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(_sweep, { timeout: 500 });
+      else setTimeout(_sweep, 200);
     }).observe(document.body, { childList: true });
   } catch (e) {}
 }

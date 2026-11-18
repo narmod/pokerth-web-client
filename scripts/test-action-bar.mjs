@@ -301,6 +301,33 @@ S._preAction = 'allin'; S._preActionToCall = 0;
 ok(A._runPreAction() === true && sentPre.length === 4, '_runPreAction : all-in armé reste valide après relance');
 S._preAction = '';
 
+// ── Bet pré-armé sur une street sans mise (rapport narmod 18/11) : code Bet
+// (4), pas Raise (5) — checkMyAction() du serveur refuse un Raise quand
+// highestSet == 0. Face à une mise : Raise.
+{
+  const { MSG: _M } = await import('../public/modules/net/messages.mjs');
+  const _bma = _M.buildMyAction, acts = [];
+  _M.buildMyAction = function (g, h, s, a, b) { acts.push([a, b]); return _bma.apply(this, arguments); };
+  S.seatData = { 1: { money: 1000, bet: 0 }, 2: { money: 1000, bet: 0 } };
+  S.highestBet = 0; S.minRaise = 0; S.smallBlind = 10; S.commCards = [10, 20, 30];
+  S._preAction = 'raise'; S._preActionToCall = 0; S.turnPid = 1;
+  ok(A._runPreAction() === true && acts.length === 1 && acts[0][0] === 4 && acts[0][1] === 20,
+     '_runPreAction : Bet pré-armé sans mise → action 4 (Bet) au minimum');
+  S.seatData[2].bet = 40; S.highestBet = 40; S.minRaise = 40;
+  S._preAction = 'raise'; S._preActionToCall = 40;
+  ok(A._runPreAction() === true && acts.length === 2 && acts[1][0] === 5,
+     '_runPreAction : Raise pré-armé face à une mise → action 5 (Raise)');
+  // Désarmée AVANT de jouer : le rendu d'aperçu lancé par doAction ne garde
+  // pas le bouton en or après coup.
+  S.seatData = { 1: { money: 1000, bet: 0 }, 2: { money: 1000, bet: 0 } }; S.highestBet = 0;
+  S._preAction = 'call'; S._preActionToCall = 0; S._actedStreet = -1;
+  ok(A._runPreAction() === true && acts.length === 3 && acts[2][0] === 2
+     && S._preAction === '' && !document.getElementById('g-actions').innerHTML.includes('prearmed'),
+     '_runPreAction : check joué, plus aucun bouton pré-armé à l\'écran');
+  _M.buildMyAction = _bma;
+  S._preAction = ''; S.commCards = [null, null, null, null, null];
+}
+
 // ── Gel du fold (rapport forum) : « the action key labels continue to update
 // after you have folded ». La barre doit rester EXACTEMENT celle de l'instant
 // du fold — zone morte ET montants figés — jusqu'à la main suivante.

@@ -5664,7 +5664,9 @@ const App = (() => {
     var _liveTurn = false;
     try { var _mzL = document.querySelector('.my-zone'); _liveTurn = !!(_mzL && _mzL.classList.contains('my-turn-active')); } catch (e) {}
     var _pinShow = !S._amSpectator && S._gameStarted; // barre toujours affichée (mode masqué permanent)
-    if ((S._preActionOpen || _pinShow) && !(S.turnPid === S.myId && _liveTurn)) { _renderPreActionPanel(); updateBottomLayout(); return; }
+    // renderMyTurnActions(true) already ends with updateBottomLayout(): run it
+    // again only when that render returned early (idempotent, it was run twice).
+    if ((S._preActionOpen || _pinShow) && !(S.turnPid === S.myId && _liveTurn)) { var _ublN = _ublSeq; _renderPreActionPanel(); if (_ublSeq === _ublN) updateBottomLayout(); return; }
     // Message vide = narrateur de tour retiré (fidélité QML : l'officiel
     // n'affiche aucun texte, le tour est signalé par la surbrillance du
     // siège). On vide #g-actions au lieu d'y laisser un bloc creux.
@@ -5766,7 +5768,9 @@ const App = (() => {
   // [9f-9] showEndGameOverlay déplacée dans public/modules/game/showdown.mjs
   // (toujours globale via window.*).
 
+  var _ublSeq = 0; // run counter (renderGameWaiting skips a duplicate run)
   function updateBottomLayout() {
+    _ublSeq++;
     _updatePinBtn();
     // Echelle continue de la barre d'action (--bar-k) : suit la fenetre
     // comme le client QML, et ATTERRIT sur les valeurs du profil paysage
@@ -7580,6 +7584,13 @@ const App = (() => {
       // (GameActionBar.qml clickAction() -> `if (playingMode !== 0) playingMode = 0`),
       // it takes precedence over any active auto mode, which falls back to
       // Manual. Forum report 2026-08-02.
+      // Bet came in between the press and the release: the label the player
+      // pressed is gone — refresh the bar, arm nothing (Fold/All-In stay valid).
+      if ((name === 'call' || name === 'raise') && S._preAction !== name
+          && typeof window._pressAmountStill === 'function' && !window._pressAmountStill()) {
+        renderMyTurnActions(true);
+        return;
+      }
       if (S._playingMode !== 0) this.setPlayingMode(0);
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
       S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
@@ -12633,7 +12644,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.127'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.128'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

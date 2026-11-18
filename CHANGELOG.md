@@ -224,6 +224,12 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Smoother table on every opponent move** (`web.128`) — per opponent message the preview bar was rebuilt and
+  `updateBottomLayout` ran twice; z-order's `<body>` observer swept the whole document on every chip / flash
+  node added or removed. Now: unchanged preview markup keeps its DOM, the duplicate layout pass is skipped, and
+  the z-order sweep ignores removals, checks added subtrees at once and runs the full sweep when the page is
+  idle. Measured (Pixel 7 profile, CPU ×4, 150 opponent moves): main-thread time per move median 38 → 19 ms,
+  long tasks 160 → 52 (10.1 s → 3.2 s). No visual change.
 - **Tapis!: scores toned down, a little harder** (`web.93`, narmod: « the score gets very high fast; 10 levels a bit
   easy ») — the poker multipliers (×2 … ×50) stacked on the chip tiers (×1 / ×2 / ×5) made one big group worth more
   than a round (≈ 1.1 M after 10 levels in a simulation, 85 % from groups). Now `handMult` ×1.25 (pair) … ×3.25
@@ -241,6 +247,14 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —
+  (1) any opponent message rebuilt `#g-actions`, so a press whose mousedown and mouseup landed on two different
+  buttons fired no click: the preview re-render is now postponed while a preview button is held (pointerdown →
+  pointerup, 1.5 s safety net) and skipped outright when the markup is unchanged; (2) a pre-armed Bet with
+  `highestBet == 0` was sent as Raise (5), refused by the server's `checkMyAction()` — now 4, like `doRaise`;
+  (3) `_runPreAction` disarmed only after `doAction` had re-rendered the preview, leaving the played button
+  gold; (4) a bet arriving during the press no longer lets the click arm a Check/Call or Raise for an amount
+  the player never saw (`_pressAmountStill`, same rule as doAction's race guard; Fold/All-In unaffected).
 - **Proxy connection gap** (`web.127`) — `_scheduleConn` let a burst through: every call inside the window read the
   same `_lastConnAt` and fired together. Each connection now reserves the next free slot of its own `host:port`;
   no gap at all toward the active server while the PROXY protocol header goes to it (the server then rate-limits

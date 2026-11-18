@@ -328,17 +328,84 @@ function _runPreAction() {
   var canCheck = toCall === 0;
   var minBet = _minRaiseRel();
   var canRaise = myMoney > toCall && myMoney >= minBet;
+  // Disarm BEFORE playing: doAction re-renders the bar at once (preview),
+  // and with S._preAction still set the button stayed gold after the action
+  // had already gone — until the next opponent move re-rendered it.
+  S._preAction = '';
   if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
   if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
   if (pa === 'allin') { doAction(6, myMoney); return true; }
-  if (pa === 'raise') { if (!canRaise) return false; if (minBet >= myMoney) doAction(6, myMoney); else doAction(5, minBet); return true; }
+  // Nothing bet yet on this street: it is a Bet (4), not a Raise (5) — the
+  // server's checkMyAction() rejects a Raise when highestSet == 0, exactly
+  // like doRaise() already distinguishes for the live button.
+  if (pa === 'raise') { if (!canRaise) return false; if (minBet >= myMoney) doAction(6, myMoney); else doAction(S.highestBet > 0 ? 5 : 4, minBet); return true; }
   return false;
 }
+
+// ── Off-turn press guard ──
+// Rebuilding #g-actions between the press and the release of a preview
+// button swallowed the click (mouse: mousedown and mouseup land on two
+// different buttons, no click is fired) — any opponent move, even a plain
+// turn change, re-renders the bar, so pre-arming during a fast round often
+// did nothing. While a preview button is held, the preview re-render is
+// postponed until the release (the click goes through first), and the
+// amount "to call" shown at the press is remembered: if a bet came in
+// meanwhile, the click does not arm a Check/Call or Raise the player never
+// saw (same rule as doAction's Check/Call race guard).
+var _press = false, _pressTmr = null, _pressPending = false;
+function _myToCall() { return Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); }
+function _onBarPressStart(e) {
+  var tg = e && e.target;
+  if (!tg || !tg.closest) return;
+  var b = tg.closest('#g-actions .actions-preview .btn-action');
+  if (!b) return;
+  _press = true;
+  window._barPressSnap = { toCall: _myToCall(), t: Date.now() };
+  clearTimeout(_pressTmr);
+  _pressTmr = setTimeout(_onBarPressEnd, 1500);   // safety net: release never seen
+}
+function _onBarPressEnd() {
+  if (!_press) return;
+  _press = false;                  // the click's own re-render (armPreAction) runs normally
+  clearTimeout(_pressTmr); _pressTmr = null;
+  // The snapshot only serves the click of THIS press (a later key press must
+  // not inherit it).
+  var _snap = window._barPressSnap;
+  setTimeout(function () { if (window._barPressSnap === _snap) window._barPressSnap = null; }, 500);
+  if (!_pressPending) return;
+  // Postponed refresh: after the click (fired right after pointerup).
+  setTimeout(function () {
+    if (_press || !_pressPending) return;
+    _pressPending = false;
+    // Only refresh a bar that is still the preview (a live turn has its own render).
+    if (document.querySelector('#g-actions .actions-preview')) {
+      try { renderMyTurnActions(true); } catch (e) {}
+    }
+  }, 0);
+}
+try {
+  document.addEventListener('pointerdown', _onBarPressStart, true);
+  document.addEventListener('pointerup', _onBarPressEnd, true);
+  document.addEventListener('pointercancel', _onBarPressEnd, true);
+} catch (e) {}
+// Called by App.armPreAction: false when the amount changed since the press.
+function _pressAmountStill() {
+  var s = window._barPressSnap; window._barPressSnap = null;
+  if (!s) return true;
+  return s.toCall === _myToCall();
+}
+window._pressAmountStill = _pressAmountStill;
 
 function renderMyTurnActions(preview) {
   // Le panneau est reconstruit : un pave de mise encore ouvert porterait des
   // bornes perimees (une relance adverse a pu passer). On le ferme d'abord.
   try { closeBetKeypad(); } catch (e) {}
+  // Preview re-render while a preview button is held: postponed to the release.
+  if (preview && _press && document.querySelector('#g-actions .actions-preview')) {
+    _pressPending = true;
+    return;
+  }
+  if (!preview) _pressPending = false;
   // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
   // manipule (le picker natif se fermerait). On differe le rafraichissement
   // de l'apercu hors-tour jusqu'a la fin de l'interaction (voir _modeSelHold).
@@ -533,8 +600,18 @@ function renderMyTurnActions(preview) {
     // Aucun son, aucune vibration, aucun keepalive serveur.
     // (Narrateur de tour "X ●●●" retiré — fidélité QML : le tour est
     // signalé uniquement par la surbrillance du siège.)
-    document.getElementById('g-actions').innerHTML =
-      '<div class="actions-preview' + (_fo ? ' no-action' : '') + '" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
+    var _gaPv = document.getElementById('g-actions');
+    var _pvHtml = '<div class="actions-preview' + (_fo ? ' no-action' : '') + '" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
+    // Same markup as the bar on screen (opponent fold/check, turn change…):
+    // keep the DOM. Rebuilding it cost a full style/layout pass per message
+    // and threw away a button under the player's finger.
+    if (_gaPv._pvHtml === _pvHtml && _gaPv._pvEl && _gaPv._pvEl === _gaPv.firstElementChild
+        && _gaPv.childNodes.length === 1) {
+      window.updateBottomLayout();
+      return;
+    }
+    _gaPv.innerHTML = _pvHtml;
+    _gaPv._pvHtml = _pvHtml; _gaPv._pvEl = _gaPv.firstElementChild;
     window.updateBottomLayout();
     _wireRaiseBtn();
     return;
