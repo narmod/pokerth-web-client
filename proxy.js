@@ -929,9 +929,19 @@ function _ppNorm(ip) { var s = String(ip || '').trim(); var m = s.match(/^::ffff
 function _ppHeader(S, dstAddr) {
   var srcA = _ppNorm(S.ip), dstA = _ppNorm(dstAddr);
   var sf = net.isIP(srcA), df = net.isIP(dstA);
-  // v1 spec: both addresses must be valid and of the same family; otherwise
-  // announce UNKNOWN (server then falls back to the socket address).
-  if (!sf || !df || sf !== df) return 'PROXY UNKNOWN\r\n';
+  // v1 spec: both addresses must be valid (and of one family, see below);
+  // otherwise announce UNKNOWN (server then falls back to the socket address).
+  if (!sf || !df) return 'PROXY UNKNOWN\r\n';
+  // Mixed families (an IPv6 browser on an IPv4 game server, the common case
+  // on mobile networks): write the IPv4 side as IPv4-mapped IPv6 and announce
+  // TCP6. UNKNOWN here made the server see the proxy's own address for every
+  // IPv6 player — one shared per-address bucket (guest game creation, failed
+  // password logins) for all of them. pokerth_server reads only the source
+  // address and accepts any IPv6 one, "::ffff:a.b.c.d" included.
+  if (sf !== df) {
+    if (sf === 4) srcA = '::ffff:' + srcA; else dstA = '::ffff:' + dstA;
+    sf = df = 6;
+  }
   var sp = (S.ipPort > 0 && S.ipPort < 65536) ? S.ipPort : 0;
   return 'PROXY ' + (sf === 6 ? 'TCP6' : 'TCP4') + ' ' + srcA + ' ' + dstA + ' ' + sp + ' ' + S.port + '\r\n';
 }

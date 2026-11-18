@@ -241,6 +241,10 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **PROXY protocol: IPv6 players kept their own address** (`web.125`) — an IPv6 browser on an IPv4 game
+  server got `PROXY UNKNOWN`, so the server saw the proxy's address for every IPv6 player and put them all in one
+  per-address bucket (guest game creation, failed password logins, upstream `4530ce0`/`d2ef9e2`); `_ppHeader` now
+  sends `TCP6` with the IPv4 side IPv4-mapped (`::ffff:a.b.c.d`).
 - **Game names with `<` or `>`** (`web.124`) — upstream `cb2d21a` makes the official server refuse them
   (`badGameName`); `_safeGameName` now swaps them for `‹` `›`, typed names and auto names built from the nick
   (« Table {name} », quick game) alike, including the empty-name fallback.
