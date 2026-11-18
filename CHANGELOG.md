@@ -241,6 +241,10 @@ highlights below.
   `tpFolded` in the 83 catalogues.
 
 ### Fixed
+- **Proxy connection gap** (`web.127`) — `_scheduleConn` let a burst through: every call inside the window read the
+  same `_lastConnAt` and fired together. Each connection now reserves the next free slot of its own `host:port`;
+  no gap at all toward the active server while the PROXY protocol header goes to it (the server then rate-limits
+  each player's own address), so a mass reconnect no longer queues players.
 - **Messages for the new server limits** (`web.126`) — `initBlocked` (7) on a password login now shows
   `connErrPwBlocked` (upstream `d2ef9e2`: up to 15 min per account, 1 h per address, guest login still open) with
   no one-minute countdown nor connect gate; `invalidGame` (1) answering our own CreateGame within 15 s

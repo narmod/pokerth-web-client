@@ -16298,7 +16298,7 @@ const MAX_UPSTREAM_QUEUE = 256 * 1024;   // browser → server bytes waiting on 
 // ── Throttle outbound TCP connections to PokerTH servers ──
 // Avoids tripping per-IP anti-brute-force when many clients connect to the
 // same server in quick succession through this proxy.
-let   _lastConnAt = 0;        // timestamp of the last TCP connection opened
+const _nextConnAt = new Map(); // "host:port" → earliest time the next connection may open
 const MIN_CONN_GAP = 5000;    // ms minimum between two connections to the same server
                               // Bumped from 2500 → 5000 because some PokerTH
                               // server configurations (notably self-hosted
@@ -16310,17 +16310,32 @@ const MIN_CONN_GAP = 5000;    // ms minimum between two connections to the same 
                               // (different browser tabs / mobile + desktop /
                               // PWA + browser) sharing the same public IP.
 
-function _scheduleConn(fn) {
+// No gap toward the active game server while the PROXY protocol header goes
+// to it (_ppAppliesTo): that server then sees every player's own address and
+// rate-limits each one apart, so spacing the connections only kept players
+// waiting (after an update banner, a restart or a network blip, all of them
+// reconnect at once).
+//
+// Everywhere else (LAN / dedicated servers typed by players, or the PROXY
+// protocol off) each connection now reserves the next free slot of its
+// target. Before, every call arriving inside the window read the same
+// timestamp, computed the same wait and fired together: a burst went
+// through as a burst, just later.
+function _scheduleConn(fn, host, port) {
+  if (_ppAppliesTo(host, port)) { fn(); return; }
   const now  = Date.now();
   const _pc  = _adminConfig.proxyCfg;
   const gap  = (_pc && typeof _pc.connGapMs === 'number' && _pc.connGapMs >= 0 && _pc.connGapMs <= 30000) ? _pc.connGapMs : MIN_CONN_GAP;
-  const wait = Math.max(0, (_lastConnAt + gap) - now);
+  const key  = String(host || '').trim().toLowerCase() + ':' + (parseInt(port, 10) || 0);
+  const slot = Math.max(now, _nextConnAt.get(key) || 0);
+  _nextConnAt.set(key, slot + gap);
+  if (_nextConnAt.size > 256) { for (const [k, t] of _nextConnAt) if (t <= now) _nextConnAt.delete(k); }
+  const wait = slot - now;
   if (wait === 0) {
-    _lastConnAt = now;
     fn();
   } else {
     console.log('[>] Connection deferred by ' + wait + 'ms (anti-throttle)');
-    setTimeout(() => { _lastConnAt = Date.now(); fn(); }, wait);
+    setTimeout(fn, wait);
   }
 }
 
@@ -16661,7 +16676,7 @@ function _openUpstream(S) {
         if (w) setTimeout(() => { try { w.close(); } catch (_) {} }, 300);
       });
     });
-  });
+  }, S.host, S.port);
 }
 
 // Branche un WebSocket navigateur sur la session S (relais navigateur→serveur,
