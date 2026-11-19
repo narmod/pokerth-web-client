@@ -1,4 +1,7 @@
-2026-11-19 version 2.1.11-web.132 (current series):
+2026-11-19 version 2.1.11-web.135 (current series):
+- bugfix: Older Android browsers (Chrome 84 and similar) — the SQLite engine behind the hand-history .pdb export failed to start, with an error on every visit; it now loads there too
+
+2026-11-19 version 2.1.11-web.132:
 - bugfix: Live — in a browser that refuses the separate storage, the spectator page could read and change your web client settings; it now always keeps its own
 
 2026-11-18 version 2.1.11-web.131:

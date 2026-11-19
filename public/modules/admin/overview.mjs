@@ -75,6 +75,7 @@ export function errKind(e) {
   if (/^Unhandled rejection\b/.test(m)) return 'reject';
   if (/^(Load-failure retry #\d+|Lang load retry) recovered\b/.test(m)) return 'ok';
   if (/^(Boot stall|Boot hold|Module graph|Login form):/.test(m)) return 'diag';
+  if (/^Id guard:/.test(m)) return 'diag';   // Xiaomi translator ids put back (web.121)
   if (/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m) ? 'load' : 'diag';
   if (/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
   return 'crash';

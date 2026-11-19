@@ -7732,6 +7732,7 @@
     // means the file itself is missing or broken, which is a load failure.
     // Page state sent with an « App is not defined » tap (web.263).
     if(/^(Boot stall|Boot hold|Module graph|Login form):/.test(m)) return 'diag';
+    if(/^Id guard:/.test(m)) return 'diag';   // Xiaomi translator ids put back (web.121)
     if(/^Load-failure probe:/.test(m)) return /^Load-failure probe: HTTP [45]\d\d\b/.test(m)?'load':'diag';
     if(/^(Failed to load |Load-failure retry #\d+ failed|Lang load failed)/.test(m)) return 'load';
     return 'crash';

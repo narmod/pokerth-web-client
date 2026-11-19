@@ -294,6 +294,8 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **sql.js on browsers before ES2021** (`web.135`, Admin › Errors: « Unexpected token '||=' » in `/vendor/sql-wasm.js:72`, Android 8 · Chrome 84, on every load) — the vendored Emscripten build used logical assignment (Chrome 85+); its five sites (`f||=`, `dc||=`, `jc||=`, `a||=`, `b&&=`, plain identifiers) are rewritten as `x||(x=…)` / `x&&(x=…)`. The file now parses as ES2020; a node round trip (create, insert, export, reopen) gives the same result.
+- **« Id guard: » reads as a Diagnostic** (`web.135`) — the Xiaomi-translator id restore (`web.121`) was shown as a Script error: `admin.html` `_erKind`, `admin/overview.mjs` `errKind` and the `errreport.mjs` outcome lane now know it.
 - **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —
   (1) any opponent message rebuilt `#g-actions`, so a press whose mousedown and mouseup landed on two different
   buttons fired no click: the preview re-render is now postponed while a preview button is held (pointerdown →
