@@ -224,6 +224,17 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Tapis!: harder past the final table** (`web.137`, narmod: « too easy from level 20, nothing new, it loops ») —
+  every difficulty knob topped out between levels 13 and 25 (5 colours, 0.7 s a chip, full stacks, 8 seals, a row
+  every 8 s), so the game played the same from there on. `tapis-rules.mjs`: level 25 opens a new stage — a 6th
+  colour (orange ✦, worth 50; `CHIPS[6]`, after the Joker chip so `WILD` keeps its index, colours drawn through
+  `colorK`), the seals start again from 2 up to 12 at 45, the rows from 10 s down to 6 s at 41 — and the clock keeps
+  tightening past 21 (0.005 s a chip a level, down to 0.6 s at 41). Simulation (greedy bot with one move of
+  lookahead, no powers, 8 columns, 1.8 s a move): rounds won at 24 / 25 / 30 / 35 / 40 were 44 / 41 / 48 / 42 / 41 %,
+  now 40 / 21 / 9 / 3 / 1 %. Adding the 6th colour on top of 8-12 seals was a wall (7 % at 25), hence the new stage.
+  Levels 1-21 unchanged. The Joker chip's top shows the 6 colours. Rules (`tpRules`): « 50 ✦ » in the chip values,
+  83 catalogues. First of the « harder Tapis! » series (next: fuse chip, guest chip, chip rain, frozen chip,
+  chameleon chip, boss characters).
 - **Action bar dead as soon as my action leaves** (`web.130`, narmod: « grey it right away ») — after `doAction`
   the preview bar looked live for a server round trip (until the next `PlayersTurn` re-render applied
   `_actedStreet`) while every click was ignored. `S._actionSent` (set after the send) makes `_barLocked()` true

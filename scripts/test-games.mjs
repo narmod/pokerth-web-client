@@ -484,8 +484,9 @@ console.log('Ace Dash: the long run, the score, the modes');
   TP.recaveRow(g3, 3, () => 0.5); TP.recaveRow(g3b, 3, () => 0.5);
   ok(g3[0].length === 3 && g3[0][0].k === g3[1][0].k && g3[2].length === 1 && g3[2][0].k === g3[3][0].k && g3[0][1].off === -1 && TP.anyMove(g3) && g3b[2][0].k === 2,
     'Tapis!: the recave pushes in a row of pairs under every column, an empty one too (neighbours share a colour, a lone column its own)');
-  ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 35 && TP.timeFor(100, 1) === 90 && TP.timeFor(100, 5) === 94 && TP.timeFor(100, 30) === 87,
-    'Tapis!: 3 colours, a 4th at level 5, a 5th at 13; 0.9 s a chip down to 0.7 s, +12 % a colour past 3, 35 s at least');
+  ok(TP.colorsAt(1) === 3 && TP.colorsAt(5) === 4 && TP.colorsAt(13) === 5 && TP.timeFor(10, 1) === 35 && TP.timeFor(100, 1) === 90 && TP.timeFor(100, 5) === 94 && TP.timeFor(100, 21) === 87
+    && TP.colorsAt(24) === 5 && TP.colorsAt(25) === 6 && TP.timeFor(100, 30) === 89 && TP.perChipAt(41) === 0.6 && TP.perChipAt(99) === 0.6,
+    'Tapis!: 3 colours, a 4th at level 5, a 5th at 13, a 6th at 25 (web.137); 0.9 s a chip down to 0.7 s, past 21 down to 0.6 s, +12 % a colour past 3, 35 s at least');
   ok(TP.inPay(1) === 10 && TP.inPay(3) === 15 && TP.cleanPay(3) === 75 && TP.lvFactor(23) === 6.5 && TP.lvPay(10, 23) === 65 && TP.TIME_PAY === 1,
     'Tapis!: a character in his hole pays 10, a cleared table 50, × lvFactor (web.122: ×6.5 at level 23, was × the level and 10 times more)');
   const R = (await import('../public/modules/games/deal.mjs')).rng('tapis-test'), d = TP.dealRound(1, 6, 12, R);
@@ -498,8 +499,22 @@ console.log('Ace Dash: the long run, the score, the modes');
   {
     const C = (k, o) => Object.assign({ k, off: 0 }, o || {}), W = TP.WILD, K = TP.CARD;
     const kit = TP.levelKit;
-    ok(kit(1).cards === 0 && kit(2).cards === 2 && kit(2).wild === 0 && kit(3).wild === 1 && !kit(4).dealer && kit(5).dealer && kit(8).seals === 0 && kit(9).seals === 2 && kit(12).rise === 0 && kit(13).rise === 14 && kit(40).rise === 8,
-      'Tapis!: what each level brings (cards 2, Joker chip 3, Dealer 5, seals 9, rising rows 13)');
+    ok(kit(1).cards === 0 && kit(2).cards === 2 && kit(2).wild === 0 && kit(3).wild === 1 && !kit(4).dealer && kit(5).dealer && kit(8).seals === 0 && kit(9).seals === 2 && kit(12).rise === 0 && kit(13).rise === 14 && kit(24).rise === 8.5 && kit(25).rise === 10 && kit(41).rise === 6 && kit(60).rise === 6
+      && kit(21).seals === 8 && kit(24).seals === 8 && kit(25).seals === 2 && kit(45).seals === 12 && kit(60).seals === 12,
+      'Tapis!: what each level brings (cards 2, Joker chip 3, Dealer 5, seals 9, rising rows 13; web.137: from 25 a new stage, seals 2 → 12, rows 10 s → 6 s)');
+    {
+      // web.137: the 6th colour is CHIPS[6], never the Joker chip's index
+      let six = true, seen6 = false;
+      for (let i = 0; i < 20; i++) {
+        const gr = TP.dealRound(30, 8, 12);
+        TP.recaveRow(gr, 6); TP.riseRow(gr, 6, 99);
+        gr.forEach((col) => col.forEach((b) => { if (b.k === 6) seen6 = true; if (b.k > 6) six = false; }));
+        if (!TP.anyMove(gr)) six = false;
+      }
+      const w = [].concat(...TP.dealRound(30, 8, 12)).filter((b) => b.k === W).length;
+      ok(six && seen6 && w === TP.levelKit(30).wild && TP.CHIPS[6].id === 'orange' && TP.colorK(4) === 4 && TP.colorK(5) === 6,
+        'Tapis!: level 30 deals the 6th colour (CHIPS[6]) and only the kit\'s Joker chips at index 5');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);

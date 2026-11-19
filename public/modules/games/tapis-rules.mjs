@@ -24,9 +24,13 @@
 //             the Dealer button on a friend from 5; sealed chips from 9 ({ seal }:
 //             no group until a group next to it breaks the seal); rows rising
 //             from the felt from 13 (riseRow). A venue every 4 levels (venueAt).
+//             Past the final table (web.137, narmod: « too easy from level 20,
+//             nothing new »): level 25 opens a new stage — a 6th colour (as the
+//             arcade's 6 tombstone colours), the seals again from 2 up to 12, rows
+//             from 10 s down to 6 s — and the clock keeps tightening.
 // ═══════════════════════════════════════════════════════════════════
 
-/** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50). */
+/** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
 export const CHIPS = [
   { id: 'red', top: '#d23a30', side: '#8e1c15', mark: '#f7f1e3', suit: '♥', v: 1 },
   { id: 'blue', top: '#2f6bd0', side: '#173c80', mark: '#f7f1e3', suit: '♦', v: 2 },
@@ -34,9 +38,16 @@ export const CHIPS = [
   { id: 'black', top: '#33363c', side: '#121316', mark: '#e3c06a', suit: '♠', v: 20 },
   { id: 'purple', top: '#9a5ae0', side: '#542a8f', mark: '#f7f1e3', suit: '★', v: 100 },
   { id: 'wild', top: '#f5f0e3', side: '#b8902e', mark: '#141414', suit: 'J', v: 10 },
+  // web.137: the 6th colour (from level 25), after the Joker chip so WILD keeps its index; worth 50, between the
+  // black and the purple, so the scores keep their size (narmod web.122: « too many digits »)
+  { id: 'orange', top: '#ee8a1f', side: '#9c4f0b', mark: '#f7f1e3', suit: '✦', v: 50 },
 ];
 /** The Joker chip (CHIPS[WILD]): it goes with every colour (from level 3). */
 export const WILD = 5;
+/** The k of the i-th colour (0-based): the Joker chip's index is skipped (the 6th colour is CHIPS[6]). */
+export const colorK = (i) => (i < WILD ? i : i + 1);
+/** A colour drawn among the first n. */
+const randK = (n, rnd) => colorK(Math.floor(rnd() * n));
 /** A card in a stack: { k: CARD, card: n }; it goes to the hand when a group next to it goes (from level 2). */
 export const CARD = -1;
 
@@ -51,8 +62,11 @@ export function levelKit(lv) {
     cards: lv < 2 ? 0 : lv < 5 ? 2 : lv < 10 ? 3 : 4,
     wild: lv < 3 ? 0 : lv < 9 ? 1 : 2,
     dealer: lv >= 5,
-    seals: lv < 9 ? 0 : Math.min(8, 2 + Math.floor((lv - 9) / 2)),
-    rise: lv < 13 ? 0 : Math.max(8, 14 - (lv - 13) * 0.5),
+    // web.137 (narmod: « nothing new past level 20 »): level 25 opens a new stage with the 6th colour — the seals
+    // start again from 2 (up to 12 at 45) and the rows from 10 s (down to 6 s at 41). 6 colours with 8+ seals at
+    // once was a wall in the simulation (40 % of rounds won at 24 → 7 % at 25); this way it goes down step by step.
+    seals: lv < 9 ? 0 : lv < 25 ? Math.min(8, 2 + Math.floor((lv - 9) / 2)) : Math.min(12, 2 + Math.floor((lv - 25) / 2)),
+    rise: lv < 13 ? 0 : lv < 25 ? Math.max(8, 14 - (lv - 13) * 0.5) : Math.max(6, 10 - (lv - 25) * 0.25),
   };
 }
 /** The level each new thing first comes at (for its word the first time). */
@@ -62,10 +76,13 @@ export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4)
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
 export const dayOfLevel = (lv) => [0.5, 0.71, 0.8, 0.93][(Math.max(1, lv) - 1) % 4];
 
-/** Colours on the board at blind level `lv`: 3, a 4th from level 5, a 5th from 13. */
-export const colorsAt = (lv) => (lv >= 13 ? 5 : lv >= 5 ? 4 : 3);
-/** Seconds a chip is worth on the clock: 0.9 at first, down to 0.7 (web.93, narmod: « a bit harder »; was 1.1 → 0.8). */
-export const perChipAt = (lv) => Math.max(0.7, 0.9 - 0.015 * (Math.max(1, lv) - 1));
+/** Colours on the board at blind level `lv`: 3, a 4th from level 5, a 5th from 13, a 6th from 25 (web.137). */
+export const colorsAt = (lv) => (lv >= 25 ? 6 : lv >= 13 ? 5 : lv >= 5 ? 4 : 3);
+/**
+ * Seconds a chip is worth on the clock: 0.9 at first, down to 0.7 (web.93, narmod: « a bit harder »; was 1.1 → 0.8),
+ * then past the final table 0.005 less a level, down to 0.6 at level 41 (web.137).
+ */
+export const perChipAt = (lv) => (lv <= 21 ? Math.max(0.7, 0.9 - 0.015 * (Math.max(1, lv) - 1)) : Math.max(0.6, 0.7 - 0.005 * (lv - 21)));
 /**
  * The round's clock for `total` chips at level `lv`: 35 s at least, 12 % more
  * for each colour past 3 (more colours, more moves: level 13 is no wall).
@@ -226,8 +243,8 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
   const live = grid.map((_, c) => c);
   const ks = new Map();
   for (let i = 0; i < live.length;) {
-    if (live[i + 1] === live[i] + 1) { const k = Math.floor(rnd() * nColors); ks.set(live[i], k); ks.set(live[i + 1], k); i += 2; }
-    else { const b = grid[live[i]][0]; ks.set(live[i], free(b) && b.k !== WILD ? b.k : -2 - Math.floor(rnd() * nColors)); i += 1; }
+    if (live[i + 1] === live[i] + 1) { const k = randK(nColors, rnd); ks.set(live[i], k); ks.set(live[i + 1], k); i += 2; }
+    else { const b = grid[live[i]][0]; ks.set(live[i], free(b) && b.k !== WILD ? b.k : -2 - randK(nColors, rnd)); i += 1; }
   }
   let n = 0;
   for (const c of live) {
@@ -254,7 +271,7 @@ export function recaveRow(grid, nColors, rnd = Math.random) {
  */
 export function refillRows(grid, nColors, rnd = Math.random) {
   const pal = [...new Set([].concat(...grid).filter((b) => b.k >= 0 && b.k !== WILD).map((b) => b.k))];
-  const P = pal.length ? pal : Array.from({ length: Math.max(2, nColors) }, (_, i) => i);
+  const P = pal.length ? pal : Array.from({ length: Math.max(2, nColors) }, (_, i) => colorK(i));
   const n = 2 + (rnd() < 0.5 ? 1 : 0);
   const had = grid.map((col) => col.length > 0);
   const add = grid.map(() => Array.from({ length: n }, () => P[Math.floor(rnd() * P.length)]));
@@ -282,7 +299,7 @@ export function riseRow(grid, nColors, maxH, rnd = Math.random) {
   grid.forEach((col) => {
     if (!col.length || col.length >= maxH) return;
     col.forEach((b) => { b.off -= 1; });
-    col.unshift({ k: Math.floor(rnd() * nColors), off: -1 });
+    col.unshift({ k: randK(nColors, rnd), off: -1 });
     n++;
   });
   return n;
@@ -299,7 +316,7 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
   for (let c = 0; c < cols; c++) {
     const h = lo + Math.floor(rnd() * (hi - lo + 1)), col = [];
     for (let r = 0; r < h; r++) {
-      let k = Math.floor(rnd() * n);
+      let k = randK(n, rnd);
       const x = rnd();
       // a little clustering so groups exist — less than until web.93 (0.26 / 0.46): fewer giant groups
       if (r > 0 && x < 0.2) k = col[r - 1].k;

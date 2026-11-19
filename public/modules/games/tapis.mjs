@@ -812,7 +812,7 @@ export function create(shell) {
     // the top (the Joker chip's in the four colours)
     if (k === WILD) {
       const tg = g.createLinearGradient(x - w, 0, x + w, 0);
-      ['#d23a30', '#2f6bd0', '#27a058', '#33363c', '#9a5ae0'].forEach((c2, i) => { tg.addColorStop(i / 4, c2); });
+      ['#d23a30', '#2f6bd0', '#27a058', '#33363c', '#9a5ae0', '#ee8a1f'].forEach((c2, i) => { tg.addColorStop(i / 5, c2); });
       g.fillStyle = tg;
     } else g.fillStyle = ch.top;
     g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();

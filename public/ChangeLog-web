@@ -1,4 +1,7 @@
-2026-11-19 version 2.1.11-web.136 (current series):
+2026-11-19 version 2.1.11-web.137 (current series):
+- improvement: Tapis! — harder from level 25: a 6th chip colour (orange ✦), sealed chips and rising rows come back stage by stage, and the clock keeps getting tighter
+
+2026-11-19 version 2.1.11-web.136:
 - bugfix: Older browsers (Chrome before 87, Safari before 14.1) — windows, overlays and the table felt could sit in the wrong place or miss part of the screen; they now cover it as they should
 
 2026-11-19 version 2.1.11-web.135:
