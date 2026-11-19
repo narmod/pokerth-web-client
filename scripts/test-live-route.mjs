@@ -29,7 +29,8 @@ check('live is excluded from SEO', /const on = !live && seoEnabled\(\)/.test(pro
 check('live has its own cache key', /const key = \(live \? 'live:' : ''\)/.test(proxy));
 check('LIVE_BOOT placeholder is substituted', /__LIVE_BOOT__-->', live\s/.test(proxy));
 check('frame-ancestors constant defined', /LIVE_FRAME_ANCESTORS = "frame-ancestors 'self'/.test(proxy));
-check('frame-ancestors sent only in live mode', /if \(live\) headers\['Content-Security-Policy'\] = LIVE_FRAME_ANCESTORS;/.test(proxy));
+check('frame-ancestors sent only in live mode', /if \(live\) \{\n\s*headers\['Content-Security-Policy'\] = LIVE_FRAME_ANCESTORS;/.test(proxy));
+check('and the report-only policy with it (web.133)', /headers\['Content-Security-Policy'\] = LIVE_FRAME_ANCESTORS;\n\s*headers\['Content-Security-Policy-Report-Only'\] = LIVE_CSP_REPORT_ONLY;/.test(proxy));
 check('no X-Frame-Options header is set', !/['"]X-Frame-Options['"]/.test(proxy));
 
 check('client HTML has exactly one LIVE_BOOT placeholder',

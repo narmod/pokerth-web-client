@@ -277,6 +277,15 @@ highlights below.
   namespaced through `Storage.prototype` for those objects instead (`getItem` / `setItem` / `removeItem` /
   `key` / `length` / `clear`), the ordinary client untouched. `test-live-storage` +5. Not a security boundary
   either way: same-origin script can still reach the real store — only a separate origin isolates `/live`.
+- **`/live` content security policy, report-only** (`web.133`) — `/live` now also sends
+  `Content-Security-Policy-Report-Only` (`LIVE_CSP_REPORT_ONLY`): own origin, plus `wss://www.pokerth.net` for
+  the direct WebSocket; no external script, no `eval`, no plugin, no `<base>`, forms to the same origin, images
+  `'self' data: blob:`. `'unsafe-inline'` stays (≈ 1 000 inline handlers), so this targets exfiltration and
+  external payloads, not inline injection. Nothing is blocked yet: `report-uri` and `report-to`
+  (`Reporting-Endpoints: live-csp="/__csp-report"`) feed `/__csp-report`, which records both report formats in
+  Admin › Errors as mode `live-csp` (blocked URL without its query string, browser-extension reports dropped,
+  `/clienterr`'s rate limit). The enforced header is unchanged (`frame-ancestors`). Plan: switch to enforcing
+  once a week of reports shows nothing legitimate. `scripts/test-live-csp.mjs` (12 checks).
 
 ### Fixed
 - **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —

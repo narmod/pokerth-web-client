@@ -8742,7 +8742,11 @@ function sendClientHtml(req, res, live) {
     'Cache-Control': 'no-store, no-cache, must-revalidate',
     'Vary': 'Accept-Encoding'
   }, SECURITY_HEADERS);
-  if (live) headers['Content-Security-Policy'] = LIVE_FRAME_ANCESTORS;
+  if (live) {
+    headers['Content-Security-Policy'] = LIVE_FRAME_ANCESTORS;
+    headers['Content-Security-Policy-Report-Only'] = LIVE_CSP_REPORT_ONLY;
+    headers['Reporting-Endpoints'] = 'live-csp="/__csp-report"';
+  }
   const ae = String(req.headers['accept-encoding'] || '');
   let body = ent.raw;
   if (/\bbr\b/.test(ae)) { body = ent.br; headers['Content-Encoding'] = 'br'; }
@@ -10987,6 +10991,32 @@ const SECURITY_HEADERS = {
 // the legacy spectator tool; 'self' keeps a direct visit to /live working.
 // No X-Frame-Options is sent anywhere, so nothing has to be unset here.
 const LIVE_FRAME_ANCESTORS = "frame-ancestors 'self' https://pokerth.net https://www.pokerth.net";
+// What /live may load and contact, sent in REPORT-ONLY mode (web.133): nothing
+// is blocked yet, browsers report what would have been, through
+// /__csp-report into Admin › Errors (mode « live-csp »). Once a week of
+// reports shows nothing legitimate, it becomes the enforced policy. The page
+// needs only its own origin (API, beacons, the proxy WebSocket — /live always
+// uses the same-origin proxy URL) and the direct pokerth.net WebSocket.
+// 'unsafe-inline' stays: the page carries ~1 000 inline handlers. What this
+// adds against an injected script: no request, beacon or image to another
+// site (exfiltration), no external script, no eval, no <base>, no plugin.
+const LIVE_CSP_REPORT_ONLY = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  "media-src 'self' data: blob:",
+  "connect-src 'self' wss://www.pokerth.net",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "frame-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  'report-uri /__csp-report',
+  'report-to live-csp'
+].join('; ');
 const _compCache = new Map(); // 'enc:path:mtime' -> Buffer
 
 // ── Stat cache ──
@@ -15677,6 +15707,31 @@ const httpServer = http.createServer((req, res) => {
     });
     return;
   }
+  // ── CSP violation reports from /live (web.133) ──
+  // Both formats: report-uri (application/csp-report, one {"csp-report":{…}})
+  // and the Reporting API (application/reports+json, an array of
+  // {type:"csp-violation", body:{…}}). Recorded as client errors of mode
+  // « live-csp », same rate limit as /clienterr. A blocked URL keeps only its
+  // origin and path — a query string may hold anything, a key included.
+  // Reports caused by browser extensions are dropped: they are not the page.
+  if (reqPathOnly === '/__csp-report') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    const cip = clientIp(req);
+    if (!_errRateOk(cip)) { req.resume(); res.writeHead(429, { 'Cache-Control': 'no-store' }); res.end(); return; }
+    readRawBody(req, 16 * 1024, function (buf) {
+      res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end();
+      if (!buf) return;
+      let d = null;
+      try { d = JSON.parse(buf.toString('utf8')); } catch (e) { return; }
+      const meta = {
+        ver: 'csp', mode: 'live-csp', path: '/live',
+        ua: String((req.headers && req.headers['user-agent']) || '').slice(0, 180),
+        ip: _maskIp(cip),
+      };
+      _cspReports(d).slice(0, 5).forEach(function (v) { _errRecord(meta, v); });
+    });
+    return;
+  }
   // ── Version marker for the in-app update banner ──
   // Returns the newest mtime across the core assets. A deploy (git pull)
   // bumps these file mtimes, so the page can poll this cheaply and offer a
@@ -16439,6 +16494,40 @@ function _errSig(it) {
   const first = String(it.stack || '').split('\n')[1] || String(it.src || '');
   const frame = String(first).trim().replace(/\?[^\s:)]*/g, '').replace(/(:\d+){1,2}\)?$/, '');
   return String(it.msg || '').slice(0, 120) + '|' + frame.slice(0, 120);
+}
+// CSP reports (both formats) → client-error items; see /__csp-report.
+const _CSP_EXT = /^(chrome|moz|safari|safari-web|ms-browser)-extension:/i;
+function _cspUrl(u) {
+  u = String(u == null ? '' : u).slice(0, 400);
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(u)) return u.slice(0, 40);   // 'inline', 'eval', 'data', 'blob'…
+  try { const x = new URL(u); return (x.protocol + '//' + x.host + x.pathname).slice(0, 160); }
+  catch (e) { return u.split(/[?#]/)[0].slice(0, 160); }
+}
+function _cspReports(d) {
+  const raw = [];
+  if (d && typeof d === 'object' && !Array.isArray(d) && d['csp-report'] && typeof d['csp-report'] === 'object') {
+    const c = d['csp-report'];
+    raw.push({ dir: c['effective-directive'] || c['violated-directive'], blocked: c['blocked-uri'],
+      src: c['source-file'], line: c['line-number'], col: c['column-number'], disp: c.disposition });
+  } else if (Array.isArray(d)) {
+    d.slice(0, 20).forEach(function (rep) {
+      if (!rep || rep.type !== 'csp-violation' || !rep.body || typeof rep.body !== 'object') return;
+      const b = rep.body;
+      raw.push({ dir: b.effectiveDirective, blocked: b.blockedURL, src: b.sourceFile,
+        line: b.lineNumber, col: b.columnNumber, disp: b.disposition });
+    });
+  }
+  const out = [];
+  raw.forEach(function (v) {
+    const blocked = String(v.blocked == null ? '' : v.blocked), src = String(v.src == null ? '' : v.src);
+    if (_CSP_EXT.test(blocked) || _CSP_EXT.test(src)) return;
+    const dir = String(v.dir || '?').replace(/[^a-z-]/gi, '').slice(0, 40) || '?';
+    out.push({
+      msg: 'CSP ' + (String(v.disp || '') === 'enforce' ? 'blocked' : 'would block') + ': ' + dir + ' ' + (_cspUrl(blocked) || '?'),
+      src: _cspUrl(src), line: parseInt(v.line, 10) || 0, col: parseInt(v.col, 10) || 0, stack: '',
+    });
+  });
+  return out;
 }
 function _errRecord(meta, it) {
   const sig = _errSig(it);
