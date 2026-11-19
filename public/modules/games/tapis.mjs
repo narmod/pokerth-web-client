@@ -63,6 +63,9 @@
 //             friend drops onto a stack with nobody on it, else onto a new
 //             column at the side (none if the table is full: he goes); in a
 //             bigger group, a blast or a power, he is shown out (pays inPay).
+//             Chip rain from 30 (web.140): every few seconds a few chips fall
+//             onto the stacks (never over the top); a guest among them on a
+//             stack with nobody on it sits down at once.
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -81,7 +84,8 @@
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
-  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn } from './tapis-rules.mjs';
+  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn,
+  rainChips } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -218,8 +222,8 @@ export function create(shell) {
     });
     G.all = G.chars.slice();                 // every friend of the round, his column gone or not (the spirits)
     // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
-    G.kit = levelKit(G.lv); G.riseT = 0; G.firstIn = false; G.recaved = false;
-    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; }
+    G.kit = levelKit(G.lv); G.riseT = 0; G.rainT = 0; G.firstIn = false; G.recaved = false;
+    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; G.kit.rain = 0; }
     if (mode === 'folie') G.kit.rise = folieEvery(G.lv);
     if (G.kit.dealer) { const d = G.chars[Math.floor(R() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
     const v = venueAt(G.lv);
@@ -459,6 +463,24 @@ export function create(shell) {
     G.fx.push({ s: '🪑 ' + t('tpGuestIn'), x: colX(L, at), y: L.base - L.cw * 5, t: 0, life: 1.4 });
     sound('notifyCard');
   }
+  /**
+   * A shower (web.140): a few chips fall from the sky onto the stacks, never over the top (in Madness one row under
+   * the red line); a guest landing on a stack with nobody on it sits down at once.
+   */
+  function rain() {
+    const L = geom(), maxH = mode === 'folie' ? G.maxRows - 1 : G.maxRows;
+    const landed = rainChips(G.grid, G.kit.rainN, colorsAt(G.lv), maxH, undefined, R);
+    if (!landed.length) return;
+    landed.forEach(([c, r]) => { G.grid[c][r].rain = true; });
+    for (let i = 0; i < 10; i++) G.parts.push({ x: Math.random() * L.W, y: TOP + Math.random() * 20, vx: 0, vy: 160 + Math.random() * 120, t: 0, life: 0.8, c: 'rgba(170,210,255,.8)', r: 1.2, rot: 0 });
+    G.fx.push({ s: '🌧️', x: L.W / 2, y: TOP + 40, t: 0, life: 1.1 });
+    sound('notifyCard');
+    for (const [c, r] of landed) {
+      const b = G.grid[c][r];
+      if (b.guest && G.chars[c].none) { b.guest = false; guestIn(L, c); }
+    }
+    afterMove();
+  }
   /** A guest shown out (web.139): he pays as a friend in his hole would. */
   function guestOut(L, c, r) {
     const pay = inPay(G.lv);
@@ -669,7 +691,7 @@ export function create(shell) {
     if (!G) return;
     const L = geom();
     for (const col of G.grid) for (const b of col) {
-      if (b.off > 0) { b.v = (b.v || 0) + 34 * dt; b.off = Math.max(0, b.off - b.v * dt); if (!b.off) { if (b.v > 8) sound('notifyTick'); b.v = 0; } }
+      if (b.off > 0) { b.v = (b.v || 0) + 34 * dt; b.off = Math.max(0, b.off - b.v * dt); if (!b.off) { if (b.v > 8) sound('notifyTick'); b.v = 0; b.rain = false; } }
       else if (b.off < 0) b.off = Math.min(0, b.off + 5 * dt);
       if (b.shake > 0) b.shake -= dt;
       if (b.pop > 0) b.pop -= dt;
@@ -705,6 +727,10 @@ export function create(shell) {
       if (mode === 'folie' && state === 'run') { G.timeMax = G.kit.rise; G.timeLeft = G.kit.rise - G.riseT; }
     }
     if (state === 'run' && G.kit && G.kit.fuses) burnFuses(dt);
+    if (state === 'run' && G.kit && G.kit.rain) {     // web.140: a shower of chips now and then
+      G.rainT += dt;
+      if (G.rainT >= G.kit.rain) { G.rainT = 0; rain(); }
+    }
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.2);
     for (let i = G.flying.length - 1; i >= 0; i--) { const f = G.flying[i]; f.t += dt; if (f.t >= 0.6) { G.flying.splice(i, 1); addCard(f.n); } }
     if (G.handFull) { G.handFull.t += dt; if (G.handFull.t > 1.8) G.handFull = null; }
@@ -730,7 +756,10 @@ export function create(shell) {
         } else {
           // His stack came down: he drops after it, a moment later (the Joker floats down, as the arcade's ghost);
           // it goes up (a refill): he goes up with it.
-          const target = chipY(L, c, col.length - 1) - L.bh;
+          // (web.140: a chip still raining down does not lift him before it lands)
+          let ti = col.length - 1;
+          while (ti > 0 && col[ti].rain) ti--;
+          const target = chipY(L, c, ti) - L.bh;
           let dropping = false;
           if (ch.y < target - 0.5) {
             if (!ch.dropAt) ch.dropAt = time + (ch.kind === 'joker' ? 0.2 : 0.12);

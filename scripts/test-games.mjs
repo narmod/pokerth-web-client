@@ -557,6 +557,22 @@ console.log('Ace Dash: the long run, the score, the modes');
       }
       ok(okG && [].concat(...TP.dealRound(26, 8, 12)).every((b) => !b.guest), 'Tapis!: level 31 deals 2 guests on plain chips (none before 27); a guest\'s stack has a pair at the bottom');
     }
+    {
+      // web.140: chip rain from 30 — n chips on different stacks lower than maxH, from high above, a guest now and then
+      ok(kit(29).rain === 0 && kit(30).rain === 18 && kit(46).rain === 10 && kit(60).rain === 10 && kit(30).rainN === 2 && kit(38).rainN === 4 && kit(60).rainN === 4
+        && TP.KIT_FROM.some(([k, lv, key]) => k === 'rain' && lv === 30 && key === 'tpNewRain'),
+        'Tapis!: chip rain from level 30, every 18 s down to 10 s, 2 chips up to 4');
+      let okR = true, guests = 0;
+      for (let i = 0; i < 200; i++) {
+        const gr = [[C(0), C(1)], [], [C(2), C(2), C(2)], [C(1)], [C(0), C(0)]];
+        const land = TP.rainChips(gr, 3, 6, 3);
+        const cols = land.map(([c]) => c);
+        if (land.length !== 3 || new Set(cols).size !== 3 || cols.includes(1) || cols.includes(2)) okR = false;
+        land.forEach(([c, r]) => { const b = gr[c][r]; if (r !== gr[c].length - 1 || !(b.off > 8) || b.k === W || b.k < 0 || b.k > 6) okR = false; if (b.guest) guests++; });
+      }
+      const full = [[C(0), C(0)], [C(1), C(1)]], none = TP.rainChips(full, 2, 3, 2);
+      ok(okR && guests > 30 && guests < 100 && none.length === 0, 'Tapis!: a shower lands on different stacks under the top, never on an empty or full one, a guest about 3 times in 10 (' + guests + '/200)');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);

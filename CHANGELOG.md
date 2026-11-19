@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: chip rain** (`web.140`, 4th of the « harder Tapis! » series) — from level 30 (`levelKit.rain`: a shower
+  every 18 s, down to 10 s at 46; `rainN` 2 chips, one more every 4 levels up to 4), chips fall from the sky onto
+  different stacks, never over the top (in Madness one row under the red line), half of them the colour of the chip
+  they land on (`rainChips`); 3 showers in 10 bring a guest (`RAIN_GUEST`): landing on a stack with nobody on it,
+  he sits down at once. A friend is not lifted by a chip still raining down (`b.rain` until it lands). Not in Zen.
+  New key `tpNewRain` and a rules sentence, 83 catalogues. Simulation: rounds won at 30 / 33 / 35 about 12 / 8 / 8 %
+  before, 7 / 7 / 8 % now (fully random colours: 5 / 3 / 3 % — a lone chip on top of every stack was too much).
 - **Tapis!: guest chips** (`web.139`, 3rd of the « harder Tapis! » series, narmod's idea: « bring new characters ») —
   from level 27 (`levelKit.guests`: 1, one more every 4 levels up to 3) plain chips carry a guest, drawn as a white
   badge with someone in it. Taken in a group of 2-4 (`guestComes`), a new friend of the level's family drops onto the

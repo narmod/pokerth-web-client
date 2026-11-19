@@ -38,6 +38,10 @@
 //             a new friend sits at the table — on a stack with nobody on it,
 //             else on a new column at the side (guestColumn); in a bigger
 //             group (or blown up, or by a power) the guest is shown out.
+//   Rain      (web.140, levelKit.rain) from level 30, every few seconds a
+//             few chips fall from the sky onto the stacks (rainChips) — now
+//             and then a guest among them: on a stack with nobody on it, he
+//             sits down at once.
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -83,7 +87,36 @@ export function levelKit(lv) {
     fuseS: lv < 22 ? 0 : Math.max(10, 16 - (lv - 22) * 0.5),
     // web.139: guest chips from 27, one more every 4 levels up to 3
     guests: lv < 27 ? 0 : Math.min(3, 1 + Math.floor((lv - 27) / 4)),
+    // web.140: chip rain from 30 — every 18 s, down to 10 s at 46; 2 chips, one more every 4 levels up to 4
+    rain: lv < 30 ? 0 : Math.max(10, 18 - (lv - 30) * 0.5),
+    rainN: lv < 30 ? 0 : Math.min(4, 2 + Math.floor((lv - 30) / 4)),
   };
+}
+/** The odds that a shower brings a guest among its chips (web.140). */
+export const RAIN_GUEST = 0.3;
+/**
+ * A shower (web.140): n chips of the first nColors colours fall from the sky
+ * onto stacks lower than maxH (each on a different one while it can), from
+ * high above (off), half of them the colour of the chip they land on. Now and
+ * then (guestP) one of them is a guest. Returns the
+ * cells they land on, [c, r].
+ */
+export function rainChips(grid, n, nColors, maxH, guestP = RAIN_GUEST, rnd = Math.random) {
+  const out = [];
+  let open = grid.map((col, c) => c).filter((c) => grid[c].length && grid[c].length < maxH);
+  const guest = rnd() < guestP ? Math.floor(rnd() * n) : -1;
+  for (let i = 0; i < n; i++) {
+    if (!open.length) open = grid.map((col, c) => c).filter((c) => grid[c].length && grid[c].length < maxH);
+    if (!open.length) break;
+    const c = open.splice(Math.floor(rnd() * open.length), 1)[0];
+    // half the time the colour of the chip it lands on (a lone chip on top of every stack was a wall in the simulation)
+    const top = grid[c][grid[c].length - 1];
+    const b = { k: top.k >= 0 && top.k !== WILD && rnd() < 0.5 ? top.k : randK(nColors, rnd), off: 9 + i * 1.6 };
+    if (i === guest) b.guest = true;
+    grid[c].push(b);
+    out.push([c, grid[c].length - 1]);
+  }
+  return out;
 }
 /** A guest chip taken in a group this small brings a new friend to the table (web.139); 5 or more show him out. */
 export const guestComes = (n) => n >= 2 && n <= 4;
@@ -95,7 +128,7 @@ export function guestColumn(nColors, rnd = Math.random) {
 /** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
 export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
