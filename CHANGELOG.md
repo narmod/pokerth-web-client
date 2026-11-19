@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: fuse chips** (`web.138`, 2nd of the « harder Tapis! » series, narmod's idea: « chips that explode ») — from
+  level 22 (`levelKit.fuses`: 1, one more every 3 levels up to 4), plain colour chips get a countdown (`fuseS` 16 s,
+  down to 10 s at 34; each next one `FUSE_STEP` 5 s later), drawn as a little bomb with its seconds and a sparking
+  wick over the stacks (red and beating in the last 5 s). Taken in its group in time, « Boom! »: the 8 cells around
+  it go too, chips (sealed or not) and cards, a fuse caught in it goes off as well (`fuseBlast`), each chip blown up
+  paying its value ×2. Burnt out, it seals the chips around it (not cards nor other fuses) and goes (`fuseOut`); the
+  usual « No more moves! » refill still applies. Not in Zen. New keys `tpNewFuse`, `tpBoom` and a sentence at the
+  end of the levels line of `tpRules`, 83 catalogues. Simulation (bot that goes for them): about neutral — 87 % of
+  fuses taken in time; a risk/reward chip more than a wall.
 - **Hall of Fame: the level beside the score** (`web.123`, narmod: « put the level number next to the score
   everywhere, even if the score decides ») — `hofEnd` sends `lv` (Tapis!, Ace Runner, Ace Dash, House of Cards,
   Poker Run, Who Wins? endless); `/__hof/score` passes it on; `hall-of-fame.js` keeps a whole level 1…999 on the

@@ -515,6 +515,31 @@ console.log('Ace Dash: the long run, the score, the modes');
       ok(six && seen6 && w === TP.levelKit(30).wild && TP.CHIPS[6].id === 'orange' && TP.colorK(4) === 4 && TP.colorK(5) === 6,
         'Tapis!: level 30 deals the 6th colour (CHIPS[6]) and only the kit\'s Joker chips at index 5');
     }
+    {
+      // web.138: fuse chips from 22 — dealt on plain colour chips, countdowns a step apart; a blast in time, a seal when out
+      ok(kit(21).fuses === 0 && kit(22).fuses === 1 && kit(22).fuseS === 16 && kit(25).fuses === 2 && kit(31).fuses === 4 && kit(60).fuses === 4 && kit(34).fuseS === 10 && kit(60).fuseS === 10
+        && TP.KIT_FROM.some(([k, lv, key]) => k === 'fuses' && lv === 22 && key === 'tpNewFuse'),
+        'Tapis!: fuse chips from level 22, one more every 3 levels up to 4, 16 s down to 10 s');
+      let okF = true;
+      for (let i = 0; i < 30; i++) {
+        const gr = TP.dealRound(28, 8, 12), fs = [];
+        gr.forEach((col) => col.forEach((b) => { if (b.fuse > 0) { fs.push(b.fuse); if (b.k < 0 || b.k === W || b.seal) okF = false; } }));
+        fs.sort((a, b) => a - b);
+        if (fs.length !== 3 || fs[0] !== TP.levelKit(28).fuseS || fs[1] - fs[0] !== TP.FUSE_STEP || fs[2] - fs[1] !== TP.FUSE_STEP) okF = false;
+      }
+      ok(okF && [].concat(...TP.dealRound(21, 8, 12)).every((b) => !b.fuse), 'Tapis!: level 28 deals 3 fuse chips on colour chips, 5 s apart; none before 22');
+      const f = (k, o) => C(k, Object.assign({ fuse: 9 }, o || {}));
+      const gb = [[C(1), C(2), C(3)], [f(0), C(0), C(K, { card: 7 })], [C(2), f(4), C(1, { seal: true })], [C(3), C(3), C(3)]];
+      const bl = TP.fuseBlast(gb, [[1, 0], [1, 1]]);
+      const has = (c, r) => bl.some(([x, y]) => x === c && y === r);
+      ok(has(0, 0) && has(0, 1) && has(2, 0) && has(2, 1) && has(1, 2) && !has(0, 2) && has(2, 2) && bl.length === 9 && has(3, 0) && has(3, 1) && has(3, 2) && !has(1, 0) && !has(1, 1)
+        && TP.fuseBlast(gb, [[0, 0], [0, 1]]).length === 0,
+        'Tapis!: a fuse chip taken blows up the 8 cells around it (cards and seals too), a fuse caught in it goes off as well (' + bl.length + ')');
+      const go = [[C(1), C(2)], [f(0), C(K, { card: 3 })], [C(2, { seal: true }), f(1)]];
+      const sealed = TP.fuseOut(go, 1, 0);
+      ok(sealed.length === 2 && go[0][0].seal && go[0][1].seal && !go[1][1].seal && !go[2][1].seal,
+        'Tapis!: a fuse burnt out seals the chips around it, not a card, a seal already or another fuse');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);

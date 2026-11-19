@@ -28,6 +28,11 @@
 //             nothing new »): level 25 opens a new stage — a 6th colour (as the
 //             arcade's 6 tombstone colours), the seals again from 2 up to 12, rows
 //             from 10 s down to 6 s — and the clock keeps tightening.
+//   Fuse      (web.138, levelKit.fuses) from level 22, chips with a countdown
+//             ({ fuse: seconds }): taken in time, they blow up the 8 cells
+//             around them too (fuseBlast, a fuse caught in it goes off as
+//             well); too late, the chip burns out and seals the chips around
+//             it (fuseOut).
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -67,10 +72,16 @@ export function levelKit(lv) {
     // once was a wall in the simulation (40 % of rounds won at 24 → 7 % at 25); this way it goes down step by step.
     seals: lv < 9 ? 0 : lv < 25 ? Math.min(8, 2 + Math.floor((lv - 9) / 2)) : Math.min(12, 2 + Math.floor((lv - 25) / 2)),
     rise: lv < 13 ? 0 : lv < 25 ? Math.max(8, 14 - (lv - 13) * 0.5) : Math.max(6, 10 - (lv - 25) * 0.25),
+    // web.138, the « harder Tapis! » series (claude/CONCEPTION_TAPIS_PLUS_DUR.md): fuse chips from 22, one more every
+    // 3 levels up to 4; the first one's countdown 16 s, down to 10 s at 34, each next one 5 s more.
+    fuses: lv < 22 ? 0 : Math.min(4, 1 + Math.floor((lv - 22) / 3)),
+    fuseS: lv < 22 ? 0 : Math.max(10, 16 - (lv - 22) * 0.5),
   };
 }
+/** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
+export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
@@ -197,6 +208,41 @@ export function freedBy(grid, cells) {
     if (b.k === CARD) cards.push([x, y]); else if (b.seal) seals.push([x, y]);
   }
   return { cards, seals };
+}
+const AROUND = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+/**
+ * A group with a fuse chip in it, taken in time (web.138): the 8 cells around
+ * each fuse chip go too — chips (sealed or not, Joker chips too) and cards —
+ * and a fuse chip caught in the blast goes off as well. Returns the cells
+ * blown up besides `cells`.
+ */
+export function fuseBlast(grid, cells) {
+  const seen = new Set(cells.map(([c, r]) => c + ',' + r)), out = [];
+  const todo = cells.filter(([c, r]) => grid[c] && grid[c][r] && grid[c][r].fuse > 0);
+  while (todo.length) {
+    const [c, r] = /** @type {number[]} */ (todo.pop());
+    for (const [dx, dy] of AROUND) {
+      const x = c + dx, y = r + dy, key = x + ',' + y, b = grid[x] && grid[x][y];
+      if (!b || seen.has(key)) continue;
+      seen.add(key); out.push([x, y]);
+      if (b.fuse > 0) todo.push([x, y]);
+    }
+  }
+  return out;
+}
+/**
+ * A fuse chip burnt out (web.138): it seals the chips around it (not the
+ * cards, not another fuse chip) — the game then takes it out. Returns the
+ * cells newly sealed.
+ */
+export function fuseOut(grid, c, r) {
+  const out = [];
+  for (const [dx, dy] of AROUND) {
+    const x = c + dx, y = r + dy, b = grid[x] && grid[x][y];
+    if (!b || b.k < 0 || b.seal || b.fuse > 0) continue;
+    b.seal = true; out.push([x, y]);
+  }
+  return out;
 }
 /** Takes `cells` out; the chips above fall (their off grows by the rows they drop). */
 export function removeCells(grid, cells) {
@@ -337,6 +383,13 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
   }
   for (let i = 0; i < kit.wild; i++) { const at = pick(); if (at) grid[at[0]][at[1]].k = WILD; }
   for (let i = 0; i < kit.seals; i++) { const at = pick(); if (at) grid[at[0]][at[1]].seal = true; }
+  // web.138: fuse chips, on chips of a colour (not a card, a Joker chip or a seal), their countdowns a step apart
+  for (let i = 0, f = 0; i < kit.fuses && spots.length; ) {
+    const at = pick(), b = at && grid[at[0]][at[1]];
+    if (!b) break;
+    if (b.k < 0 || b.k === WILD || b.seal) continue;
+    b.fuse = kit.fuseS + FUSE_STEP * f++; i++;
+  }
   if (!anyMove(grid)) recaveRow(grid, n, rnd);
   return grid;
 }

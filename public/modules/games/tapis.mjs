@@ -56,6 +56,9 @@
 //             colour), the Dealer button in a friend's hand (first in his hole:
 //             ×2), sealed chips (a group next to one breaks the seal), rows
 //             rising from the felt. Each new thing has its word the first time.
+//             Fuse chips from 22 (web.138): a countdown on the chip; taken in
+//             time « Boom! », the cells around go too (each chip blown up pays
+//             its value ×2); burnt out, it seals the chips around it and goes.
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -74,7 +77,7 @@
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
-  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows } from './tapis-rules.mjs';
+  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -197,7 +200,7 @@ export function create(shell) {
     if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
     // Madness starts lower (room for the rows to come); Zen has no seals.
     G.grid = dealRound(G.lv, G.cols, mode === 'folie' ? Math.max(5, Math.round(G.maxRows * 0.6)) : G.maxRows, R);
-    if (mode === 'zen') G.grid.forEach((col) => col.forEach((b) => { b.seal = false; }));
+    if (mode === 'zen') G.grid.forEach((col) => col.forEach((b) => { b.seal = false; b.fuse = 0; }));   // nor fuse chips (web.138)
     G.grid.forEach((col, c) => col.forEach((b, r) => { b.off = 6 + r * 0.6 + c * 0.5; }));   // the chips fall into place
     G.total = chipsLeft(G.grid);
     G.timeMax = G.timeLeft = timed() ? timeFor(G.total, G.lv) : 1;
@@ -313,7 +316,17 @@ export function create(shell) {
     grp.filter(([c, r]) => G.grid[c][r].k >= 0).forEach(([c, r], i) => {
       if (pay.each[i]) G.fx.push({ s: fmt(pay.each[i]), x: colX(L, c), y: chipY(L, c, r) - L.bh * 0.5, t: -0.04 * Math.min(i, 12), life: 0.9, small: true, tier: tierOf(i) });
     });
-    takeCells(L, grp);
+    // web.138: a fuse chip in the group goes off — the cells around it go too, each chip ×2 its value
+    const blast = fuseBlast(G.grid, grp);
+    if (blast.length) {
+      const boom = blast.reduce((a, [x, y]) => a + (G.grid[x][y].k >= 0 ? CHIPS[G.grid[x][y].k].v * 2 : 0), 0);
+      grp.concat(blast).forEach(([x, y]) => { if (G.grid[x][y].fuse > 0) fireBurst(L, x, y, false); });
+      G.score += boom;
+      const [bx, by] = grp.find(([x, y]) => G.grid[x][y].fuse > 0) || blast[0];
+      G.fx.push({ s: '💥 ' + t('tpBoom') + '  +' + fmt(boom), x: colX(L, bx), y: chipY(L, bx, by) - L.bh * 3, t: 0.05, life: 1.3, big: true });
+      sound('notifyAllIn');
+    }
+    takeCells(L, grp.concat(blast));
     G.score += pay.pts;
     if (pay.cat > G.bestCat) G.bestCat = pay.cat;
     G.fx.push({ s: t(NAME_KEYS[pay.cat]) + '  +' + fmt(pay.pts), x: colX(L, top[0]), y: chipY(L, top[0], Math.min(top[1], G.grid[top[0]].length)) - L.bh * 2, t: 0, life: 1.2, big: grp.length >= 5 });
@@ -411,6 +424,33 @@ export function create(shell) {
     const L = geom();
     G.fx.push({ s: '🂠 ' + t(NAME_KEYS[cat]) + '  +' + fmt(pts), x: L.W / 2, y: TOP + 34, t: 0, life: 1.8, big: true });
     sound(cat >= 2 ? 'notifyBigWin' : 'notifyAllIn');
+  }
+  /** A fuse chip going off (web.138): sparks and smoke, a ring of fire when taken in time, grey ash when burnt out. */
+  function fireBurst(L, c, r, out) {
+    const x = colX(L, c), y = chipY(L, c, r) - L.bh / 2;
+    const cols = out ? ['#5b5f66', '#8a8f96', '#2a2c30', '#ff7a1a'] : ['#ffd23a', '#ff8a1a', '#ff4a1a', '#fff3c0'];
+    for (let i = 0; i < 26; i++) {
+      const a = Math.random() * Math.PI * 2, v = L.cw * (2 + Math.random() * (out ? 2.5 : 5));
+      G.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - L.cw * (out ? 0.5 : 2), t: 0, life: 0.5 + Math.random() * 0.5, c: cols[i % 4], r: 1.5 + Math.random() * 3, rot: Math.random() * 6 });
+    }
+  }
+  /** Fuse chips burning (web.138): each second off their countdown; burnt out, the chips around are sealed and it goes. */
+  function burnFuses(dt) {
+    const out = [];
+    for (const col of G.grid) for (const b of col) if (b.fuse > 0) { b.fuse -= dt; if (b.fuse <= 0) { b.fuse = 0; out.push(b); } }
+    if (!out.length) return;
+    const L = geom();
+    for (const b of out) {
+      const c = G.grid.findIndex((col) => col.includes(b));
+      if (c < 0) continue;
+      const r = G.grid[c].indexOf(b);
+      for (const [x, y] of fuseOut(G.grid, c, r)) G.grid[x][y].pop = 0.45;
+      fireBurst(L, c, r, true);
+      G.fx.push({ s: '💥🔒', x: colX(L, c), y: chipY(L, c, r) - L.bh * 2, t: 0, life: 1.1 });
+      removeCells(G.grid, [[c, r]]);
+    }
+    sound('notifyFold');
+    afterMove();
   }
   function burstCells(L, cells) {
     for (const [c, r] of cells) {
@@ -623,6 +663,7 @@ export function create(shell) {
       }
       if (mode === 'folie' && state === 'run') { G.timeMax = G.kit.rise; G.timeLeft = G.kit.rise - G.riseT; }
     }
+    if (state === 'run' && G.kit && G.kit.fuses) burnFuses(dt);
     if (G.venueT < 1) G.venueT = Math.min(1, G.venueT + dt / 1.2);
     for (let i = G.flying.length - 1; i >= 0; i--) { const f = G.flying[i]; f.t += dt; if (f.t >= 0.6) { G.flying.splice(i, 1); addCard(f.n); } }
     if (G.handFull) { G.handFull.t += dt; if (G.handFull.t > 1.8) G.handFull = null; }
@@ -789,6 +830,30 @@ export function create(shell) {
       g.beginPath(); g.moveTo(x - w, yb - bh); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh); g.ellipse(x, yb - bh, w, ry, 0, 0, Math.PI, true); g.fill();
     }
   }
+  /**
+   * A fuse chip (web.138): a little black bomb on its side with the seconds left, its wick sparking — red and
+   * beating in the last 5 seconds.
+   */
+  function drawFuse(g, L, x, yb, left, sc) {
+    const { bh } = L, w = L.rx * (sc || 1), r = Math.max(4, Math.min(bh * 0.55, w * 0.42)), cy = yb - bh * 0.5;
+    const hot = left < 5, beat = hot ? 1 + 0.12 * Math.max(0, Math.sin(time * 14)) : 1;
+    g.save();
+    g.translate(x, cy); g.scale(beat, beat);
+    // the wick, from the bomb up to the right, and its spark
+    const wx = r * 0.95, wy = -r * 1.15;
+    g.strokeStyle = '#c8a46a'; g.lineWidth = Math.max(1, r * 0.18); g.beginPath(); g.moveTo(r * 0.5, -r * 0.6); g.quadraticCurveTo(r * 0.95, -r * 0.7, wx, wy); g.stroke();
+    if (!shell.reduced || hot) {
+      const f = 0.6 + 0.4 * Math.sin(time * 31 + x);
+      g.fillStyle = 'rgba(255,210,58,' + f.toFixed(2) + ')'; g.beginPath(); g.arc(wx, wy, r * (0.28 + 0.12 * f), 0, 7); g.fill();
+      g.fillStyle = '#fff6d0'; g.beginPath(); g.arc(wx, wy, r * 0.12, 0, 7); g.fill();
+    }
+    // the bomb and its seconds
+    g.fillStyle = hot ? '#b3201a' : '#17181b'; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill();
+    g.strokeStyle = hot ? '#ffd0c8' : '#e3c06a'; g.lineWidth = Math.max(1, r * 0.14); g.stroke();
+    g.fillStyle = '#fff'; g.font = '800 ' + (r * 1.15).toFixed(1) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(String(Math.ceil(left)), 0, r * 0.06);
+    g.restore();
+  }
   const chipSprites = spriteCache(shell, 96);
   const roomSprite = spriteCache(shell, 2);     // the room: a whole-canvas picture, the last two levels'
   /** The chip itself (no highlight): its side, its marks and suit, its top, its seal. */
@@ -900,6 +965,11 @@ export function create(shell) {
         const b = col[r], sx = b.shake > 0 ? Math.sin(time * 70) * 2.5 : (r % 3 === 1 ? 0.8 : r % 3 === 2 ? -0.6 : 0);
         drawChip(g, L, x + sx, chipY(L, c, r), b, hl.has(c + ',' + r), b.pop > 0 ? 1 + b.pop * 0.35 : 1, r === col.length - 1);
       }
+    }
+    // The fuse chips' bombs (web.138), over the stacks so the chip above never hides them.
+    for (let c = 0; c < G.grid.length; c++) {
+      const x = colX(L, c), col = G.grid[c];
+      for (let r = 0; r < col.length; r++) if (col[r].fuse > 0) drawFuse(g, L, x, chipY(L, c, r), col[r].fuse, col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
     }
     // The cursor (keys, pad, remote).
     if (state === 'run' && G.showCursor && cur.bar < 0 && G.grid[cur.c]) {
