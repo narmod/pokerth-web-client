@@ -835,6 +835,9 @@
   .lbrand{display:flex;align-items:center;gap:12px;margin:0 0 4px}
   .lbrand img{width:44px;height:44px;display:block}
   .lbrand h1{margin:0}
+  #login label.lrem{display:flex;align-items:center;gap:8px;margin:12px 0 4px;font-size:.84rem;cursor:pointer}
+  #login label.lrem input{margin:0;flex:none}
+  #login .lrem-note{margin:0 0 12px}
   @media(max-width:899px){
     .shell{grid-template-columns:minmax(0,1fr)}
     .side{position:fixed;left:0;top:0;bottom:0;width:min(316px,86vw);transform:translateX(-102%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.35);visibility:hidden}
@@ -1179,6 +1182,8 @@
     <div class="card">
       <label for="ltok">Admin token</label>
       <input id="ltok" type="password" placeholder="your admin token" autocomplete="off">
+      <label class="lrem" for="lrem"><input type="checkbox" id="lrem"> Remember on this device</label>
+      <div class="muted lrem-note">Off: the key lasts until this tab is closed. On: it stays in this browser, where any page of this site — <code>/live</code> included — could read it.</div>
       <button id="loginBtn" class="primary">Log in</button>
       <div id="loginErr" class="msg err"></div>
       <div class="muted">Set on the server: <code>STATS_ADMIN_TOKEN</code> in the <code>.env</code> file next to <code>docker-compose.yml</code> (Docker), or <code>pokerth-web set-token</code> on a native install.</div>
@@ -2302,9 +2307,24 @@
 </div>
 <script>
 (function(){
-  var TOKK='pth_admin_tok', $=function(id){return document.getElementById(id);};
+  var TOKK='pth_admin_tok', REMK='pth_admin_remember', $=function(id){return document.getElementById(id);};
   var login=$('login'), dash=$('dash');
-  function tok(){ return (localStorage.getItem(TOKK)||'').trim(); }
+  // Where the key lives (web.134). By default in this tab's sessionStorage:
+  // the other pages of this origin — /live, embedded on pokerth.net, and the
+  // client — share localStorage, not another tab's sessionStorage, so a script
+  // injected there cannot read the key. « Remember on this device » keeps the
+  // old behaviour (localStorage). A key stored before web.134 without that
+  // choice moves into the tab: still logged in, gone from localStorage.
+  function _ss(){ try{ var s=window.sessionStorage; s.getItem(TOKK); return s; }catch(e){ return null; } }
+  function _remembered(){ try{ return localStorage.getItem(REMK)==='1'; }catch(e){ return false; } }
+  (function(){ try{ var l=localStorage.getItem(TOKK), s=_ss();
+    if(l && s && !_remembered()){ if(!s.getItem(TOKK)) s.setItem(TOKK,l); localStorage.removeItem(TOKK); } }catch(e){} })();
+  function tok(){ var v=''; var s=_ss(); try{ v=(s&&s.getItem(TOKK))||''; }catch(e){} if(!v){ try{ v=localStorage.getItem(TOKK)||''; }catch(e){} } return v.trim(); }
+  function _storeTok(v, rem){ var s=_ss();
+    try{ if(rem||!s){ localStorage.setItem(TOKK,v); localStorage.setItem(REMK,'1'); if(s) s.removeItem(TOKK); }
+         else { s.setItem(TOKK,v); localStorage.removeItem(TOKK); localStorage.removeItem(REMK); } }catch(e){} }
+  function _dropTok(){ try{ var s=_ss(); if(s) s.removeItem(TOKK); }catch(e){} try{ localStorage.removeItem(TOKK); localStorage.removeItem(REMK); }catch(e){} }
+  try{ if($('lrem')) $('lrem').checked=_remembered(); }catch(e){}
   // Terminal auth failure on a background poll (dead/rotated token, or the
   // server's brute-force block). Stop every refresher and drop back to login,
   // otherwise the auto-refresh loops keep hammering /admin — which renews the
@@ -2909,7 +2929,7 @@
 
   $('loginBtn').addEventListener('click', doLogin);
   $('ltok').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  function doLogin(){ localStorage.setItem(TOKK, $('ltok').value.trim()); enter(); }
+  function doLogin(){ _storeTok($('ltok').value.trim(), !!($('lrem') && $('lrem').checked)); enter(); }
   $('logoutBtn').addEventListener('click', function(){ doLogout(); });
   (function(){
     var btn=$('themeBtn'); if(!btn) return;
@@ -2931,7 +2951,7 @@
   (function(){ var sel=$('idleSel'); if(!sel) return; sel.value=IDLE_MS===0?'0':(IDLE_MS===3600000?'60':'10');
     sel.addEventListener('change',function(){ var v=sel.value; IDLE_MS=v==='0'?0:(v==='60'?3600000:600000); _idleReset(); try{ localStorage.setItem('pth_admin_idle',v); }catch(e){} }); })();
   function _idleReset(){ _idleLast=Date.now(); }
-  function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); sectionEvent(''); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); sectionEvent(''); _dropTok(); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
   function _idleCheck(){ if(IDLE_MS && tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after '+(IDLE_MS>=3600000?'1 hour':'10 minutes')+' of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);

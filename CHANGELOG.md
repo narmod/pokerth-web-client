@@ -286,6 +286,12 @@ highlights below.
   Admin › Errors as mode `live-csp` (blocked URL without its query string, browser-extension reports dropped,
   `/clienterr`'s rate limit). The enforced header is unchanged (`frame-ancestors`). Plan: switch to enforcing
   once a week of reports shows nothing legitimate. `scripts/test-live-csp.mjs` (12 checks).
+- **Admin key kept per tab** (`web.134`) — the admin page stored its key in `localStorage`, shared by every page
+  of the origin: a script injected into `/live` (embedded on pokerth.net, showing every player's names and chat)
+  could have read it. It now lives in the tab's `sessionStorage`, which other tabs and frames cannot read; a
+  « Remember on this device » box on the login screen keeps the old behaviour (`pth_admin_remember`). A key
+  stored before web.134 without that choice moves into the tab on the next load (still logged in). Log out
+  clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
 - **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —
