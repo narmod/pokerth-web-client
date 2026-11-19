@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: guest chips** (`web.139`, 3rd of the « harder Tapis! » series, narmod's idea: « bring new characters ») —
+  from level 27 (`levelKit.guests`: 1, one more every 4 levels up to 3) plain chips carry a guest, drawn as a white
+  badge with someone in it. Taken in a group of 2-4 (`guestComes`), a new friend of the level's family drops onto the
+  nearest stack with nobody on it, else onto a new 3-chip column at the nearest side (`guestColumn`: a pair at the
+  bottom, so it can be played) — another one to put in his hole; with the table at its full width he cannot sit and
+  goes. In a group of 5+, a fuse blast or a power, the guest is shown out and pays as a friend in his hole
+  (`inPay`). New keys `tpNewGuest`, `tpGuestIn`, `tpGuestOut` and a rules sentence, 83 catalogues. Simulation: a
+  bot that avoids letting them in lets in about 4 % of them — a chip that asks for big groups more than a wall.
 - **Tapis!: fuse chips** (`web.138`, 2nd of the « harder Tapis! » series, narmod's idea: « chips that explode ») — from
   level 22 (`levelKit.fuses`: 1, one more every 3 levels up to 4), plain colour chips get a countdown (`fuseS` 16 s,
   down to 10 s at 34; each next one `FUSE_STEP` 5 s later), drawn as a little bomb with its seconds and a sparking

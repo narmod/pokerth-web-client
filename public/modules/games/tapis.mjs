@@ -59,6 +59,10 @@
 //             Fuse chips from 22 (web.138): a countdown on the chip; taken in
 //             time « Boom! », the cells around go too (each chip blown up pays
 //             its value ×2); burnt out, it seals the chips around it and goes.
+//             Guest chips from 27 (web.139): taken in a group of 2-4, a new
+//             friend drops onto a stack with nobody on it, else onto a new
+//             column at the side (none if the table is full: he goes); in a
+//             bigger group, a blast or a power, he is shown out (pays inPay).
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -77,7 +81,7 @@
 import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
-  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut } from './tapis-rules.mjs';
+  WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -326,7 +330,10 @@ export function create(shell) {
       G.fx.push({ s: '💥 ' + t('tpBoom') + '  +' + fmt(boom), x: colX(L, bx), y: chipY(L, bx, by) - L.bh * 3, t: 0.05, life: 1.3, big: true });
       sound('notifyAllIn');
     }
+    // web.139: a guest chip in a small group brings a friend; in a big one (or blown up) he is shown out
+    const guests = grp.concat(blast).filter(([x, y]) => G.grid[x][y].guest).map(([x, y]) => ({ x, y, in: guestComes(grp.length) && grp.some(([a, b]) => a === x && b === y) }));
     takeCells(L, grp.concat(blast));
+    guests.forEach((gu) => (gu.in ? guestIn(L, gu.x) : guestOut(L, gu.x, gu.y)));
     G.score += pay.pts;
     if (pay.cat > G.bestCat) G.bestCat = pay.cat;
     G.fx.push({ s: t(NAME_KEYS[pay.cat]) + '  +' + fmt(pay.pts), x: colX(L, top[0]), y: chipY(L, top[0], Math.min(top[1], G.grid[top[0]].length)) - L.bh * 2, t: 0, life: 1.2, big: grp.length >= 5 });
@@ -344,7 +351,9 @@ export function create(shell) {
     if (!cells.length || G.inv[p] <= 0) return;
     G.inv[p]--;
     const L = geom();
+    const guests = cells.filter(([x, y]) => G.grid[x][y].guest);
     G.score += takeCells(L, cells) * lvPay(3, G.lv);
+    guests.forEach(([x, y]) => guestOut(L, x, y));
     sound('notifyAllIn');
     moved(); renderHud(); afterMove();
   }
@@ -424,6 +433,38 @@ export function create(shell) {
     const L = geom();
     G.fx.push({ s: '🂠 ' + t(NAME_KEYS[cat]) + '  +' + fmt(pts), x: L.W / 2, y: TOP + 34, t: 0, life: 1.8, big: true });
     sound(cat >= 2 ? 'notifyBigWin' : 'notifyAllIn');
+  }
+  /**
+   * A guest sits at the table (web.139): he drops onto the nearest stack with nobody on it, else onto a new column
+   * of 3 chips at the side nearest to c — none when the table is at its full width: then he goes (shown out).
+   */
+  let guestN = 0;
+  function guestIn(L, c) {
+    let at = -1;
+    for (let i = 0; i < G.cols; i++) if (G.chars[i].none && G.grid[i].length && (at < 0 || Math.abs(i - c) < Math.abs(at - c))) at = i;
+    if (at < 0 && G.cols >= G.cols0) { guestOut(L, c, 0); return; }
+    if (at < 0) {
+      at = c < G.cols / 2 ? 0 : G.cols;
+      const col = guestColumn(colorsAt(G.lv), R);
+      col.forEach((b, r) => { b.off = 6 + r * 0.6; b.pop = 0.4; });
+      G.grid.splice(at, 0, col); G.chars.splice(at, 0, noFriend()); G.xs.splice(at, 0, null); G.cols++;
+      if (at === 0) G.cursor.c++;
+      G.xs = G.xs.map((x, i) => (x == null ? colAim(geom(), i) : x));
+      hover = null; G.picked = null;
+    }
+    const kinds = castFor(G.lv, G.cols0, R), kind = kinds[Math.floor(R() * kinds.length)];
+    const ace = castActor(shell.layer, kind, 'pth-game-tpg' + guestN++);
+    const ch = { ace, kind, slot: Math.min(G.cols0 - 1, at + Math.floor((G.cols0 - G.cols) / 2)), st: 'top', y: -60, vy: 0, sink: 0, mood: '', pose: '', clapUntil: 0, look: 0, eye: '', sweat: false, dealer: false, double: false };
+    G.chars[at] = ch; G.all.push(ch);
+    G.fx.push({ s: '🪑 ' + t('tpGuestIn'), x: colX(L, at), y: L.base - L.cw * 5, t: 0, life: 1.4 });
+    sound('notifyCard');
+  }
+  /** A guest shown out (web.139): he pays as a friend in his hole would. */
+  function guestOut(L, c, r) {
+    const pay = inPay(G.lv);
+    G.score += pay; renderHud();
+    G.fx.push({ s: '👋 ' + t('tpGuestOut') + '  +' + fmt(pay), x: colX(L, Math.min(c, G.cols - 1)), y: L.base - L.cw * 4 - r * 2, t: 0.1, life: 1.3, green: true });
+    sound('notifyAllIn');
   }
   /** A fuse chip going off (web.138): sparks and smoke, a ring of fire when taken in time, grey ash when burnt out. */
   function fireBurst(L, c, r, out) {
@@ -854,6 +895,20 @@ export function create(shell) {
     g.fillText(String(Math.ceil(left)), 0, r * 0.06);
     g.restore();
   }
+  /** A guest chip (web.139): a little white badge with someone in it, ringed with gold. */
+  function drawGuest(g, L, x, yb, sc) {
+    const { bh } = L, w = L.rx * (sc || 1), r = Math.max(4, Math.min(bh * 0.55, w * 0.42)), cy = yb - bh * 0.5;
+    g.save();
+    g.translate(x, cy + Math.sin(time * 3 + x) * 0.6);
+    g.fillStyle = '#fbf7ee'; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill();
+    g.save(); g.clip();
+    g.fillStyle = '#2f4f9e';
+    g.beginPath(); g.arc(0, -r * 0.22, r * 0.3, 0, 7); g.fill();
+    g.beginPath(); g.ellipse(0, r * 0.72, r * 0.62, r * 0.5, 0, 0, 7); g.fill();
+    g.restore();
+    g.strokeStyle = '#d8b25a'; g.lineWidth = Math.max(1, r * 0.16); g.beginPath(); g.arc(0, 0, r, 0, 7); g.stroke();
+    g.restore();
+  }
   const chipSprites = spriteCache(shell, 96);
   const roomSprite = spriteCache(shell, 2);     // the room: a whole-canvas picture, the last two levels'
   /** The chip itself (no highlight): its side, its marks and suit, its top, its seal. */
@@ -969,7 +1024,10 @@ export function create(shell) {
     // The fuse chips' bombs (web.138), over the stacks so the chip above never hides them.
     for (let c = 0; c < G.grid.length; c++) {
       const x = colX(L, c), col = G.grid[c];
-      for (let r = 0; r < col.length; r++) if (col[r].fuse > 0) drawFuse(g, L, x, chipY(L, c, r), col[r].fuse, col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
+      for (let r = 0; r < col.length; r++) {
+        if (col[r].fuse > 0) drawFuse(g, L, x, chipY(L, c, r), col[r].fuse, col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
+        else if (col[r].guest) drawGuest(g, L, x, chipY(L, c, r), col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
+      }
     }
     // The cursor (keys, pad, remote).
     if (state === 'run' && G.showCursor && cur.bar < 0 && G.grid[cur.c]) {

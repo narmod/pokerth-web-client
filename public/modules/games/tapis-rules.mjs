@@ -33,6 +33,11 @@
 //             around them too (fuseBlast, a fuse caught in it goes off as
 //             well); too late, the chip burns out and seals the chips around
 //             it (fuseOut).
+//   Guest     (web.139, levelKit.guests) from level 27, chips with a guest
+//             ({ guest: true }): taken in a group of 4 or fewer (guestComes),
+//             a new friend sits at the table — on a stack with nobody on it,
+//             else on a new column at the side (guestColumn); in a bigger
+//             group (or blown up, or by a power) the guest is shown out.
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -76,12 +81,21 @@ export function levelKit(lv) {
     // 3 levels up to 4; the first one's countdown 16 s, down to 10 s at 34, each next one 5 s more.
     fuses: lv < 22 ? 0 : Math.min(4, 1 + Math.floor((lv - 22) / 3)),
     fuseS: lv < 22 ? 0 : Math.max(10, 16 - (lv - 22) * 0.5),
+    // web.139: guest chips from 27, one more every 4 levels up to 3
+    guests: lv < 27 ? 0 : Math.min(3, 1 + Math.floor((lv - 27) / 4)),
   };
+}
+/** A guest chip taken in a group this small brings a new friend to the table (web.139); 5 or more show him out. */
+export const guestComes = (n) => n >= 2 && n <= 4;
+/** The stack a guest brings when there is no free one (web.139): 3 chips, a pair at the bottom so it can be played. */
+export function guestColumn(nColors, rnd = Math.random) {
+  const a = randK(nColors, rnd), b = randK(nColors, rnd);
+  return [{ k: a, off: 0 }, { k: a, off: 0 }, { k: b, off: 0 }];
 }
 /** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
 export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
@@ -389,6 +403,13 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
     if (!b) break;
     if (b.k < 0 || b.k === WILD || b.seal) continue;
     b.fuse = kit.fuseS + FUSE_STEP * f++; i++;
+  }
+  // web.139: guest chips, on plain chips of a colour (not a card, a Joker chip, a seal or a fuse)
+  for (let i = 0; i < kit.guests && spots.length; ) {
+    const at = pick(), b = at && grid[at[0]][at[1]];
+    if (!b) break;
+    if (b.k < 0 || b.k === WILD || b.seal || b.fuse > 0) continue;
+    b.guest = true; i++;
   }
   if (!anyMove(grid)) recaveRow(grid, n, rnd);
   return grid;

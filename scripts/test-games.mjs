@@ -540,6 +540,23 @@ console.log('Ace Dash: the long run, the score, the modes');
       ok(sealed.length === 2 && go[0][0].seal && go[0][1].seal && !go[1][1].seal && !go[2][1].seal,
         'Tapis!: a fuse burnt out seals the chips around it, not a card, a seal already or another fuse');
     }
+    {
+      // web.139: guest chips from 27 — on plain chips; 2-4 bring a friend, 5+ show him out; his stack can be played
+      ok(kit(26).guests === 0 && kit(27).guests === 1 && kit(31).guests === 2 && kit(35).guests === 3 && kit(60).guests === 3
+        && TP.KIT_FROM.some(([k, lv, key]) => k === 'guests' && lv === 27 && key === 'tpNewGuest')
+        && !TP.guestComes(1) && TP.guestComes(2) && TP.guestComes(4) && !TP.guestComes(5) && !TP.guestComes(12),
+        'Tapis!: guest chips from level 27, one more every 4 levels up to 3; a group of 2-4 lets him in, 5+ shows him out');
+      let okG = true;
+      for (let i = 0; i < 30; i++) {
+        const gr = TP.dealRound(31, 8, 12);
+        let n = 0;
+        gr.forEach((col) => col.forEach((b) => { if (b.guest) { n++; if (b.k < 0 || b.k === W || b.seal || b.fuse > 0) okG = false; } }));
+        if (n !== 2) okG = false;
+        const gc = TP.guestColumn(6);
+        if (gc.length !== 3 || gc[0].k !== gc[1].k || gc.some((b) => b.k === W || b.k < 0 || b.k > 6) || !TP.anyMove([gc])) okG = false;
+      }
+      ok(okG && [].concat(...TP.dealRound(26, 8, 12)).every((b) => !b.guest), 'Tapis!: level 31 deals 2 guests on plain chips (none before 27); a guest\'s stack has a pair at the bottom');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);
