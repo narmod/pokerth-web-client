@@ -167,6 +167,8 @@ ok(S._actedStreet === -1, '_actedStreet init = -1 (je n\'ai pas encore agi)');
 ok(S._roundEnded === false && S._boardDealing === false && S._inShowdown === false,
    'verrous de manche / board init = false');
 
+ok(S._actionSent === false, '_actionSent init = false (aucune action en vol, web.130)');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -200,7 +202,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_hbCount', '_hbLast', '_hbInterval', '_HB_WATCHDOG_MIN_MS',
    '_playingMode', '_preAction', '_preActionToCall', '_preActionOpen',
    '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
-   '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD',
+   '_actionBarPinned', '_actionSent', 'FEATURE_AUTO_CHECK_FOLD',
    '_handResultSnapshot', '_seatStackAtHandStart', '_myStackAtHandStart',
    '_lastPixPos', '_lastPixPids', '_potCenter', '_lastPotValue',
    'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',

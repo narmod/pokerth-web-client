@@ -98,7 +98,7 @@ ok(/when its connection opens/.test(admin) && /a page loaded but never connected
 // -- 1b. Client beacon ------------------------------------------------------
 const cc = client.slice(client.indexOf('window._pthCountConnect = function'));
 ok(/if \(window\.LIVE_MODE\) mode = 'live';/.test(cc.slice(0, 400)), "/live reports its connects as 'live'");
-ok(/\['pokerthnet', 'lan', 'offline', 'live'\]\.indexOf\(mode\)/.test(cc.slice(0, 600)), 'and the client whitelist lets it through');
+ok(/\['pokerthnet', 'lan', 'offline', 'live'(?:, '[a-z]+')*\]\.indexOf\(mode\)/.test(cc.slice(0, 600)), 'and the client whitelist lets it through');
 
 // -- 2. Live connections board ------------------------------------------
 ok((client.match(/\(window\.LIVE_MODE \? '&live=1' : ''\)/g) || []).length === 2, 'both proxy URLs (bridge and notice channel) carry &live=1 on /live');

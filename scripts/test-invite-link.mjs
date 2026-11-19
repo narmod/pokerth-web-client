@@ -154,7 +154,8 @@ const pj = fs.readFileSync('public/pokerth.js', 'utf8');
 const copyFn = pj.slice(pj.indexOf('    copyTableLink() {'), pj.indexOf('    // ── Share an invite link to the current table'));
 ok(copyFn.length > 0 && copyFn.indexOf("'?' + qs") === -1 && copyFn.indexOf('this._inviteLink()') !== -1,
   'copyTableLink: canonical #join link, no more ?host=&table=<id>');
-ok(/shareTableLink\(\) \{\s*var _il = this\._inviteLink\(\);/.test(pj), 'shareTableLink: same builder as copyTableLink');
+// (the « Play nearby » early return of web.354 may come first: no link is built there)
+ok(/shareTableLink\(\) \{\s*(?:\/\/[^\n]*\n\s*)*(?:if \(window\._nearbyMode\)[^\n]*\n\s*)?var _il = this\._inviteLink\(\);/.test(pj), 'shareTableLink: same builder as copyTableLink');
 const apply = pj.slice(pj.indexOf('function _pthApplySharedLink'), pj.indexOf('function _pthDrainShare'));
 ok(apply.indexOf('S.gameId') === -1 && apply.indexOf('S.gId') !== -1, '_pthApplySharedLink: « never during a hand » guard reads S.gId');
 ok(pj.indexOf('window.InviteLink.armNotFoundWatch()') !== -1, 'landing: not-found watch armed from the connection');
