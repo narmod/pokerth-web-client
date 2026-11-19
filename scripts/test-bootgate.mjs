@@ -34,7 +34,7 @@ const invisible = rule('#boot-splash.bs-invisible');
 const hide = rule('#boot-splash.bs-hide');
 const base = rule('#boot-splash');
 
-ok(!!base && /position:fixed/.test(base) && /inset:0/.test(base),
+ok(!!base && /position:fixed/.test(base) && /inset:0|top:0;right:0;bottom:0;left:0/.test(base),
    'the overlay covers the viewport');
 ok(!!invisible, 'the .bs-invisible rule (splash option off) still exists');
 ok(!!invisible && /opacity:\s*0/.test(invisible),

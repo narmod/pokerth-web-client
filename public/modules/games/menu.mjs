@@ -67,7 +67,7 @@ const CSS = `
 #pth-game .gm-card.lock h3{color:var(--text)}
 #pth-game .gm-myst{position:relative;background:#06080b}
 #pth-game .gm-myst .gm-dk{height:100%;filter:blur(9px) grayscale(1) brightness(.35);transform:scale(1.12)}
-#pth-game .gm-myst .gm-qm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 58px/1 'Cinzel',Georgia,serif;color:rgba(245,215,122,.9);text-shadow:0 2px 12px rgba(0,0,0,.9)}
+#pth-game .gm-myst .gm-qm{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;font:700 58px/1 'Cinzel',Georgia,serif;color:rgba(245,215,122,.9);text-shadow:0 2px 12px rgba(0,0,0,.9)}
 #pth-game.pg-light .gm-myst{background:#cfd3da}
 #pth-game.pg-light .gm-myst .gm-dk{filter:blur(9px) grayscale(1) brightness(.75) contrast(.8)}
 #pth-game.pg-light .gm-myst .gm-qm{color:#5a4410;text-shadow:0 1px 8px rgba(255,255,255,.8)}

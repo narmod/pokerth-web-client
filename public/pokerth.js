@@ -2694,7 +2694,7 @@ function showWelcomeModal(title, body, version) {
   hideWelcomeModal();
   var back = document.createElement('div');
   back.id = 'welcome-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
   card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
@@ -2783,7 +2783,7 @@ function showGuestNoticeModal(title, body, version) {
   hideGuestNoticeModal();
   var back = document.createElement('div');
   back.id = 'guestnotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
   card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
@@ -2857,7 +2857,7 @@ function showAuthNoticeModal(title, body, version) {
   hideAuthNoticeModal();
   var back = document.createElement('div');
   back.id = 'authnotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
   card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
@@ -2929,7 +2929,7 @@ function showLanNoticeModal(title, body, version) {
   hideLanNoticeModal();
   var back = document.createElement('div');
   back.id = 'lannotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
   card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
@@ -12685,7 +12685,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.135'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.136'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

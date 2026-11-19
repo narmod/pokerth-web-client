@@ -1531,7 +1531,7 @@ function openThemePanel(ev) {
   if (!(window.matchMedia && window.matchMedia('(min-width:900px) and (min-height:600px)').matches)) {
     overlay = document.createElement('div');
     overlay.id = OVERLAY_ID;
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent';
+    overlay.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:9998;background:transparent';
     overlay.addEventListener('click', closeThemePanel);
   }
 

@@ -16,7 +16,7 @@ export const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K
 export const CHIP = [['#b3261e', '#f5f0e3'], ['#1f4e9e', '#f5f0e3'], ['#1e7a46', '#f5f0e3'], ['#1b1b1b', '#d8b25a']];
 
 const CSS = `
-#${ACE_ID}{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#${ACE_ID}{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;overflow:hidden}
 #${ACE_ID} .ar-box{position:absolute;left:0;top:0;width:168px;height:228px;transform-origin:84px 212px;will-change:transform}
 #${ACE_ID} svg>ellipse[cy="180"]{display:none}
 #${ACE_ID} .run .mc-lean{transform:rotate(7deg)}
@@ -85,9 +85,9 @@ const CSS = `
 @media (max-width:520px){#pth-game .gm-tile{padding:10px 8px;gap:4px}#pth-game .gm-tile i{font-size:24px}#pth-game .gm-tile b{font-size:14px}}
 /* The title screen's template (title.mjs, web.55): the dark picture, the
    record of each tile, a row of option chips, a footnote */
-#pth-game .pg-panel>.gm-bg{position:absolute;inset:0;z-index:0;display:block;max-width:none;overflow:hidden;pointer-events:none}
+#pth-game .pg-panel>.gm-bg{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0;display:block;max-width:none;overflow:hidden;pointer-events:none}
 #pth-game .pg-panel>.gm-bg svg{display:block;width:100%;height:100%;filter:brightness(.5) saturate(.9)}
-#pth-game .pg-panel>.gm-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(11,18,16,.3),rgba(11,18,16,.82))}
+#pth-game .pg-panel>.gm-bg::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;background:radial-gradient(ellipse at center,rgba(11,18,16,.3),rgba(11,18,16,.82))}
 #pth-game .pg-panel.gm-title>div:not(.gm-bg){position:relative;z-index:1;gap:10px;max-width:640px}
 #pth-game .pg-panel .gm-hint{max-width:520px;color:#dfe9e3}
 #pth-game .gm-tile .gm-rec{color:#d8b25a}

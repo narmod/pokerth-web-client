@@ -112,7 +112,7 @@ function open(url, name, warnings) {
   // dialog is visible and centred even under a stale cached stylesheet
   // that predates the #invite-dialog rules.
   dlg.style.position = 'fixed';
-  dlg.style.inset = '0';
+  dlg.style.top = dlg.style.right = dlg.style.bottom = dlg.style.left = '0';   // inset, spelled out (Chrome < 87, Safari < 14.1)
   dlg.style.zIndex = '1300';
   dlg.style.alignItems = 'center';
   dlg.style.justifyContent = 'center';

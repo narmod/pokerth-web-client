@@ -713,13 +713,13 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
    boîte centrale col700 opacité 0.8 radius 5 avec logo 96, barre, et rangée
    terminal + message tournant. Couleurs via variables de thème (data-theme).
    Conservé en plus du QML : compteur de modules et erreur → « Réessayer ». */
-#boot-splash{--edge:#bf671f;position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+#boot-splash{--edge:#bf671f;position:fixed;top:0;right:0;bottom:0;left:0;z-index:99999;display:flex;align-items:center;justify-content:center;
   color:var(--text-hi,#eff1f5);background:#10141c;overflow:hidden;
   opacity:1;transition:opacity .42s ease}
-#boot-splash::before{content:"";position:absolute;inset:-28px;
+#boot-splash::before{content:"";position:absolute;top:-28px;right:-28px;bottom:-28px;left:-28px;
   background:url("/img/pokerth-login-bg.webp") center / cover no-repeat;
   filter:blur(10px);transform:scale(1.05)}
-:root.reduce-fx #boot-splash::before{filter:none;transform:none;inset:0}
+:root.reduce-fx #boot-splash::before{filter:none;transform:none;top:0;right:0;bottom:0;left:0}
 #boot-splash.bs-hide{opacity:0;pointer-events:none}
 /* Splash désactivé par l'option : invisible, mais il continue de BLOQUER les
    clics tant que l'app n'est pas prête. Sans ça, le formulaire est pleinement
@@ -3024,7 +3024,7 @@ function _processAvatarFile(file) {
         </div>
       </div>
       <!-- Seats overlay: full zone, pixel-positioned by JS -->
-      <div id="g-seats" style="position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5"></div>
+      <div id="g-seats" style="position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;overflow:visible;z-index:5"></div>
       </div><!-- /g-zoom-layer -->
       <!-- Loupe mini-board (web addition, modules/ui/mini-board.mjs): fixed copy
            of the community cards, OUTSIDE the zoom layer, shown only when it is

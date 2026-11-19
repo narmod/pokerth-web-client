@@ -756,7 +756,7 @@ function ensureCss() {
     + '#pth-game.pg-light .bl-box{background:rgba(250,247,240,.96);box-shadow:0 0 0 1px rgba(140,105,20,.4),0 10px 26px rgba(0,0,0,.18)}'
     + '#pth-game.pg-light .bl-box h2{color:#8a6510}#pth-game.pg-light .bl-box .ar-final{color:#1d222b}'
     // The buttons: the table's, positioned over the felt.
-    + '#pth-game .bl-ui{position:absolute;inset:0;pointer-events:none;z-index:400}'
+    + '#pth-game .bl-ui{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;z-index:400}'
     + '#pth-game .bl-his .ar-lab{max-width:7em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '#pth-game .bl-ui button{position:absolute;pointer-events:auto;box-sizing:border-box;margin:0;display:flex;flex-direction:column;align-items:center;'
     + 'justify-content:center;gap:.12em;line-height:1.05;white-space:nowrap;overflow:hidden;min-height:0;min-width:0;cursor:pointer;-webkit-tap-highlight-color:transparent}'

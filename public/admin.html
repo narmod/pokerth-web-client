@@ -281,9 +281,9 @@
   .fspill.off{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
   .fspill.off .dots{opacity:.5}
   .fsoffnote{align-self:center;color:var(--muted);font-size:.75rem}
-  .fsheet{position:fixed;inset:0;z-index:60}
+  .fsheet{position:fixed;top:0;right:0;bottom:0;left:0;z-index:60}
   .fsheet[hidden]{display:none}
-  .fsscrim{position:absolute;inset:0;background:rgba(5,8,12,.6)}
+  .fsscrim{position:absolute;top:0;right:0;bottom:0;left:0;background:rgba(5,8,12,.6)}
   .fspanel{position:absolute;top:0;right:0;bottom:0;width:min(440px,100vw);display:flex;flex-direction:column;background:var(--side);border-left:1px solid var(--line);box-shadow:-18px 0 50px rgba(0,0,0,.35)}
   .fsgrab{display:none}
   .fshead{display:flex;align-items:center;gap:2px;padding:12px 8px 6px 20px}
@@ -842,7 +842,7 @@
     .shell{grid-template-columns:minmax(0,1fr)}
     .side{position:fixed;left:0;top:0;bottom:0;width:min(316px,86vw);transform:translateX(-102%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.35);visibility:hidden}
     .shell.open .side{transform:none;visibility:visible}
-    .shell.open .scrim{display:block;position:fixed;inset:0;background:rgba(5,8,12,.55);z-index:20}
+    .shell.open .scrim{display:block;position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(5,8,12,.55);z-index:20}
     .sclose,.menubtn{display:inline-flex}
     .side .gtab{min-height:46px}
     .side .tab{min-height:42px}

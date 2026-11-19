@@ -58,10 +58,10 @@ const CSS = `
 #${ROOT_ID} .pg-play[hidden],#${ROOT_ID} .pg-view[hidden]{display:none}
 #${ROOT_ID} .pg-stage{position:relative;flex:none;border-radius:14px;overflow:hidden;background:#131e19;
   box-shadow:0 0 0 1px rgba(216,178,90,.32),0 12px 34px rgba(0,0,0,.35);touch-action:none;cursor:pointer;outline:none}
-#${ROOT_ID} canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#${ROOT_ID} .pg-layer{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+#${ROOT_ID} canvas{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;display:block}
+#${ROOT_ID} .pg-layer{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;pointer-events:none;overflow:hidden}
 #${ROOT_ID} .pg-hud{position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px 12px}
-#${ROOT_ID} .pg-panel{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;
+#${ROOT_ID} .pg-panel{position:absolute;top:0;right:0;bottom:0;left:0;z-index:4;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;
   background:radial-gradient(ellipse at center,rgba(11,18,16,.35),rgba(11,18,16,.82));pointer-events:none;color:#e8efea}
 #${ROOT_ID} .pg-panel[hidden]{display:none}
 #${ROOT_ID} .pg-panel.pg-clear{background:none}
@@ -98,8 +98,8 @@ body.has-gamepad #${ROOT_ID} .pg-pk{display:inline-block}
 #${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="right"]{order:-2}
 #${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="jump"]{order:1}
 #${ROOT_ID}.pg-lanes .pg-land .pg-pad button[data-a="duck"]{order:2}
-#${ROOT_ID} .pg-view{position:absolute;inset:0;overflow:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(24px + var(--pth-sab,0px)) max(16px,env(safe-area-inset-left,0px))}
-#${ROOT_ID} .pg-rules{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.45)}
+#${ROOT_ID} .pg-view{position:absolute;top:0;right:0;bottom:0;left:0;overflow:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(24px + var(--pth-sab,0px)) max(16px,env(safe-area-inset-left,0px))}
+#${ROOT_ID} .pg-rules{position:absolute;top:0;right:0;bottom:0;left:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.45)}
 #${ROOT_ID} .pg-rules[hidden]{display:none}
 #${ROOT_ID} .pg-sheet{width:min(560px,100%);max-height:100%;overflow:auto;box-sizing:border-box;padding:16px 18px;border-radius:14px;
   background:var(--modal-bg,var(--panel));color:var(--text-hi);border:1px solid var(--border-hi);box-shadow:0 18px 50px rgba(0,0,0,.4);user-select:text;-webkit-user-select:text}

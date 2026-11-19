@@ -1,4 +1,7 @@
-2026-11-19 version 2.1.11-web.135 (current series):
+2026-11-19 version 2.1.11-web.136 (current series):
+- bugfix: Older browsers (Chrome before 87, Safari before 14.1) — windows, overlays and the table felt could sit in the wrong place or miss part of the screen; they now cover it as they should
+
+2026-11-19 version 2.1.11-web.135:
 - bugfix: Older Android browsers (Chrome 84 and similar) — the SQLite engine behind the hand-history .pdb export failed to start, with an error on every visit; it now loads there too
 
 2026-11-19 version 2.1.11-web.132:

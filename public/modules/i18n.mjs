@@ -703,7 +703,7 @@ function openLangMenu(ev) {
 
     var overlay = document.createElement('div');
     overlay.id = 'lang-menu-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:transparent';
+    overlay.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:9998;background:transparent';
     overlay.addEventListener('click', closeLangMenu);
 
     var menu = document.createElement('div');

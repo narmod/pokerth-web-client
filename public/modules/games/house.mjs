@@ -114,7 +114,7 @@ export function create(shell) {
   const ace = aceActor(shell.layer);
   // Cards in front of the Ace: a second canvas above him.
   const fgCanvas = document.createElement('canvas');
-  fgCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block';
+  fgCanvas.style.cssText = 'position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;display:block';
   shell.layer.appendChild(fgCanvas);
   const fg = /** @type {CanvasRenderingContext2D} */ (fgCanvas.getContext('2d'));
 

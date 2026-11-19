@@ -548,7 +548,7 @@ body {
    Scoped to the installed app on purpose: in a normal browser tab dvh is the
    correct unit (it tracks the collapsing toolbars) and body must stay in flow. */
 @media (display-mode: fullscreen), (display-mode: standalone) {
-  body { position: fixed; inset: 0; height: auto; }
+  body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; height: auto; }
   .screen { height: 100%; }
 
   /* The screens now reach the physical bottom edge, so whatever sits at the
@@ -713,7 +713,7 @@ body {
 /* Toggle switch */
 .cf-switch { position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer; flex: none; }
 .cf-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.cf-switch-tr { position: absolute; inset: 0; background: var(--border); border-radius: var(--r-pill); transition: background 0.16s; }
+.cf-switch-tr { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: var(--border); border-radius: var(--r-pill); transition: background 0.16s; }
 .cf-switch-tr::before {
   content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
   background: #fff; border-radius: 50%; transition: transform 0.16s; box-shadow: 0 1px 3px rgba(0,0,0,0.35);
@@ -1181,7 +1181,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    voile noir, z-index dans la bande geree. */
 #game-info-modal {
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   z-index: 1200;
   display: flex;
   align-items: center;
@@ -1307,7 +1307,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    panneau intercepte les clics. */
 #player-info-modal {
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   z-index: 1200;
   display: flex;
   align-items: center;
@@ -1517,7 +1517,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   /* Fixed full-viewport "backdrop" surface; the popup's own
      header+grid form the visible card, centered via flex. */
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   z-index: 10000;
   display: flex !important;
   flex-direction: column;
@@ -2588,7 +2588,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #s-game.urgent::after {
   content: '';
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   pointer-events: none;
   z-index: 90;
   box-shadow: inset 0 0 60px 10px rgba(var(--red-rgb), 0.22);
@@ -2943,7 +2943,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .felt-oval::before {
   content: '';
   position: absolute;
-  inset: 10px;
+  top: 10px; right: 10px; bottom: 10px; left: 10px;
   border-radius: 50% / 42%;
   border: 2px solid rgba(255,255,255,0.07);
   pointer-events: none;
@@ -3046,7 +3046,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   .felt-oval::before {
   content: '';
   position: absolute;
-  inset: 10px;
+  top: 10px; right: 10px; bottom: 10px; left: 10px;
   border-radius: 50% / 42%;
   border: 2px solid rgba(255,255,255,0.07);
   pointer-events: none;
@@ -4124,7 +4124,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 /* ══ HANDS HELP OVERLAY ══ */
 #hands-overlay {
-  position: fixed; inset: 0; z-index: 100;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   background: transparent; pointer-events: none;  /* fenêtre flottante, pas de backdrop */
   padding: var(--sp-5);
@@ -4399,7 +4399,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .felt-oval::before {
   content: '';
   position: absolute;
-  inset: 10px;
+  top: 10px; right: 10px; bottom: 10px; left: 10px;
   border-radius: 50% / 42%;
   border: 2px solid rgba(255,255,255,0.07);
   pointer-events: none;
@@ -4630,7 +4630,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .seat-avatar.has-pth-avatar > .seat-initial { display: none; }
 .seat-avatar > .seat-pth-img {
   position: absolute;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -5258,7 +5258,7 @@ body.spectator-nosend #g-actions .waiting-msg {
 }
 /* ══ PASSWORD PROMPT ══ */
 #password-prompt {
-  position: fixed; inset: 0; z-index: 200;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.75);
 }
@@ -5280,7 +5280,7 @@ body.spectator-nosend #g-actions .waiting-msg {
 
 /* ══ INSTALL POPUP (PWA add-to-home-screen instructions) ══ */
 #install-popup {
-  position: fixed; inset: 0; z-index: 200;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.75);
   padding: var(--sp-5);
@@ -5303,7 +5303,7 @@ body.spectator-nosend #g-actions .waiting-msg {
 
 /* ══ WINNER OVERLAY ══ */
 .winner-overlay {
-  position: fixed; inset: 0; z-index: 100;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   /* PAS de voile noir (demande narmod) : la table reste visible derriere,
      seuls la carte et son ombre apparaissent. pointer-events:none sur le
@@ -5943,7 +5943,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    GameStartInitial. Options différenciées admin (case bots + Démarrer +
    Quitter) / joueur simple (Quitter seul). ── */
 .wait-page {
-  position: absolute; inset: 0; z-index: 40;
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 40;
   display: flex; flex-direction: column; align-items: center;
   gap: var(--sp-5); overflow-y: auto;
   padding: 20px 14px calc(20px + env(safe-area-inset-bottom, 0px));
@@ -6075,7 +6075,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
    message). Style is heavier than the per-hand winner-overlay:
    bigger trophy, dramatic gold gradient, dedicated stats section. */
 .endgame-overlay {
-  position: fixed; inset: 0; z-index: 110;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 110;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.85);
   backdrop-filter: blur(4px);
@@ -6226,7 +6226,7 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 /* iOS-style toggle switch */
 .auto-switch { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
 .auto-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.auto-switch-track { position: absolute; inset: 0; background: rgba(255,255,255,0.12);
+.auto-switch-track { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(255,255,255,0.12);
   border: 1px solid var(--gold-dim); border-radius: 21px; transition: 0.2s; }
 .auto-switch-track::before { content: ""; position: absolute; height: 15px; width: 15px; left: 2px; top: 2px;
   background: var(--cream); border-radius: 50%; transition: 0.2s; }
@@ -6341,7 +6341,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #leave-dialog,
 #live-spectate-dialog,
 #disconnect-dialog {
-  position: fixed; inset: 0; z-index: 120;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 120;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -6417,7 +6417,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
    buttons). Adds a centred input row and a green 'Create' button to
    match the semantic 'positive action' colour used elsewhere. */
 #quick-create-dialog {
-  position: fixed; inset: 0; z-index: 120;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 120;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -6882,7 +6882,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #report-confirm-modal,
 #invite-modal {
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -6891,7 +6891,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 }
 .km-backdrop {
   position: absolute;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   background: rgba(0,0,0,0.65);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -7031,7 +7031,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 #timeout-warn-modal,
 #conn-lost-modal {
   position: fixed;
-  inset: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   z-index: 10050;
   display: flex;
   align-items: center;
@@ -8070,7 +8070,7 @@ html[data-seat-struct="qml"] .seat.active .seat-plate::after {
      (--turn-glow-z : passer sous un avatar débordant, qui porte alors son
      propre anneau). Défauts = comportement QML historique. */
   content: ""; position: absolute;
-  inset: var(--active-turn-inset, var(--turn-glow-inset, -2px));
+  top: var(--active-turn-inset, var(--turn-glow-inset, -2px)); right: var(--active-turn-inset, var(--turn-glow-inset, -2px)); bottom: var(--active-turn-inset, var(--turn-glow-inset, -2px)); left: var(--active-turn-inset, var(--turn-glow-inset, -2px));
   border-radius: var(--turn-glow-radius, inherit);
   border-width: var(--active-turn-border, 1px);
   border-style: solid;
@@ -8089,7 +8089,7 @@ html[data-seat-struct="qml"] .seat.active .seat-plate::after {
 html[data-seat-struct="qml"] .seat.winner .seat-plate { opacity: 1; }
 html[data-seat-struct="qml"] .seat.winner .seat-plate::after {
   content: ""; position: absolute;
-  inset: var(--winner-frame-inset, var(--turn-glow-inset, -2px));
+  top: var(--winner-frame-inset, var(--turn-glow-inset, -2px)); right: var(--winner-frame-inset, var(--turn-glow-inset, -2px)); bottom: var(--winner-frame-inset, var(--turn-glow-inset, -2px)); left: var(--winner-frame-inset, var(--turn-glow-inset, -2px));
   border-radius: var(--winner-frame-radius, inherit); /* forme du pack */
   border: 3px solid var(--winner-frame, #FFD700);
   box-shadow: 0 0 16px 2px var(--winner-halo, rgba(255, 215, 0, 0.6));
@@ -8387,7 +8387,7 @@ html[data-seat-struct="qml"] .seat-timer-badge { display: none; }
    remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */
 html[data-seat-struct="qml"] .seat-avatar .seat-timer { display: none; }
 html[data-seat-struct="qml"] .seat-timer-rect {
-  position: absolute; inset: -3px;
+  position: absolute; top: -3px; right: -3px; bottom: -3px; left: -3px;
   width: calc(100% + 6px); height: calc(100% + 6px);
   pointer-events: none; overflow: visible; z-index: 3;
 }
@@ -8608,7 +8608,7 @@ body.pad-active .btn-check::before { content: var(--pad-g-ok, "A"); }
 body.pad-active .btn-raise::before { content: var(--pad-g-raise, "Y"); }
 /* Hold-to-All-In gauge: filled left to right while Y is held. */
 .pad-hold-fill {
-  position: absolute; inset: 0; border-radius: inherit;
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit;
   background: currentColor; opacity: 0.28; pointer-events: none;
   transform-origin: left center; transform: scaleX(0);
   animation: padHoldFill var(--pad-hold-ms, 600ms) linear forwards;
@@ -8632,7 +8632,7 @@ body.pad-active :focus:not(.pad-cur) { outline: none; }
 #ctl-badge.ctl-badge-nav { border-color: var(--gold-hi); color: var(--gold-hi); }
 /* Controller menu (modules/ui/ctl-menu.mjs): large tiles. */
 #ctl-menu {
-  position: fixed; inset: 0; z-index: 1000;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -8662,7 +8662,7 @@ body.pad-active :focus:not(.pad-cur) { outline: none; }
 .ctl-menu-keys p { margin: 0 0 8px; }
 /* Controller on-screen keyboard (modules/ui/ctl-keyboard.mjs). */
 #ctl-kb {
-  position: fixed; inset: 0; z-index: 1001;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1001;
   display: flex; align-items: flex-end; justify-content: center;
   background: rgba(0,0,0,0.45);
 }
@@ -8808,7 +8808,7 @@ body.pad-active :focus:not(.pad-cur) { outline: none; }
 /* Couche zoomable (parité zoomLayer QML) : mêmes règles de centrage que
    .table-zone ; le transform est posé par _loupeApply (transition 220ms
    OutCubic hors drag). */
-#g-zoom-layer { position:absolute; inset:0; display:flex; align-items:center;
+#g-zoom-layer { position:absolute; top: 0; right: 0; bottom: 0; left: 0; display:flex; align-items:center;
   justify-content:center; overflow:visible; will-change:transform; }
 .zoom-ctrl .zoom-btn:not(.zoom-toggle) { display:flex; }
 .zoom-btn.active { background: var(--accent, #E3C800); color: #1a1205; border-color: var(--accent, #E3C800); }
@@ -9306,7 +9306,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    same-origin /api/ranking relay (see proxy.js). Self-contained so it
    is easy to restyle or move later. All colours via palette tokens.
    ═══════════════════════════════════════════════════════════════════ */
-#ranking-modal, #tableranking-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
+#ranking-modal, #tableranking-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 .trk-sub { color: var(--text); opacity: 0.75; font-size: var(--fs-sm); margin-bottom: 10px; }
 /* Parité avec les options avancées (#adv-modal) : aucun voile sombre — le jeu /
    le lobby restent visibles derrière et cliquables ; seule la carte capte les
@@ -9406,7 +9406,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    badge de non-lus sur le bouton d'en-tete du lobby. Entierement
    ADDITIF ; tout passe par les tokens de palette. Logique :
    modules/ui/forumnews.mjs, relais : proxy.js /api/forumfeed. */
-#forum-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
+#forum-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 #forum-modal .rk-card { pointer-events: auto; }
 #forum-modal.rk-floating { pointer-events: none; }
 #forum-modal.rk-floating .rk-backdrop { display: none; }
@@ -9691,7 +9691,7 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 /* Carte des stats de session dans la fenetre de statistiques : encadree pour
    la separer nettement du bloc coupes, qui vient du serveur alors que
    celles-ci sont des mesures locales de ma partie en cours. */
-#pp-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
+#pp-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 /* Largeur suivant l'ecran : le contenu porte un tableau de dix colonnes, un
    camembert et un histogramme de dix barres. A 480px fixes, tout se tassait
    sur un grand ecran alors que la place ne manquait pas. On prend une part de
@@ -9735,7 +9735,7 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .rk-season-c { color: var(--text-dim); transition: transform 0.15s; }
 .rk-season.open .rk-season-c { transform: rotate(90deg); }
 .rk-season-b { padding: 6px 2px 2px; }
-#pm-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
+#pm-modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 #pm-modal .rk-card { pointer-events: auto; width: min(600px, calc(100vw - 32px)); height: min(85vh, 520px); padding: 14px 16px 12px; }
 #pm-modal.rk-floating { pointer-events: none; }
 #pm-modal.rk-floating .rk-backdrop { display: none; }
@@ -9825,7 +9825,7 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .rk-awards::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: var(--r-xs); }
 .rk-awards::-webkit-scrollbar-track { background: transparent; }
 .rk-award { flex: 0 0 auto; width: 54px; height: 54px; object-fit: contain; border-radius: 4px; background: rgba(var(--gold-rgb), 0.05); cursor: pointer; }
-#rk-awpop { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center; padding: 24px; cursor: pointer; pointer-events: auto; }
+#rk-awpop { display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10000; background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center; padding: 24px; cursor: pointer; pointer-events: auto; }
 #rk-awpop img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: var(--r-sm); box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6); }
 .rk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; }
 .rk-tile { background: var(--field-bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 4px; text-align: center; }
@@ -9968,9 +9968,9 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    Entrée via la roue crantée (jeu + lobby). Chrome réutilisé de .km-* ; corps
    .adv-* propre. Bascules présentation appliquées par applyAdvOpts() via des
    classes sur <body>. */
-#accessibility-modal{position:fixed;inset:0;z-index:1210;display:flex;align-items:center;justify-content:center;padding:var(--sp-6)}
+#accessibility-modal{position:fixed;top: 0; right: 0; bottom: 0; left: 0;z-index:1210;display:flex;align-items:center;justify-content:center;padding:var(--sp-6)}
 #accessibility-modal[hidden]{display:none}
-.accessibility-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58)}
+.accessibility-backdrop{position:absolute;top: 0; right: 0; bottom: 0; left: 0;background:rgba(0,0,0,.58)}
 .accessibility-card{position:relative;width:min(430px,calc(100vw - var(--sp-6) - var(--sp-6)));max-height:calc(100dvh - var(--sp-6) - var(--sp-6));overflow:auto;box-sizing:border-box;padding:var(--sp-7);border:1px solid var(--border-hi);border-radius:var(--r-lg);background:var(--modal-bg);box-shadow:0 18px 50px rgba(0,0,0,.5);color:var(--text)}
 .accessibility-card h2{margin:0 calc(var(--sp-7) + var(--sp-7)) var(--sp-7) 0;color:var(--text-hi);font:600 var(--fs-xl)/1.2 var(--ff-display)}
 .accessibility-close{position:absolute;top:var(--sp-5);right:var(--sp-5);width:var(--ctrl-md);height:var(--ctrl-md);border:1px solid var(--border);border-radius:var(--r-pill);background:var(--inset);color:var(--text-hi);font:inherit;cursor:pointer}
@@ -9989,7 +9989,7 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .accessibility-close:focus-visible,.accessibility-size input:focus-visible,.accessibility-toggle input:focus-visible,.accessibility-reset:focus-visible{outline:3px solid var(--sel,var(--gold));outline-offset:3px}
 @media (max-width:599.98px){.accessibility-card{width:calc(100vw - var(--sp-7));max-height:calc(100dvh - var(--sp-7));padding:var(--sp-7) var(--sp-6)}}
 
-#adv-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#adv-modal{position:fixed;top: 0; right: 0; bottom: 0; left: 0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none}
 #adv-modal .km-backdrop{display:none}
 #adv-modal .km-card{pointer-events:auto}
 .adv-card{max-width:420px;width:calc(100% - 32px)}
@@ -10614,7 +10614,7 @@ html.reduce-fx .seat-action-badge {
    Meme moule que la modale de bienvenue du monolithe : fond assombri, carte
    centree, tokens de theme. Voir modules/ui/poll.mjs. */
 .poll-back {
-  position: fixed; inset: 0; z-index: 10000;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10000;
   display: flex; align-items: center; justify-content: center; padding: 18px;
   background: rgba(0, 0, 0, .55);
 }
@@ -10669,10 +10669,10 @@ html.reduce-fx .seat-action-badge {
 :root[data-theme^="pokerth"] .lobby-statsbar { border-top: none; }
 
 /* ── Page « À propos de PokerTH » (parité AboutPage QML 2.1.3) ── */
-#about-page { position:fixed; inset:0; z-index:120; display:none; flex-direction:column; background:var(--felt); overflow-y:auto; }
+#about-page { position:fixed; top: 0; right: 0; bottom: 0; left: 0; z-index:120; display:none; flex-direction:column; background:var(--felt); overflow-y:auto; }
 
 /* ── Page Privacy in-app : même entête cp-header que « Créer une partie ». ── */
-#privacy-page { position:fixed; inset:0; z-index:120; display:none; flex-direction:column; background:var(--felt); }
+#privacy-page { position:fixed; top: 0; right: 0; bottom: 0; left: 0; z-index:120; display:none; flex-direction:column; background:var(--felt); }
 .pv-scroll { flex:1; overflow-y:auto; }
 .pv-body { max-width:720px; margin:0 auto; padding:10px 18px 48px; color:var(--text); font-size:var(--fs-md); line-height:1.65; }
 .pv-updated { color:var(--text-dim); font-size:var(--fs-base); margin:4px 0 14px; }
@@ -10768,7 +10768,7 @@ html.reduce-fx .seat-action-badge {
 
 /* ── Galerie d'avatars d'exemple (client Qt-Widgets officiel) ── */
 .avgal-overlay {
-  position: fixed; inset: 0; z-index: 1200;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1200;
   display: none; align-items: center; justify-content: center;
   background: rgba(0, 0, 0, 0.55);
 }
@@ -10932,7 +10932,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #g-comm::before {
   content: '';
   position: absolute;
-  inset: -16px -24px;
+  top: -16px; right: -24px; bottom: -16px; left: -24px;
   background: radial-gradient(ellipse at center, rgba(255, 237, 184, 0.12), transparent 70%);
   filter: blur(10px);
   z-index: -1;
@@ -11054,7 +11054,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lob-h-v::after { left:0; right:0; top:50%; height:2px; transform:translateY(-50%); }
 
 /* Scrim pour les slide-in mobiles */
-.lob-scrim { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:98; }
+.lob-scrim { display:none; position:fixed; top: 0; right: 0; bottom: 0; left: 0; background:rgba(0,0,0,0.45); z-index:98; }
 .lob-scrim.on { display:block; }
 
 /* ── WIDE ≥900 : 3 colonnes redimensionnables ── */
@@ -11102,7 +11102,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   #s-lobby .lobby-grid > #players-panel,
   #s-lobby .lobby-grid > #lobby-gameinfo,
   #s-lobby .lobby-grid > #lobby-chat-panel {
-    position:static !important; inset:auto !important; transform:none !important;
+    position:static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; transform:none !important;
     width:auto !important; height:auto !important; max-height:none !important; margin:0 !important;
     box-shadow:none; border:1px solid var(--border); border-radius:8px;
     background:var(--panel); min-height:0;
@@ -11136,7 +11136,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
   /* Chat intégré sous les tables (plus de fenêtre flottante ni d'overlay) */
   #s-lobby .lobby-grid > #lobby-chat-panel {
-    order:3; position:static !important; inset:auto !important; top:auto !important; right:auto !important; bottom:auto !important; left:auto !important; transform:none !important;
+    order:3; position:static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; top:auto !important; right:auto !important; bottom:auto !important; left:auto !important; transform:none !important;
     display:flex !important; width:auto !important; flex:1 1 0; min-height:140px;
     max-height:none !important; box-shadow:none; z-index:auto;
     border:1px solid var(--border); border-radius:8px;
@@ -11462,7 +11462,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
 /* ── Siège au tour : anneau (ex-activeRing) ── */
 :root .seat.active .seat-avatar { animation: none !important; }   /* base statique de la 3583 conservée */
 :root .seat.active .seat-avatar::before {
-  content:""; position:absolute; inset:0; border-radius:50%;
+  content:""; position:absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius:50%;
   pointer-events:none; z-index:-1;
   box-shadow: 0 0 0 4px rgba(var(--gold-rgb), 0.55), 0 0 20px rgba(var(--gold-rgb), 0.6);
   will-change: opacity, transform;
@@ -11478,7 +11478,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
   animation: actBarPopT 0.55s cubic-bezier(.2,.9,.3,1.15) both;                  /* pop = transform seul */
 }
 :root .my-zone.my-turn-active .action-grid::after {
-  content:""; position:absolute; inset:0; border-radius:inherit;
+  content:""; position:absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius:inherit;
   pointer-events:none; z-index:-1;
   box-shadow: 0 0 0 2px #ffe066, 0 0 32px 7px rgba(var(--gold-rgb), 0.74);       /* pic, statique */
   will-change: opacity;
@@ -11488,7 +11488,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
 /* ── Dock joueur actif (ex-pulse-gold) ── */
 :root .player-bar.pb-active .player-bar-left { position: relative; animation: none; }
 :root .player-bar.pb-active .player-bar-left::after {
-  content:""; position:absolute; inset:0; border-radius:inherit;
+  content:""; position:absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius:inherit;
   pointer-events:none; z-index:-1;
   box-shadow: 0 0 22px rgba(var(--gold-rgb), 0.9);
   will-change: opacity;
@@ -11501,7 +11501,7 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
   box-shadow: 0 0 0 2px #ffd24d, 0 0 12px rgba(240,160,32,.55);                  /* statique */
 }
 :root .btn-action.btn-call.confirm-call::after {
-  content:""; position:absolute; inset:0; border-radius:inherit;
+  content:""; position:absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius:inherit;
   pointer-events:none; z-index:-1;
   box-shadow: 0 0 0 2px #ffd24d, 0 0 19px rgba(240,160,32,.9);
   will-change: opacity;
@@ -11829,7 +11829,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-money { font-size: var(--fs-xs
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-avatar { width: 36px !important; height: 36px !important; }
 html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { width: 26px; height: 36px; }
 /* ── HUD par siège + grille de range (thème client) ─────────────────────── */
-#hud-layer{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:visible}
+#hud-layer{position:absolute;top: 0; right: 0; bottom: 0; left: 0;pointer-events:none;z-index:6;overflow:visible}
 .hud-box{position:absolute;pointer-events:auto;cursor:pointer;
   min-width:148px;background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:var(--r-md);
   padding:4px 7px 5px;box-shadow:0 8px 26px rgba(0,0,0,.55);backdrop-filter:blur(4px);
@@ -11857,7 +11857,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
    transparent qui laisse passer les clics (AUCUN voile sombre : le jeu reste
    visible et jouable derrière), carte promue en .floating-win par
    _rangeSetupFloat au-dessus de 600 px. */
-#range-modal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;
+#range-modal{position:fixed;top: 0; right: 0; bottom: 0; left: 0;z-index:1200;display:none;align-items:center;justify-content:center;
   padding:16px;pointer-events:none}
 #range-modal .range-card{pointer-events:auto;background:var(--panel-hi);border:1px solid var(--border);border-radius:var(--r-lg);
   box-shadow:0 12px 40px rgba(0,0,0,.55);max-width:min(96vw,720px);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
@@ -12244,7 +12244,7 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 }
 /* ── Framing panel (camera / photo under the face template) ── */
 .avm-cam {
-  position: fixed; inset: 0; z-index: 10050;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10050;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.9); padding: var(--sp-4);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
@@ -12280,12 +12280,12 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   touch-action: none; user-select: none; -webkit-user-select: none;
 }
 .avm-cam-view video {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
   transform: scaleX(-1);
 }
 .avm-cam-img { position: absolute; top: 0; left: 0; transform-origin: 0 0; max-width: none; display: block; }
 .avm-cam-view.is-photo { cursor: grab; }
-.avm-cam-guide { position: absolute; inset: 0; pointer-events: none; }
+.avm-cam-guide { position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none; }
 .avm-cam-guide svg { width: 100%; height: 100%; display: block; }
 .avm-cam-hint { font-size: var(--fs-sm); color: var(--text-hi); text-align: center; max-width: 420px; min-height: 2.4em; }
 .avm-cam-btns { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; width: min(90vw, 52vh, 420px); }
@@ -12347,7 +12347,7 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
    modals (ranking/forum) sit at 1200 — at the game-dialog level (120)
    this dialog would open BEHIND the lobby UI. Kept below toasts (10000). */
 #invite-dialog {
-  position: fixed; inset: 0; z-index: 1300;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1300;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -12661,7 +12661,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    whatever its parent is — the client does the same reset for its own grid. */
 :root[data-live="1"] .live-lobby #lobby-chat-panel {
   display: flex !important; flex: 1; min-height: 0;
-  position: static !important; inset: auto !important;
+  position: static !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
   transform: none !important; z-index: auto !important;
   left: auto !important; top: auto !important;
   right: auto !important; bottom: auto !important;
@@ -13313,7 +13313,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   }
   :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
     position: relative !important;
-    inset: auto !important;
+    top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
     width: 100% !important;
     height: var(--adaptive-drawer-height) !important;
     max-height: var(--adaptive-drawer-height) !important;
@@ -13445,7 +13445,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   }
   :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-overlay {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     padding: 0;
     align-items: flex-start;
     justify-content: flex-end;
@@ -13951,7 +13951,7 @@ body.lan-dir-locked #f-hostport,
 body.lan-dir-locked #tls-row { display: none !important; }
 
 #lan-prop-dialog {
-  position: fixed; inset: 0; z-index: 1300;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1300;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -14027,7 +14027,7 @@ body.nb-on:not(.nb-host) .nb-host-only { display: none !important; }
 .lan-dd-item.nearby .lan-dd-plus { width: auto; font-weight: 400; }
 
 #nb-dialog {
-  position: fixed; inset: 0; z-index: 1300;
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1300;
   display: none; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);

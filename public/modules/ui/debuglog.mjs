@@ -207,7 +207,7 @@ window.addEventListener('online', function () { _lifePush('network back online',
 
 // ── Viewer ─────────────────────────────────────────────────────────
 const CSS =
-  '#dbg-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center}' +
+  '#dbg-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;display:flex;align-items:center;justify-content:center}' +
   '#dbg-modal .dbg-card{width:min(92vw,680px);height:min(88vh,680px);display:flex;flex-direction:column;gap:8px}' +
   '#dbg-text{flex:1;min-height:0;width:100%;box-sizing:border-box;resize:none;white-space:pre;overflow:auto;' +
     'font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.45;' +

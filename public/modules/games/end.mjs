@@ -42,7 +42,7 @@ import { cardHtml, fmt } from './common.mjs';
 const CSS = `
 #pth-game .pg-panel.gm-end{background:radial-gradient(ellipse at center,rgba(6,9,14,.55),rgba(6,9,14,.82));pointer-events:auto;overflow:auto}
 #pth-game .pg-panel.gm-end>div{max-width:none;width:100%;align-items:center}
-#pth-game .pg-panel.gm-eout{position:absolute;inset:0;z-index:15;padding:10px;align-items:safe center}
+#pth-game .pg-panel.gm-eout{position:absolute;top:0;right:0;bottom:0;left:0;z-index:15;padding:10px;align-items:safe center}
 #pth-game .pg-panel.gm-eout>div{margin:auto 0}
 #pth-game .gm-endc{zoom:var(--gm-ez,1)}
 #pth-game .gm-endc{width:min(420px,100%);box-sizing:border-box;margin:auto;background:linear-gradient(180deg,rgba(24,30,40,.97),rgba(14,18,25,.98));border:1.5px solid rgba(232,184,74,.55);border-radius:20px;padding:14px 14px 12px;color:#f1e9d4;box-shadow:0 12px 40px rgba(0,0,0,.55);text-align:center}
@@ -60,10 +60,10 @@ const CSS = `
 #pth-game .gm-escore small{margin-left:6px;font:700 13px 'Inter',system-ui,sans-serif;color:#cfd8d2;text-shadow:none}
 #pth-game .gm-enew{display:inline-block;margin:6px 0 0;padding:3px 12px;border-radius:999px;background:linear-gradient(90deg,#c2303a,#e8573f);color:#fff;font:800 11px 'Inter',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
 #pth-game .gm-ecount{position:relative;width:46px;height:46px;margin:8px auto 2px}
-#pth-game .gm-ecount svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+#pth-game .gm-ecount svg{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
 #pth-game .gm-ecount circle{fill:none;stroke-width:4;stroke:rgba(255,255,255,.14)}
 #pth-game .gm-ecount .gm-ering{stroke:#d8b25a;stroke-linecap:round;stroke-dasharray:119.4;animation:gmERing var(--s) linear forwards}
-#pth-game .gm-ecount b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 18px 'Inter',system-ui,sans-serif;color:#f1e9d4}
+#pth-game .gm-ecount b{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;font:800 18px 'Inter',system-ui,sans-serif;color:#f1e9d4}
 @keyframes gmERing{to{stroke-dashoffset:119.4}}
 #pth-game .gm-enote{margin:6px 0 2px;font:600 14px 'Inter',system-ui,sans-serif;color:#f1e9d4}
 #pth-game .gm-efoot{margin-top:8px;font:500 11px 'Inter',system-ui,sans-serif;color:#9fb0a6}

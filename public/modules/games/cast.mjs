@@ -24,7 +24,7 @@ export const KINDS = SUITS.concat(FIGURES, ['joker']);
 
 const INK = '#1b1b1b';
 const CSS = `
-.cs{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.cs{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;overflow:visible}
 .cs .cs-box{position:absolute;left:0;top:0;width:100px;height:120px;transform-origin:50px 116px;will-change:transform}
 .cs svg{position:absolute;left:0;top:0;width:100px;height:120px;overflow:visible}
 .cs .v{display:none}

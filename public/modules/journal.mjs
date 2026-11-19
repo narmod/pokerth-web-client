@@ -474,7 +474,7 @@ function _initSplit(el) {
 }
 
 const CSS = `
-#jr-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+#jr-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
 #jr-modal .km-backdrop{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 #jr-modal.jr-float{pointer-events:none}
 #jr-modal.jr-float .km-backdrop{display:none}
