@@ -68,6 +68,38 @@ plain.window.localStorage.setItem('pth_theme', 'casino');
 check('the ordinary client is not namespaced',
   plain.window.localStorage.getItem('pth_theme') === 'casino');
 
+// web.131: a browser that refuses to replace window.localStorage. The store
+// is then namespaced through Storage.prototype instead of being shared.
+{
+  const fd = new JSDOM('<!DOCTYPE html><body></body>',
+    { url: 'https://webclient.pokerth.net/live', runScripts: 'outside-only' });
+  const fw = fd.window;
+  fw.localStorage.setItem('pth_theme', 'casino');
+  fw.localStorage.setItem('pth_admin_tok', 'secret');
+  for (const n of ['localStorage', 'sessionStorage']) {
+    const st = fw[n];
+    Object.defineProperty(fw, n, { value: st, configurable: false, writable: false });
+  }
+  const warns = [];
+  fw.console.warn = (...a) => warns.push(a.join(' '));
+  fw.LIVE_MODE = 1;
+  fw.eval(shim);
+  const ls = fw.localStorage;
+  check('fallback: no warning, the prototype hook took over', warns.length === 0);
+  check("fallback: /live cannot read the client's theme or the admin key",
+    ls.getItem('pth_theme') === null && ls.getItem('pth_admin_tok') === null);
+  ls.setItem('pth_theme', 'officiallight');
+  check('fallback: its own value, under the namespace',
+    ls.getItem('pth_theme') === 'officiallight' && fw.Storage.prototype.getItem.call(ls, 'live:pth_theme') === null
+    && ls.length === 1 && ls.key(0) === 'pth_theme');
+  ls.clear();
+  check('fallback: clear() leaves the client keys',
+    ls.length === 0 && (() => { const ks = []; for (let i = 0; i < fw.Object.getOwnPropertyNames(ls).length; i++) ks.push(fw.Object.getOwnPropertyNames(ls)[i]); return ks.includes('pth_theme') && ks.includes('pth_admin_tok') && !ks.includes('live:pth_theme'); })());
+  fw.sessionStorage.setItem('x', '1');
+  check('fallback: sessionStorage namespaced too',
+    fw.sessionStorage.getItem('x') === '1' && fw.Object.getOwnPropertyNames(fw.sessionStorage).includes('live:x'));
+}
+
 check('the shim is loaded blocking, before the app module',
   proxy.indexOf("'<script src=\"/live-storage.js\"></script>'") <
   proxy.indexOf("'<script type=\"module\" src=\"/modules/live/index.mjs\"></script>'"));

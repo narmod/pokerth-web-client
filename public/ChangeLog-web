@@ -1,4 +1,7 @@
-2026-11-18 version 2.1.11-web.131 (current series):
+2026-11-19 version 2.1.11-web.132 (current series):
+- bugfix: Live — in a browser that refuses the separate storage, the spectator page could read and change your web client settings; it now always keeps its own
+
+2026-11-18 version 2.1.11-web.131:
 - bugfix: Security — one crafted request could stop the web client's server and cut every player off when the mini-games Hall of Fame is on; fixed
 - bugfix: Hall of Fame — scores under a pokerth.net nickname can only come from a login to pokerth.net, and nobody can erase someone else's line any more
 - improvement: Admin page — guessing the admin key is now blocked after a few tries on every page

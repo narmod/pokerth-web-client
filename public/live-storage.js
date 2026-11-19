@@ -47,6 +47,48 @@
     return api;
   }
 
+  // Fallback when window.localStorage cannot be replaced: namespace the store
+  // itself, through Storage.prototype, for these objects only. Until web.131
+  // /live then went on reading and writing the player's settings (a console
+  // warning was all), which the comment above says must not happen.
+  var fallen = [];
+  function patchPrototype() {
+    var P = window.Storage && window.Storage.prototype;
+    if (!P) return false;
+    var get = P.getItem, set = P.setItem, rem = P.removeItem, key = P.key;
+    var lenD = Object.getOwnPropertyDescriptor(P, 'length');
+    var len = lenD && lenD.get;
+    if (!get || !set || !rem || !key || !len) return false;
+    var ours = function (st) { return fallen.indexOf(st) >= 0; };
+    var own = function (st) {
+      var out = [];
+      for (var i = 0; i < len.call(st); i++) {
+        var k = key.call(st, i);
+        if (k && k.indexOf(PREFIX) === 0) out.push(k.slice(PREFIX.length));
+      }
+      return out;
+    };
+    P.getItem = function (k) { return get.call(this, ours(this) ? PREFIX + k : k); };
+    P.setItem = function (k, v) { return set.call(this, ours(this) ? PREFIX + k : k, v); };
+    P.removeItem = function (k) { return rem.call(this, ours(this) ? PREFIX + k : k); };
+    P.key = function (i) {
+      if (!ours(this)) return key.call(this, i);
+      var ks = own(this); return i < ks.length ? ks[i] : null;
+    };
+    P.clear = (function (clr) {
+      return function () {
+        if (!ours(this)) return clr.call(this);
+        var st = this; own(st).forEach(function (k) { rem.call(st, PREFIX + k); });
+      };
+    })(P.clear);
+    Object.defineProperty(P, 'length', {
+      configurable: true, enumerable: lenD.enumerable,
+      get: function () { return ours(this) ? own(this).length : len.call(this); }
+    });
+    return true;
+  }
+  var patched = null;
+
   ['localStorage', 'sessionStorage'].forEach(function (name) {
     var real;
     try { real = window[name]; } catch (e) { return; }
@@ -56,9 +98,12 @@
         value: shim(real), configurable: true, writable: false
       });
     } catch (e) {
-      // A browser that refuses the redefinition keeps the shared store. Say so
-      // in the console rather than pretending the isolation happened.
-      try { console.warn('[live] storage isolation unavailable:', e && e.message); } catch (e2) {}
+      fallen.push(real);
+      try { if (patched === null) patched = patchPrototype(); } catch (e2) { patched = false; }
+      if (!patched) {
+        // Nothing left to hook: say so rather than pretend the isolation happened.
+        try { console.warn('[live] storage isolation unavailable:', e && e.message); } catch (e3) {}
+      }
     }
   });
 })();

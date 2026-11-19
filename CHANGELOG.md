@@ -271,6 +271,12 @@ highlights below.
   `/sessions`, `/broadcasts`, `/clock`) never counted wrong keys, an unlimited oracle for guessing the admin
   key: the same stale key repeated stays free, each new wrong key now counts toward the block (10 / 15 min).
   Tests: `test-hall-of-fame` (+6), `test-admin-safety` (+3), `test-admin-clock` updated.
+- **`/live` storage isolation fails closed** (`web.132`) — when a browser refused to replace
+  `window.localStorage` / `sessionStorage`, `live-storage.js` only warned in the console and `/live` went on
+  reading and writing the web client's own keys (same origin as `/` and `/admin`). The store is now
+  namespaced through `Storage.prototype` for those objects instead (`getItem` / `setItem` / `removeItem` /
+  `key` / `length` / `clear`), the ordinary client untouched. `test-live-storage` +5. Not a security boundary
+  either way: same-origin script can still reach the real store — only a separate origin isolates `/live`.
 
 ### Fixed
 - **Pre-actions (off-turn buttons)** (`web.128`, narmod: « a check selected in advance reacts strangely ») —
