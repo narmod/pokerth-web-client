@@ -36,6 +36,7 @@ const CANNED = {
       { id: 21, mode: 'pthnet', cc: 'BR', ua: UA_WIN, ver: '2.1.10-web.126', ip: '192.0.2.x', startedAt: NOW - 1000, attached: true },
       { id: 22, mode: 'offline', cc: 'JP', ua: UA_AND, startedAt: NOW - 900, attached: true },
       { id: 23, mode: 'pthnet', live: true, cc: 'ZZ', startedAt: NOW - 800, attached: false },
+      { id: 24, mode: 'arcade', game: 'tapis', cc: 'FR', startedAt: NOW - 700, attached: true },
     ] },
   '/admin/errors': { ok: true, now: NOW, since: NOW - 864e5,
     groups: [
@@ -76,15 +77,16 @@ await tick(150);
 ok(errors.length === 0, 'opening Sessions throws nothing' + (errors.length ? ': ' + errors[0] : ''));
 ok(!$('seBridges') && !$('seNotify'), 'the two old lists are gone, one table holds every connection');
 const rows = () => [...doc.querySelectorAll('#seList .lrow:not(.lhd)')];
-ok(rows().length === 6, 'six rows: three bridges and three notice channels, found ' + rows().length);
+ok(rows().length === 7, 'seven rows: three bridges and four notice channels, found ' + rows().length);
 ok(doc.querySelectorAll('#seList .lhd').length === 1, 'with one header row');
 const tiles = [...doc.querySelectorAll('#seTiles .setile')];
-ok(tiles.length === 4, 'four tiles, one per entry mode');
+ok(tiles.length === 5, 'five tiles, one per entry mode');
 const tn = (k) => doc.querySelector('#seTiles [data-sm="' + k + '"] .ovmn').textContent;
-ok(tn('net') === '2' && tn('lan') === '2' && tn('off') === '1' && tn('live') === '1', 'Internet 2 · LAN 2 · Training 1 · Live 1 (' + ['net', 'lan', 'off', 'live'].map(tn).join(',') + ')');
+ok(tn('net') === '2' && tn('lan') === '2' && tn('off') === '1' && tn('live') === '1' && tn('arc') === '1', 'Internet 2 · LAN 2 · Training 1 · Live 1 · Mini-games 1 (' + ['net', 'lan', 'off', 'live', 'arc'].map(tn).join(',') + ')');
+ok(/1 in a game · 0 on the page/.test($('seTiles').textContent), 'Mini-games splits the players in a game from those on the page');
 ok(/1 through this proxy · 1 direct/.test($('seTiles').textContent), 'Internet splits bridged and direct');
 ok(/on 2 servers/.test($('seTiles').textContent), 'LAN counts its servers');
-ok(/6 connections · 3 bridges · 3 notice channels · cap 500/.test($('seSum').textContent), 'the head note counts everything');
+ok(/7 connections · 3 bridges · 4 notice channels · cap 500/.test($('seSum').textContent), 'the head note counts everything');
 const txt = $('seList').textContent;
 ok(/Ann<b>/.test(txt) && !doc.querySelector('#seList b b'), 'a nickname is text, never markup');
 ok(/Germany/.test(txt) && doc.querySelector('#seList img.ckf'), 'the country shows with its flag');
@@ -92,6 +94,7 @@ ok(/pthsrv\.pokerth\.net:7236 · TLS/.test(txt), 'a bridge says where it goes');
 ok(/reconnect grace/.test(txt) && /connecting/.test(txt) && /detached/.test(txt), 'every state reads in words');
 ok(/↑2\.0 KB ↓4\.0 KB/.test(txt), 'a bridge shows its traffic');
 ok(/Spectator/.test(txt) && /Training/.test(txt) && /Direct client/.test(txt), 'notice channels say what they are');
+ok(/Mini-games/.test(txt) && /Tapis!/.test(txt) && /in a game/.test(txt), 'a Mini-games row says the game on screen');
 ok(rows()[0].textContent.indexOf('Ann') >= 0, 'oldest connection first');
 ok(rows().every((r) => r.querySelector('.lact .del')), 'every row can be disconnected');
 rows()[0].querySelector('.lact .del').click();
@@ -102,7 +105,10 @@ doc.querySelector('#seModes [data-sm="lan"]').click();
 ok(rows().length === 2 && rows().every((r) => /LAN/.test(r.querySelector('.lmode').textContent)), 'the LAN chip keeps the LAN rows');
 ok(doc.querySelector('#seTiles [data-sm="lan"]').classList.contains('on'), 'and its tile shows it');
 doc.querySelector('#seTiles [data-sm="lan"]').click();
-ok(rows().length === 6 && doc.querySelector('#seModes [data-sm="all"]').classList.contains('on'), 'the same tile clicked again goes back to All');
+ok(rows().length === 7 && doc.querySelector('#seModes [data-sm="all"]').classList.contains('on'), 'the same tile clicked again goes back to All');
+doc.querySelector('#seTiles [data-sm="arc"]').click();
+ok(rows().length === 1 && /Mini-games/.test(rows()[0].textContent), 'the Mini-games tile keeps its row');
+doc.querySelector('#seTiles [data-sm="arc"]').click();
 doc.querySelector('#seTiles [data-sm="off"]').click();
 ok(rows().length === 1 && /Training/.test(rows()[0].textContent), 'a tile filters too');
 ok(window.localStorage.getItem('pth_admin_se_mode') === 'off', 'the choice is remembered');

@@ -1171,6 +1171,12 @@
   /* Entry-mode tiles: « Live/spectator tool » takes two lines on a phone. The
      tiles share their rows (subgrid), so the figures of a row stay level. */
   #ovModes>.ovmode,#seTiles>.ovmode,#lmTiles>.ovmode{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:4px;align-content:start}
+  /* Five entry modes since Mini-games joined the live views (web.144): five
+     columns on a wide screen, three below, and on a phone the odd last tile
+     takes the row (as #pkTiles). */
+  #ovModes,#seTiles,#lmTiles{grid-template-columns:repeat(5,minmax(0,1fr))}
+  @media(max-width:1199px){ #ovModes,#seTiles,#lmTiles{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media(max-width:760px){ #ovModes,#seTiles,#lmTiles{grid-template-columns:repeat(2,minmax(0,1fr))} #ovModes>.ovmode:last-child:nth-child(odd),#seTiles>.ovmode:last-child:nth-child(odd),#lmTiles>.ovmode:last-child:nth-child(odd){grid-column:1/-1} }
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#FFFFFF':'#11171F');}catch(e){}})();</script>
 </head>
@@ -1532,7 +1538,7 @@
       <div class="card">
         <div class="boardhead"><h2>Live connections</h2><span id="seSum" class="headnote"></span><button id="seRefresh" class="use">Refresh</button></div>
         <p class="muted">Everyone connected right now, refreshed every 5&nbsp;s while this tab is open. IP addresses are partially masked.</p>
-        <details class="more"><summary>Bridges, notices and /live</summary><p class="muted"><b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. Connections from the <b>/live</b> spectator view are tagged and counted apart.</p></details>
+        <details class="more"><summary>Bridges, notices and /live</summary><p class="muted"><b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, training, or the Mini-games page, which also says the game on screen) that only receive broadcasts. Connections from the <b>/live</b> spectator view are tagged and counted apart.</p></details>
         <div class="ltool"><input id="seFilter" class="filter" type="search" placeholder="Filter: name, country, server, device, version…" autocomplete="off"><div class="chips" id="seModes" role="group" aria-label="Entry mode"></div></div>
         <div id="seMsg" class="msg"></div>
         <div id="seList" class="ltab"><div class="empty">Loading…</div></div>
@@ -8031,7 +8037,7 @@
     var osL=v.osv?(os==='iPhone'||os==='iPad'?os+' '+v.osv:v.osv):(os==='macOS'?'Mac':os);
     return [osL, v.brv||br].filter(Boolean).join(' \u00b7 ');
   }
-  function _seMode(m){ return m==='pthnet'?'Internet' : m==='lan'?'LAN' : m==='offline'?'Training' : (m||'\u2014'); }
+  function _seMode(m){ return m==='pthnet'?'Internet' : m==='lan'?'LAN' : m==='offline'?'Training' : m==='arcade'?'Mini-games' : (m||'\u2014'); }
   function _seKickBtn(id,label){
     var b=document.createElement('button'); b.className='del'; b.textContent='Disconnect';
     b.addEventListener('click',function(){
@@ -8051,9 +8057,11 @@
   // costs. Tiles on top count them by mode; a filter and the mode chips only
   // narrow what is shown (nothing is read again).
   var _seData=null, _seSel='all';
-  try{ var _sm=localStorage.getItem('pth_admin_se_mode'); if(['all','net','lan','off','live'].indexOf(_sm)>=0) _seSel=_sm; }catch(e){}
-  var SE_MODES=[['net','Internet','var(--m-net)'],['lan','LAN','var(--m-lan)'],['off','Training','var(--m-off)'],['live','Live/spectator tool','var(--m-live)']];
-  function _seKind(x,notify){ return x.live?'live':(notify?(x.mode==='offline'?'off':'net'):(x.mode==='lan'?'lan':'net')); }
+  try{ var _sm=localStorage.getItem('pth_admin_se_mode'); if(['all','net','lan','off','live','arc'].indexOf(_sm)>=0) _seSel=_sm; }catch(e){}
+  var SE_MODES=[['net','Internet','var(--m-net)'],['lan','LAN','var(--m-lan)'],['off','Training','var(--m-off)'],['live','Live/spectator tool','var(--m-live)'],['arc','Mini-games','var(--m-arc)']];
+  // Mini-games (mode 'arcade', web.144): a notice channel opened by the
+  // Mini-games page, which tells the game on screen (games/presence.mjs).
+  function _seKind(x,notify){ return x.live?'live':(notify?(x.mode==='offline'?'off':(x.mode==='arcade'?'arc':'net')):(x.mode==='lan'?'lan':'net')); }
   function _seRows(d){
     var out=[];
     (d.bridges||[]).forEach(function(b){
@@ -8065,9 +8073,9 @@
     });
     (d.notify||[]).forEach(function(c){
       var k=_seKind(c,true);
-      out.push({k:k, notify:true, id:c.id, who:k==='live'?'Spectator':(k==='off'?'Training':'Direct client'), named:false,
-        sub:k==='live'?'/live':(k==='off'?'against the bots':'straight to pokerth.net'), cc:c.cc,
-        where:k==='off'?'offline':'pokerth.net, direct', dev:_seDev(c.ua), ver:c.ver, ip:c.ip, at:c.startedAt, io:'',
+      out.push({k:k, notify:true, id:c.id, who:k==='live'?'Spectator':(k==='off'?'Training':(k==='arc'?'Mini-games':'Direct client')), named:false,
+        sub:k==='live'?'/live':(k==='off'?'against the bots':(k==='arc'?(c.game?'in a game':'on the page'):'straight to pokerth.net')), cc:c.cc,
+        where:k==='off'?'offline':(k==='arc'?(c.game?(ARC_GAMES[c.game]||c.game):'the page\u2019s home'):'pokerth.net, direct'), dev:_seDev(c.ua), ver:c.ver, ip:c.ip, at:c.startedAt, io:'',
         state:c.attached?'live':'detached', kick:'this notice channel'});
     });
     out.sort(function(a,b){ return a.at-b.at; });
@@ -8075,12 +8083,13 @@
   }
   function _seTiles(rows,d){
     var boxes=[$('seTiles'),$('lmTiles')].filter(Boolean); if(!boxes.length) return;
-    var n={net:[0,0],lan:[0,{}],off:[0],live:[0]};
-    rows.forEach(function(r){ n[r.k][0]++; if(r.k==='net'&&!r.notify) n.net[1]++; if(r.k==='lan') n.lan[1][r.where]=1; });
+    var n={net:[0,0],lan:[0,{}],off:[0],live:[0],arc:[0,0]};
+    rows.forEach(function(r){ n[r.k][0]++; if(r.k==='net'&&!r.notify) n.net[1]++; if(r.k==='lan') n.lan[1][r.where]=1; if(r.k==='arc'&&r.sub==='in a game') n.arc[1]++; });
     var html=SE_MODES.map(function(m){
       var c=n[m[0]][0], sub=m[0]==='net'?(n.net[1]+' through this proxy · '+(c-n.net[1])+' direct')
         : m[0]==='lan'?(c?'on '+Object.keys(n.lan[1]).length+' server'+(Object.keys(n.lan[1]).length===1?'':'s'):'no LAN table right now')
-        : m[0]==='off'?'playing the bots offline':'watching on /live';
+        : m[0]==='off'?'playing the bots offline'
+        : m[0]==='arc'?(c?n.arc[1]+' in a game · '+(c-n.arc[1])+' on the page':'nobody on the page'):'watching on /live';
       return '<button type="button" class="ovmode setile'+(_seSel===m[0]?' on':'')+'" data-sm="'+m[0]+'" style="--mc:'+m[2]+'" aria-pressed="'+(_seSel===m[0])+'"><span class="ovmh"><i class="lvdot"></i><span>'+m[1]+'</span></span><b class="ovmn">'+c+'</b><span class="ovms">'+sub+'</span></button>';
     }).join('');
     boxes.forEach(function(b){ b.innerHTML=html; });

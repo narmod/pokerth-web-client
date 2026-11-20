@@ -16585,7 +16585,8 @@ function _maskIp(ip) {
 // Instantané des connexions pour /admin/sessions. Deux familles :
 //   • bridges : ponts de jeu (navigateur ⇄ proxy ⇄ serveur PokerTH)
 //   • notify  : canaux légers ?notify=1 (joueurs connectés en direct à
-//                pokerth.net ou en entraînement, qui ne reçoivent que les avis)
+//                pokerth.net, en entraînement ou sur la page Mini-jeux, qui
+//                ne reçoivent que les avis)
 function _sessionsSnapshot() {
   const now = Date.now();
   const bridges = [];
@@ -16607,7 +16608,7 @@ function _sessionsSnapshot() {
   try {
     wss.clients.forEach(function (c) {
       if (!c._notify) return;
-      notify.push({ id: c._nid, mode: c._bcMode || '', live: !!c._live, ver: c._ver || '', cc: c._cc || '',
+      notify.push({ id: c._nid, mode: c._bcMode || '', live: !!c._live, ver: c._ver || '', cc: c._cc || '', game: c._game || '',
                     ua: c._ua || '', ip: _maskIp(c._ip), startedAt: c._startedAt || now,
                     attached: c.readyState === 1 });
     });
@@ -16996,11 +16997,25 @@ wss.on('connection', (ws, req) => {
   // reste simplement dans wss.clients, donc broadcastNotice() (INFO:/NOTICE:)
   // l'atteint sans autre modification. Le heartbeat existant la surveille.
   if (params.get('notify') === '1') {
-    ws._bcMode = params.get('mode') === 'offline' ? 'offline' : 'pthnet';
+    // mode=arcade: the Mini-games page (public/modules/games/presence.mjs),
+    // counted apart on the admin's live views; it plays no table, so a
+    // broadcast aimed at one mode never reaches it, only « all modes ».
+    const _nMode = params.get('mode');
+    ws._bcMode = _nMode === 'offline' ? 'offline' : (_nMode === 'arcade' ? 'arcade' : 'pthnet');
     ws._notify = true; ws._nid = ++_sessSeq;
+    ws._game = '';
     console.log('[i] Notify-only client attached (' + ws._bcMode + ', ' + wss.clients.size + ' ws total)');
     if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
-    ws.on('message', function () {});       // aucun trafic entrant attendu
+    // Aucun trafic entrant attendu, sauf sur la page Mini-jeux : « G:<id> »
+    // dit le jeu à l'écran ('' = l'accueil de la page). Seul un id connu de
+    // server/arcade-stats.js est gardé, avec la socket, jamais stocké.
+    ws.on('message', function (data, isBinary) {
+      if (ws._bcMode !== 'arcade' || isBinary) return;
+      const s = String(data || '');
+      if (s.length > 40 || s.indexOf('G:') !== 0) return;
+      const g = s.slice(2);
+      ws._game = (ARCADE_STATS.GAMES.indexOf(g) >= 0 || ARCADE_STATS.BONUS.indexOf(g) >= 0) ? g : '';
+    });
     ws.on('error', function () {});
     return;
   }

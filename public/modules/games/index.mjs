@@ -25,6 +25,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { arcadeStat } from './stats.mjs';
+import * as presence from './presence.mjs';
 
 // Ace Runner's score changed (web.39: the distance plus the hand's bonus, no
 // more distance × hand): its records restart, once per device (narmod).
@@ -209,6 +210,8 @@ export async function loadGame(id) {
   const g = GAMES.find((x) => x.id === id);
   if (!g) throw new Error('unknown game ' + id);
   if (id !== HOME) arcadeStat('open_' + id);
+  // The game on screen, for the admin's live view (presence.mjs).
+  presence.setGame(id === HOME ? '' : id);
   return [Object.assign({}, g, { name: gameName(g) }), await g.load()];
 }
 
@@ -240,6 +243,8 @@ export async function launch(id) {
   const g = GAMES.find((x) => x.id === id);
   if (!g || open) return;
   open = true;
+  // Live on the admin board while the page is open (presence.mjs).
+  presence.enter();
   if (id === HOME) {
     // A session of the Mini-games mode (the « Narrow to » cube, once per
     // browser session) and the page opened, whatever the way in.
@@ -261,7 +266,7 @@ export async function launch(id) {
     }
   } catch (e) {
     try { console.warn('[games]', e); } catch (e2) {}
-  } finally { open = false; shellNow = null; }
+  } finally { open = false; shellNow = null; presence.leave(); }
 }
 
 /**

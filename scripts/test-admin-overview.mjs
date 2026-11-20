@@ -33,21 +33,25 @@ const SESS = { ok: true, now: 1e6,
     { mode: 'offline', startedAt: 1e6 - 900 },
     { mode: 'offline', startedAt: 1e6 - 800 },
     { mode: 'pthnet', live: true, startedAt: 1e6 - 700 },
+    { mode: 'arcade', game: 'tapis', startedAt: 1e6 - 600 },
+    { mode: 'arcade', game: '', startedAt: 1e6 - 500 },
   ] };
 const now = OV.nowByMode(SESS);
 ok(now.net.n === 2 && now.net.bridged === 1 && now.net.direct === 1, 'Internet counts the bridged and the direct players');
 ok(now.lan.n === 3 && now.lan.servers === 2, 'LAN counts players and distinct servers, host case aside');
 ok(now.off.n === 2, 'Training is the offline notice channels');
 ok(now.live.n === 2, '/live spectators are counted apart, bridged or not');
+ok(now.arc.n === 2 && now.arc.playing === 1, 'Mini-games counts its page, and who is in a game');
+ok(now.net.direct === 1, 'a Mini-games channel is never counted as Internet');
 ok(OV.nowByMode({ ok: false }) === null, 'a failed read yields nothing rather than zeros');
 
 // ── Connections per day ───────────────────────────────────────────────────
 const rows = OV.dailyByMode([
-  { date: '2026-10-16', m: { pokerthnet: 5, lan: 2, offline: 1, live: 1 } },
+  { date: '2026-10-16', m: { pokerthnet: 5, lan: 2, offline: 1, live: 1, arcade: 3 } },
   { date: '2026-10-17', m: { pokerthnet: 1 } },
   { date: '2026-10-18' },
 ], '2026-10-17');
-ok(rows[0].net === 5 && rows[0].lan === 2 && rows[0].off === 1 && rows[0].live === 1 && rows[0].total === 9, 'a day adds its four modes');
+ok(rows[0].net === 5 && rows[0].lan === 2 && rows[0].off === 1 && rows[0].live === 1 && rows[0].arc === 3 && rows[0].total === 12, 'a day adds its five modes');
 ok(rows[1].today && !rows[0].today, 'today is marked, by the server\'s day key');
 ok(!rows[2].has && rows[2].total === 0, 'a day without counts says so');
 ok((proxy.match(/m: \(b && b\.m\) \? b\.m : undefined, lo: \(b && b\.lo\) \? b\.lo : undefined \}\)\);/g) || []).length === 2,
@@ -142,7 +146,7 @@ OV.render(panel, {
 });
 const txt = (id) => doc.getElementById(id).textContent;
 ok(/All clear/.test(txt('ovAlerts')), 'the alert row paints');
-ok(doc.querySelectorAll('#ovModes .ovmode').length === 4, 'four mode cards');
+ok(doc.querySelectorAll('#ovModes .ovmode').length === 5, 'five mode cards');
 ok(/321 online on the server · 12 tables/.test(txt('ovModes')), 'Internet adds the server-wide figure when the server publishes one');
 ok(/on 2 servers/.test(txt('ovModes')), 'LAN names its servers');
 ok(doc.querySelectorAll('#ovChart .ovbar').length === 2 && doc.querySelector('#ovChart .ovbar.today'), 'one bar per day, today marked');
@@ -173,7 +177,9 @@ ok(/class="ovtop"/.test(src) && !/class="top"/.test(src), 'the top segment is no
 ok(/spectator/.test(txt('ovNow')), 'a /live viewer is a spectator, not a guest');
 ok(doc.querySelectorAll('#ovNow .ovrow').length === 6 && /and \d+ more/.test(txt('ovNow')), 'six live connections, then a count');
 ok(!doc.querySelector('#ovNow img') && /<img src=x>/.test(txt('ovNow')), 'a nickname is shown as text, never as markup');
-ok(/10 connections/.test(txt('ovNowN')), 'the header counts every connection');
+ok(/mini-games/.test(txt('ovNow')) && /Tapis!/.test(txt('ovNow')) && /the page\u2019s home/.test(txt('ovNow')), 'a Mini-games player shows the game on screen, or the page\u2019s home');
+ok(/1 in a game · 1 on the page/.test(txt('ovModes')), 'the Mini-games card splits game and page');
+ok(/12 connections/.test(txt('ovNowN')), 'the header counts every connection');
 ok(/Settings saved/.test(txt('ovAudit')) && /\(403\)/.test(txt('ovAudit')) && /radio/.test(txt('ovAudit')), 'recent changes in words, a refusal marked, the key named');
 OV.render(panel, { visits: { ok: true, todayKey: 'x', series: [{ date: '2026-10-01' }] } });
 ok(/No connection counted/.test(txt('ovChart')), 'an empty fortnight says so instead of drawing nothing');

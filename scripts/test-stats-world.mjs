@@ -107,6 +107,19 @@ try {
   ok(!JSON.stringify(se).includes('Europe/Berlin'), 'the time zone itself is never handed out, only the country');
   [w1, w2, w3].forEach((w) => w.close());
 
+  // ── The Mini-games page, live (web.144): its own mode, the game on screen ──
+  const w4 = await open('&mode=arcade&tz=' + encodeURIComponent('Europe/Paris'));
+  const w5 = await open('&mode=arcade');
+  w4.send('G:tapis'); w5.send('G:not-a-game');
+  await new Promise((r) => setTimeout(r, 200));
+  const sa = await get('/admin/sessions');
+  const arc = (sa.notify || []).filter((c) => c.mode === 'arcade').map((c) => c.cc + ':' + c.game).sort().join();
+  ok(arc === ':,FR:tapis', 'a Mini-games channel keeps its mode and a known game only (' + arc + ')');
+  w4.send('G:'); await new Promise((r) => setTimeout(r, 150));
+  const sb = await get('/admin/sessions');
+  ok((sb.notify || []).filter((c) => c.mode === 'arcade' && c.game).length === 0, 'back on the page\u2019s home, no game is shown');
+  [w4, w5].forEach((w) => w.close());
+
   // ── Connections per LAN server, logins by kind (web.123) ──
   const ping = (b, ua) => fetch(base + '/__visit', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, ua ? { 'User-Agent': ua } : {}), body: JSON.stringify(b) });
   await ping({ mode: 'lan', vid: 'v1', srv: 'lyon.example.org:7234' });

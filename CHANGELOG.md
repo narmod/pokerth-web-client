@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Admin: Mini-games live** (`web.144`) — the Mini-games page now shows on the live views as a fifth entry mode,
+  next to Internet, LAN, Training and Live: Overview › « Right now » and its connection list, Live › Sessions
+  (tile, filter chip, a row per player with the game on screen) and Live › Map. While the page is open the client
+  opens the same light notice channel as training (`?notify=1&mode=arcade`, `public/modules/games/presence.mjs`, its
+  own socket) and says the game on screen with one `G:<id>` frame — a known game id only, kept with the socket, no
+  nickname. These players now also get « all modes » admin broadcasts. Overview's « Connections per day » chart
+  shows the Mini-games sessions, already counted since `web.25`. Tests: `test-arcade-presence`, plus
+  `test-stats-world`, `test-admin-overview` and `test-admin-live` extended.
 - **Tapis!: bosses** (`web.143`, 7th and last of the « harder Tapis! » series) — the Shark from level 39, the Cheat
   from 40, one each level in turn, both from 45 (`levelKit.shark` / `cheat`), on the friends left and right of the
   middle (never the Dealer's). The Shark (a fin on his back) takes the top chip of the taller stack beside him every

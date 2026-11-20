@@ -10,14 +10,20 @@
 // window.PthAdmin = { api, open(t), master() }.
 import { icon } from './icons.mjs';
 
-// The four ways in, in the order the statistics use. `key` is the name the
+// The five ways in, in the order the statistics use. `key` is the name the
 // visit store counts under, `sess` the one a live connection carries.
 export const MODES = [
   { id: 'net',  key: 'pokerthnet', label: 'Internet', glyph: 'globe',   color: 'var(--m-net)' },
   { id: 'lan',  key: 'lan',        label: 'LAN',      glyph: 'network', color: 'var(--m-lan)' },
   { id: 'off',  key: 'offline',    label: 'Training', glyph: 'robot',   color: 'var(--m-off)' },
   { id: 'live', key: 'live',       label: 'Live/spectator tool', glyph: 'eye', color: 'var(--m-live)' },
+  { id: 'arc',  key: 'arcade',     label: 'Mini-games', glyph: 'gamepad', color: 'var(--m-arc)' },
 ];
+
+// The Mini-games page tells the game on screen (games/presence.mjs); same
+// names as the Statistics › Mini-games panel (ARC_GAMES in admin.html).
+export const ARC_GAME_NAMES = { 'whowins': 'Who Wins?', 'ace-runner': 'Ace Runner', 'hilo': 'Higher or Lower', 'tapis': 'Tapis!', 'videopoker': 'Video Poker', 'pokerdrop': 'Poker Drop', 'solitaire': 'Poker Solitaire', 'ace-dash': 'Ace Dash', 'bluff': 'The Ace\u2019s Bluff', 'poker-run': 'Poker Run', 'house': 'House of Cards' };
+export function arcGameName(id) { return id ? (ARC_GAME_NAMES[id] || id) : 'the page\u2019s home'; }
 
 export function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -27,10 +33,11 @@ const nf = (n) => (typeof n === 'number' && isFinite(n) ? n.toLocaleString('en-U
 // ── Right now, by entry mode ─────────────────────────────────────────────
 // Bridges are game connections relayed by this proxy (pokerth.net or a LAN
 // server). Notice channels are opened by clients that play WITHOUT a bridge:
-// connected straight to pokerth.net, or training offline against the bots.
+// connected straight to pokerth.net, training offline against the bots, or on
+// the Mini-games page (mode 'arcade', which plays no table).
 // /live spectators are counted apart, whichever way they connect.
 export function nowByMode(d) {
-  const out = { net: { n: 0, bridged: 0, direct: 0 }, lan: { n: 0, servers: 0 }, off: { n: 0 }, live: { n: 0 } };
+  const out = { net: { n: 0, bridged: 0, direct: 0 }, lan: { n: 0, servers: 0 }, off: { n: 0 }, live: { n: 0 }, arc: { n: 0, playing: 0 } };
   if (!d || !d.ok) return null;
   const lanServers = new Set();
   (d.bridges || []).forEach((b) => {
@@ -41,6 +48,7 @@ export function nowByMode(d) {
   (d.notify || []).forEach((c) => {
     if (c.live) { out.live.n++; return; }
     if (c.mode === 'offline') { out.off.n++; return; }
+    if (c.mode === 'arcade') { out.arc.n++; if (c.game) out.arc.playing++; return; }
     out.net.n++; out.net.direct++;
   });
   out.lan.servers = lanServers.size;
@@ -238,6 +246,7 @@ function modesHtml(now, live) {
         if (live && live.ok && typeof live.online === 'number') sub += '<br>' + nw(nf(live.online) + ' online on the server') + (typeof live.tables === 'number' ? ' · ' + nw(nf(live.tables) + ' tables') : '');
       } else if (x.id === 'lan') sub = c.n ? 'on ' + c.servers + ' server' + (c.servers === 1 ? '' : 's') : 'no LAN table right now';
       else if (x.id === 'off') sub = 'playing the bots offline';
+      else if (x.id === 'arc') sub = c.n ? c.playing + ' in a game · ' + (c.n - c.playing) + ' on the page' : 'nobody on the page';
       else sub = 'watching on /live';
     }
     return '<div class="ovmode" style="--mc:' + x.color + '"><div class="ovmh">' + icon(x.glyph, 'ovmi') + '<span>' + x.label + '</span></div>' +
@@ -354,7 +363,10 @@ function nowListHtml(d) {
   if (!d || !d.ok) return '<div class="empty err">Could not load the connections.</div>';
   const all = [];
   (d.bridges || []).forEach((b) => all.push({ mode: b.live ? 'live' : b.mode === 'lan' ? 'lan' : 'net', who: b.live ? 'spectator' : (b.nick || (b.auth ? 'account' : 'guest')), at: b.startedAt, cc: b.cc, where: b.live ? '/live' : (b.mode === 'lan' ? b.host : 'pokerth.net') }));
-  (d.notify || []).forEach((c) => all.push({ mode: c.live ? 'live' : c.mode === 'offline' ? 'off' : 'net', who: c.live ? 'spectator' : c.mode === 'offline' ? 'training' : 'direct client', at: c.startedAt, cc: c.cc, where: c.live ? '/live' : c.mode === 'offline' ? 'offline' : 'pokerth.net, direct' }));
+  (d.notify || []).forEach((c) => {
+    if (!c.live && c.mode === 'arcade') { all.push({ mode: 'arc', who: 'mini-games', at: c.startedAt, cc: c.cc, where: arcGameName(c.game) }); return; }
+    all.push({ mode: c.live ? 'live' : c.mode === 'offline' ? 'off' : 'net', who: c.live ? 'spectator' : c.mode === 'offline' ? 'training' : 'direct client', at: c.startedAt, cc: c.cc, where: c.live ? '/live' : c.mode === 'offline' ? 'offline' : 'pokerth.net, direct' });
+  });
   if (!all.length) return '<div class="empty">Nobody connected right now.</div>';
   all.sort((a, b) => b.at - a.at);
   const M = Object.fromEntries(MODES.map((x) => [x.id, x]));
@@ -393,7 +405,7 @@ export function render(root, st) {
   if (st.sessions) {
     set('ovNow', nowListHtml(st.sessions));
     const n = nowByMode(st.sessions);
-    const c = n ? n.net.n + n.lan.n + n.off.n + n.live.n : 0;
+    const c = n ? n.net.n + n.lan.n + n.off.n + n.live.n + n.arc.n : 0;
     set('ovNowN', n ? c + ' connection' + (c === 1 ? '' : 's') : '');
   }
   if (st.audit) set('ovAudit', auditHtml(st.audit));
