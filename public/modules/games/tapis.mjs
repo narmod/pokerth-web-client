@@ -66,6 +66,8 @@
 //             Chip rain from 30 (web.140): every few seconds a few chips fall
 //             onto the stacks (never over the top); a guest among them on a
 //             stack with nobody on it sits down at once.
+//             Frozen seals from 33 (web.141): a group next to one breaks the
+//             ice (shards), the next one the seal.
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -85,7 +87,7 @@ import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn,
-  rainChips } from './tapis-rules.mjs';
+  rainChips, crack } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -208,7 +210,7 @@ export function create(shell) {
     if (mode === 'daily') R = rng('tp-' + dayKey() + '-' + G.lv);
     // Madness starts lower (room for the rows to come); Zen has no seals.
     G.grid = dealRound(G.lv, G.cols, mode === 'folie' ? Math.max(5, Math.round(G.maxRows * 0.6)) : G.maxRows, R);
-    if (mode === 'zen') G.grid.forEach((col) => col.forEach((b) => { b.seal = false; b.fuse = 0; }));   // nor fuse chips (web.138)
+    if (mode === 'zen') G.grid.forEach((col) => col.forEach((b) => { b.seal = false; b.ice = 0; b.fuse = 0; }));   // nor fuse chips (web.138), nor ice (web.141)
     G.grid.forEach((col, c) => col.forEach((b, r) => { b.off = 6 + r * 0.6 + c * 0.5; }));   // the chips fall into place
     G.total = chipsLeft(G.grid);
     G.timeMax = G.timeLeft = timed() ? timeFor(G.total, G.lv) : 1;
@@ -412,9 +414,9 @@ export function create(shell) {
   function takeCells(L, cells) {
     const fr = freedBy(G.grid, cells);
     for (const [c, r] of fr.seals) {
-      const b = G.grid[c][r]; b.seal = false; b.pop = 0.4;
+      const b = G.grid[c][r], ice = crack(b); b.pop = 0.4;    // web.141: a frozen seal loses its ice first
       const x = colX(L, c), y = chipY(L, c, r) - L.bh / 2;
-      for (let i = 0; i < 8; i++) { const a = Math.random() * 7; G.parts.push({ x, y, vx: Math.cos(a) * 50, vy: Math.sin(a) * 50 - 40, t: 0, life: 0.6, c: '#c3ccd6', r: 1.6, rot: 0 }); }
+      for (let i = 0; i < (ice ? 14 : 8); i++) { const a = Math.random() * 7, v = ice ? 80 : 50; G.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 40, t: 0, life: ice ? 0.8 : 0.6, c: ice ? (i % 2 ? '#e8f6ff' : '#9fd4f5') : '#c3ccd6', r: ice ? 2.2 : 1.6, rot: Math.random() * 6 }); }
     }
     if (fr.seals.length) sound('notifyTick');
     const chips = cells.filter(([c, r]) => G.grid[c][r].k >= 0);
@@ -924,6 +926,23 @@ export function create(shell) {
     g.fillText(String(Math.ceil(left)), 0, r * 0.06);
     g.restore();
   }
+  /** A frozen seal (web.141): a block of ice over the chip and its padlock, frost on top, a glint now and then. */
+  function drawIce(g, L, x, yb, sc) {
+    const { bh, ry } = L, w = L.rx * (sc || 1) + 1.5;
+    g.save();
+    g.beginPath(); g.moveTo(x - w, yb - bh - 1); g.lineTo(x - w, yb); g.ellipse(x, yb, w, ry + 1, 0, Math.PI, 0, true); g.lineTo(x + w, yb - bh - 1); g.ellipse(x, yb - bh - 1, w, ry + 1, 0, 0, Math.PI, true);
+    const gr = g.createLinearGradient(x - w, yb - bh, x + w, yb);
+    gr.addColorStop(0, 'rgba(225,245,255,.6)'); gr.addColorStop(0.5, 'rgba(160,210,240,.32)'); gr.addColorStop(1, 'rgba(215,240,255,.55)');
+    g.fillStyle = gr; g.fill();
+    g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 1; g.stroke();
+    g.fillStyle = 'rgba(245,252,255,.35)'; g.beginPath(); g.ellipse(x, yb - bh - 1, w, ry + 1, 0, 0, 7); g.fill();
+    // a few frost streaks and a glint
+    g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = Math.max(1, bh * 0.08);
+    g.beginPath(); g.moveTo(x - w * 0.7, yb - bh * 0.2); g.lineTo(x - w * 0.35, yb - bh * 0.75); g.moveTo(x + w * 0.2, yb - bh * 0.1); g.lineTo(x + w * 0.5, yb - bh * 0.6); g.stroke();
+    const gl = (time * 0.7 + x * 0.013) % 3;
+    if (gl < 0.4 && !shell.reduced) { g.fillStyle = 'rgba(255,255,255,' + (1 - gl / 0.4).toFixed(2) + ')'; g.font = Math.max(7, bh * 0.8).toFixed(0) + 'px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('✦', x + w * 0.55, yb - bh - ry * 0.3); }
+    g.restore();
+  }
   /** A guest chip (web.139): a little white badge with someone in it, ringed with gold. */
   function drawGuest(g, L, x, yb, sc) {
     const { bh } = L, w = L.rx * (sc || 1), r = Math.max(4, Math.min(bh * 0.55, w * 0.42)), cy = yb - bh * 0.5;
@@ -1056,6 +1075,7 @@ export function create(shell) {
       for (let r = 0; r < col.length; r++) {
         if (col[r].fuse > 0) drawFuse(g, L, x, chipY(L, c, r), col[r].fuse, col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
         else if (col[r].guest) drawGuest(g, L, x, chipY(L, c, r), col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
+        if (col[r].ice > 0) drawIce(g, L, x, chipY(L, c, r), col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
       }
     }
     // The cursor (keys, pad, remote).

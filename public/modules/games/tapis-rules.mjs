@@ -42,6 +42,9 @@
 //             few chips fall from the sky onto the stacks (rainChips) — now
 //             and then a guest among them: on a stack with nobody on it, he
 //             sits down at once.
+//   Ice       (web.141, levelKit.ice) from level 33, some seals are frozen
+//             ({ seal: true, ice: 1 }): a group next to one breaks the ice,
+//             the next one the seal (crack).
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -90,7 +93,18 @@ export function levelKit(lv) {
     // web.140: chip rain from 30 — every 18 s, down to 10 s at 46; 2 chips, one more every 4 levels up to 4
     rain: lv < 30 ? 0 : Math.max(10, 18 - (lv - 30) * 0.5),
     rainN: lv < 30 ? 0 : Math.min(4, 2 + Math.floor((lv - 30) / 4)),
+    // web.141: frozen seals from 33 — 2 of the seals, one more every 3 levels up to 6
+    ice: lv < 33 ? 0 : Math.min(6, 2 + Math.floor((lv - 33) / 3)),
   };
+}
+/**
+ * A group next to a sealed chip (web.141): a frozen one loses its ice and
+ * stays sealed, else the seal breaks. Returns true when it was the ice.
+ */
+export function crack(b) {
+  if (b.ice > 0) { b.ice--; return true; }
+  b.seal = false;
+  return false;
 }
 /** The odds that a shower brings a guest among its chips (web.140). */
 export const RAIN_GUEST = 0.3;
@@ -128,7 +142,7 @@ export function guestColumn(nColors, rnd = Math.random) {
 /** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
 export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain'], ['ice', 33, 'tpNewIce']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
@@ -429,7 +443,10 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
     deck.push(card); grid[at[0]][at[1]] = { k: CARD, card, off: 0 };
   }
   for (let i = 0; i < kit.wild; i++) { const at = pick(); if (at) grid[at[0]][at[1]].k = WILD; }
-  for (let i = 0; i < kit.seals; i++) { const at = pick(); if (at) grid[at[0]][at[1]].seal = true; }
+  for (let i = 0; i < kit.seals; i++) {
+    const at = pick();
+    if (at) { grid[at[0]][at[1]].seal = true; if (i < (kit.ice || 0)) grid[at[0]][at[1]].ice = 1; }   // web.141: the first ones frozen
+  }
   // web.138: fuse chips, on chips of a colour (not a card, a Joker chip or a seal), their countdowns a step apart
   for (let i = 0, f = 0; i < kit.fuses && spots.length; ) {
     const at = pick(), b = at && grid[at[0]][at[1]];

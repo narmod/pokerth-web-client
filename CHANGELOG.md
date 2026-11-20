@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: frozen chips** (`web.141`, 5th of the « harder Tapis! » series) — from level 33 the first seals of the
+  deal are frozen (`levelKit.ice`: 2, one more every 3 levels up to 6, never more than the seals; `{ seal, ice: 1 }`):
+  a group next to one breaks the ice (shards, `crack`), the next one the seal. Drawn as a translucent block of ice
+  over the chip and its padlock, with frost streaks and a glint. Not in Zen (no seals there). New key `tpNewIce` and
+  a rules sentence, 83 catalogues. Simulation: a small step on its own (rounds won at 33 / 34 / 36 within a few
+  points of before) — it adds to the rows, rain and seals of those levels.
 - **Tapis!: chip rain** (`web.140`, 4th of the « harder Tapis! » series) — from level 30 (`levelKit.rain`: a shower
   every 18 s, down to 10 s at 46; `rainN` 2 chips, one more every 4 levels up to 4), chips fall from the sky onto
   different stacks, never over the top (in Madness one row under the red line), half of them the colour of the chip

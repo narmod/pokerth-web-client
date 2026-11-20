@@ -573,6 +573,22 @@ console.log('Ace Dash: the long run, the score, the modes');
       const full = [[C(0), C(0)], [C(1), C(1)]], none = TP.rainChips(full, 2, 3, 2);
       ok(okR && guests > 30 && guests < 100 && none.length === 0, 'Tapis!: a shower lands on different stacks under the top, never on an empty or full one, a guest about 3 times in 10 (' + guests + '/200)');
     }
+    {
+      // web.141: frozen seals from 33 — the first seals of the deal; a group next to one breaks the ice, the next the seal
+      ok(kit(32).ice === 0 && kit(33).ice === 2 && kit(45).ice === 6 && kit(60).ice === 6 && [33, 36, 40, 45, 60].every((lv) => kit(lv).ice <= kit(lv).seals)
+        && TP.KIT_FROM.some(([k, lv, key]) => k === 'ice' && lv === 33 && key === 'tpNewIce'),
+        'Tapis!: frozen seals from level 33, 2 up to 6, never more than the seals');
+      let okI = true;
+      for (let i = 0; i < 20; i++) {
+        const cells = [].concat(...TP.dealRound(36, 8, 12));
+        const ice = cells.filter((b) => b.ice > 0);
+        if (ice.length !== kit(36).ice || ice.some((b) => !b.seal) || cells.filter((b) => b.seal).length !== kit(36).seals) okI = false;
+      }
+      const fz = C(1, { seal: true, ice: 1 }), first = TP.crack(fz), still = fz.seal, second = TP.crack(fz);
+      const gi = [[C(0), C(0), fz]];
+      ok(okI && [].concat(...TP.dealRound(32, 8, 12)).every((b) => !b.ice) && first === true && still && second === false && !fz.seal && !fz.ice,
+        'Tapis!: level 36 freezes the first seals; a frozen seal takes two cracks');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);
