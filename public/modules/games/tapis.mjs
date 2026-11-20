@@ -68,6 +68,8 @@
 //             stack with nobody on it sits down at once.
 //             Frozen seals from 33 (web.141): a group next to one breaks the
 //             ice (shards), the next one the seal.
+//             Chameleon chips from 36 (web.142): every 3 s the next colour of
+//             the level; their badge shows the colour to come and the time.
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -87,7 +89,7 @@ import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn,
-  rainChips, crack } from './tapis-rules.mjs';
+  rainChips, crack, chamTick, chamNext, CHAM_S } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -225,7 +227,7 @@ export function create(shell) {
     G.all = G.chars.slice();                 // every friend of the round, his column gone or not (the spirits)
     // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
     G.kit = levelKit(G.lv); G.riseT = 0; G.rainT = 0; G.firstIn = false; G.recaved = false;
-    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; G.kit.rain = 0; }
+    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; G.kit.rain = 0; G.kit.cham = 0; }
     if (mode === 'folie') G.kit.rise = folieEvery(G.lv);
     if (G.kit.dealer) { const d = G.chars[Math.floor(R() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
     const v = venueAt(G.lv);
@@ -729,6 +731,18 @@ export function create(shell) {
       if (mode === 'folie' && state === 'run') { G.timeMax = G.kit.rise; G.timeLeft = G.kit.rise - G.riseT; }
     }
     if (state === 'run' && G.kit && G.kit.fuses) burnFuses(dt);
+    if (state === 'run' && G.kit && G.kit.cham) {      // web.142: chameleon chips turn
+      const turned = chamTick(G.grid, dt, colorsAt(G.lv));
+      if (turned.length) {
+        const L = geom();
+        for (const [c, r] of turned) {
+          const b = G.grid[c][r]; b.pop = 0.4;
+          const x = colX(L, c), y = chipY(L, c, r) - L.bh / 2, col = CHIPS[b.k].top;
+          for (let i = 0; i < 6; i++) { const a = Math.random() * 7; G.parts.push({ x, y, vx: Math.cos(a) * 45, vy: Math.sin(a) * 45 - 30, t: 0, life: 0.45, c: col, r: 1.6, rot: 0 }); }
+        }
+        afterMove();
+      }
+    }
     if (state === 'run' && G.kit && G.kit.rain) {     // web.140: a shower of chips now and then
       G.rainT += dt;
       if (G.rainT >= G.kit.rain) { G.rainT = 0; rain(); }
@@ -926,6 +940,28 @@ export function create(shell) {
     g.fillText(String(Math.ceil(left)), 0, r * 0.06);
     g.restore();
   }
+  /**
+   * A chameleon chip (web.142): a badge on its side in the colour to come, with a white arc for the time left before
+   * it turns; a shimmer of the next colour on its top in the last second.
+   */
+  function drawCham(g, L, x, yb, b, sc) {
+    const { bh, ry } = L, w = L.rx * (sc || 1), r = Math.max(4, Math.min(bh * 0.5, w * 0.38)), cy = yb - bh * 0.5;
+    const next = CHIPS[chamNext(b.k, colorsAt(G.lv))], left = Math.max(0, Math.min(1, b.cham / CHAM_S));
+    g.save();
+    if (left < 1 / CHAM_S && !shell.reduced) {
+      g.globalAlpha = 0.25 + 0.35 * (1 - left * CHAM_S);
+      g.fillStyle = next.top; g.beginPath(); g.ellipse(x, yb - bh, w, ry, 0, 0, 7); g.fill();
+      g.globalAlpha = 1;
+    }
+    g.translate(x, cy);
+    g.fillStyle = next.top; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill();
+    g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = Math.max(1, r * 0.14); g.stroke();
+    g.strokeStyle = '#fff'; g.lineWidth = Math.max(1.2, r * 0.26); g.lineCap = 'round';
+    g.beginPath(); g.arc(0, 0, r * 0.72, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * left); g.stroke();
+    g.fillStyle = next.mark; g.font = '800 ' + (r * 0.95).toFixed(1) + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(next.suit, 0, r * 0.05);
+    g.restore();
+  }
   /** A frozen seal (web.141): a block of ice over the chip and its padlock, frost on top, a glint now and then. */
   function drawIce(g, L, x, yb, sc) {
     const { bh, ry } = L, w = L.rx * (sc || 1) + 1.5;
@@ -1075,6 +1111,7 @@ export function create(shell) {
       for (let r = 0; r < col.length; r++) {
         if (col[r].fuse > 0) drawFuse(g, L, x, chipY(L, c, r), col[r].fuse, col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
         else if (col[r].guest) drawGuest(g, L, x, chipY(L, c, r), col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
+        if (col[r].cham > 0) drawCham(g, L, x, chipY(L, c, r), col[r], col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
         if (col[r].ice > 0) drawIce(g, L, x, chipY(L, c, r), col[r].pop > 0 ? 1 + col[r].pop * 0.35 : 1);
       }
     }

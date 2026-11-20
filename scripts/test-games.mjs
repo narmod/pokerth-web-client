@@ -589,6 +589,23 @@ console.log('Ace Dash: the long run, the score, the modes');
       ok(okI && [].concat(...TP.dealRound(32, 8, 12)).every((b) => !b.ice) && first === true && still && second === false && !fz.seal && !fz.ice,
         'Tapis!: level 36 freezes the first seals; a frozen seal takes two cracks');
     }
+    {
+      // web.142: chameleon chips from 36 — on plain chips, the next colour of the level every CHAM_S seconds
+      ok(kit(35).cham === 0 && kit(36).cham === 2 && kit(48).cham === 6 && kit(60).cham === 6 && TP.CHAM_S === 3
+        && TP.KIT_FROM.some(([k, lv, key]) => k === 'cham' && lv === 36 && key === 'tpNewCham')
+        && TP.chamNext(0, 3) === 1 && TP.chamNext(2, 3) === 0 && TP.chamNext(4, 6) === 6 && TP.chamNext(6, 6) === 0 && TP.chamNext(4, 5) === 0,
+        'Tapis!: chameleon chips from level 36, 2 up to 6; the next colour skips the Joker chip and goes round');
+      let okC = true;
+      for (let i = 0; i < 20; i++) {
+        const cells = [].concat(...TP.dealRound(39, 8, 12)), ch = cells.filter((b) => b.cham > 0);
+        if (ch.length !== 3 || ch.some((b) => b.k < 0 || b.k === W || b.seal || b.fuse > 0 || b.guest || b.cham > TP.CHAM_S)) okC = false;
+      }
+      const gc = [[C(0, { cham: 1 }), C(2)], [C(W, { cham: 1 }), C(1, { cham: 4 })]];
+      const t1 = TP.chamTick(gc, 1.5, 3);
+      ok(okC && [].concat(...TP.dealRound(35, 8, 12)).every((b) => !b.cham) && t1.length === 1 && gc[0][0].k === 1 && gc[0][0].cham === 2.5
+        && gc[1][0].k === W && !gc[1][0].cham && gc[1][1].k === 1 && gc[1][1].cham === 2.5,
+        'Tapis!: level 39 deals 3 chameleons on plain chips (none before 36); a tick turns the ones whose time is up, a Joker chip stays one');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);

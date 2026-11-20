@@ -45,6 +45,9 @@
 //   Ice       (web.141, levelKit.ice) from level 33, some seals are frozen
 //             ({ seal: true, ice: 1 }): a group next to one breaks the ice,
 //             the next one the seal (crack).
+//   Chameleon (web.142, levelKit.cham) from level 36, chips that change
+//             colour every CHAM_S seconds ({ cham: seconds left }), always to
+//             the next colour of the level (chamNext, chamTick).
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -95,7 +98,31 @@ export function levelKit(lv) {
     rainN: lv < 30 ? 0 : Math.min(4, 2 + Math.floor((lv - 30) / 4)),
     // web.141: frozen seals from 33 — 2 of the seals, one more every 3 levels up to 6
     ice: lv < 33 ? 0 : Math.min(6, 2 + Math.floor((lv - 33) / 3)),
+    // web.142: chameleon chips from 36, 2, one more every 3 levels up to 6
+    cham: lv < 36 ? 0 : Math.min(6, 2 + Math.floor((lv - 36) / 3)),
   };
+}
+/** Seconds between two colours of a chameleon chip (web.142). */
+export const CHAM_S = 3;
+/** The colour after k among the first nColors (web.142), round and round. */
+export function chamNext(k, nColors) {
+  const n = Math.max(1, Math.floor(nColors));
+  for (let i = 0; i < n; i++) if (colorK(i) === k) return colorK((i + 1) % n);
+  return colorK(0);
+}
+/**
+ * Chameleon chips (web.142): dt seconds off their clocks; the ones that run
+ * out take the next colour and start again. Returns the cells that changed.
+ */
+export function chamTick(grid, dt, nColors) {
+  const out = [];
+  grid.forEach((col, c) => col.forEach((b, r) => {
+    if (!(b.cham > 0)) return;
+    if (b.k < 0 || b.k === WILD) { b.cham = 0; return; }   // turned into a Joker chip by the Shuffle: it stays one
+    b.cham -= dt;
+    if (b.cham <= 0) { b.k = chamNext(b.k, nColors); b.cham += CHAM_S; if (b.cham <= 0) b.cham = CHAM_S; out.push([c, r]); }
+  }));
+  return out;
 }
 /**
  * A group next to a sealed chip (web.141): a frozen one loses its ice and
@@ -142,7 +169,7 @@ export function guestColumn(nColors, rnd = Math.random) {
 /** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
 export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain'], ['ice', 33, 'tpNewIce']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain'], ['ice', 33, 'tpNewIce'], ['cham', 36, 'tpNewCham']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */
@@ -460,6 +487,13 @@ export function dealRound(lv, cols, maxRows, rnd = Math.random) {
     if (!b) break;
     if (b.k < 0 || b.k === WILD || b.seal || b.fuse > 0) continue;
     b.guest = true; i++;
+  }
+  // web.142: chameleon chips, on plain chips of a colour, their clocks apart so they do not all turn at once
+  for (let i = 0; i < (kit.cham || 0) && spots.length; ) {
+    const at = pick(), b = at && grid[at[0]][at[1]];
+    if (!b) break;
+    if (b.k < 0 || b.k === WILD || b.seal || b.fuse > 0 || b.guest) continue;
+    b.cham = 0.6 + rnd() * (CHAM_S - 0.6); i++;
   }
   if (!anyMove(grid)) recaveRow(grid, n, rnd);
   return grid;

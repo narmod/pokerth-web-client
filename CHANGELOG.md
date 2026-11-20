@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: chameleon chips** (`web.142`, 6th of the « harder Tapis! » series) — from level 36 (`levelKit.cham`: 2,
+  one more every 3 levels up to 6) plain chips change colour every `CHAM_S` 3 s, always to the next colour of the
+  level, the Joker chip skipped (`chamNext`, `chamTick`; clocks dealt apart). A badge on the chip shows the colour to
+  come with a white arc for the time left; in the last second the next colour shimmers on its top. Each turn: a pop
+  and a few sparks, then the usual « No more moves! » check. A chip shuffled into a Joker chip stays one. Not in Zen.
+  New key `tpNewCham` and a rules sentence, 83 catalogues. Simulation: rounds won at 36-39 within a few points of
+  before (the bot plays a move every 1.8 s whatever the colours).
 - **Tapis!: frozen chips** (`web.141`, 5th of the « harder Tapis! » series) — from level 33 the first seals of the
   deal are frozen (`levelKit.ice`: 2, one more every 3 levels up to 6, never more than the seals; `{ seal, ice: 1 }`):
   a group next to one breaks the ice (shards, `crack`), the next one the seal. Drawn as a translucent block of ice
