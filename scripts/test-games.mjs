@@ -606,6 +606,25 @@ console.log('Ace Dash: the long run, the score, the modes');
         && gc[1][0].k === W && !gc[1][0].cham && gc[1][1].k === 1 && gc[1][1].cham === 2.5,
         'Tapis!: level 39 deals 3 chameleons on plain chips (none before 36); a tick turns the ones whose time is up, a Joker chip stays one');
     }
+    {
+      // web.143: bosses — the Shark from 39, the Cheat from 40, in turn, both from 45; their tricks never over the top
+      ok(!kit(38).shark && !kit(38).cheat && kit(39).shark && !kit(39).cheat && !kit(40).shark && kit(40).cheat && kit(41).shark && !kit(41).cheat
+        && kit(45).shark && kit(45).cheat && kit(60).shark && kit(60).cheat && kit(39).sharkS === 9 && kit(60).sharkS === 5 && kit(40).cheatS === 10 && kit(60).cheatS === 6
+        && TP.BOSS_PAY === 3 && TP.KIT_FROM.some(([k, lv, key]) => k === 'shark' && lv === 39 && key === 'tpNewShark') && TP.KIT_FROM.some(([k, lv, key]) => k === 'cheat' && lv === 40 && key === 'tpNewCheat'),
+        'Tapis!: the Shark from level 39, the Cheat from 40, in turn, both from 45; 9 s / 10 s down to 5 s / 6 s');
+      const gs = [[C(0), C(1), C(2)], [C(3)], [C(1), C(4, { seal: true })], [C(2), C(2)]];
+      const m1 = TP.sharkSteal(gs, 1, 5);
+      const okS = m1 && m1[0] === 0 && gs[0].length === 2 && gs[1].length === 2 && gs[1][1].k === 2;
+      const gs2 = [[C(0)], [C(3)], [C(1), C(4, { seal: true })]];
+      const okS2 = TP.sharkSteal(gs2, 1, 5) === null && TP.sharkSteal([[C(0), C(1)], [C(2), C(2)]], 1, 2) === null;
+      let okT = true;
+      for (let i = 0; i < 50; i++) {
+        const gt = [[C(0), C(3)]], cell = TP.cheatSlip(gt, 0, 4, 6);
+        if (!cell || gt[0].length !== 3 || gt[0][2].k === 3 || gt[0][2].k === W || gt[0][2].k < 0) okT = false;
+      }
+      ok(okS && okS2 && okT && TP.cheatSlip([[C(0), C(1)]], 0, 2, 6) === null,
+        'Tapis!: the Shark takes the top chip of the taller stack beside him (not a seal, never over the top); the Cheat slips one of another colour');
+    }
     ok(TP.venueAt(1) === 0 && TP.venueAt(4) === 0 && TP.venueAt(5) === 1 && TP.venueAt(20) === 4 && TP.venueAt(21) === 5 && TP.venueAt(99) === 5, 'Tapis!: a venue every 4 levels, the final table from 21');
     const g1 = [[C(0), C(W), C(0)], [C(1), C(W)], [C(0, { seal: true }), C(K, { card: 12 })]];
     const grp = TP.groupAt(g1, 0, 0);

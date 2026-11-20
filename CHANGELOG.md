@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Tapis!: bosses** (`web.143`, 7th and last of the « harder Tapis! » series) — the Shark from level 39, the Cheat
+  from 40, one each level in turn, both from 45 (`levelKit.shark` / `cheat`), on the friends left and right of the
+  middle (never the Dealer's). The Shark (a fin on his back) takes the top chip of the taller stack beside him every
+  9 s, down to 5 s (`sharkSteal`: 2 chips or more there, not a card, a seal or a fuse); the Cheat (a curly moustache,
+  an ace up his sleeve) slips a chip of another colour onto his stack every 10 s, down to 6 s (`cheatSlip`) — never
+  over the top (Madness: one row under the red line). In his hole a boss is worth 3 friends (`BOSS_PAY`). `cast.mjs`
+  (additive): `boss(kind)` and the two outfits. Not in Zen. New keys `tpNewShark`, `tpNewCheat` and a rules sentence,
+  83 catalogues. Simulation: no measure — from level 37 the bot (no powers) already wins about 1 round in 100.
 - **Tapis!: chameleon chips** (`web.142`, 6th of the « harder Tapis! » series) — from level 36 (`levelKit.cham`: 2,
   one more every 3 levels up to 6) plain chips change colour every `CHAM_S` 3 s, always to the next colour of the
   level, the Joker chip skipped (`chamNext`, `chamTick`; clocks dealt apart). A badge on the chip shows the colour to

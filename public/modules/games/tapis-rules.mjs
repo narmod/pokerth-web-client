@@ -48,6 +48,11 @@
 //   Chameleon (web.142, levelKit.cham) from level 36, chips that change
 //             colour every CHAM_S seconds ({ cham: seconds left }), always to
 //             the next colour of the level (chamNext, chamTick).
+//   Bosses    (web.143, levelKit.shark / cheat) from level 39, a friend with
+//             a trick: the Shark takes the top chip of the taller stack next
+//             to his (sharkSteal), the Cheat slips a chip of another colour
+//             under his feet (cheatSlip) — every few seconds, until he is in
+//             his hole (worth 3 friends).
 // ═══════════════════════════════════════════════════════════════════
 
 /** The chips: colour (side, dark side, marks), suit printed on them, value (web.122: ÷5, was 5 / 10 / 25 / 100 / 500, the Joker 50; web.137: the 6th, orange ✦, 50). */
@@ -100,7 +105,49 @@ export function levelKit(lv) {
     ice: lv < 33 ? 0 : Math.min(6, 2 + Math.floor((lv - 33) / 3)),
     // web.142: chameleon chips from 36, 2, one more every 3 levels up to 6
     cham: lv < 36 ? 0 : Math.min(6, 2 + Math.floor((lv - 36) / 3)),
+    // web.143: bosses — the Shark from 39, the Cheat from 40, one each level in turn, both from 45; every 9 s (the
+    // Shark) / 10 s (the Cheat), 0.25 s less a level, down to 5 / 6 s
+    shark: lv >= 39 && (lv >= 45 || lv % 2 === 1) ? 1 : 0,
+    cheat: lv >= 40 && (lv >= 45 || lv % 2 === 0) ? 1 : 0,
+    sharkS: lv < 39 ? 0 : Math.max(5, 9 - (lv - 39) * 0.25),
+    cheatS: lv < 40 ? 0 : Math.max(6, 10 - (lv - 40) * 0.25),
   };
+}
+/** A boss in his hole is worth this many friends (web.143). */
+export const BOSS_PAY = 3;
+/**
+ * The Shark's trick (web.143): the top chip of the taller stack next to
+ * column c (2 chips or more, a plain or Joker chip, not sealed, not a fuse)
+ * goes on top of his own, if it is lower than maxH. Returns [from, to] or null.
+ */
+export function sharkSteal(grid, c, maxH) {
+  if (!grid[c] || grid[c].length >= maxH) return null;
+  let from = -1;
+  for (const x of [c - 1, c + 1]) {
+    const col = grid[x];
+    if (!col || col.length < 2) continue;
+    const b = col[col.length - 1];
+    if (b.k < 0 || b.seal || b.fuse > 0) continue;
+    if (from < 0 || col.length > grid[from].length) from = x;
+  }
+  if (from < 0) return null;
+  const b = grid[from].pop();
+  b.off = 0; b.pop = 0.4;
+  grid[c].push(b);
+  return [from, c];
+}
+/**
+ * The Cheat's trick (web.143): a chip of a colour other than his top one
+ * slipped onto his stack, if it is lower than maxH. Returns its cell or null.
+ */
+export function cheatSlip(grid, c, maxH, nColors, rnd = Math.random) {
+  const col = grid[c];
+  if (!col || !col.length || col.length >= maxH) return null;
+  const top = col[col.length - 1];
+  let k = randK(nColors, rnd);
+  for (let i = 0; i < 6 && k === top.k; i++) k = randK(nColors, rnd);
+  col.push({ k, off: 0, pop: 0.5 });
+  return [c, col.length - 1];
 }
 /** Seconds between two colours of a chameleon chip (web.142). */
 export const CHAM_S = 3;
@@ -169,7 +216,7 @@ export function guestColumn(nColors, rnd = Math.random) {
 /** Seconds more on each next fuse chip of a round, so they do not all go off at once. */
 export const FUSE_STEP = 5;
 /** The level each new thing first comes at (for its word the first time). */
-export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain'], ['ice', 33, 'tpNewIce'], ['cham', 36, 'tpNewCham']];
+export const KIT_FROM = [['cards', 2, 'tpNewCards'], ['wild', 3, 'tpNewWild'], ['dealer', 5, 'tpNewDealer'], ['seals', 9, 'tpNewSeal'], ['rise', 13, 'tpNewRise'], ['fuses', 22, 'tpNewFuse'], ['guests', 27, 'tpNewGuest'], ['rain', 30, 'tpNewRain'], ['ice', 33, 'tpNewIce'], ['cham', 36, 'tpNewCham'], ['shark', 39, 'tpNewShark'], ['cheat', 40, 'tpNewCheat']];
 /** The venue at blind level lv (runner-scenery.mjs VENUES): a new one every 4 levels, the final table from 21. */
 export const venueAt = (lv) => Math.min(5, Math.floor((Math.max(1, lv) - 1) / 4));
 /** The time of day in a venue: day, dusk, evening, night along its 4 levels. */

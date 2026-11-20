@@ -12,6 +12,8 @@
 //   look(dx, dy)   the eyes follow a point (dx, dy in −1 … 1)
 //   clip(u)        hide what is below sprite row u (0 … 120): his body in a hole
 //   badge(on)      the Dealer button in his right hand
+//   boss(kind)     Tapis!'s bosses (web.143): 'shark' (a fin on his back),
+//                  'cheat' (a curly moustache, an ace up his sleeve), or none
 // Sprite: 100 × 120, his feet at (50, 116). Poses: idle, balance, air, clap,
 // wave, ko. Moods: smile, jump, yay, wink, grin, dizzy, scared (sweat), ko,
 // love — the « mc-m-* » names of aceActor are accepted too. « Reduce
@@ -43,7 +45,7 @@ const CSS = `
 .cs.cs-m-dizzy .e-spiral,.cs.cs-m-dizzy .m-wavy,.cs.cs-m-dizzy .fx-stars,
 .cs.cs-m-scared .e-big,.cs.cs-m-scared .m-o,.cs.cs-m-scared .fx-sweat,
 .cs.cs-m-ko .e-x,.cs.cs-m-ko .m-flat,
-.cs.cs-m-love .e-heart,.cs.cs-m-love .m-smile,.cs.cs-sweat .fx-sweat,.cs.cs-dealer .fx-dealer{display:inline}
+.cs.cs-m-love .e-heart,.cs.cs-m-love .m-smile,.cs.cs-sweat .fx-sweat,.cs.cs-dealer .fx-dealer,.cs.cs-shark .fx-shark,.cs.cs-cheat .fx-cheat{display:inline}
 .cs.idle .cs-body{animation:csBreath 1.7s ease-in-out infinite alternate}
 .cs.balance .cs-armL{transform:rotate(58deg)}.cs.balance .cs-armR{transform:rotate(-58deg)}
 .cs.balance .cs-all{animation:csSway .7s ease-in-out infinite alternate}
@@ -170,9 +172,16 @@ export function castSvg(kind) {
     + '<g class="cs-legR"><path d="M56 89 L58 110" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="61.5" cy="112" rx="7" ry="4" fill="#24262b"/></g>';
   const stars = '<g class="v fx-stars"><path d="M34 22 l1.6 3.4 3.6 .5 -2.6 2.5 .6 3.6 -3.2 -1.7 -3.2 1.7 .6 -3.6 -2.6 -2.5 3.6 -.5 Z" fill="#f5c518"/>'
     + '<path d="M66 20 l1.3 2.8 3 .4 -2.2 2 .5 3 -2.6 -1.4 -2.6 1.4 .5 -3 -2.2 -2 3 -.4 Z" fill="#f5c518"/></g>';
+  // web.143, Tapis!'s bosses: the Shark's fin behind him; the Cheat's moustache and the ace up his left sleeve
+  const [fy] = FACE[kind] || [55, 9];
+  const fin = '<g class="v fx-shark"><path d="M58 70 Q66 30 88 14 Q80 40 84 72 Z" fill="#6f8296" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>'
+    + '<path d="M66 64 Q72 38 84 24" fill="none" stroke="#a9bccd" stroke-width="2" stroke-linecap="round"/></g>';
+  const cheat = '<g class="v fx-cheat"><path d="M50 ' + (fy + 6.5) + ' q-4 -3 -8 0 q-3 2 -5 -1 M50 ' + (fy + 6.5) + ' q4 -3 8 0 q3 2 5 -1" fill="none" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>'
+    + '<g transform="rotate(-25 14 74)"><rect x="9" y="64" width="10" height="14" rx="1.6" fill="#fbf7ee" stroke="' + INK + '" stroke-width="1.2"/>'
+    + '<text x="14" y="74" text-anchor="middle" font-size="8" font-weight="800" font-family="Inter,system-ui,sans-serif" fill="#c0242c">A</text></g></g>';
   return '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g class="cs-all">'
     + '<ellipse cx="50" cy="114" rx="22" ry="4" fill="rgba(0,0,0,.3)"/>' + legs
-    + '<g class="cs-body">' + armL + (w.back ? w.back() : '') + body + face(kind) + (w.front ? w.front() : '') + armR + stars + '</g>'
+    + '<g class="cs-body">' + fin + armL + (w.back ? w.back() : '') + body + face(kind) + (w.front ? w.front() : '') + cheat + armR + stars + '</g>'
     + '</g></svg>';
 }
 
@@ -210,6 +219,8 @@ export function castActor(layer, kind, id) {
     },
     /** The Dealer button in his hand (Tapis!, from level 5). */
     badge(on) { root.classList.toggle('cs-dealer', !!on); },
+    /** Tapis!'s bosses (web.143): 'shark', 'cheat' or none. */
+    boss(b) { root.classList.toggle('cs-shark', b === 'shark'); root.classList.toggle('cs-cheat', b === 'cheat'); },
     /** Sweat drops on (his stack nearly gone, the clock nearly out). */
     sweat(on) { root.classList.toggle('cs-sweat', !!on); },
     /** The eyes towards (dx, dy), each in −1 … 1. */

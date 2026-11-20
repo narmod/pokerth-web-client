@@ -70,6 +70,10 @@
 //             ice (shards), the next one the seal.
 //             Chameleon chips from 36 (web.142): every 3 s the next colour of
 //             the level; their badge shows the colour to come and the time.
+//             Bosses from 39 (web.143): the Shark (a fin) takes the top chip of
+//             the taller stack beside him, the Cheat (moustache, an ace up his
+//             sleeve) slips a chip of another colour under his feet; in his
+//             hole a boss is worth 3 friends.
 //   Modes     (push 4, web.81) Classic (rounds against the clock); Madness
 //             (no clock: a row rises every few seconds, sooner each level, at
 //             once when no pair is left; a stack over the red line ends it);
@@ -89,7 +93,7 @@ import { NAME_KEYS, MULT, evalCards } from './poker-hand.mjs';
 import { CHIPS, colorsAt, timeFor, inPay, TIME_PAY, cleanPay, blindsAt, groupPay, groupAt, anyMove, lvPay,
   removeCells, colorCells, crossCells, shuffleGrid, dealRound, chipsLeft, powerFor, POWER_MAX, castFamily, tierOf,
   WILD, CARD, levelKit, KIT_FROM, venueAt, dayOfLevel, freedBy, riseRow, refillRows, fuseBlast, fuseOut, guestComes, guestColumn,
-  rainChips, crack, chamTick, chamNext, CHAM_S } from './tapis-rules.mjs';
+  rainChips, crack, chamTick, chamNext, CHAM_S, sharkSteal, cheatSlip, BOSS_PAY } from './tapis-rules.mjs';
 import { fmt, rr, ink, drawFace, imageCache, SUITS as SUIT_SIGNS, RANKS, isRed } from './common.mjs';
 import { drawScenery, sceneryStill, VENUES } from './runner-scenery.mjs';
 import { castActor, SUITS, FIGURES, KINDS } from './cast.mjs';
@@ -227,9 +231,17 @@ export function create(shell) {
     G.all = G.chars.slice();                 // every friend of the round, his column gone or not (the spirits)
     // What the level brings: the Dealer button in a friend's hand, rows from the felt, the venue.
     G.kit = levelKit(G.lv); G.riseT = 0; G.rainT = 0; G.firstIn = false; G.recaved = false;
-    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; G.kit.rain = 0; G.kit.cham = 0; }
+    if (mode === 'zen') { G.kit.rise = 0; G.kit.seals = 0; G.kit.rain = 0; G.kit.cham = 0; G.kit.shark = 0; G.kit.cheat = 0; }
     if (mode === 'folie') G.kit.rise = folieEvery(G.lv);
     if (G.kit.dealer) { const d = G.chars[Math.floor(R() * G.chars.length)]; d.dealer = true; d.ace.badge(true); }
+    // web.143: the bosses — the Shark left of the middle, the Cheat right of it (never the Dealer's friend)
+    const mid = Math.floor(G.chars.length / 2);
+    [['shark', mid - 1, G.kit.sharkS], ['cheat', mid, G.kit.cheatS]].forEach(([b, c, every]) => {
+      if (!G.kit[b] || G.chars.length < 3) return;
+      const at = G.chars[c] && !G.chars[c].dealer ? c : c + (b === 'shark' ? -1 : 1), ch = G.chars[at];
+      if (!ch || ch.dealer || ch.boss) return;
+      ch.boss = b; ch.bossT = every * 0.8; ch.ace.boss(b);
+    });
     const v = venueAt(G.lv);
     if (v !== G.venue) { G.prevVenue = G.venue; G.venue = v; G.venueT = 0; }
     renderHud();
@@ -485,6 +497,34 @@ export function create(shell) {
     }
     afterMove();
   }
+  /**
+   * The bosses' tricks (web.143), each on his own clock, while he stands on his stack: the Shark takes the top chip
+   * of the taller stack beside him, the Cheat slips a chip of another colour under his feet (never over the top;
+   * in Madness one row under the red line).
+   */
+  function bossTricks(dt) {
+    const maxH = mode === 'folie' ? G.maxRows - 1 : G.maxRows;
+    let moved = false;
+    G.chars.forEach((ch, c) => {
+      if (!ch.boss || ch.st !== 'top' || !G.grid[c] || !G.grid[c].length) return;
+      ch.bossT -= dt;
+      if (ch.bossT > 0) return;
+      ch.bossT = ch.boss === 'shark' ? G.kit.sharkS : G.kit.cheatS;
+      const L = geom();
+      if (ch.boss === 'shark') {
+        const mv = sharkSteal(G.grid, c, maxH);
+        if (!mv) return;
+        const [from] = mv, x0 = colX(L, from), x1 = colX(L, c), y = chipY(L, c, G.grid[c].length - 1) - L.bh / 2;
+        for (let i = 0; i < 10; i++) { const f = i / 9; G.parts.push({ x: x0 + (x1 - x0) * f, y: y - Math.sin(f * Math.PI) * L.cw * 1.5, vx: 0, vy: -20, t: 0, life: 0.45, c: '#a9bccd', r: 1.8, rot: 0 }); }
+        G.fx.push({ s: '🦈', x: x1, y: y - L.cw * 2.5, t: 0, life: 0.9 });
+      } else {
+        if (!cheatSlip(G.grid, c, maxH, colorsAt(G.lv), R)) return;
+        G.fx.push({ s: '🎩', x: colX(L, c), y: chipY(L, c, G.grid[c].length - 1) - L.cw * 2.5, t: 0, life: 0.9 });
+      }
+      ch.ace.fx('hop'); sound('notifyCard'); moved = true;
+    });
+    if (moved) { hover = null; afterMove(); }
+  }
   /** A guest shown out (web.139): he pays as a friend in his hole would. */
   function guestOut(L, c, r) {
     const pay = inPay(G.lv);
@@ -731,6 +771,7 @@ export function create(shell) {
       if (mode === 'folie' && state === 'run') { G.timeMax = G.kit.rise; G.timeLeft = G.kit.rise - G.riseT; }
     }
     if (state === 'run' && G.kit && G.kit.fuses) burnFuses(dt);
+    if (state === 'run' && G.kit && (G.kit.shark || G.kit.cheat)) bossTricks(dt);
     if (state === 'run' && G.kit && G.kit.cham) {      // web.142: chameleon chips turn
       const turned = chamTick(G.grid, dt, colorsAt(G.lv));
       if (turned.length) {
@@ -811,9 +852,9 @@ export function create(shell) {
           G.signs.push({ x: colX(L, c), t: 0 });    // « Couché ! » (folded) — a little sign planted by his hole (narmod, instead of « RIP »)
           sound('notifyCard');
           if (state === 'run') {
-            const pay = inPay(G.lv) * (ch.double ? 2 : 1);
+            const pay = inPay(G.lv) * (ch.double ? 2 : 1) * (ch.boss ? BOSS_PAY : 1);   // web.143: a boss is worth 3
             G.score += pay; G.inTotal++; renderHud();
-            G.fx.push({ s: (ch.double ? 'Dealer ×2  ' : duel() ? t('pdPlayer', { n: G.turn + 1 }) + ' ' : t('tpIn') + ' ') + '+' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true, big: ch.double });
+            G.fx.push({ s: (ch.boss ? (ch.boss === 'shark' ? '🦈 ' : '🎩 ') : '') + (ch.double ? 'Dealer ×2  ' : duel() ? t('pdPlayer', { n: G.turn + 1 }) + ' ' : t('tpIn') + ' ') + '+' + fmt(pay), x: colX(L, c), y: L.base - L.cw * 1.6, t: 0, life: 1.3, green: true, big: ch.double });
             if (ch.double) { ch.dealer = false; ch.ace.badge(false); sound('notifyAllIn'); }
           }
           for (let i = 0; i < 14; i++) { const a = -Math.PI * Math.random(); G.parts.push({ x: colX(L, c), y: L.base, vx: Math.cos(a) * 60, vy: Math.sin(a) * 90, t: 0, life: 0.7, c: i % 2 ? '#f5c518' : '#fbf7ee', r: 2, rot: 0 }); }
