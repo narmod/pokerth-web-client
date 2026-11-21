@@ -66,6 +66,23 @@ await new Promise((r) => setTimeout(r, 10));
 ok(wlRequests === 1, 'acquireWakeLock: une seule requête tant que tenu (' + wlRequests + ')');
 M.releaseWakeLock();
 ok(wlReleased === 1, 'releaseWakeLock relâche');
+// web.150 — two asks in a row while the request is pending: one request;
+// a release while pending wins (the lock is let go as soon as it arrives)
+wlRequests = 0; wlReleased = 0;
+M.acquireWakeLock(); M.acquireWakeLock();
+ok(wlRequests === 1, 'acquireWakeLock: une seule requête en vol (' + wlRequests + ')');
+await new Promise((r) => setTimeout(r, 10));
+M.releaseWakeLock(); wlReleased = 0;
+M.acquireWakeLock(); M.releaseWakeLock();
+await new Promise((r) => setTimeout(r, 10));
+ok(wlReleased === 1, 'release pendant la requête : verrou relâché dès son arrivée');
+// _waitingSeat: seated in the waiting room only
+window.PthState = { gId: 12, _gameStarted: false, _amSpectator: false };
+ok(M._waitingSeat() === true, '_waitingSeat: assis, partie pas démarrée');
+window.PthState._amSpectator = true; ok(M._waitingSeat() === false, '_waitingSeat: spectateur → non');
+window.PthState = { gId: 12, _gameStarted: true }; ok(M._waitingSeat() === false, '_waitingSeat: partie démarrée → non');
+window.PthState = { gId: 0 }; ok(M._waitingSeat() === false, '_waitingSeat: pas de table → non');
+delete window.PthState;
 const savedNav = globalThis.navigator; setNav({});
 await M.acquireWakeLock();
 ok(true, 'API absente -> no-op silencieux');

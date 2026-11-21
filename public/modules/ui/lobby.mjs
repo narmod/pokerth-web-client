@@ -13,7 +13,7 @@
 // ═══════════════════════════════════════════════════════════════════
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
-import { esc } from './misc.mjs';
+import { esc, acquireWakeLock, releaseWakeLock, _waitingSeat } from './misc.mjs';
 import { _groupThousands } from './fmt.mjs';
 import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
@@ -503,6 +503,13 @@ function _updateLobbyWaitStatus() {
   // donc on s'appuie sur gId (table courante) + !_gameStarted uniquement.
   var waiting = !!(S.gId && !S._gameStarted);
   el.style.display = waiting ? '' : 'none';
+  // web.150 — screen kept awake while seated in the waiting room (see
+  // net/session.mjs show()); not released here when the table is on screen.
+  try {
+    var _sg = document.getElementById('s-game');
+    if (_waitingSeat()) acquireWakeLock();
+    else if (!(_sg && _sg.classList && _sg.classList.contains('active'))) releaseWakeLock();
+  } catch (e) {}
   // Parite QML GameWaitPage : en spectateur, « Spectating — waiting for the
   // next hand » remplace « Waiting for players ». La cle data-i18n est
   // permutee pour que setLang retraduise correctement a chaud.

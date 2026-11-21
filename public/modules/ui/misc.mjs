@@ -87,16 +87,28 @@ function _getSessionId() {
 // turn-based game means long idle waits). The OS releases the lock when the
 // tab is hidden, so we re-acquire it when the game screen regains focus.
 // No-ops gracefully where the API is unavailable (older browsers).
-var _wakeLock = null;
+// web.150: also in the waiting room (net/session.mjs, ui/lobby.mjs), so it
+// can be asked for twice in a row: one request at a time, and a release that
+// comes while a request is pending wins (_wlWant).
+var _wakeLock = null, _wlPending = false, _wlWant = false;
 function acquireWakeLock() {
-  if (!('wakeLock' in navigator) || _wakeLock) return;
+  _wlWant = true;
+  if (!('wakeLock' in navigator) || _wakeLock || _wlPending) return;
+  _wlPending = true;
   navigator.wakeLock.request('screen').then(function (wl) {
+    _wlPending = false;
+    if (!_wlWant) { try { wl.release(); } catch (e) {} return; }
     _wakeLock = wl;
-    wl.addEventListener('release', function () { _wakeLock = null; });
-  }).catch(function () { /* denied or not visible — ignore */ });
+    wl.addEventListener('release', function () { if (_wakeLock === wl) _wakeLock = null; });
+  }).catch(function () { _wlPending = false; /* denied or not visible — ignore */ });
 }
 function releaseWakeLock() {
+  _wlWant = false;
   if (_wakeLock) { try { _wakeLock.release(); } catch (e) {} _wakeLock = null; }
+}
+// Seated in the waiting room: joined or created, not started, not watching (web.150).
+function _waitingSeat() {
+  try { return !!(window.PthState && window.PthState.gId && !window.PthState._gameStarted && !window.PthState._amSpectator && !window._offlineMode); } catch (e) { return false; }
 }
 // ── Trames de contrôle du proxy (texte) ─────────────────────────────
 // NOTICE: (redémarrage programmé / annulation) et INFO: (diffusions admin).
@@ -217,7 +229,7 @@ function _attachPanelDrag(el, posKey, dragClass) {
   window.addEventListener('resize', function () { applyWs(); var r = el.getBoundingClientRect(); applyPos(r.left, r.top); });
 }
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { esc, _getSessionId, acquireWakeLock, releaseWakeLock, _handleCtrlFrame, setPct, _attachPanelDrag };
+export { esc, _getSessionId, acquireWakeLock, releaseWakeLock, _waitingSeat, _handleCtrlFrame, setPct, _attachPanelDrag };
 if (typeof window !== 'undefined') {
   window.esc = esc;
   window._sidStore = _sidStore;

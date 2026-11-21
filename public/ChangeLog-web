@@ -1,4 +1,7 @@
-2026-11-21 version 2.1.11-web.149 (current series):
+2026-11-21 version 2.1.11-web.150 (current series):
+- improvement: your screen now stays on while you wait for a table to start, so the game no longer waits for you
+
+2026-11-21 version 2.1.11-web.149:
 - new: closing or reloading the tab while you play at a table now asks for confirmation first, so you don't leave by mistake
 
 2026-11-21 version 2.1.11-web.148:

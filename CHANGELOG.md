@@ -291,6 +291,13 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Screen kept awake in the waiting room** (`web.150`) — server log (2026-11-21): 30 of the 33 late or missing
+  start ACKs (« start timeout after 20s, starting anyway ») came from web pages, mostly iPhones, often the same
+  players several games in a row: the screen locks while the table fills, the page is frozen, and the whole table
+  waits up to 20 s. The waiting room lives on `s-lobby`, where the wake lock was released; it is now held while
+  seated there (joined or created, not started, not spectating): `net/session.mjs` show() and the visibility
+  handler, `ui/lobby.mjs` `_updateLobbyWaitStatus()` (not released while the table is on screen). `ui/misc.mjs`:
+  one request at a time, a release while pending wins; `_waitingSeat()`. Tests: `test-misc` extended.
 - **Backup offer: from the 3rd day of play** (`web.146`) — a newcomer who answered « Show me » (or did not answer
   « First time on PokerTH? ») used to get the local backup offer at his very next visit, with nothing to back up
   yet: 5 305 shown, 3 222 « Later », 45 backups made (admin, 2026-11-21). `backup-autosave.mjs`: the put-off offer

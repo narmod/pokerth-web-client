@@ -10,7 +10,7 @@
 // ═══════════════════════════════════════════════════════════════════
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
-import { acquireWakeLock, releaseWakeLock } from '../ui/misc.mjs';
+import { acquireWakeLock, releaseWakeLock, _waitingSeat } from '../ui/misc.mjs';
 
 // Track mode + name of last Init sent so we can detect 'rapid mode swap'
 // patterns that the PokerTH server's anti-brute-force flags as
@@ -92,8 +92,11 @@ function show(id) {
     if (id === 's-lobby' && window._lobby3Sync) window._lobby3Sync();
   } catch (e) {}
   if (window._syncOverlayTop) window._syncOverlayTop();
-  // Keep the screen awake only while at the table.
-  if (id === 's-game') acquireWakeLock(); else releaseWakeLock();
+  // Keep the screen awake only while at the table — and, web.150, in the
+  // waiting room (it lives on s-lobby): server log 2026-11-21, 30 of the 33
+  // late or missing start ACKs came from web pages, mostly iPhones whose
+  // screen had locked while waiting; the whole table waits up to 20 s.
+  if (id === 's-game' || (id === 's-lobby' && _waitingSeat())) acquireWakeLock(); else releaseWakeLock();
   // PWA shortcut intent (?go=play|create): fire ONCE when the lobby first
   // appears (i.e. right after a successful connect). Cleared immediately so
   // later returns to the lobby (e.g. leaving a game) don't re-trigger it.
@@ -177,7 +180,7 @@ function _maybeReconnectOnResume() {
 document.addEventListener('visibilitychange', function () {
   if (document.hidden) return;
   var sg = document.getElementById('s-game');
-  if (sg && sg.classList.contains('active')) acquireWakeLock();
+  if ((sg && sg.classList.contains('active')) || _waitingSeat()) acquireWakeLock();   // waiting room: web.150
   _maybeReconnectOnResume();
 });
 window.addEventListener('pageshow', _maybeReconnectOnResume);
