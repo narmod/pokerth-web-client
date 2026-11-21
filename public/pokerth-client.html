@@ -3602,7 +3602,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     bar.id = 'update-banner';
     var span = document.createElement('span'); span.textContent = msg; span.setAttribute('data-i18n', kMsg);
     var btn = document.createElement('button'); btn.textContent = lbl; btn.setAttribute('data-i18n', kBtn);
-    btn.onclick = partial ? function () { btn.disabled = true; location.reload(); } : function () {
+    btn.onclick = partial ? function () { btn.disabled = true; window._pthUnloadOkAt = Date.now(); location.reload(); } : function () {
       btn.disabled = true;
       // Free the PokerTH player before reloading so the proxy doesn't keep a
       // server-side "zombie" alive during its reconnect grace. (The ↺ refresh
@@ -3619,7 +3619,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         navigator.serviceWorker.getRegistration().then(function (r) {
           if (r && r.waiting) r.waiting.postMessage({ type: 'SKIP_WAITING' });
         }).catch(function () {});
-      setTimeout(function () { location.reload(); }, 180);
+      setTimeout(function () { window._pthUnloadOkAt = Date.now(); location.reload(); }, 180);
     };
     var x = document.createElement('button');
     x.textContent = '\u00d7';

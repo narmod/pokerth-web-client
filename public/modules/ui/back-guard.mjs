@@ -16,6 +16,15 @@
 //   3. écran de connexion → comportement natif, on ne pièges rien.
 //
 // Option « pth_back_guard » (Options avancées → Interface), active par défaut.
+//
+// web.149 — fermer l'onglet / recharger la page assis à une table réseau en
+// cours : le navigateur demande « Quitter le site ? » (ses propres mots — les
+// navigateurs ignorent tout texte de la page). Log serveur du 2026-11-21 :
+// 32 % des sessions web finissent à une table, 73 % sans retour sous 10 min.
+// Pas en entraînement, pas en spectateur, pas une fois éliminé, pas pour les
+// rechargements du client lui-même (window._pthUnloadOkAt, posé juste avant,
+// valable 3 s). Même option que le garde du Retour. Safari iOS ne demande
+// jamais : rien à faire là.
 
 import { t } from '../i18n.mjs';
 import { closeTop } from './keynav.mjs';
@@ -80,10 +89,28 @@ function _onPop() {
   } catch (e) {}
 }
 
+// Assis à une table réseau en cours, encore en jeu (web.149).
+export function _atTable() {
+  var S = window.PthState;
+  if (!S || !S.amInGame || S._amSpectator || !S._gameStarted || window._offlineMode) return false;
+  var me = S.seatData && S.seatData[S.myId];
+  if (me && me.money != null && me.money <= 0 && me.active === false) return false;   // éliminé
+  return true;
+}
+
+function _onBeforeUnload(e) {
+  if (!_enabled()) return;
+  try { if (Date.now() - (window._pthUnloadOkAt || 0) < 3000) return; } catch (x) {}
+  if (!_atTable()) return;
+  e.preventDefault();
+  e.returnValue = '';   // Chrome < 119, Safari macOS
+}
+
 export function initBackGuard() {
   if (window._backGuardWired) return;
   window._backGuardWired = true;
   window.addEventListener('popstate', _onPop);
+  window.addEventListener('beforeunload', _onBeforeUnload);
   _push();
 }
 

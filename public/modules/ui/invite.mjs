@@ -152,6 +152,7 @@ function shareEmail() {
   // mailto: must navigate in the SAME context — window.open gives a blank
   // tab on several mobile browsers.
   try {
+    window._pthUnloadOkAt = Date.now();    // no « Leave site? » (ui/back-guard.mjs)
     window.location.href = 'mailto:?subject=' + encodeURIComponent('PokerTH — ' + _curName) +
       '&body=' + encodeURIComponent(_shareText() + '\n\n' + _curUrl);
   } catch (e) {}
@@ -162,7 +163,7 @@ function shareSms() {
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const body = encodeURIComponent(_shareText() + '\n' + _curUrl);
-  try { window.location.href = iOS ? ('sms:&body=' + body) : ('sms:?body=' + body); } catch (e) {}
+  try { window._pthUnloadOkAt = Date.now(); window.location.href = iOS ? ('sms:&body=' + body) : ('sms:?body=' + body); } catch (e) {}
 }
 
 window.InviteUI = { open, close, copy, shareNative, shareWhatsApp, shareTelegram, shareEmail, shareSms };

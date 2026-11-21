@@ -820,7 +820,7 @@ function resetAdvDefaults() {
     }
     for (var j = 0; j < doomed.length; j++) { try { localStorage.removeItem(doomed[j]); } catch (e2) {} }
   } catch (e) {}
-  try { location.reload(); } catch (e) {}
+  try { window._pthUnloadOkAt = Date.now(); location.reload(); } catch (e) {}
 }
 window.resetAdvDefaults = resetAdvDefaults;
 
@@ -1187,7 +1187,7 @@ function _importWebBackupFile(f) {
     if (typeof showToast === 'function') showToast(msg);
     setTimeout(function () {
       var q = t('cfgXmlReload') || 'Reload now to apply everything?';
-      if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+      if (window.confirm(msg + '\n\n' + q)) { try { window._pthUnloadOkAt = Date.now(); location.reload(); } catch (e) {} }
     }, 300);
   };
   r.onerror = fail;
@@ -1325,7 +1325,7 @@ function _importPokerthConfigFile(f) {
       // pour appliquer thèmes/decks et resynchroniser toute l'UI.
       setTimeout(function () {
         var q = t('cfgXmlReload') || 'Reload now to apply everything?';
-        if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+        if (window.confirm(msg + '\n\n' + q)) { try { window._pthUnloadOkAt = Date.now(); location.reload(); } catch (e) {} }
       }, 150);
     } catch (e) {
       if (typeof showToast === 'function') showToast((t('cfgXmlImportErr') || 'Import failed') + ' — ' + e.message, { tone: 'error' });
@@ -12712,7 +12712,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.148'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.149'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

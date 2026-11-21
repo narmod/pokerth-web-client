@@ -96,5 +96,20 @@ ok(toasts.length === before && stack === stackBefore - 1,
    'option décochée : Back natif (aucune interception)');
 localStorage.removeItem('pth_back_guard');
 
+// ── web.149 : « Quitter le site ? » assis à une table réseau en cours ──
+const bu = () => { const e = new w.Event('beforeunload', { cancelable: true }); w.dispatchEvent(e); return e.defaultPrevented; };
+w.PthState = { amInGame: true, _gameStarted: true, _amSpectator: false, myId: 5, seatData: { 5: { money: 1200, active: true } } };
+ok(bu() === true, 'assis à une table en cours : le navigateur demande avant de quitter');
+w._pthUnloadOkAt = Date.now();
+ok(bu() === false, 'rechargement du client lui-même : pas de question');
+w._pthUnloadOkAt = 0;
+w.PthState._amSpectator = true; ok(bu() === false, 'spectateur : pas de question'); w.PthState._amSpectator = false;
+w.PthState._gameStarted = false; ok(bu() === false, 'salle d\'attente : pas de question'); w.PthState._gameStarted = true;
+w.PthState.seatData[5] = { money: 0, active: false }; ok(bu() === false, 'éliminé : pas de question');
+w.PthState.seatData[5] = { money: 0, active: true }; ok(bu() === true, 'all-in (encore dans la donne) : question');
+w._offlineMode = true; ok(bu() === false, 'entraînement hors ligne : pas de question'); w._offlineMode = false;
+localStorage.setItem('pth_back_guard', '0'); ok(bu() === false, 'option décochée : pas de question'); localStorage.removeItem('pth_back_guard');
+w.PthState = { amInGame: false }; ok(bu() === false, 'pas à une table : pas de question');
+
 console.log(fail ? `\nFAIL ${pass}/${pass + fail}` : `\nPASS ${pass}/${pass}`);
 process.exit(fail ? 1 : 0);

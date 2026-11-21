@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **« Leave site? » while seated at a running table** (`web.149`) — server log (2026-11-21): 32 % of the web sessions
+  end at a table (QML 12 %, Qt Widgets 6 %), 73 % of them without coming back within 10 min. `ui/back-guard.mjs` now
+  also listens to `beforeunload`: closing the tab or reloading while seated at a running network table, still in
+  play, makes the browser ask first (its own words). Not in training, as a spectator, in the waiting room or once out
+  of chips; not for the client's own navigations (update banner, backup restore, reset, invite link, e-mail/SMS
+  invites: `window._pthUnloadOkAt`, 3 s). Same option as the Back guard (`pth_back_guard`). Safari on iPhone never
+  asks. Tests: `test-back-guard` extended.
 - **Admin: real installs, iPhone included** (`web.147`) — `install.installed` only follows Chromium's own prompt
   (`appinstalled`): an iPhone install (Share → Add to Home Screen) was never counted, while 5.4 % of the visits run
   installed (admin, 2026-11-21). New Ace's Help event `install.launched`: the first start of the installed app on a

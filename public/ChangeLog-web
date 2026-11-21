@@ -1,4 +1,7 @@
-2026-11-21 version 2.1.11-web.148 (current series):
+2026-11-21 version 2.1.11-web.149 (current series):
+- new: closing or reloading the tab while you play at a table now asks for confirmation first, so you don't leave by mistake
+
+2026-11-21 version 2.1.11-web.148:
 - bugfix: joining a password table without typing the password no longer disconnects you from the server
 
 2026-11-21 version 2.1.11-web.146:

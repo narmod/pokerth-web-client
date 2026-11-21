@@ -226,7 +226,7 @@ export function onInviteHashChange() {
   // Not connected, or connected to another server: reload on the link so
   // the regular landing (login mode, server fields, banner) takes over.
   if (!cur || !sameServer(link.s || PTHNET, cur.s)) {
-    try { window.location.reload(); } catch (e) {}
+    try { window._pthUnloadOkAt = Date.now(); window.location.reload(); } catch (e) {}
     return true;
   }
   try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}

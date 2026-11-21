@@ -307,7 +307,7 @@ async function _applyBackupFile(file) {
   // Reload: applies theme, language, options — same purpose as the reload
   // prompt of the manual import, without asking since the player just asked
   // for the restore.
-  setTimeout(() => { try { location.reload(); } catch (_e) {} }, 800);
+  setTimeout(() => { try { window._pthUnloadOkAt = Date.now(); location.reload(); } catch (_e) {} }, 800);
   return 'ok';
 }
 

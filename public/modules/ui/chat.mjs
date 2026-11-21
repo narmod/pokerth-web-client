@@ -99,7 +99,7 @@ function _chatLocalCmd(text, echo) {
         if (!srv) { echo('update', 'server version not readable'); return; }
         if (srv === cur) { echo('update', 'up to date (' + cur + ')'); return; }
         echo('update', 'version ' + srv + ' available — clearing cache and reloading…');
-        var done = function () { setTimeout(function () { try { location.reload(); } catch (e) {} }, 500); };
+        var done = function () { setTimeout(function () { try { window._pthUnloadOkAt = Date.now(); location.reload(); } catch (e) {} }, 500); };
         try {
           var p = [];
           if (window.caches && caches.keys) p.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }));
