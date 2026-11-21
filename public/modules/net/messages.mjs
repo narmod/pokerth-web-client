@@ -381,6 +381,18 @@ const MSG = (() => {
   }
 
 
+  // A game password as the server takes it: at most 64 UTF-8 bytes, cut on a
+  // character boundary ('' when there is none).
+  function _pw64(p) {
+    const s = p == null ? '' : String(p);
+    if (!s) return '';
+    const enc = new TextEncoder();
+    if (enc.encode(s).length <= 64) return s;
+    let out = '', n = 0;
+    for (const ch of s) { const b = enc.encode(ch).length; if (n + b > 64) break; out += ch; n += b; }
+    return out;
+  }
+
   // JoinExistingGameMessage: gameId=1, password=2, autoLeave=3, spectateOnly=4
   function buildJoinGame(gameId, spectateOnly, password) {
     // JoinExistingGameMessage per proto:
@@ -398,7 +410,12 @@ const MSG = (() => {
     //
     // Emit only the fields the caller actually requested:
     const fields = [[1, 0, gameId]];
-    if (password) fields.push([2, 2, password]);
+    // web.148 — the server closes the session on a password outside 1..64 bytes
+    // (netpacketvalidator.cpp ValidateJoinExistingGameMessage → « Invalid
+    // packet: 21 »): an empty one is not sent (→ JoinGameFailed invalidPassword,
+    // « Wrong password »), a longer one is cut to 64 bytes (no table has more).
+    const pw = _pw64(password);
+    if (pw) fields.push([2, 2, pw]);
     if (spectateOnly) fields.push([4, 0, 1]);
     const msg = Proto.encode(fields);
     return Proto.encode([[1,0,T.JoinExisting],[22,2,msg]]);

@@ -8225,10 +8225,13 @@ const App = (() => {
     joinGameWithPassword(gameId, pass) {
       var g = S.games[gameId];
       var gName = g ? g.name : '#' + gameId;
+      if (!(gameId > 0)) return;   // gameId 0 → the server closes the session
       addChat(null, 'Joining "' + esc(gName) + '"...', 'sys');
-      // JoinExistingGameMessage: gameId=1, password=2
-      var msg = Proto.encode([[1,0,gameId],[2,2,pass||'']]);
-      _sendJoin(Proto.encode([[1,0,21],[22,2,msg]]));
+      // JoinExistingGameMessage: gameId=1, password=2. web.148: through the shared
+      // helper — the old hand-rolled one sent an EMPTY password when « Join » was
+      // pressed with nothing typed, and the server closed the session (log
+      // « Invalid packet: 21 »: 32 web sessions in 48 h, 2026-11-21).
+      _sendJoin(MSG.buildJoinGame(gameId, false, pass));
     },
     // Clic sur une ligne de partie → sélection + panneau « Infos de partie »
     // (remplace l'ancienne liste dépliable sous la ligne).
@@ -12709,7 +12712,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.147'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.148'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

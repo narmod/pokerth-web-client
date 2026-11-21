@@ -371,6 +371,12 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Password table: an empty password no longer disconnects** (`web.148`) — « Join » in the 🔒 prompt with nothing
+  typed sent JoinExistingGame with an EMPTY password; the server's validator (password absent or 1..64 bytes) closed
+  the session: « Invalid packet: 21 », 32 web sessions in 48 h, mostly guests (server log, 2026-11-21).
+  `joinGameWithPassword()` now goes through `MSG.buildJoinGame()`, which leaves an empty password out (→ JoinGameFailed
+  invalidPassword: « Wrong password », prompt shown again) and cuts a longer one to 64 UTF-8 bytes; gameId 0 is never
+  sent. Test: `scripts/test-join-password.mjs`.
 - **Translation where Google is blocked** (`web.145`, player report from China) — a blocked
   `translate.googleapis.com` does not refuse the request, it hangs until the browser's own network timeout
   (20-75 s), so every 🌐 tap waited that long before MyMemory and the `/api/translate` relay (which reaches

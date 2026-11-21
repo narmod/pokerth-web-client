@@ -1,4 +1,7 @@
-2026-11-21 version 2.1.11-web.146 (current series):
+2026-11-21 version 2.1.11-web.148 (current series):
+- bugfix: joining a password table without typing the password no longer disconnects you from the server
+
+2026-11-21 version 2.1.11-web.146:
 - improvement: the offer to back up your settings now waits until your 3rd day of play instead of your second visit
 
 2026-11-21 version 2.1.11-web.145:
