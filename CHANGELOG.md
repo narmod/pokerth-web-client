@@ -385,6 +385,18 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Reopened page: no more « nickname in use » for 2 minutes** (`web.151`, audit `claude/AUDIT_FANTOMES_2026-11-21.md`)
+  — server log (48 h): 146 logins refused because the same nickname still had a session open, all from the web
+  client, 144 of them guests; they also set off 12 of the 13 per-IP login limits. A page closed or killed and
+  reopened gets a new proxy sid (sessionStorage), so its old bridge stays in grace (`SESSION_GRACE_MS`, 120 s) and
+  the official server refuses the same guest nickname (it replaces an account session itself, never a guest's).
+  Fix with the server's own secret, not the IP: the client keeps the GUID of its last session (`pth_lastguid`:
+  nick, server, 16 bytes, 24 h; not in training; out of the backup file, kept by the factory reset) and replays it
+  as `myLastSessionId` when it has neither the seat marker nor an in-memory GUID; the proxy records each session's
+  GUID at InitAck (memory only, never logged) and, on an Init whose nickname AND GUID match a bridge still in grace
+  (no browser attached, same upstream), closes that ghost and holds the Init 1 s so the server sees the close first.
+  A live tab, another nickname or another GUID: untouched. Accounts too (same rule). Not covered: the `direct`
+  transport. Tests: `scripts/test-proxy-ghost.mjs` (fake server + real proxy), `test-msg-lobby` extended.
 - **Password table: an empty password no longer disconnects** (`web.148`) — « Join » in the 🔒 prompt with nothing
   typed sent JoinExistingGame with an EMPTY password; the server's validator (password absent or 1..64 bytes) closed
   the session: « Invalid packet: 21 », 32 web sessions in 48 h, mostly guests (server log, 2026-11-21).

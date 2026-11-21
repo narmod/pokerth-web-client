@@ -1,4 +1,7 @@
-2026-11-21 version 2.1.11-web.150 (current series):
+2026-11-21 version 2.1.11-web.151 (current series):
+- bugfix: reopening the page right after closing it no longer locks you out for two minutes with « nickname already in use »
+
+2026-11-21 version 2.1.11-web.150:
 - improvement: your screen now stays on while you wait for a table to start, so the game no longer waits for you
 
 2026-11-21 version 2.1.11-web.149:

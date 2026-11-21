@@ -148,6 +148,12 @@ function onAnnounce(sub) {
       } catch (e) { _lastSid = null; }
     }
     if (!_lastSid) _lastSid = S._sessionGuid || null;
+    // web.151 — a page closed or killed and reopened has neither: the GUID of
+    // this device's last session (pth_lastguid, written at InitAck), same nick,
+    // same server. The proxy then closes that session if it is still in grace
+    // (claude/AUDIT_FANTOMES_2026-11-21.md); the server only compares it with a
+    // seat's GUID, so a stale one is harmless.
+    if (!_lastSid) _lastSid = _lastGuidFor(S.myName);
     // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
     // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
     // (comme authPass) pour couvrir aussi les reconnexions automatiques.
@@ -168,6 +174,35 @@ function onAnnounce(sub) {
     } catch (e) {}
     send(MSG.buildInit(S.myName, pMaj, pMin, loginType, authPass, srvPass, _lastSid));
     return;
+}
+
+// ── pth_lastguid (web.151) ─────────────────────────────────────────────
+// The GUID of this device's last session, beyond the tab (the proxy sid lives
+// in sessionStorage outside the home-screen app): { n, k (base64, 16 bytes),
+// t, h: host:port }. Never in training (its fake GUID means nothing to a real
+// server), never other than 16 bytes (the server closes the session on any
+// other size). Kept out of the backup file, kept by the factory reset.
+const LASTGUID_KEY = 'pth_lastguid';
+const LASTGUID_MAX_AGE = 24 * 3600 * 1000;
+function _connHostPort() {
+  var p = S._lastConnectParams;
+  return (p && p.host) ? String(p.host).toLowerCase() + ':' + p.port : '';
+}
+function _keepLastGuid() {
+  try {
+    var g = S._sessionGuid, h = _connHostPort();
+    if (window._offlineMode || !g || g.length !== 16 || !h || !S.myName) return;
+    localStorage.setItem(LASTGUID_KEY, JSON.stringify({ n: S.myName, k: MSG.bytesToB64(g), t: Date.now(), h: h }));
+  } catch (e) {}
+}
+function _lastGuidFor(name) {
+  try {
+    if (window._offlineMode || !name) return null;
+    var r = JSON.parse(localStorage.getItem(LASTGUID_KEY) || 'null');
+    if (!r || !r.k || r.n !== name || r.h !== _connHostPort() || !(Date.now() - r.t < LASTGUID_MAX_AGE)) return null;
+    var b = MSG.b64ToBytes(r.k);
+    return (b && b.length === 16) ? b : null;
+  } catch (e) { return null; }
 }
 
 function onInitAck(sub) {
@@ -207,6 +242,7 @@ function onInitAck(sub) {
     // login and the server closed the session on the spot (invalid size) --
     // only a page reload cleared it.
     S._sessionGuid = window._offlineMode ? null : Proto.raw(sub, 1);
+    _keepLastGuid();   // web.151
     // Nouvelle session : le compteur de battements repart de zero. Il peut
     // s'agir d'un AUTRE serveur (2.0.x, sans heartbeat) — garder l'ancien
     // compte armerait le watchdog lobby sur un serveur muet, qui se ferait alors

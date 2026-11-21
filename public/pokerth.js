@@ -807,7 +807,7 @@ function resetAdvDefaults() {
   // Puis rechargement complet : tout se réinitialise proprement au boot
   // (styles injectés au chargement, modules, mémoires en RAM).
   var KEEP = {
-    pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
+    pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1, pth_lastguid: 1,
     pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
     pth_nick: 1, pth_lan_nick: 1, pth_lan_host: 1, pth_lan_port: 1, pth_lan_tls: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
     pth_avatar: 1, pth_avatar_img: 1, pth_avatar_up: 1
@@ -1089,7 +1089,8 @@ var _BACKUP_SKIP = {
   pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
   pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1,
   pth_feature_off: 1,  // the server's kill-switch list, not a player setting
-  pth_inst_launched: 1 // a fact of this device (guide: install.launched, web.147)
+  pth_inst_launched: 1, // a fact of this device (guide: install.launched, web.147)
+  pth_lastguid: 1      // this device's last server session id (net/msg-lobby.mjs, web.151)
 };
 // The admin panel shares this origin: its token (pth_admin_tok…) must never
 // travel in a player's backup file, nor be set by importing one.
@@ -12712,7 +12713,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.150'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.151'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

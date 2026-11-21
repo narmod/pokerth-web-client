@@ -116,6 +116,42 @@ M.onInitAck(subOf([[1, 0, 1], [2, 0, 42]]));
 ok(S._hbCount === 0 && S._hbLast === 0 && S._hbInterval === 0,
    'onInitAck : suivi du battement remis à zéro');
 
+// ── web.151 : pth_lastguid — the GUID of this device's last session, beyond the tab
+{
+  const G = new Uint8Array(16).map((_, i) => i + 1);
+  const lastSidOf = (b) => { const env = Proto.decode(b); const im = Proto.sub(env, 3); return Proto.raw(im, 3); };
+  const announce = () => subOf([[1, 2, Proto.encode([[1, 0, 5], [2, 0, 1]])], [2, 2, Proto.encode([[1, 0, 2], [2, 0, 1]])], [4, 0, 0], [5, 0, 3]]);
+  S._lastConnectParams = { host: 'Srv.Example', port: 7234 };
+  delete store['pth_lastguid'];
+  M.onInitAck(subOf([[1, 2, G], [2, 0, 42]]));
+  const lg = JSON.parse(store['pth_lastguid'] || 'null');
+  ok(lg && lg.n === 'Moi' && lg.h === 'srv.example:7234' && MSG.b64ToBytes(lg.k).length === 16, 'onInitAck : pth_lastguid written (nick, server, 16-byte GUID)');
+  // a new page: no seat marker, no in-memory GUID → the stored one is replayed
+  const sent3 = []; S.ws = { readyState: 1, send: (f) => sent3.push(new Uint8Array(f).slice(4)), close() {} };
+  els['login-mode'].value = 'lan'; S._sessionGuid = null; delete store['pth_resume'];
+  M.onAnnounce(announce());
+  let ls = sent3.length ? lastSidOf(sent3[0]) : null;
+  ok(ls && ls.length === 16 && ls[0] === 1 && ls[15] === 16, 'new page : myLastSessionId = pth_lastguid');
+  // the seat marker still wins
+  const K = new Uint8Array(16).fill(9);
+  store['pth_resume'] = JSON.stringify({ n: 'Moi', g: 5, t: Date.now(), k: MSG.bytesToB64(K) });
+  sent3.length = 0; M.onAnnounce(announce());
+  ls = lastSidOf(sent3[0]); ok(ls && ls[0] === 9, 'pth_resume (seat GUID) still comes first');
+  delete store['pth_resume'];
+  // another server, another nick, too old → nothing
+  S._lastConnectParams = { host: 'other.example', port: 7234 };
+  sent3.length = 0; M.onAnnounce(announce()); ok(!lastSidOf(sent3[0]), 'other server : not replayed');
+  S._lastConnectParams = { host: 'Srv.Example', port: 7234 };
+  S.myName = 'Autre'; sent3.length = 0; M.onAnnounce(announce()); ok(!lastSidOf(sent3[0]), 'other nick : not replayed'); S.myName = 'Moi';
+  const old = JSON.parse(store['pth_lastguid']); old.t = Date.now() - 25 * 3600 * 1000; store['pth_lastguid'] = JSON.stringify(old);
+  sent3.length = 0; M.onAnnounce(announce()); ok(!lastSidOf(sent3[0]), 'older than 24 h : not replayed');
+  // training: never written, never replayed
+  delete store['pth_lastguid']; window._offlineMode = true;
+  M.onInitAck(subOf([[1, 2, G], [2, 0, 42]]));
+  ok(!('pth_lastguid' in store), 'training : pth_lastguid never written');
+  window._offlineMode = false; S._sessionGuid = null; S._lastConnectParams = null;
+}
+
 // ── onPlayerList : ajout et retrait
 sub = subOf([[1, 0, 9], [2, 0, 0]]); // pid 9, notification=ADD(0)
 S._lobbyPids = new Set(); S._lobbyPlayerCount = 0;

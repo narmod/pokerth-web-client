@@ -257,7 +257,10 @@ function describeMsg(payload) {
       const ack = pbDecode(outer[7][0]);
       const pid = ack[2] ? ack[2][0] : '?';
       extra = ' ✓ CONNECTED! playerId=' + pid;
-      if (typeof pid === 'number') return { name, extra, pid };
+      // InitAck.yourSessionId (field 1, 16 bytes): kept by the bridge for the
+      // same-device re-login check (web.151), never logged.
+      const guid = (ack[1] && Buffer.isBuffer(ack[1][0]) && ack[1][0].length === 16) ? Buffer.from(ack[1][0]) : null;
+      if (typeof pid === 'number') return { name, extra, pid, guid };
     }
     if (msgType === 1 && outer[2] && outer[2][0]) { // Announce
       const ann = pbDecode(outer[2][0]);
@@ -16747,6 +16750,7 @@ function _openUpstream(S) {
           S.n++;
           const d = describeMsg(payload);
           if (d.name === 'InitAck' && typeof d.pid === 'number') S.playerId = d.pid;
+          if (d.name === 'InitAck' && d.guid) S.guid = d.guid;   // web.151: same-device re-login
           if (d.name === 'InitAck' && S.isAuthLogin && S.chatNick) { _issueSyncToken(S); _issueHofToken(S); }
           const _ll = _logLevel();
           // quiet : rien par message, SAUF les trames d'erreur (toujours utiles).
@@ -16793,6 +16797,55 @@ function _openUpstream(S) {
       });
     });
   }, S.host, S.port);
+}
+
+// ── Same-device re-login (web.151, claude/AUDIT_FANTOMES_2026-11-21.md) ──
+// A page closed or killed and reopened gets a NEW sid: its old bridge stays in
+// grace (SESSION_GRACE_MS) and the server refuses the same guest nickname for
+// ~2 min (« player name in use », 144 guests in 48 h; the official server
+// replaces an account session itself, but never a guest's). The new Init
+// carries myLastSessionId = the GUID the server gave the old session at its
+// InitAck — a secret only that client knows. When it matches a bridge still in
+// grace (no browser attached), same upstream, same nickname, that ghost is
+// closed (the server frees the nickname) and the Init is held a moment so the
+// server sees the close first. Anything else: untouched, as before.
+const GHOST_INIT_DELAY_MS = 1000;
+function _initNickGuid(payload) {
+  try {
+    const outer = pbDecode(payload);
+    if (!(outer[1] && outer[1][0] === 2 && outer[3] && outer[3][0])) return null;   // InitMessage only
+    const init = pbDecode(outer[3][0]);
+    const guid = (init[3] && Buffer.isBuffer(init[3][0]) && init[3][0].length === 16) ? init[3][0] : null;
+    let nick = null;
+    if (init[6] && init[6][0]) nick = init[6][0].toString('utf8');
+    else if (init[7] && init[7][0]) {
+      const m = init[7][0].toString('utf8').match(/(?:^|,)n=([^,]+)/);
+      if (m) nick = m[1].replace(/=2C/g, ',').replace(/=3D/g, '=');
+    }
+    return (nick && guid) ? { nick: nick.slice(0, 32), guid } : null;
+  } catch (e) { return null; }
+}
+/** Closes the ghosts of this device (see above); returns how many. */
+function _closeSameDeviceGhosts(S, payload) {
+  // Cheap gate: only the session's first Init is looked at (envelope field 1 =
+  // type 2 → bytes 08 02); every other frame costs two comparisons.
+  if (S.initChecked || payload.length < 2 || payload[0] !== 0x08 || payload[1] !== 0x02) return 0;
+  S.initChecked = true;
+  const ig = _initNickGuid(payload);
+  if (!ig) return 0;
+  const h = String(S.host).toLowerCase(), p = parseInt(S.port, 10);
+  const doomed = [];
+  _liveSessions.forEach(function (G) {
+    if (G === S || G.ws || !G.guid || !G.sock || G.sock.destroyed) return;
+    if (String(G.host).toLowerCase() !== h || parseInt(G.port, 10) !== p) return;
+    if (G.chatNick !== ig.nick || !G.guid.equals(ig.guid)) return;
+    doomed.push(G);
+  });
+  doomed.forEach(function (G) {
+    console.log('[~] Same-device re-login — ghost session ' + (G.sid ? G.sid.slice(0, 8) : '#' + G.id) + ' closed (session id match), Init held ' + GHOST_INIT_DELAY_MS + 'ms');
+    _destroySession(G);
+  });
+  return doomed.length;
 }
 
 // Branche un WebSocket navigateur sur la session S (relais navigateur→serveur,
@@ -16913,6 +16966,17 @@ function _attachWs(S, ws) {
       console.warn('[!] Upstream not reading (' + S.sock.writableLength + 'b queued) — closing');
       try { ws.close(1008, 'upstream stalled'); } catch (_) {}
       _destroySession(S);
+      return;
+    }
+    // web.151: an Init held while its ghost goes — what follows waits behind it, in order.
+    if (S.holdQ) { if (S.holdQ.length < 64) S.holdQ.push(buf); return; }
+    if (_closeSameDeviceGhosts(S, buf.slice(4, 4 + buf.readUInt32BE(0)))) {
+      S.holdQ = [buf];
+      setTimeout(function () {
+        const q = S.holdQ; S.holdQ = null;
+        if (!q || !_liveSessions.has(S) || !S.sock || !S.sock.writable) return;
+        for (const b of q) S.sock.write(b);
+      }, GHOST_INIT_DELAY_MS);
       return;
     }
     S.sock.write(buf);
