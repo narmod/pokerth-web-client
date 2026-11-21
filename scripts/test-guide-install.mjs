@@ -10,7 +10,9 @@
 //                to Home Screen), counted howto;
 //   · twice    — already asked twice on this device: never again;
 //   · watcher  — a game only watched (spectator): no question;
-//   · desktop  — a desktop browser without the prompt (Firefox): no question.
+//   · desktop  — a desktop browser without the prompt (Firefox): no question;
+//   · launched — the app started installed: install.launched once per device,
+//                never in the browser (web.147).
 // Run: node scripts/test-guide-install.mjs   (needs jsdom)
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +22,7 @@ import { pathToFileURL, fileURLToPath } from 'url';
 const SCENARIO = process.argv[2];
 if (!SCENARIO) {
   let failed = 0;
-  for (const s of ['prompt', 'ios', 'twice', 'watcher', 'desktop', 'deadua']) {
+  for (const s of ['prompt', 'ios', 'twice', 'watcher', 'desktop', 'deadua', 'launched']) {
     const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url), s], { encoding: 'utf8', timeout: 120000 });
     process.stdout.write(`── ${s}\n` + (r.stdout || '') + (r.stderr || ''));
     if (r.status !== 0) failed++;
@@ -61,7 +63,7 @@ w.localStorage.setItem('pth_guide_offered', '1');            // « First time on
 if (SCENARIO === 'twice') { w.localStorage.setItem('pth_inst_n', '2'); w.localStorage.setItem('pth_inst_at', '1'); }
 const calls = [];
 w.PthState = { _currentLoginMode: 'guest', loaded: true, games: {}, seats: [], seatData: {} };
-w.pwaInstalled = () => false;
+w.pwaInstalled = () => SCENARIO === 'launched';
 w.pwaCanPrompt = () => SCENARIO !== 'ios' && SCENARIO !== 'desktop' && SCENARIO !== 'deadua';
 w.pwaInstall = () => calls.push('pwaInstall');
 for (const k of Object.getOwnPropertyNames(w)) { if (k === 'performance' || k in globalThis) continue; try { globalThis[k] = w[k]; } catch (e) {} }
@@ -81,6 +83,16 @@ const queue = () => { try { return JSON.parse(w.localStorage.getItem('pth_guide_
 const asked = () => !!(bub() && /écran d’accueil/.test(bub().textContent));
 
 await wait(600);
+if (SCENARIO === 'launched') {
+  ok(queue().filter((e) => e === 'install.launched').length === 1 && w.localStorage.getItem('pth_inst_launched') === '1', 'installed app started: install.launched counted once, device marked');
+  const mod = await import(pathToFileURL(path.resolve('public/modules/guide/index.mjs')).href + '?again');
+  w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+  await wait(300);
+  ok(queue().filter((e) => e === 'install.launched').length === 1, 'next start: not counted again');
+  console.log(`\n${pass} passed, ${fail} failed`);
+  process.exit(fail ? 1 : 0);
+}
+ok(!queue().includes('install.launched'), 'in the browser: no install.launched');
 ok(!asked(), 'nothing before a game');
 // a game: the table, hands played (or only watched), then back to the lobby
 w.PthState._amSpectator = SCENARIO === 'watcher';

@@ -72,7 +72,8 @@ const EVENTS = Object.freeze({
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
   'more-help': ['shown', 'section', 'search', 'window'],
   // web.269 — « Want PokerTH on your home screen? » after a finished game, tips on or off
-  install: ['shown', 'later', 'install', 'howto', 'installed'],
+  // launched (web.147): the first start of the installed app on a device, iPhone included
+  install: ['shown', 'later', 'install', 'howto', 'installed', 'launched'],
   // web.27 — the local backup offer on a blank browser storage (backup-autosave.mjs)
   // returning (web.265): « I already play » on a blank browser — the offer asks « Had a backup? »
   // create_* / restore_* (web.267): why a Create / Restore did not succeed (picker closed, no file…)

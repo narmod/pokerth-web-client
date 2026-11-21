@@ -1360,6 +1360,18 @@ function maybeInstall() {
   }, 1500);
 }
 function endInst() { closeBubble(); if (!state.isOn()) leave(); else schedule(); }
+// web.147 — the app started installed: counted once per device (install.launched).
+// appinstalled only comes with Chromium's own prompt: an iPhone (Share → Add to
+// Home Screen) never says it, so install.installed missed every iOS install.
+// The home-screen app keeps a storage of its own there, so its first start is
+// that device's install. A device installed before web.147 is counted once, at
+// its next start. The key stays out of the backup file (pokerth.js _BACKUP_SKIP).
+const KEY_INST_LAUNCHED = 'pth_inst_launched';
+function trackLaunched() {
+  if (automated() || !appStandalone()) return;
+  try { if (localStorage.getItem(KEY_INST_LAUNCHED)) return; localStorage.setItem(KEY_INST_LAUNCHED, '1'); } catch (e) { return; }
+  beacon('install', 'launched');
+}
 if (typeof window !== 'undefined') window.addEventListener('appinstalled', () => { if (instAsked) beacon('install', 'installed'); });
 
 // ── First-launch offer (D3) ────────────────────────────────────────
@@ -1706,6 +1718,7 @@ function init() {
     window._guidePendingSync = null;
     if (mergeFromAccount(o)) { try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark('guide'); } catch (e) {} }
   }
+  try { trackLaunched(); } catch (e) {}                 // web.147: counted tips on or off
   if (!available()) return;
   window.addEventListener('pth-achievement', checkTrophies);   // the last trophy → the arcade's word (web.87)
   checkTrophies();

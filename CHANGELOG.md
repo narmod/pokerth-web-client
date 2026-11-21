@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Admin: real installs, iPhone included** (`web.147`) — `install.installed` only follows Chromium's own prompt
+  (`appinstalled`): an iPhone install (Share → Add to Home Screen) was never counted, while 5.4 % of the visits run
+  installed (admin, 2026-11-21). New Ace's Help event `install.launched`: the first start of the installed app on a
+  device (`pth_inst_launched`, kept out of the backup file), tips on or off; the iOS home-screen app has a storage of
+  its own, so its first start is that device's install. Devices installed before `web.147` are counted once at their
+  next start. Shown in Admin › Ace's Help › Install. Tests: `test-guide-install` (scenario `launched`),
+  `test-guide-admin` bound 175.
 - **Admin: Mini-games live** (`web.144`) — the Mini-games page now shows on the live views as a fifth entry mode,
   next to Internet, LAN, Training and Live: Overview › « Right now » and its connection list, Live › Sessions
   (tile, filter chip, a row per player with the game on screen) and Live › Map. While the page is open the client

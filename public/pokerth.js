@@ -1088,7 +1088,8 @@ window.exportPokerthConfig = exportPokerthConfig;
 var _BACKUP_SKIP = {
   pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
   pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1,
-  pth_feature_off: 1   // the server's kill-switch list, not a player setting
+  pth_feature_off: 1,  // the server's kill-switch list, not a player setting
+  pth_inst_launched: 1 // a fact of this device (guide: install.launched, web.147)
 };
 // The admin panel shares this origin: its token (pth_admin_tok…) must never
 // travel in a player's backup file, nor be set by importing one.
@@ -12708,7 +12709,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.147'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
