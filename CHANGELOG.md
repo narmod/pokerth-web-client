@@ -358,6 +358,13 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Translation where Google is blocked** (`web.145`, player report from China) — a blocked
+  `translate.googleapis.com` does not refuse the request, it hangs until the browser's own network timeout
+  (20-75 s), so every 🌐 tap waited that long before MyMemory and the `/api/translate` relay (which reaches
+  Google from the server) were tried. The direct gtx and MyMemory calls now abort after 4 s (`_trFetch`,
+  `AbortController`); a timeout or network error marks that route dead for the rest of the page's life
+  (`_trDirectDead`, in memory only), so the next taps go straight to the next step. An HTTP status (429) does
+  not. Test: `test-translate-fallback` extended.
 - **`inset` spelled out for browsers before Chrome 87 / Safari 14.1** (`web.136`) — older engines drop the `inset` shorthand, so fixed modals (`#game-info-modal`, `#player-info-modal`, `#password-prompt`, `#hands-overlay`…), scrims, the boot splash, the mini-game layers and the felt `::before` lost their position. Every `inset` (60 in `pokerth.css`, 7 in the `<style>` of `pokerth-client.html`/`admin.html`, 24 in CSS built by JS, `invite.mjs` `style.inset`) becomes `top/right/bottom/left` with the same values and `!important` — the exact expansion of the shorthand, so modern browsers compute the same thing. The three `inset: var(--…)` take single-value variables only. `test-bootgate` accepts the longhands.
 - **sql.js on browsers before ES2021** (`web.135`, Admin › Errors: « Unexpected token '||=' » in `/vendor/sql-wasm.js:72`, Android 8 · Chrome 84, on every load) — the vendored Emscripten build used logical assignment (Chrome 85+); its five sites (`f||=`, `dc||=`, `jc||=`, `a||=`, `b&&=`, plain identifiers) are rewritten as `x||(x=…)` / `x&&(x=…)`. The file now parses as ES2020; a node round trip (create, insert, export, reopen) gives the same result.
 - **« Id guard: » reads as a Diagnostic** (`web.135`) — the Xiaomi-translator id restore (`web.121`) was shown as a Script error: `admin.html` `_erKind`, `admin/overview.mjs` `errKind` and the `errreport.mjs` outcome lane now know it.

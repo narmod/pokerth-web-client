@@ -26,6 +26,12 @@ const rel = js.indexOf("fetch('/api/translate'");
 ok(gtx !== -1 && mm !== -1 && rel !== -1 && gtx < mm && mm < rel, 'chaîne gtx direct → MyMemory direct → relais, dans cet ordre');
 ok(/_trFailNoteAt[\s\S]{0,200}60000/.test(js), 'note d\u2019échec visible, throttlée 60 s (parité postFailureNote)');
 ok(/showToast\(t\('chatTranslateFailed'\)/.test(js), 'note via la clé i18n existante (45 langues déjà couvertes)');
+// web.145 : Google bloqué (Chine) = requête qui pend, pas un refus.
+ok(/var _TR_DIRECT_MS = 4000;/.test(js), 'appels directs bornés à 4 s');
+ok(/function _trFetch\(url, route\)[\s\S]{0,400}AbortController[\s\S]{0,300}ac\.abort\(\)/.test(js), '_trFetch annule via AbortController');
+ok(js.indexOf("_trFetch(direct, 'gtx')") !== -1 && js.indexOf("_trFetch(u, 'mm')") !== -1, 'gtx ET MyMemory passent par _trFetch');
+ok(/_trDirectDead\[route\] = true;/.test(js) && /if \(_trDirectDead\[route\]\) return Promise\.reject/.test(js), 'route morte sautée pour la suite de la page');
+ok(!/fetch\('\/api\/translate'[^)]*signal/.test(js), 'le relais reste sans délai client (dernier recours)');
 
 console.log('relais (proxy.js):');
 const px = readFileSync('proxy.js', 'utf8');

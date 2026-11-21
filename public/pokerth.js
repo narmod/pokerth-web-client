@@ -2127,6 +2127,29 @@ function _chatTrTarget() {
   if (low === 'pt-pt') return 'pt-PT'; // gtx : pt = pt-BR
   return low.split('-')[0];
 }
+// Direct calls (gtx, MyMemory) get a short deadline. Where Google is
+// blocked (mainland China, some school/company networks) the request is not
+// refused, it just hangs until the browser's own network timeout (20-75 s),
+// so the player waited that long on every tap before the relay was tried.
+// A timeout or a network error (not an HTTP status: a 429 is temporary) marks
+// that direct route dead for the rest of the page's life, so the next taps go
+// straight to the next step. In memory only: a new visit tries again.
+var _TR_DIRECT_MS = 4000;
+var _trDirectDead = { gtx: false, mm: false };
+function _trFetch(url, route) {
+  if (_trDirectDead[route]) return Promise.reject(new Error(route + '_dead'));
+  var ac = (typeof AbortController === 'function') ? new AbortController() : null;
+  var tmo = ac ? setTimeout(function () { try { ac.abort(); } catch (e) {} }, _TR_DIRECT_MS) : null;
+  return fetch(url, ac ? { signal: ac.signal } : undefined).then(function (r) {
+    if (tmo) clearTimeout(tmo);
+    return r;
+  }, function (err) {
+    if (tmo) clearTimeout(tmo);
+    _trDirectDead[route] = true;
+    throw err;
+  });
+}
+window._trDirectDead = _trDirectDead;
 // Une seule porte pour la traduction (chat ET post du forum) : appel direct
 // gtx d'abord — le quota reste porté par l'IP du joueur, comme dans le client
 // QML — puis repli sur le relais serveur /api/translate si le navigateur
@@ -2148,7 +2171,7 @@ window._gtxTranslate = function (text, target) {
   };
   var direct = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
     encodeURIComponent(tl) + '&dt=t&q=' + encodeURIComponent(q);
-  return fetch(direct).then(function (r) {
+  return _trFetch(direct, 'gtx').then(function (r) {
     if (!r.ok) throw new Error('http ' + r.status);
     return r.json();
   }).then(take).catch(function () {
@@ -2191,7 +2214,7 @@ window._mmTranslate = function (text, target) {
   if (!q.trim() || q.length > 480) return Promise.reject(new Error('mm_skip'));
   var u = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) +
     '&langpair=' + encodeURIComponent('Autodetect|' + tl);
-  return fetch(u).then(function (r) {
+  return _trFetch(u, 'mm').then(function (r) {
     if (!r.ok) throw new Error('mm_http ' + r.status);
     return r.json();
   }).then(function (d) {
@@ -12685,7 +12708,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.144'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.145'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

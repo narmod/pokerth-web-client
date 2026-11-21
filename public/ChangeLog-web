@@ -1,4 +1,7 @@
-2026-11-20 version 2.1.11-web.143 (current series):
+2026-11-21 version 2.1.11-web.145 (current series):
+- bugfix: chat and forum translation no longer hangs where Google is blocked (e.g. China): after 4 seconds it switches to the other services
+
+2026-11-20 version 2.1.11-web.143:
 - new: Tapis! — bosses from level 39: the Shark takes chips from the stack beside him, the Cheat slips chips under his feet; each in his hole is worth 3 friends
 
 2026-11-20 version 2.1.11-web.142:
