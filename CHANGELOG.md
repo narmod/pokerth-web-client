@@ -277,6 +277,12 @@ highlights below.
   card's record. `newDeck(rnd)` takes an optional stream (additive). New key `arModeTimeD` × 83 catalogues.
 
 ### Changed
+- **Backup offer: from the 3rd day of play** (`web.146`) — a newcomer who answered « Show me » (or did not answer
+  « First time on PokerTH? ») used to get the local backup offer at his very next visit, with nothing to back up
+  yet: 5 305 shown, 3 222 « Later », 45 backups made (admin, 2026-11-21). `backup-autosave.mjs`: the put-off offer
+  (`pth_bak_offer_next`, now « <days>:<last local day> », the legacy `'1'` counting as one day) comes back on the
+  3rd distinct day of play (`NEXT_DAYS`). « I already play » on a blank browser still asks « Had a backup? » at
+  once; the Firefox offer and the fallback banner are unchanged. Tests: `test-backup-autosave` extended.
 - **Tapis!: harder past the final table** (`web.137`, narmod: « too easy from level 20, nothing new, it loops ») —
   every difficulty knob topped out between levels 13 and 25 (5 colours, 0.7 s a chip, full stacks, 8 seals, a row
   every 8 s), so the game played the same from there on. `tapis-rules.mjs`: level 25 opens a new stage — a 6th

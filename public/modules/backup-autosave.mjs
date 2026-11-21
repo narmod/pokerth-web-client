@@ -462,11 +462,42 @@ function _failEv(kind, why) {
 // this offer. While that question waits he keeps this one (keep: no fallback
 // banner after WATCH_MS); a newcomer (« Show me ») gets it at a later visit
 // instead (defer), a returning player (« I already play ») right away. Until
-// it has been shown once, NEXT_KEY makes the next session offer it again,
-// even though the storage is no longer blank (no write hold then).
+// it has been shown once, NEXT_KEY brings it back in a later session, even
+// though the storage is no longer blank (no write hold then).
+// web.146 — not at the very next visit any more: on the NEXT_DAYS-th distinct
+// day of play. Admin (2026-11-21): 5 305 shown, 3 222 « Later », 45 backups
+// made — at his second visit a newcomer has nothing to back up yet. NEXT_KEY
+// holds « <days>:<last day> » (local date); the legacy '1' counts as one day.
 const NEXT_KEY = 'pth_bak_offer_next';
-function _nextOffer() { try { return localStorage.getItem(NEXT_KEY) === '1'; } catch (_e) { return false; } }
-function _setNext(on) { try { if (on) localStorage.setItem(NEXT_KEY, '1'); else localStorage.removeItem(NEXT_KEY); } catch (_e) {} }
+const NEXT_DAYS = 3;
+function _dayKey(d) {
+  const t = d || new Date();
+  return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+}
+/** Pure: the stored value after a visit on `today` → { n: distinct days, value }. null when nothing is put off. */
+function _nextDays(raw, today) {
+  if (raw == null || raw === '') return null;
+  const m = /^(\d+):(\d{4}-\d{2}-\d{2})$/.exec(String(raw));
+  let n = m ? (parseInt(m[1], 10) || 1) : 1;           // legacy '1' (or anything unreadable): one day already seen
+  const last = m ? m[2] : '';
+  if (last !== today) n += 1;
+  return { n, value: n + ':' + today };
+}
+/** At boot: counts today as a day of play; true from the NEXT_DAYS-th distinct day on. */
+function _nextOffer() {
+  try {
+    const r = _nextDays(localStorage.getItem(NEXT_KEY), _dayKey());
+    if (!r) return false;
+    localStorage.setItem(NEXT_KEY, r.value);
+    return r.n >= NEXT_DAYS;
+  } catch (_e) { return false; }
+}
+function _setNext(on) {
+  try {
+    if (!on) { localStorage.removeItem(NEXT_KEY); return; }
+    if (localStorage.getItem(NEXT_KEY) == null) localStorage.setItem(NEXT_KEY, '1:' + _dayKey());   // day 1 = this visit
+  } catch (_e) {}
+}
 function _offerKeep() {
   if (!_offerPending()) return;
   _offer.kept = true;
@@ -705,7 +736,7 @@ function _showRestoreBanner() {
 function _holdState() { return _hold; }
 
 function _maybeOfferRestore() {
-  // web.265: put off from an earlier visit (NEXT_KEY) — offered now, unless a folder was picked meanwhile
+  // web.265: put off from an earlier visit (NEXT_KEY) — offered from its 3rd day of play (web.146), unless a folder was picked meanwhile
   const next = !_FRESH_AT_BOOT && _nextOffer();
   if (next && _state.dirName) _setNext(false);
   if (!_supported() || !_enabled() || !(_FRESH_AT_BOOT || (next && !_state.dirName))) { _hold = false; return; }
@@ -887,4 +918,4 @@ if (typeof window !== 'undefined') {
 
 // ESM exports: for the deterministic tests only. In the browser the module
 // talks through window.* exclusively.
-export { save, pickFolder, pickForRestore, pickFileForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState };
+export { save, pickFolder, pickForRestore, pickFileForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState, _nextDays, _dayKey };

@@ -222,5 +222,13 @@ globalThis.showOpenFilePicker = async () => { offerPicked++; const e = new Error
 check('offer Restore without a remembered folder => the file picker', typeof window._bakOffer.restore === 'function'
   && (await window._bakOffer.restore()) === 'abort' && offerPicked === 1 && dirPickerCalls === 0);
 
+// web.146 — the put-off offer comes back on the 3rd distinct day of play
+check('next: nothing put off => null', mod._nextDays(null, '2026-11-21') === null);
+check('next: same day => still day 1', mod._nextDays('1:2026-11-21', '2026-11-21').n === 1);
+check('next: 2nd day => n=2, value rewritten', (() => { const r = mod._nextDays('1:2026-11-21', '2026-11-22'); return r.n === 2 && r.value === '2:2026-11-22'; })());
+check('next: 3rd day => n=3', mod._nextDays('2:2026-11-22', '2026-11-25').n === 3);
+check('next: legacy \'1\' counts as one day', mod._nextDays('1', '2026-11-21').n === 2);
+check('next: local day key format', /^\d{4}-\d{2}-\d{2}$/.test(mod._dayKey(new Date(2026, 0, 5))) && mod._dayKey(new Date(2026, 0, 5)) === '2026-01-05');
+
 if (failures) { console.error(failures + ' failure(s)'); process.exit(1); }
 console.log('All backup-autosave tests passed.');

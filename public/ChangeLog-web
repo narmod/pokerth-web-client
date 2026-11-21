@@ -1,4 +1,7 @@
-2026-11-21 version 2.1.11-web.145 (current series):
+2026-11-21 version 2.1.11-web.146 (current series):
+- improvement: the offer to back up your settings now waits until your 3rd day of play instead of your second visit
+
+2026-11-21 version 2.1.11-web.145:
 - bugfix: chat and forum translation no longer hangs where Google is blocked (e.g. China): after 4 seconds it switches to the other services
 
 2026-11-20 version 2.1.11-web.143:
