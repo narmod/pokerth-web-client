@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'La servilo de PokerTH ne respondas (rekomenco aŭ prizorgado). Via konekto funkcias — nova provo post {s} s',
+    srvDownGaveUp: 'La servilo de PokerTH estas neatingebla jam de 30 minutoj. Reprovu poste.',
+    netOfflineBanner: 'Neniu interreta konekto — rekonektiĝos tuj kiam ĝi revenos',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Ludi proksime", nbSub: "Sen interreto · sama Wi-Fi", nbHost: "Gastigi ludon", nbJoin: "Aliĝi al ludo", nbAdd: "Aldoni ludanton", nbAddAnother: "Aldoni plian ludanton", nbDone: "Farite, ni ludu", nbHostStep1: "La ludanto skanas ĉi tiun kodon, en la aplikaĵo aŭ per la fotilo de la telefono.", nbHostStep2: "Poste skanu la kodon, kiu aperas sur lia ekrano.", nbGuestStep1: "Skanu la kodon de la gastiganto, aŭ algluu ĝin sube.", nbGuestStep2: "Montru ĉi tiun kodon al la gastiganto.", nbScan: "Skani kodon", nbPaste: "Algluu kodon ĉi tie", nbWait: "Atendante la alian telefonon…", nbConnected: "Ludanto konektita.", nbErrCode: "Ĉi tiu kodo ne validas.", nbErrVersion: "La du telefonoj ne havas la saman version de la aplikaĵo.", nbErrCamera: "Fotilo ne disponebla: anstataŭe algluu la kodon.", nbErrLink: "Neniu konekto. Ambaŭ telefonoj devas esti en la sama Wi-Fi (gastaj retoj ofte blokas tion).", nbLost: "La konekto kun la gastiganto perdiĝis. Reparigu ene de 2 minutoj por konservi vian lokon.", nbRelayed: "Kodo sendita al via ludo. Vi povas fermi ĉi tiun langeton.", nbScoreboard: "Poentotabulo de la vespero", nbOneTable: "Nur unu tablo samtempe, kiam oni ludas proksime.",
   loadPartialFail: "Parto de la aplikaĵo ne ŝargiĝis.", reloadNow: "Reŝargi",

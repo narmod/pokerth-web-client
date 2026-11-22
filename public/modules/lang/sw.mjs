@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Seva ya PokerTH haijibu (kuwashwa upya au matengenezo). Muunganisho wako unafanya kazi — jaribio linalofuata baada ya sekunde {s}',
+    srvDownGaveUp: 'Seva ya PokerTH haipatikani kwa dakika 30. Tafadhali jaribu tena baadaye.',
+    netOfflineBanner: 'Hakuna muunganisho wa Intaneti — itaunganisha upya mara tu utakaporudi',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Cheza karibu", nbSub: "Bila Intaneti · Wi-Fi ileile", nbHost: "Andaa mchezo", nbJoin: "Jiunge na mchezo", nbAdd: "Ongeza mchezaji", nbAddAnother: "Ongeza mchezaji mwingine", nbDone: "Tayari, tucheze", nbHostStep1: "Mchezaji anachanganua msimbo huu, kwenye programu au kwa kamera ya simu.", nbHostStep2: "Kisha changanua msimbo unaoonekana kwenye skrini yake.", nbGuestStep1: "Changanua msimbo wa mwenyeji, au ubandike hapa chini.", nbGuestStep2: "Mwonyeshe mwenyeji msimbo huu.", nbScan: "Changanua msimbo", nbPaste: "Bandika msimbo hapa", nbWait: "Inasubiri simu nyingine…", nbConnected: "Mchezaji ameunganishwa.", nbErrCode: "Msimbo huu si sahihi.", nbErrVersion: "Simu hizo mbili hazina toleo moja la programu.", nbErrCamera: "Kamera haipatikani: bandika msimbo badala yake.", nbErrLink: "Hakuna muunganisho. Simu zote mbili lazima ziwe kwenye Wi-Fi ileile (mitandao ya wageni mara nyingi huzuia hili).", nbLost: "Muunganisho na mwenyeji umepotea. Unganisha tena ndani ya dakika 2 ili ubaki na kiti chako.", nbRelayed: "Msimbo umetumwa kwenye mchezo wako. Unaweza kufunga kichupo hiki.", nbScoreboard: "Ubao wa alama wa jioni", nbOneTable: "Meza moja tu kwa wakati mmoja unapocheza karibu.",
   loadPartialFail: "Sehemu ya programu haikupakiwa.", reloadNow: "Pakia upya",

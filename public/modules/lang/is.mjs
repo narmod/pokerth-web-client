@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH-þjónninn svarar ekki (endurræsing eða viðhald). Tengingin þín virkar — næsta tilraun eftir {s} sek',
+    srvDownGaveUp: 'PokerTH-þjónninn hefur verið óaðgengilegur í 30 mínútur. Reyndu aftur síðar.',
+    netOfflineBanner: 'Engin nettenging — tengist aftur um leið og hún kemur',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Spila í nágrenninu", nbSub: "Án internets · sama Wi-Fi", nbHost: "Halda leik", nbJoin: "Taka þátt í leik", nbAdd: "Bæta við leikmanni", nbAddAnother: "Bæta við öðrum leikmanni", nbDone: "Tilbúið, spilum", nbHostStep1: "Leikmaðurinn skannar þennan kóða, í appinu eða með myndavél símans.", nbHostStep2: "Skannaðu svo kóðann sem birtist á skjánum hans.", nbGuestStep1: "Skannaðu kóða gestgjafans eða límdu hann hér fyrir neðan.", nbGuestStep2: "Sýndu gestgjafanum þennan kóða.", nbScan: "Skanna kóða", nbPaste: "Límdu kóða hér", nbWait: "Bíð eftir hinum símanum…", nbConnected: "Leikmaður tengdur.", nbErrCode: "Þessi kóði er ógildur.", nbErrVersion: "Símarnir tveir eru ekki með sömu útgáfu af appinu.", nbErrCamera: "Myndavél ekki tiltæk: límdu kóðann í staðinn.", nbErrLink: "Engin tenging. Báðir símarnir verða að vera á sama Wi-Fi (gestanet loka oft á það).", nbLost: "Tengingin við gestgjafann rofnaði. Paraðu aftur innan 2 mínútna til að halda sætinu.", nbRelayed: "Kóði sendur í leikinn þinn. Þú getur lokað þessum flipa.", nbScoreboard: "Stigatafla kvöldsins", nbOneTable: "Aðeins eitt borð í einu þegar spilað er í nágrenninu.",
   loadPartialFail: "Hluti forritsins hlóðst ekki.", reloadNow: "Endurhlaða",

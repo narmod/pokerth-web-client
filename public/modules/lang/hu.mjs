@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'A PokerTH szerver nem válaszol (újraindítás vagy karbantartás). A kapcsolatod működik — újabb próbálkozás {s} mp múlva',
+    srvDownGaveUp: 'A PokerTH szerver 30 perce nem érhető el. Próbáld újra később.',
+    netOfflineBanner: 'Nincs internetkapcsolat — újracsatlakozás, amint visszatér',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Játék a közelben", nbSub: "Internet nélkül · ugyanaz a Wi-Fi", nbHost: "Játék indítása", nbJoin: "Csatlakozás játékhoz", nbAdd: "Játékos hozzáadása", nbAddAnother: "Még egy játékos hozzáadása", nbDone: "Kész, játsszunk", nbHostStep1: "A játékos beolvassa ezt a kódot az appban vagy a telefon kamerájával.", nbHostStep2: "Aztán olvasd be a kódot, ami megjelenik a képernyőjén.", nbGuestStep1: "Olvasd be a házigazda kódját, vagy illeszd be lent.", nbGuestStep2: "Mutasd meg ezt a kódot a házigazdának.", nbScan: "Kód beolvasása", nbPaste: "Illessz be ide egy kódot", nbWait: "Várakozás a másik telefonra…", nbConnected: "Játékos csatlakozott.", nbErrCode: "Ez a kód érvénytelen.", nbErrVersion: "A két telefonon nem ugyanaz az app-verzió fut.", nbErrCamera: "A kamera nem érhető el: illeszd be inkább a kódot.", nbErrLink: "Nincs kapcsolat. Mindkét telefonnak ugyanazon a Wi-Fin kell lennie (a vendéghálózatok gyakran tiltják).", nbLost: "Megszakadt a kapcsolat a házigazdával. Párosíts újra 2 percen belül, hogy megtartsd a helyed.", nbRelayed: "A kód elküldve a játékodnak. Ezt a lapot bezárhatod.", nbScoreboard: "Az este eredménytáblája", nbOneTable: "Közeli játékban egyszerre csak egy asztal lehet.",
   loadPartialFail: "Az alkalmazás egy része nem töltődött be.", reloadNow: "Újratöltés",

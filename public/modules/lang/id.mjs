@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Server PokerTH tidak merespons (restart atau pemeliharaan). Koneksi Anda berfungsi — percobaan berikutnya dalam {s} dtk',
+    srvDownGaveUp: 'Server PokerTH tidak tersedia selama 30 menit. Silakan coba lagi nanti.',
+    netOfflineBanner: 'Tidak ada koneksi Internet — akan tersambung kembali begitu tersedia',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Main berdekatan", nbSub: "Tanpa Internet · Wi-Fi yang sama", nbHost: "Jadi tuan rumah", nbJoin: "Gabung permainan", nbAdd: "Tambah pemain", nbAddAnother: "Tambah pemain lain", nbDone: "Selesai, ayo main", nbHostStep1: "Pemain memindai kode ini, di aplikasi atau dengan kamera ponsel.", nbHostStep2: "Lalu pindai kode yang muncul di layarnya.", nbGuestStep1: "Pindai kode tuan rumah, atau tempel di bawah.", nbGuestStep2: "Tunjukkan kode ini ke tuan rumah.", nbScan: "Pindai kode", nbPaste: "Tempel kode di sini", nbWait: "Menunggu ponsel lain…", nbConnected: "Pemain terhubung.", nbErrCode: "Kode ini tidak valid.", nbErrVersion: "Kedua ponsel tidak memakai versi aplikasi yang sama.", nbErrCamera: "Kamera tidak tersedia: tempel kodenya saja.", nbErrLink: "Tidak ada koneksi. Kedua ponsel harus di Wi-Fi yang sama (jaringan tamu sering memblokirnya).", nbLost: "Koneksi ke tuan rumah terputus. Pasangkan lagi dalam 2 menit agar kursimu tetap ada.", nbRelayed: "Kode terkirim ke permainanmu. Kamu boleh menutup tab ini.", nbScoreboard: "Papan skor malam ini", nbOneTable: "Hanya satu meja sekaligus saat main berdekatan.",
   loadPartialFail: "Sebagian aplikasi gagal dimuat.", reloadNow: "Muat ulang",

@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH serveri javob bermayapti (qayta ishga tushirish yoki texnik xizmat). Ulanishingiz ishlayapti — keyingi urinish {s} soniyadan keyin',
+    srvDownGaveUp: 'PokerTH serveri 30 daqiqadan beri mavjud emas. Keyinroq qayta urinib ko‘ring.',
+    netOfflineBanner: 'Internet aloqasi yo‘q — qaytishi bilan qayta ulanadi',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Yaqin joyda oʻynash", nbSub: "Internetsiz · bitta Wi-Fi", nbHost: "Oʻyin ochish", nbJoin: "Oʻyinga qoʻshilish", nbAdd: "Oʻyinchi qoʻshish", nbAddAnother: "Yana bir oʻyinchi qoʻshish", nbDone: "Tayyor, oʻynaymiz", nbHostStep1: "Oʻyinchi bu kodni ilovada yoki telefon kamerasida skanerlaydi.", nbHostStep2: "Soʻng uning ekranida chiqqan kodni skanerlang.", nbGuestStep1: "Mezbonning kodini skanerlang yoki pastga joylang.", nbGuestStep2: "Bu kodni mezbonga koʻrsating.", nbScan: "Kodni skanerlash", nbPaste: "Kodni shu yerga joylang", nbWait: "Ikkinchi telefon kutilmoqda…", nbConnected: "Oʻyinchi ulandi.", nbErrCode: "Bu kod yaroqsiz.", nbErrVersion: "Ikki telefonda ilovaning bir xil versiyasi yoʻq.", nbErrCamera: "Kamera mavjud emas: oʻrniga kodni joylang.", nbErrLink: "Ulanish yoʻq. Ikkala telefon ham bitta Wi-Fi tarmogʻida boʻlishi kerak (mehmon tarmoqlari buni koʻpincha bloklaydi).", nbLost: "Mezbon bilan aloqa uzildi. Oʻrningizni saqlash uchun 2 daqiqa ichida qayta ulaning.", nbRelayed: "Kod oʻyiningizga yuborildi. Bu varaqni yopishingiz mumkin.", nbScoreboard: "Kechaning hisob jadvali", nbOneTable: "Yaqin joyda oʻynaganda bir vaqtda faqat bitta stol.",
   loadPartialFail: "Ilovaning bir qismi yuklanmadi.", reloadNow: "Qayta yuklash",

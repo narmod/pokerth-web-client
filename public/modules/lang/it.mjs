@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Il server PokerTH non risponde (riavvio o manutenzione). La tua connessione funziona — nuovo tentativo tra {s} s',
+    srvDownGaveUp: 'Il server PokerTH non è disponibile da 30 minuti. Riprova più tardi.',
+    netOfflineBanner: 'Nessuna connessione a Internet — riconnessione appena torna disponibile',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Gioca vicino", nbSub: "Senza Internet · stesso Wi-Fi", nbHost: "Ospita una partita", nbJoin: "Unisciti a una partita", nbAdd: "Aggiungi un giocatore", nbAddAnother: "Aggiungi un altro giocatore", nbDone: "Fatto, si gioca", nbHostStep1: "Il giocatore scansiona questo codice, nell’app o con la fotocamera del telefono.", nbHostStep2: "Poi scansiona il codice che compare sul suo schermo.", nbGuestStep1: "Scansiona il codice dell’host o incollalo qui sotto.", nbGuestStep2: "Mostra questo codice all’host.", nbScan: "Scansiona un codice", nbPaste: "Incolla un codice qui", nbWait: "In attesa dell’altro telefono…", nbConnected: "Giocatore connesso.", nbErrCode: "Questo codice non è valido.", nbErrVersion: "I due telefoni non hanno la stessa versione dell’app.", nbErrCamera: "Fotocamera non disponibile: incolla invece il codice.", nbErrLink: "Nessuna connessione. I due telefoni devono essere sullo stesso Wi-Fi (le reti ospiti spesso lo bloccano).", nbLost: "Connessione con l’host persa. Ricollegati entro 2 minuti per tenere il tuo posto.", nbRelayed: "Codice inviato alla tua partita. Puoi chiudere questa scheda.", nbScoreboard: "Classifica della serata", nbOneTable: "Un solo tavolo alla volta quando si gioca vicino.",
   loadPartialFail: "Una parte dell'app non è stata caricata.", reloadNow: "Ricarica",

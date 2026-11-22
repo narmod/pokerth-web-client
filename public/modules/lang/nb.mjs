@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH-serveren svarer ikke (omstart eller vedlikehold). Tilkoblingen din fungerer — nytt forsøk om {s} s',
+    srvDownGaveUp: 'PokerTH-serveren har vært utilgjengelig i 30 minutter. Prøv igjen senere.',
+    netOfflineBanner: 'Ingen Internett-tilkobling — kobler til igjen så snart den er tilbake',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Spill i nærheten", nbSub: "Uten internett · samme Wi-Fi", nbHost: "Vær vert for et spill", nbJoin: "Bli med i et spill", nbAdd: "Legg til en spiller", nbAddAnother: "Legg til en spiller til", nbDone: "Ferdig, la oss spille", nbHostStep1: "Spilleren skanner denne koden i appen eller med telefonens kamera.", nbHostStep2: "Skann deretter koden som vises på skjermen hans.", nbGuestStep1: "Skann vertens kode, eller lim den inn nedenfor.", nbGuestStep2: "Vis denne koden til verten.", nbScan: "Skann en kode", nbPaste: "Lim inn en kode her", nbWait: "Venter på den andre telefonen…", nbConnected: "Spiller tilkoblet.", nbErrCode: "Denne koden er ugyldig.", nbErrVersion: "De to telefonene har ikke samme versjon av appen.", nbErrCamera: "Kamera utilgjengelig: lim inn koden i stedet.", nbErrLink: "Ingen tilkobling. Begge telefonene må være på samme Wi-Fi (gjestenett blokkerer det ofte).", nbLost: "Forbindelsen til verten ble brutt. Koble til på nytt innen 2 minutter for å beholde plassen din.", nbRelayed: "Koden er sendt til spillet ditt. Du kan lukke denne fanen.", nbScoreboard: "Kveldens resultattavle", nbOneTable: "Bare ett bord om gangen når man spiller i nærheten.",
   loadPartialFail: "En del av appen ble ikke lastet inn.", reloadNow: "Last inn på nytt",

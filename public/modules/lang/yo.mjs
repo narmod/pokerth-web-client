@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Olupin PokerTH kò dáhùn (àtúnbẹ̀rẹ̀ tàbí àtúnṣe). Ìsopọ̀ rẹ ń ṣiṣẹ́ — ìgbìyànjú tó kàn ní ìṣẹ́jú-àáyá {s}',
+    srvDownGaveUp: 'Olupin PokerTH kò sí fún ìṣẹ́jú 30. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i nígbà míì.',
+    netOfflineBanner: 'Kò sí ìsopọ̀ Íntánẹ́ẹ̀tì — yóò tún sopọ̀ ní kété tí ó bá padà',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Ṣeré nítòsí", nbSub: "Láìsí Íntánẹ́ẹ̀tì · Wi-Fi kan náà", nbHost: "Gbàlejò eré", nbJoin: "Darapọ̀ mọ́ eré", nbAdd: "Fi òṣèré kún un", nbAddAnother: "Fi òṣèré mìíràn kún un", nbDone: "Ó ti parí, ẹ jẹ́ ká ṣeré", nbHostStep1: "Òṣèré náà ṣàyẹ̀wò kóòdù yìí nínú áàpù tàbí pẹ̀lú kámẹ́rà fóònù.", nbHostStep2: "Lẹ́yìn náà, ṣàyẹ̀wò kóòdù tó yọ lórí ojú ìbòjú rẹ̀.", nbGuestStep1: "Ṣàyẹ̀wò kóòdù agbàlejò, tàbí lẹ̀ ẹ́ sí ìsàlẹ̀.", nbGuestStep2: "Fi kóòdù yìí han agbàlejò.", nbScan: "Ṣàyẹ̀wò kóòdù", nbPaste: "Lẹ kóòdù síbí", nbWait: "Ń dúró de fóònù kejì…", nbConnected: "Òṣèré ti sopọ̀.", nbErrCode: "Kóòdù yìí kò wúlò.", nbErrVersion: "Fóònù méjèèjì kò ní ẹ̀yà áàpù kan náà.", nbErrCamera: "Kámẹ́rà kò sí: lẹ kóòdù náà dípò rẹ̀.", nbErrLink: "Kò sí ìsopọ̀. Fóònù méjèèjì gbọ́dọ̀ wà lórí Wi-Fi kan náà (àwọn nẹ́tíwọ̀ọ̀kì àlejò máa ń dí i lọ́wọ́).", nbLost: "Ìsopọ̀ pẹ̀lú agbàlejò ti já. Tún so pọ̀ láàrin ìṣẹ́jú 2 kí o lè di ìjókòó rẹ mú.", nbRelayed: "A ti fi kóòdù ránṣẹ́ sí eré rẹ. O lè pa táàbù yìí.", nbScoreboard: "Pátákó àmì ìrọ̀lẹ́", nbOneTable: "Tábìlì kan ṣoṣo ní àkókò kan nígbà tí a bá ń ṣeré nítòsí.",
   loadPartialFail: "Apá kan nínú àpù náà kò gbé wọlé.", reloadNow: "Tún gbé wọlé",

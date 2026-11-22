@@ -1,4 +1,8 @@
-2026-11-21 version 2.1.11-web.151 (current series):
+2026-11-22 version 2.1.11-web.152 (current series):
+- improvement: when the PokerTH server restarts or is under maintenance, the client now says so — your own connection works — and keeps reconnecting by itself every 20 seconds for up to 30 minutes, instead of giving up after 2 minutes
+- improvement: without Internet, the client waits for the network to come back and reconnects at once, without using up its attempts
+
+2026-11-21 version 2.1.11-web.151:
 - bugfix: reopening the page right after closing it no longer locks you out for two minutes with « nickname already in use »
 
 2026-11-21 version 2.1.11-web.150:

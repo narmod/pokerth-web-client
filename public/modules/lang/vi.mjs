@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Máy chủ PokerTH không phản hồi (khởi động lại hoặc bảo trì). Kết nối của bạn vẫn hoạt động — thử lại sau {s} giây',
+    srvDownGaveUp: 'Máy chủ PokerTH đã không khả dụng trong 30 phút. Vui lòng thử lại sau.',
+    netOfflineBanner: 'Không có kết nối Internet — sẽ kết nối lại ngay khi có mạng',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Chơi gần nhau", nbSub: "Không cần Internet · cùng Wi-Fi", nbHost: "Tổ chức ván chơi", nbJoin: "Tham gia ván chơi", nbAdd: "Thêm người chơi", nbAddAnother: "Thêm người chơi khác", nbDone: "Xong, chơi thôi", nbHostStep1: "Người chơi quét mã này trong ứng dụng hoặc bằng camera điện thoại.", nbHostStep2: "Sau đó quét mã hiện trên màn hình của họ.", nbGuestStep1: "Quét mã của chủ phòng hoặc dán vào bên dưới.", nbGuestStep2: "Cho chủ phòng xem mã này.", nbScan: "Quét mã", nbPaste: "Dán mã vào đây", nbWait: "Đang chờ điện thoại kia…", nbConnected: "Người chơi đã kết nối.", nbErrCode: "Mã này không hợp lệ.", nbErrVersion: "Hai điện thoại không cùng phiên bản ứng dụng.", nbErrCamera: "Không dùng được camera: hãy dán mã thay thế.", nbErrLink: "Không có kết nối. Hai điện thoại phải dùng cùng Wi-Fi (mạng khách thường chặn việc này).", nbLost: "Mất kết nối với chủ phòng. Ghép nối lại trong 2 phút để giữ chỗ.", nbRelayed: "Đã gửi mã tới ván chơi của bạn. Bạn có thể đóng thẻ này.", nbScoreboard: "Bảng điểm buổi tối", nbOneTable: "Khi chơi gần nhau, mỗi lần chỉ một bàn.",
   loadPartialFail: "Một phần của ứng dụng không tải được.", reloadNow: "Tải lại",

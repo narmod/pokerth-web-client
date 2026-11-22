@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH serveris neatsako (paleidimas iš naujo arba priežiūra). Jūsų ryšys veikia — kitas bandymas po {s} s',
+    srvDownGaveUp: 'PokerTH serveris nepasiekiamas jau 30 minučių. Bandykite vėliau.',
+    netOfflineBanner: 'Nėra interneto ryšio — prisijungsime iš naujo, kai tik jis atsiras',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Žaisti netoliese", nbSub: "Be interneto · tas pats Wi-Fi", nbHost: "Surengti žaidimą", nbJoin: "Prisijungti prie žaidimo", nbAdd: "Pridėti žaidėją", nbAddAnother: "Pridėti dar vieną žaidėją", nbDone: "Baigta, žaidžiam", nbHostStep1: "Žaidėjas nuskaito šį kodą programėlėje arba telefono kamera.", nbHostStep2: "Tada nuskaityk kodą, kuris atsiranda jo ekrane.", nbGuestStep1: "Nuskaityk šeimininko kodą arba įklijuok jį žemiau.", nbGuestStep2: "Parodyk šį kodą šeimininkui.", nbScan: "Nuskaityti kodą", nbPaste: "Įklijuok kodą čia", nbWait: "Laukiama kito telefono…", nbConnected: "Žaidėjas prisijungė.", nbErrCode: "Šis kodas negalioja.", nbErrVersion: "Abiejuose telefonuose skiriasi programėlės versija.", nbErrCamera: "Kamera nepasiekiama: geriau įklijuok kodą.", nbErrLink: "Nėra ryšio. Abu telefonai turi būti tame pačiame Wi-Fi (svečių tinklai dažnai tai blokuoja).", nbLost: "Ryšys su šeimininku nutrūko. Susiek iš naujo per 2 minutes, kad išlaikytum vietą.", nbRelayed: "Kodas išsiųstas į tavo žaidimą. Šį skirtuką gali uždaryti.", nbScoreboard: "Vakaro rezultatų lentelė", nbOneTable: "Žaidžiant netoliese – tik vienas stalas vienu metu.",
   loadPartialFail: "Dalis programėlės neįsikėlė.", reloadNow: "Įkelti iš naujo",

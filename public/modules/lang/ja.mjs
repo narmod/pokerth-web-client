@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH サーバーが応答しません（再起動またはメンテナンス中）。あなたの接続は正常です — {s} 秒後に再試行',
+    srvDownGaveUp: 'PokerTH サーバーが30分間利用できません。後でもう一度お試しください。',
+    netOfflineBanner: 'インターネットに接続されていません — 復帰しだい再接続します',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "近くで遊ぶ", nbSub: "インターネット不要 · 同じWi-Fi", nbHost: "ゲームをホスト", nbJoin: "ゲームに参加", nbAdd: "プレイヤーを追加", nbAddAnother: "プレイヤーをさらに追加", nbDone: "OK、遊ぼう", nbHostStep1: "相手がこのコードをアプリまたはスマホのカメラで読み取ります。", nbHostStep2: "次に、相手の画面に表示されたコードを読み取ってください。", nbGuestStep1: "ホストのコードを読み取るか、下に貼り付けてください。", nbGuestStep2: "このコードをホストに見せてください。", nbScan: "コードを読み取る", nbPaste: "ここにコードを貼り付け", nbWait: "もう一台のスマホを待っています…", nbConnected: "プレイヤーが接続しました。", nbErrCode: "このコードは無効です。", nbErrVersion: "2台のスマホでアプリのバージョンが違います。", nbErrCamera: "カメラを使えません。代わりにコードを貼り付けてください。", nbErrLink: "接続できません。2台とも同じWi-Fiにつないでください（ゲストネットワークではブロックされることがあります）。", nbLost: "ホストとの接続が切れました。席を保つには2分以内にもう一度ペアリングしてください。", nbRelayed: "コードをゲームに送りました。このタブは閉じてかまいません。", nbScoreboard: "今夜のスコアボード", nbOneTable: "近くで遊ぶときは同時に1卓だけです。",
   loadPartialFail: "アプリの一部を読み込めませんでした。", reloadNow: "再読み込み",

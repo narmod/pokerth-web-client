@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH-palvelin ei vastaa (uudelleenkäynnistys tai huolto). Yhteytesi toimii — seuraava yritys {s} s kuluttua',
+    srvDownGaveUp: 'PokerTH-palvelin on ollut tavoittamattomissa 30 minuuttia. Yritä myöhemmin uudelleen.',
+    netOfflineBanner: 'Ei internetyhteyttä — yhdistetään uudelleen heti, kun yhteys palaa',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Pelaa lähellä", nbSub: "Ilman internetiä · sama Wi-Fi", nbHost: "Isännöi peliä", nbJoin: "Liity peliin", nbAdd: "Lisää pelaaja", nbAddAnother: "Lisää toinen pelaaja", nbDone: "Valmis, pelataan", nbHostStep1: "Pelaaja skannaa tämän koodin sovelluksessa tai puhelimen kameralla.", nbHostStep2: "Skannaa sitten koodi, joka näkyy hänen näytöllään.", nbGuestStep1: "Skannaa isännän koodi tai liitä se alle.", nbGuestStep2: "Näytä tämä koodi isännälle.", nbScan: "Skannaa koodi", nbPaste: "Liitä koodi tähän", nbWait: "Odotetaan toista puhelinta…", nbConnected: "Pelaaja yhdistetty.", nbErrCode: "Tämä koodi ei kelpaa.", nbErrVersion: "Puhelimissa ei ole samaa sovelluksen versiota.", nbErrCamera: "Kamera ei käytettävissä: liitä koodi sen sijaan.", nbErrLink: "Ei yhteyttä. Molempien puhelinten on oltava samassa Wi-Fi-verkossa (vierasverkot estävät sen usein).", nbLost: "Yhteys isäntään katkesi. Yhdistä uudelleen 2 minuutin kuluessa säilyttääksesi paikkasi.", nbRelayed: "Koodi lähetetty peliisi. Voit sulkea tämän välilehden.", nbScoreboard: "Illan tulostaulu", nbOneTable: "Lähellä pelatessa vain yksi pöytä kerrallaan.",
   loadPartialFail: "Osa sovelluksesta jäi latautumatta.", reloadNow: "Lataa uudelleen",

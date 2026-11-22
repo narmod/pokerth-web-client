@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH 서버가 응답하지 않습니다(재시작 또는 점검 중). 사용자의 연결은 정상입니다 — {s}초 후 다시 시도',
+    srvDownGaveUp: 'PokerTH 서버를 30분째 사용할 수 없습니다. 나중에 다시 시도하세요.',
+    netOfflineBanner: '인터넷에 연결되어 있지 않습니다 — 연결이 복구되면 바로 다시 연결합니다',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "가까이에서 플레이", nbSub: "인터넷 없이 · 같은 Wi-Fi", nbHost: "게임 호스트", nbJoin: "게임 참가", nbAdd: "플레이어 추가", nbAddAnother: "플레이어 더 추가", nbDone: "완료, 시작하자", nbHostStep1: "상대가 앱이나 휴대폰 카메라로 이 코드를 스캔합니다.", nbHostStep2: "그다음 상대 화면에 나타난 코드를 스캔하세요.", nbGuestStep1: "호스트의 코드를 스캔하거나 아래에 붙여 넣으세요.", nbGuestStep2: "이 코드를 호스트에게 보여 주세요.", nbScan: "코드 스캔", nbPaste: "여기에 코드 붙여 넣기", nbWait: "다른 휴대폰을 기다리는 중…", nbConnected: "플레이어가 연결되었습니다.", nbErrCode: "유효하지 않은 코드입니다.", nbErrVersion: "두 휴대폰의 앱 버전이 다릅니다.", nbErrCamera: "카메라를 사용할 수 없습니다. 대신 코드를 붙여 넣으세요.", nbErrLink: "연결되지 않았습니다. 두 휴대폰이 같은 Wi-Fi에 있어야 합니다(게스트 네트워크는 흔히 이를 차단합니다).", nbLost: "호스트와의 연결이 끊겼습니다. 자리를 지키려면 2분 안에 다시 연결하세요.", nbRelayed: "코드를 게임으로 보냈습니다. 이 탭은 닫아도 됩니다.", nbScoreboard: "오늘 밤 점수판", nbOneTable: "가까이에서 플레이할 때는 한 번에 한 테이블만 가능합니다.",
   loadPartialFail: "앱 일부를 불러오지 못했습니다.", reloadNow: "새로고침",

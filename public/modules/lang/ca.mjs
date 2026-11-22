@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'El servidor de PokerTH no respon (reinici o manteniment). La connexió funciona — nou intent d\'aquí a {s} s',
+    srvDownGaveUp: 'El servidor de PokerTH no està disponible des de fa 30 minuts. Torneu-ho a provar més tard.',
+    netOfflineBanner: 'Sense connexió a Internet — es reconnectarà quan torni',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Jugar a prop", nbSub: "Sense Internet · mateixa Wi-Fi", nbHost: "Organitzar una partida", nbJoin: "Unir-se a una partida", nbAdd: "Afegir un jugador", nbAddAnother: "Afegir un altre jugador", nbDone: "Fet, a jugar", nbHostStep1: "El jugador escaneja aquest codi, a l’app o amb la càmera del telèfon.", nbHostStep2: "Després escaneja el codi que apareix a la seva pantalla.", nbGuestStep1: "Escaneja el codi de l’amfitrió o enganxa’l a sota.", nbGuestStep2: "Mostra aquest codi a l’amfitrió.", nbScan: "Escanejar un codi", nbPaste: "Enganxa un codi aquí", nbWait: "Esperant l’altre telèfon…", nbConnected: "Jugador connectat.", nbErrCode: "Aquest codi no és vàlid.", nbErrVersion: "Els dos telèfons no tenen la mateixa versió de l’app.", nbErrCamera: "Càmera no disponible: enganxa el codi en lloc d’això.", nbErrLink: "Sense connexió. Els dos telèfons han d’estar a la mateixa Wi-Fi (les xarxes de convidats sovint ho bloquegen).", nbLost: "S’ha perdut la connexió amb l’amfitrió. Torna a emparellar en 2 minuts per conservar el teu lloc.", nbRelayed: "Codi enviat a la teva partida. Pots tancar aquesta pestanya.", nbScoreboard: "Marcador de la vetllada", nbOneTable: "Només una taula alhora quan es juga a prop.",
   loadPartialFail: "Una part de l'aplicació no s'ha carregat.", reloadNow: "Torna a carregar",

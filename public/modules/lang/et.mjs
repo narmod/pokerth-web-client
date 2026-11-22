@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH-i server ei vasta (taaskäivitus või hooldus). Sinu ühendus töötab — järgmine katse {s} s pärast',
+    srvDownGaveUp: 'PokerTH-i server on olnud 30 minutit kättesaamatu. Proovi hiljem uuesti.',
+    netOfflineBanner: 'Internetiühendus puudub — ühendus luuakse uuesti kohe, kui see taastub',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Mängi läheduses", nbSub: "Ilma internetita · sama Wi-Fi", nbHost: "Korralda mäng", nbJoin: "Liitu mänguga", nbAdd: "Lisa mängija", nbAddAnother: "Lisa veel üks mängija", nbDone: "Valmis, mängime", nbHostStep1: "Mängija skannib selle koodi rakenduses või telefoni kaameraga.", nbHostStep2: "Seejärel skanni kood, mis tema ekraanile ilmub.", nbGuestStep1: "Skanni võõrustaja kood või kleebi see allpool.", nbGuestStep2: "Näita seda koodi võõrustajale.", nbScan: "Skanni kood", nbPaste: "Kleebi kood siia", nbWait: "Ootan teist telefoni…", nbConnected: "Mängija ühendatud.", nbErrCode: "See kood ei kehti.", nbErrVersion: "Kahel telefonil pole sama rakenduse versiooni.", nbErrCamera: "Kaamera pole saadaval: kleebi kood selle asemel.", nbErrLink: "Ühendus puudub. Mõlemad telefonid peavad olema samas Wi-Fi võrgus (külaliste võrgud blokeerivad seda sageli).", nbLost: "Ühendus võõrustajaga katkes. Seo uuesti 2 minuti jooksul, et oma koht alles hoida.", nbRelayed: "Kood saadeti sinu mängu. Võid selle vahekaardi sulgeda.", nbScoreboard: "Õhtu tulemustabel", nbOneTable: "Läheduses mängides ainult üks laud korraga.",
   loadPartialFail: "Osa rakendusest ei laadinud.", reloadNow: "Laadi uuesti",

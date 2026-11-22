@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Serverul PokerTH nu răspunde (repornire sau mentenanță). Conexiunea ta funcționează — următoarea încercare în {s} s',
+    srvDownGaveUp: 'Serverul PokerTH este indisponibil de 30 de minute. Încearcă din nou mai târziu.',
+    netOfflineBanner: 'Nu există conexiune la internet — reconectare imediat ce revine',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Joacă în apropiere", nbSub: "Fără internet · aceeași rețea Wi-Fi", nbHost: "Găzduiește un joc", nbJoin: "Intră într-un joc", nbAdd: "Adaugă un jucător", nbAddAnother: "Adaugă încă un jucător", nbDone: "Gata, jucăm", nbHostStep1: "Jucătorul scanează acest cod, în aplicație sau cu camera telefonului.", nbHostStep2: "Apoi scanează codul care apare pe ecranul lui.", nbGuestStep1: "Scanează codul gazdei sau lipește-l mai jos.", nbGuestStep2: "Arată acest cod gazdei.", nbScan: "Scanează un cod", nbPaste: "Lipește un cod aici", nbWait: "Se așteaptă celălalt telefon…", nbConnected: "Jucător conectat.", nbErrCode: "Acest cod nu este valid.", nbErrVersion: "Cele două telefoane nu au aceeași versiune a aplicației.", nbErrCamera: "Camera nu e disponibilă: lipește codul în schimb.", nbErrLink: "Nicio conexiune. Ambele telefoane trebuie să fie în aceeași rețea Wi-Fi (rețelele pentru oaspeți o blochează adesea).", nbLost: "Conexiunea cu gazda s-a pierdut. Reconectează-te în 2 minute ca să-ți păstrezi locul.", nbRelayed: "Cod trimis jocului tău. Poți închide această filă.", nbScoreboard: "Clasamentul serii", nbOneTable: "O singură masă odată când joci în apropiere.",
   loadPartialFail: "O parte a aplicației nu s-a încărcat.", reloadNow: "Reîncarcă",

@@ -19,6 +19,10 @@
 //   D · the link comes back on MY turn and the server says nothing more (it is
 //       waiting for me): the action bar is live as soon as the socket is open,
 //       and the notice does not stay over the cards for my whole thinking time.
+//   F · the game server restarts (proxy close 4504): its own notice, retries
+//       every 20 s ± 5 s past the 6 attempts, back with the server.
+//   G · the game server stays down 30 min: login screen + its own message.
+//   H · the device is offline: its own notice, rebind once the network is back.
 //
 // Timers are driven with Playwright's clock (the real delays add up to ~110 s).
 // Run:  node scripts/test-reconnect-browser.mjs   (npm run test:reconnect-browser)
@@ -197,6 +201,87 @@ async function runDevice(browser, name, descriptor) {
       });
       await check('B: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
     } catch (error) { reporter.fail('B aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'reconnect-b-aborted'); }
+    finally { await context.close(); }
+  }
+  // ── F · the game server restarts (proxy close 4504) ─────────────────────
+  //   the notice says the server is down and the player's connection works,
+  //   the retries keep coming every 20 s ± 5 s well past the 6 attempts, the
+  //   attempt counter never shows, and the table comes back with the server.
+  {
+    const { context, page, errors } = await fresh(browser, descriptor);
+    try {
+      const before = await snap(page);
+      await page.evaluate(() => { window.__fxRefuse = 4504; window.WebSocket.instance.drop(); });
+      await tick(page, 5300);                       // the usual first retry meets the 4504
+      const down = await snap(page);
+      await shot(page, name, 'reconnect-f1-server-down');
+      const want = await page.evaluate(() => window.t('srvDownBanner', { s: 0 }).split('—')[0].trim());
+      await tick(page, 10 * 60 * 1000);             // ten minutes later: still waiting
+      const later = await snap(page);
+      await check('F server down: its own notice, no n/6 counter, still retrying after 10 min', async () => {
+        assert.ok(down.note, 'no notice while the game server is down');
+        assert.ok(want && want !== 'srvDownBanner' && down.note.text.includes(want), `the notice does not say the server is down: "${down.note.text}"`);
+        assert.ok(!/\d\s*\/\s*6/.test(down.note.text), `attempt counter shown: "${down.note.text}"`);
+        assert.equal(later.screen, 's-game', `gave up after 10 min: ${later.screen}`);
+        const tries = later.sockets - down.sockets;
+        assert.ok(tries >= 24 && tries <= 40, `retries in 10 min: ${tries} (expected one every 20 s ± 5 s)`);
+        assert.ok(later.note && later.note.text.includes(want));
+      });
+      await page.evaluate(() => { window.__fxRefuse = false; });
+      await tick(page, 26000);
+      const back = await snap(page);
+      await check('F server back: one more rebind, socket open, the notice changes', async () => {
+        assert.ok(back.open, 'the socket is not open once the server is back');
+        assert.ok(!/fresh=1/.test(back.url || ''), 'the retry asks the proxy for a FRESH session');
+        assert.ok(!back.note || !back.note.text.includes(want), `the server-down notice stays: "${back.note && back.note.text}"`);
+      });
+      await check('F: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
+    } catch (error) { reporter.fail('F aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'reconnect-f-aborted'); }
+    finally { await context.close(); }
+  }
+  // ── G · the game server stays down for 30 min ───────────────────────────
+  {
+    const { context, page, errors } = await fresh(browser, descriptor);
+    try {
+      await page.evaluate(() => { window.__fxRefuse = 4504; window.WebSocket.instance.drop(); });
+      await tick(page, 5300);
+      for (let i = 0; i < 4; i++) await tick(page, 8 * 60 * 1000);
+      const end = await snap(page);
+      await check('G server down 30 min: back to the login screen with its own translated message', async () => {
+        assert.equal(end.screen, 's-connect', `still waiting after 32 min: ${end.screen}`);
+        const msg = await page.evaluate(() => { const want = window.t('srvDownGaveUp'); const m = document.getElementById('conn-lost-modal');
+          return { want, found: document.body.innerText.includes(want), modal: !!m && getComputedStyle(m).display !== 'none' }; });
+        assert.ok(msg.want !== 'srvDownGaveUp' && msg.found && msg.modal, JSON.stringify(msg));
+      });
+      await check('G: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
+    } catch (error) { reporter.fail('G aborted', String(error && error.message || error).split('\n')[0]); }
+    finally { await context.close(); }
+  }
+  // ── H · the device is offline ───────────────────────────────────────────
+  {
+    const { context, page, errors } = await fresh(browser, descriptor);
+    try {
+      const before = await snap(page);
+      await context.setOffline(true);
+      await page.evaluate(() => { window.__fxRefuse = true; window.WebSocket.instance.drop(); });
+      await tick(page, 5 * 60 * 1000);
+      const off = await snap(page);
+      const want = await page.evaluate(() => window.t('netOfflineBanner').split('—')[0].trim());
+      await check('H offline: its own notice, the table stays, at most one safety try a minute', async () => {
+        assert.equal(off.screen, 's-game', `gave up while offline: ${off.screen}`);
+        assert.ok(off.note && want !== 'netOfflineBanner' && off.note.text.includes(want), `notice: "${off.note && off.note.text}"`);
+        assert.ok(off.sockets - before.sockets <= 6, `${off.sockets - before.sockets} sockets in 5 min while offline`);
+      });
+      await page.evaluate(() => { window.__fxRefuse = false; });
+      await context.setOffline(false);
+      await tick(page, 4000);
+      const on = await snap(page);
+      await check('H network back: rebind within a few seconds', async () => {
+        assert.ok(on.open, 'no socket open after the network came back');
+        assert.ok(!/fresh=1/.test(on.url || ''));
+      });
+      await check('H: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
+    } catch (error) { reporter.fail('H aborted', String(error && error.message || error).split('\n')[0]); }
     finally { await context.close(); }
   }
   // ── C · leaving on purpose ──────────────────────────────────────────────

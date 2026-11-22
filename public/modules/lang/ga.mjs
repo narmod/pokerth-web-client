@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Níl freastalaí PokerTH ag freagairt (atosú nó cothabháil). Tá do nasc ag obair — an chéad iarracht eile i gceann {s} s',
+    srvDownGaveUp: 'Níl freastalaí PokerTH ar fáil le 30 nóiméad. Bain triail eile as ar ball.',
+    netOfflineBanner: 'Níl aon nasc Idirlín ann — athcheanglófar a luaithe a fhillfidh sé',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Imir in aice láimhe", nbSub: "Gan Idirlíon · an Wi-Fi céanna", nbHost: "Óstáil cluiche", nbJoin: "Téigh isteach i gcluiche", nbAdd: "Cuir imreoir leis", nbAddAnother: "Cuir imreoir eile leis", nbDone: "Déanta, imrímis", nbHostStep1: "Scanann an t-imreoir an cód seo, san aip nó le ceamara an fhóin.", nbHostStep2: "Ansin scan an cód a thaispeántar ar a scáileán.", nbGuestStep1: "Scan cód an óstaigh, nó greamaigh thíos é.", nbGuestStep2: "Taispeáin an cód seo don óstach.", nbScan: "Scan cód", nbPaste: "Greamaigh cód anseo", nbWait: "Ag fanacht leis an bhfón eile…", nbConnected: "Imreoir ceangailte.", nbErrCode: "Níl an cód seo bailí.", nbErrVersion: "Níl an leagan céanna den aip ar an dá fhón.", nbErrCamera: "Níl ceamara ar fáil: greamaigh an cód ina ionad.", nbErrLink: "Gan cheangal. Caithfidh an dá fhón a bheith ar an Wi-Fi céanna (is minic a chuireann líonraí aíonna bac air).", nbLost: "Cailleadh an ceangal leis an óstach. Péireáil arís laistigh de 2 nóiméad chun do shuíochán a choinneáil.", nbRelayed: "Seoladh an cód chuig do chluiche. Is féidir leat an cluaisín seo a dhúnadh.", nbScoreboard: "Clár scóir na hoíche", nbOneTable: "Bord amháin ag an am nuair a imrítear in aice láimhe.",
   loadPartialFail: "Níor lódáladh cuid den aip.", reloadNow: "Athlódáil",

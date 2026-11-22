@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'De PokerTH-server reageert niet (herstart of onderhoud). Je verbinding werkt — volgende poging over {s} s',
+    srvDownGaveUp: 'De PokerTH-server is al 30 minuten onbereikbaar. Probeer het later opnieuw.',
+    netOfflineBanner: 'Geen internetverbinding — opnieuw verbinden zodra die terug is',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Dichtbij spelen", nbSub: "Zonder internet · zelfde wifi", nbHost: "Spel hosten", nbJoin: "Spel joinen", nbAdd: "Speler toevoegen", nbAddAnother: "Nog een speler toevoegen", nbDone: "Klaar, spelen maar", nbHostStep1: "De speler scant deze code, in de app of met de camera van de telefoon.", nbHostStep2: "Scan daarna de code die op zijn scherm verschijnt.", nbGuestStep1: "Scan de code van de host of plak hem hieronder.", nbGuestStep2: "Laat deze code aan de host zien.", nbScan: "Code scannen", nbPaste: "Plak hier een code", nbWait: "Wachten op de andere telefoon…", nbConnected: "Speler verbonden.", nbErrCode: "Deze code is ongeldig.", nbErrVersion: "De twee telefoons hebben niet dezelfde versie van de app.", nbErrCamera: "Camera niet beschikbaar: plak de code in plaats daarvan.", nbErrLink: "Geen verbinding. Beide telefoons moeten op dezelfde wifi zitten (gastnetwerken blokkeren dit vaak).", nbLost: "Verbinding met de host verloren. Koppel binnen 2 minuten opnieuw om je plaats te houden.", nbRelayed: "Code naar je spel gestuurd. Je kunt dit tabblad sluiten.", nbScoreboard: "Scorebord van de avond", nbOneTable: "Maar één tafel tegelijk bij dichtbij spelen.",
   loadPartialFail: "Een deel van de app is niet geladen.", reloadNow: "Opnieuw laden",

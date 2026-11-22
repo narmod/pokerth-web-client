@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH serveri cavab vermir (yenidən başladılma və ya texniki xidmət). Bağlantınız işləyir — növbəti cəhd {s} san sonra',
+    srvDownGaveUp: 'PokerTH serveri 30 dəqiqədir əlçatan deyil. Sonra yenidən cəhd edin.',
+    netOfflineBanner: 'İnternet bağlantısı yoxdur — qayıdan kimi yenidən qoşulacaq',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Yaxınlıqda oyna", nbSub: "İnternetsiz · eyni Wi-Fi", nbHost: "Oyun qur", nbJoin: "Oyuna qoşul", nbAdd: "Oyunçu əlavə et", nbAddAnother: "Daha bir oyunçu əlavə et", nbDone: "Hazırdır, oynayaq", nbHostStep1: "Oyunçu bu kodu tətbiqdə və ya telefon kamerası ilə skan edir.", nbHostStep2: "Sonra onun ekranında görünən kodu skan et.", nbGuestStep1: "Ev sahibinin kodunu skan et və ya aşağıya yapışdır.", nbGuestStep2: "Bu kodu ev sahibinə göstər.", nbScan: "Kodu skan et", nbPaste: "Kodu bura yapışdır", nbWait: "Digər telefon gözlənilir…", nbConnected: "Oyunçu qoşuldu.", nbErrCode: "Bu kod etibarlı deyil.", nbErrVersion: "İki telefonda tətbiqin eyni versiyası yoxdur.", nbErrCamera: "Kamera əlçatan deyil: əvəzində kodu yapışdır.", nbErrLink: "Bağlantı yoxdur. Hər iki telefon eyni Wi-Fi-da olmalıdır (qonaq şəbəkələri bunu tez-tez bloklayır).", nbLost: "Ev sahibi ilə bağlantı kəsildi. Yerini saxlamaq üçün 2 dəqiqə ərzində yenidən qoşul.", nbRelayed: "Kod oyununa göndərildi. Bu tabı bağlaya bilərsən.", nbScoreboard: "Axşamın xal cədvəli", nbOneTable: "Yaxınlıqda oynayanda eyni anda yalnız bir masa.",
   loadPartialFail: "Tətbiqin bir hissəsi yüklənmədi.", reloadNow: "Yenidən yüklə",

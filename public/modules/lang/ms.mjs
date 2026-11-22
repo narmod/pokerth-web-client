@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Pelayan PokerTH tidak bertindak balas (mula semula atau penyelenggaraan). Sambungan anda berfungsi — cubaan seterusnya dalam {s} s',
+    srvDownGaveUp: 'Pelayan PokerTH tidak tersedia selama 30 minit. Sila cuba lagi kemudian.',
+    netOfflineBanner: 'Tiada sambungan Internet — akan bersambung semula sebaik sahaja ia kembali',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Main berdekatan", nbSub: "Tanpa Internet · Wi-Fi yang sama", nbHost: "Jadi hos permainan", nbJoin: "Sertai permainan", nbAdd: "Tambah pemain", nbAddAnother: "Tambah pemain lain", nbDone: "Siap, jom main", nbHostStep1: "Pemain mengimbas kod ini, dalam apl atau dengan kamera telefon.", nbHostStep2: "Kemudian imbas kod yang muncul pada skrinnya.", nbGuestStep1: "Imbas kod hos, atau tampal di bawah.", nbGuestStep2: "Tunjukkan kod ini kepada hos.", nbScan: "Imbas kod", nbPaste: "Tampal kod di sini", nbWait: "Menunggu telefon yang satu lagi…", nbConnected: "Pemain disambungkan.", nbErrCode: "Kod ini tidak sah.", nbErrVersion: "Kedua-dua telefon tidak menggunakan versi apl yang sama.", nbErrCamera: "Kamera tidak tersedia: tampal kod sahaja.", nbErrLink: "Tiada sambungan. Kedua-dua telefon mesti berada di Wi-Fi yang sama (rangkaian tetamu sering menyekatnya).", nbLost: "Sambungan ke hos terputus. Pasangkan semula dalam 2 minit untuk mengekalkan tempat anda.", nbRelayed: "Kod dihantar ke permainan anda. Anda boleh menutup tab ini.", nbScoreboard: "Papan skor malam ini", nbOneTable: "Hanya satu meja pada satu masa ketika main berdekatan.",
   loadPartialFail: "Sebahagian aplikasi gagal dimuatkan.", reloadNow: "Muat semula",

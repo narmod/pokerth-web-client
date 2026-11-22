@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH zerbitzariak ez du erantzuten (berrabiaraztea edo mantentze-lanak). Zure konexioak funtzionatzen du — hurrengo saiakera {s} s barru',
+    srvDownGaveUp: 'PokerTH zerbitzaria ez dago erabilgarri duela 30 minutu. Saiatu berriro geroago.',
+    netOfflineBanner: 'Ez dago Interneteko konexiorik — berriro konektatuko da itzultzen denean',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Gertu jokatu", nbSub: "Internetik gabe · Wi-Fi bera", nbHost: "Partida bat antolatu", nbJoin: "Partida batean sartu", nbAdd: "Jokalari bat gehitu", nbAddAnother: "Beste jokalari bat gehitu", nbDone: "Eginda, jokatu dezagun", nbHostStep1: "Jokalariak kode hau eskaneatzen du, aplikazioan edo telefonoaren kamerarekin.", nbHostStep2: "Ondoren, eskaneatu bere pantailan agertzen den kodea.", nbGuestStep1: "Eskaneatu ostalariaren kodea edo itsatsi behean.", nbGuestStep2: "Erakutsi kode hau ostalariari.", nbScan: "Kode bat eskaneatu", nbPaste: "Itsatsi kode bat hemen", nbWait: "Beste telefonoaren zain…", nbConnected: "Jokalaria konektatuta.", nbErrCode: "Kode hau ez da baliozkoa.", nbErrVersion: "Bi telefonoek ez dute aplikazioaren bertsio bera.", nbErrCamera: "Kamera ez dago erabilgarri: itsatsi kodea horren ordez.", nbErrLink: "Ez dago konexiorik. Bi telefonoek Wi-Fi berean egon behar dute (gonbidatuen sareek askotan blokeatzen dute).", nbLost: "Ostalariarekiko konexioa galdu da. Parekatu berriro 2 minututan zure lekua gordetzeko.", nbRelayed: "Kodea zure partidara bidali da. Fitxa hau itxi dezakezu.", nbScoreboard: "Gaueko markagailua", nbOneTable: "Mahai bakarra aldi berean gertu jokatzean.",
   loadPartialFail: "Aplikazioaren zati bat ez da kargatu.", reloadNow: "Birkargatu",

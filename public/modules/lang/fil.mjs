@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Hindi tumutugon ang PokerTH server (restart o maintenance). Gumagana ang iyong koneksyon — susubok muli sa loob ng {s} s',
+    srvDownGaveUp: 'Hindi available ang PokerTH server sa loob ng 30 minuto. Subukang muli mamaya.',
+    netOfflineBanner: 'Walang koneksyon sa Internet — kokonekta muli sa sandaling bumalik ito',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Maglaro nang malapit", nbSub: "Walang Internet · parehong Wi-Fi", nbHost: "Mag-host ng laro", nbJoin: "Sumali sa laro", nbAdd: "Magdagdag ng manlalaro", nbAddAnother: "Magdagdag ng isa pang manlalaro", nbDone: "Tapos na, laro na", nbHostStep1: "Ini-scan ng manlalaro ang code na ito, sa app o gamit ang camera ng telepono.", nbHostStep2: "Pagkatapos, i-scan ang code na lalabas sa screen niya.", nbGuestStep1: "I-scan ang code ng host, o i-paste ito sa ibaba.", nbGuestStep2: "Ipakita ang code na ito sa host.", nbScan: "Mag-scan ng code", nbPaste: "Mag-paste ng code dito", nbWait: "Hinihintay ang kabilang telepono…", nbConnected: "Nakakonekta na ang manlalaro.", nbErrCode: "Hindi valid ang code na ito.", nbErrVersion: "Hindi pareho ang bersyon ng app sa dalawang telepono.", nbErrCamera: "Walang camera: i-paste na lang ang code.", nbErrLink: "Walang koneksyon. Dapat nasa parehong Wi-Fi ang dalawang telepono (madalas itong hinaharang ng mga guest network).", nbLost: "Nawala ang koneksyon sa host. Mag-pair muli sa loob ng 2 minuto para mapanatili ang upuan mo.", nbRelayed: "Naipadala ang code sa laro mo. Puwede mo nang isara ang tab na ito.", nbScoreboard: "Scoreboard ngayong gabi", nbOneTable: "Isang mesa lang sa isang pagkakataon kapag naglalaro nang malapit.",
   loadPartialFail: "Hindi na-load ang bahagi ng app.", reloadNow: "I-reload",

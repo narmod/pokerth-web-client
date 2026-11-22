@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Nid yw gweinydd PokerTH yn ymateb (ailgychwyn neu waith cynnal a chadw). Mae eich cysylltiad yn gweithio — cais nesaf mewn {s} e',
+    srvDownGaveUp: 'Nid yw gweinydd PokerTH wedi bod ar gael ers 30 munud. Rhowch gynnig arall arni yn nes ymlaen.',
+    netOfflineBanner: 'Dim cysylltiad â\'r rhyngrwyd — bydd yn ailgysylltu cyn gynted ag y daw\'n ôl',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Chwarae gerllaw", nbSub: "Heb y Rhyngrwyd · yr un Wi-Fi", nbHost: "Cynnal gêm", nbJoin: "Ymuno â gêm", nbAdd: "Ychwanegu chwaraewr", nbAddAnother: "Ychwanegu chwaraewr arall", nbDone: "Iawn, i ffwrdd â ni", nbHostStep1: "Mae'r chwaraewr yn sganio'r cod hwn, yn yr ap neu gyda chamera'r ffôn.", nbHostStep2: "Yna sganiwch y cod sy'n ymddangos ar ei sgrin.", nbGuestStep1: "Sganiwch god y gwesteiwr, neu ei gludo isod.", nbGuestStep2: "Dangoswch y cod hwn i'r gwesteiwr.", nbScan: "Sganio cod", nbPaste: "Gludwch god yma", nbWait: "Yn aros am y ffôn arall…", nbConnected: "Chwaraewr wedi cysylltu.", nbErrCode: "Nid yw'r cod hwn yn ddilys.", nbErrVersion: "Nid oes gan y ddau ffôn yr un fersiwn o'r ap.", nbErrCamera: "Camera ddim ar gael: gludwch y cod yn lle hynny.", nbErrLink: "Dim cysylltiad. Rhaid i'r ddau ffôn fod ar yr un Wi-Fi (mae rhwydweithiau gwesteion yn aml yn ei rwystro).", nbLost: "Collwyd y cysylltiad â'r gwesteiwr. Parwch eto o fewn 2 funud i gadw'ch sedd.", nbRelayed: "Anfonwyd y cod i'ch gêm. Gallwch gau'r tab hwn.", nbScoreboard: "Sgorfwrdd y noson", nbOneTable: "Dim ond un bwrdd ar y tro wrth chwarae gerllaw.",
   loadPartialFail: "Ni lwythodd rhan o'r ap.", reloadNow: "Ail-lwytho",

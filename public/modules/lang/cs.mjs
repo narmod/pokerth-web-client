@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Server PokerTH neodpovídá (restart nebo údržba). Vaše připojení funguje — další pokus za {s} s',
+    srvDownGaveUp: 'Server PokerTH je nedostupný už 30 minut. Zkuste to později.',
+    netOfflineBanner: 'Žádné připojení k internetu — znovu se připojí, jakmile se obnoví',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Hrát poblíž", nbSub: "Bez internetu · stejná Wi-Fi", nbHost: "Hostovat hru", nbJoin: "Připojit se ke hře", nbAdd: "Přidat hráče", nbAddAnother: "Přidat dalšího hráče", nbDone: "Hotovo, hrajeme", nbHostStep1: "Hráč naskenuje tento kód v aplikaci nebo fotoaparátem telefonu.", nbHostStep2: "Pak naskenuj kód, který se objeví na jeho obrazovce.", nbGuestStep1: "Naskenuj kód hostitele nebo ho vlož níže.", nbGuestStep2: "Ukaž tento kód hostiteli.", nbScan: "Naskenovat kód", nbPaste: "Sem vlož kód", nbWait: "Čekání na druhý telefon…", nbConnected: "Hráč připojen.", nbErrCode: "Tento kód není platný.", nbErrVersion: "Oba telefony nemají stejnou verzi aplikace.", nbErrCamera: "Fotoaparát není k dispozici: vlož raději kód.", nbErrLink: "Žádné spojení. Oba telefony musí být na stejné Wi-Fi (sítě pro hosty to často blokují).", nbLost: "Spojení s hostitelem ztraceno. Spáruj se znovu do 2 minut, abys neztratil místo.", nbRelayed: "Kód odeslán do tvé hry. Tuto kartu můžeš zavřít.", nbScoreboard: "Výsledky večera", nbOneTable: "Při hře poblíž jen jeden stůl najednou.",
   loadPartialFail: "Část aplikace se nenačetla.", reloadNow: "Načíst znovu",

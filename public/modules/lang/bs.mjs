@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH server ne odgovara (ponovno pokretanje ili održavanje). Vaša veza radi — novi pokušaj za {s} s',
+    srvDownGaveUp: 'PokerTH server je nedostupan već 30 minuta. Pokušajte ponovo kasnije.',
+    netOfflineBanner: 'Nema internet veze — ponovno povezivanje čim se vrati',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Igraj u blizini", nbSub: "Bez interneta · isti Wi-Fi", nbHost: "Ugosti igru", nbJoin: "Pridruži se igri", nbAdd: "Dodaj igrača", nbAddAnother: "Dodaj još jednog igrača", nbDone: "Gotovo, igramo", nbHostStep1: "Igrač skenira ovaj kod u aplikaciji ili kamerom telefona.", nbHostStep2: "Zatim skeniraj kod koji se pojavi na njegovom ekranu.", nbGuestStep1: "Skeniraj kod domaćina ili ga zalijepi ispod.", nbGuestStep2: "Pokaži ovaj kod domaćinu.", nbScan: "Skeniraj kod", nbPaste: "Ovdje zalijepi kod", nbWait: "Čeka se drugi telefon…", nbConnected: "Igrač povezan.", nbErrCode: "Ovaj kod nije važeći.", nbErrVersion: "Dva telefona nemaju istu verziju aplikacije.", nbErrCamera: "Kamera nije dostupna: umjesto toga zalijepi kod.", nbErrLink: "Nema veze. Oba telefona moraju biti na istoj Wi-Fi mreži (mreže za goste to često blokiraju).", nbLost: "Veza s domaćinom je izgubljena. Ponovo se upari u roku od 2 minute da zadržiš svoje mjesto.", nbRelayed: "Kod je poslan u tvoju igru. Ovu karticu možeš zatvoriti.", nbScoreboard: "Tabela večeri", nbOneTable: "Pri igri u blizini samo jedan sto odjednom.",
   loadPartialFail: "Dio aplikacije se nije učitao.", reloadNow: "Ponovo učitaj",

@@ -88,6 +88,10 @@ function _showBanner(msg) {
   // reconnexion, rapport narmod 09/08). Garde défensive en prime.
   var _st = window.PthState || {};
   var _keep = !!_st._pendingRejoin;
+  // Game server down (proxy close 4504, modules/net/reconn-hold.mjs): a server
+  // restart ends its games, so « your seat stays reserved » would be a promise
+  // nobody can keep — the line is left out while the outage lasts.
+  try { if (window.PthReconnHold && window.PthReconnHold.outageSince()) _keep = false; } catch (eK) {}
   var ps = document.getElementById('g-conn-pill-sub');
   if (ps) { ps.textContent = _keep ? t('reconnSeatKept') : ''; ps.style.display = (_keep && usePill) ? 'block' : 'none'; }
   var bs = document.getElementById('reconnect-sub');
@@ -4577,6 +4581,7 @@ const App = (() => {
     window._reconnectStableTimer = setTimeout(function () {
       if (S.ws === w && S.ws && S.ws.readyState === WebSocket.OPEN) {
         S._reconnectAttempts = 0;
+        try { window.PthReconnHold && window.PthReconnHold.reset(); } catch (eH) {}
         // The link has been back and stable for 10 s: the notice goes now. It
         // used to wait for the next frame from the server - but after a rebind
         // on MY turn there is none (the server waits for my action), so the
@@ -7068,6 +7073,10 @@ const App = (() => {
         // se ferait renommer au pseudo « déjà pris »).
         _armRejoin();
 
+        // Game server restarting (proxy close 4504) or device offline: wait
+        // for it instead of burning the 6 attempts (modules/net/reconn-hold.mjs).
+        if (App._reconnectHold(e)) return;
+
         // --- RECONNEXION AUTO (limitée pour éviter le blocage IP) ---
         S._reconnectAttempts++;
         // 6, comme _reconnectContinue qui mène TOUTES les tentatives suivantes : ce
@@ -7121,7 +7130,7 @@ const App = (() => {
               clearTimeout(window._reconnectTimer);
               if (_closeIsTerminal(ev)) return;
               // Relancer le processus de reconnexion
-              App && App.connect && App._reconnectContinue && App._reconnectContinue();
+              App && App.connect && App._reconnectContinue && App._reconnectContinue(ev);
             };
           } catch(err) {
             _showBanner(t('errGeneric', { code: err.message }));
@@ -7130,9 +7139,10 @@ const App = (() => {
       };
     },
 
-    _reconnectContinue() {
+    _reconnectContinue(ev) {
       // Relancer le processus de reconnexion — backoff exponentiel
       if (!S._lastConnectParams || S._intentionalDisconnect) return;
+      if (App._reconnectHold(ev)) return;
       S._reconnectAttempts++;
       var maxAttempts = 6;
       if (S._reconnectAttempts > maxAttempts) {
@@ -7162,6 +7172,14 @@ const App = (() => {
       window._reconnectCountdown = setInterval(_updateBannerCountdown, 1000);
       window._reconnectTimer = setTimeout(function() {
         clearInterval(window._reconnectCountdown);
+        App._reconnectOpen();
+      }, delay);
+    },
+
+    // Rebind to the proxy session (same URL, no fresh) — the body of every
+    // reconnect attempt after the first; also called by the reconnect hold
+    // (modules/net/reconn-hold.mjs) when the game server or the network is back.
+    _reconnectOpen() {
         // FIX web.23 (rapport narmod : 5G→Wi-Fi → « Reprise impossible ») :
         // App.connect() est une poignée de main NEUVE avec &fresh=1 — le proxy
         // DÉTRUIT alors la session en grâce (une table où il ne reste que des
@@ -7192,13 +7210,34 @@ const App = (() => {
             S.ws = null;
             clearTimeout(window._reconnectTimer);
             if (_closeIsTerminal(ev)) return;
-            App && App._reconnectContinue && App._reconnectContinue();
+            App && App._reconnectContinue && App._reconnectContinue(ev);
           };
           S.ws.onerror = function() {};
         } catch (err) {
           _showBanner(t('errGeneric', { code: err.message }));
         }
-      }, delay);
+    },
+
+    // Reconnect hold (modules/net/reconn-hold.mjs): true when it took over the
+    // retry — game server unreachable (proxy close 4504) or device offline.
+    // Never in training, « play nearby » or with no hold module loaded.
+    _reconnectHold(ev) {
+      try {
+        var H = window.PthReconnHold;
+        if (!H || window._offlineMode || window._nearbyMode || !S._lastConnectParams) return false;
+        return H.hold(ev, {
+          open: function () { App._reconnectOpen(); },
+          fail: function (msg) { App._reconnectGiveUp(msg); }
+        });
+      } catch (eH) { return false; }
+    },
+
+    // Same end as the 6 failed attempts, with the hold's own message.
+    _reconnectGiveUp(msg) {
+      _hideBanner();
+      show('s-connect');
+      setStatus(msg, 'err');
+      try { window._connLostShow && window._connLostShow(msg); } catch (eCl) {}
     },
 
     abortReconnect() {
@@ -12713,7 +12752,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.151'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.152'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

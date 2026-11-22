@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'Chan eil frithealaiche PokerTH a\' freagairt (ath-thòiseachadh no obair-glèidhidh). Tha do cheangal ag obair — an ath oidhirp an ceann {s} d',
+    srvDownGaveUp: 'Cha robh frithealaiche PokerTH ri fhaighinn fad 30 mionaid. Feuch ris a-rithist an ceann tamaill.',
+    netOfflineBanner: 'Chan eil ceangal ris an eadar-lìon ann — thèid ath-cheangal cho luath \'s a thilleas e',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Cluich faisg air làimh", nbSub: "Gun eadar-lìon · an aon Wi-Fi", nbHost: "Cùm geama", nbJoin: "Gabh pàirt ann an geama", nbAdd: "Cuir cluicheadair ris", nbAddAnother: "Cuir cluicheadair eile ris", nbDone: "Deiseil, cluicheamaid", nbHostStep1: "Sganaidh an cluicheadair an còd seo, san aplacaid no le camara a’ fòn.", nbHostStep2: "An uairsin sganaich an còd a nochdas air an sgrìn aige.", nbGuestStep1: "Sganaich còd an òstair, no cuir a-steach gu h-ìosal e.", nbGuestStep2: "Seall an còd seo dhan òstair.", nbScan: "Sganaich còd", nbPaste: "Cuir còd an seo", nbWait: "A’ feitheamh ris an fhòn eile…", nbConnected: "Tha an cluicheadair ceangailte.", nbErrCode: "Chan eil an còd seo dligheach.", nbErrVersion: "Chan eil an aon tionndadh dhen aplacaid air an dà fhòn.", nbErrCamera: "Chan eil camara ri fhaighinn: cuir an còd a-steach na àite.", nbErrLink: "Gun cheangal. Feumaidh an dà fhòn a bhith air an aon Wi-Fi (bidh lìonraidhean aoighean gu tric ga bhacadh).", nbLost: "Chaidh an ceangal ris an òstair a chall. Paidhrich a-rithist taobh a-staigh 2 mhionaid gus do sheat a chumail.", nbRelayed: "Chaidh an còd a chur dhan gheama agad. ’S urrainn dhut an taba seo a dhùnadh.", nbScoreboard: "Clàr-sgòraidh na h-oidhche", nbOneTable: "Dìreach aon bhòrd aig an aon àm nuair a chluicheas tu faisg air làimh.",
   loadPartialFail: "Cha deach pàirt dhen aplacaid a luchdadh.", reloadNow: "Ath-luchdaich",

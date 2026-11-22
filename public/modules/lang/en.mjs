@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    srvDownBanner: 'PokerTH server not responding (restart or maintenance). Your connection is fine — next try in {s}s',
+    srvDownGaveUp: 'The PokerTH server has been unavailable for 30 minutes. Please try again later.',
+    netOfflineBanner: 'No Internet connection — reconnecting as soon as it is back',
     // « Play nearby » (modules/ui/nearby.mjs, web.350)
     nbEntry: "Play nearby", nbSub: "No Internet · same Wi-Fi", nbHost: "Host a game", nbJoin: "Join a game", nbAdd: "Add a player", nbAddAnother: "Add another player", nbDone: "Done, let’s play", nbHostStep1: "The player scans this code, in the app or with the phone’s camera.", nbHostStep2: "Then scan the code that appears on their screen.", nbGuestStep1: "Scan the host’s code, or paste it below.", nbGuestStep2: "Show this code to the host.", nbScan: "Scan a code", nbPaste: "Paste a code here", nbWait: "Waiting for the other phone…", nbConnected: "Player connected.", nbErrCode: "This code is not valid.", nbErrVersion: "The two phones do not have the same version of the app.", nbErrCamera: "Camera unavailable: paste the code instead.", nbErrLink: "No connection. Both phones must be on the same Wi-Fi (guest networks often block it).", nbLost: "Connection to the host lost. Pair again within 2 minutes to keep your seat.", nbRelayed: "Code sent to your game. You can close this tab.", nbScoreboard: "Evening scoreboard", nbOneTable: "Only one table at a time when playing nearby.",
   loadPartialFail: "Part of the app did not load.", reloadNow: "Reload",

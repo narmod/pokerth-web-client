@@ -186,8 +186,11 @@ export async function openTable(page, base, options = {}) {
     class FixtureSocket extends EventTarget {
       static CONNECTING = 0; static OPEN = 1; static CLOSING = 2; static CLOSED = 3;
       // window.__fxRefuse = true: the network is still down, every new socket fails at once.
+      // window.__fxRefuse = 4504: the proxy answers but the game server is down — the
+      // socket opens, then the proxy closes it with « game-server-unreachable ».
       constructor(url) { super(); this.url = url; this.sent = []; FixtureSocket.instance = this; FixtureSocket.count = (FixtureSocket.count || 0) + 1;
-        if (window.__fxRefuse) { this.readyState = 3; setTimeout(() => { if (this.onerror) this.onerror({ target: this }); if (this.onclose) this.onclose({ code: 1006, wasClean: false, target: this }); }, 0); }
+        if (window.__fxRefuse === 4504) { this.readyState = 1; setTimeout(() => { if (this.onopen) this.onopen({ target: this }); this.readyState = 3; if (this.onclose) this.onclose({ code: 4504, reason: 'game-server-unreachable', wasClean: true, target: this }); }, 0); }
+        else if (window.__fxRefuse) { this.readyState = 3; setTimeout(() => { if (this.onerror) this.onerror({ target: this }); if (this.onclose) this.onclose({ code: 1006, wasClean: false, target: this }); }, 0); }
         else { this.readyState = 1; setTimeout(() => this.onopen && this.onopen({ target: this }), 0); } }
       send(data) { this.sent.push(data); }
       close() { this.readyState = 3; if (this.onclose) this.onclose({ code: 1000, target: this }); }

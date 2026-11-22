@@ -16667,6 +16667,14 @@ function _lookupPreferV4(host, cb) {
   });
 }
 
+// Connection errors that mean « the game server is not there » when they come
+// before the upstream socket ever connected. TLS and protocol failures are left
+// out on purpose: they are configuration problems, waiting would not fix them.
+const UPSTREAM_UNREACHABLE = new Set(['ECONNREFUSED', 'ETIMEDOUT', 'EHOSTUNREACH', 'ENETUNREACH',
+                                      'EHOSTDOWN', 'ECONNRESET', 'ENOTFOUND', 'EAI_AGAIN']);
+// Close code sent to the browser in that case (4503 is already « at capacity »).
+const CLOSE_GAME_SERVER_UNREACHABLE = 4504;
+
 // Ouvre la connexion TCP/TLS amont vers PokerTH pour la session S.
 function _openUpstream(S) {
   _scheduleConn(() => {
@@ -16785,7 +16793,18 @@ function _openUpstream(S) {
                  : err.message.includes('wrong version') ? '  → server without TLS: uncheck TLS'
                  : err.code === 'ECONNRESET'             ? '  → connection abruptly cut' : '';
         console.error('[-] Socket error: ' + err.message + hint);
-        try { S.ws && S.ws.close(1011, String(err.message || 'socket error').slice(0, 100)); } catch (_) {}
+        // Game server unreachable before any exchange (restart, maintenance,
+        // machine down): a dedicated code, so the client can tell « the PokerTH
+        // server is not answering » from « your own network » and keep waiting
+        // for it (modules/net/reconn-hold.mjs). The reason carries no address:
+        // the raw error message names the server's internal host:port.
+        const _unreach = !S.connected && UPSTREAM_UNREACHABLE.has(err.code);
+        try {
+          if (S.ws) {
+            if (_unreach) S.ws.close(CLOSE_GAME_SERVER_UNREACHABLE, 'game-server-unreachable');
+            else S.ws.close(1011, String(err.message || 'socket error').slice(0, 100));
+          }
+        } catch (_) {}
         _destroySession(S);
       });
 

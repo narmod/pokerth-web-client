@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Waiting out a game-server restart** (`web.152`) — lobby chat 17–22/11: two « Important Security Update » restarts,
+  players reinstalling the app because they could not tell a dead server from their own network, and a reconnect that
+  gave up after ~1 min 50 (6 attempts) while a restart takes 5 min or more. The proxy now closes the browser socket
+  with **4504 « game-server-unreachable »** when the upstream connection fails before any exchange (`ECONNREFUSED`,
+  `ETIMEDOUT`, `EHOSTUNREACH`, `ENETUNREACH`, `EHOSTDOWN`, `ECONNRESET`, `ENOTFOUND`, `EAI_AGAIN`; TLS and protocol
+  failures keep 1011) — the reason no longer carries the server's internal `host:port` (it used to:
+  `connect ECONNREFUSED 127.0.0.1:…`). New `public/modules/net/reconn-hold.mjs`, consulted by both reconnect paths
+  before the usual backoff: on 4504 a notice of its own (« PokerTH server not responding… your connection is fine »,
+  no n/6 counter, no « seat kept » line — a restart ends the games), a rebind every 20 s ± 5 s for up to 30 min, then
+  the « Connection lost » window with its own message; with `navigator.onLine === false` it waits for the `online`
+  event (safety try every 60 s). Any other close keeps the 6-attempt policy; an older proxy changes nothing. Not in
+  training or « play nearby ». 3 new strings in the 83 languages. Tests: `test-proxy-server-down`, `test-reconn-hold`,
+  `test-reconnect-browser` scenarios F (server down, back), G (30 min) and H (offline).
 - **« Leave site? » while seated at a running table** (`web.149`) — server log (2026-11-21): 32 % of the web sessions
   end at a table (QML 12 %, Qt Widgets 6 %), 73 % of them without coming back within 10 min. `ui/back-guard.mjs` now
   also listens to `beforeunload`: closing the tab or reloading while seated at a running network table, still in
