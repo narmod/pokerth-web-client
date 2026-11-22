@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'کھلاڑی کارڈ',
+    chatNickQuote: 'اقتباس',
+    advChatNickMenu: 'چیٹ: عرفی نام پر ٹیپ سے کھلاڑی کارڈ، رائٹ کلک یا دیر تک دبانے سے مینو کھلتا ہے',
     srvDownBanner: 'PokerTH سرور جواب نہیں دے رہا (ری اسٹارٹ یا دیکھ بھال)۔ آپ کا کنکشن ٹھیک ہے — اگلی کوشش {s} سیکنڈ میں',
     srvDownGaveUp: 'PokerTH سرور 30 منٹ سے دستیاب نہیں ہے۔ براہ کرم بعد میں دوبارہ کوشش کریں۔',
     netOfflineBanner: 'انٹرنیٹ کنکشن نہیں ہے — واپس آتے ہی دوبارہ جڑ جائے گا',

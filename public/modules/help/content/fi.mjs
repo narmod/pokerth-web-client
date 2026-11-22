@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat ja sosiaalisuus',
       sections: [
         { id: 'panels', t: 'Aulachat ja pöytächat',
-          b: ['Aulassa on oma chat ja pöydässä toinen. Puhelimella pöytächat leijuu pelin päällä; suuremmilla näytöillä se on siirrettävä ja kokoa muutettava ikkuna. Chat-painikkeen merkki laskee lukemattomat viestit.'] },
+          b: ['Aulassa on oma chat ja pöydässä toinen. Puhelimella pöytächat leijuu pelin päällä; suuremmilla näytöillä se on siirrettävä ja kokoa muutettava ikkuna. Chat-painikkeen merkki laskee lukemattomat viestit.', 'Napauta lempinimeä chatissa avataksesi pelaajakortin; oikea napsautus tai pitkä painallus avaa valikon: yksityisviesti, lainaa (kirjoittaa ”Nimi: ” kenttään), ohita, muistiinpano… Voidaan poistaa käytöstä kohdassa Lisäasetukset → Chat.'] },
         { id: 'typing', t: 'Kirjoitusavut',
           list: [
             'Tab täydentää nimimerkin — paina Tabia uudelleen selataksesi osumia.',

@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat og socialt',
       sections: [
         { id: 'panels', t: 'Lobbychat og bordchat',
-          b: ['Der er en chat i lobbyen og en ved bordet. På telefonen svæver bordchatten over spillet; på større skærme er det et flytbart vindue, der kan ændres i størrelse. Et mærke på chatknappen tæller ulæste beskeder.'] },
+          b: ['Der er en chat i lobbyen og en ved bordet. På telefonen svæver bordchatten over spillet; på større skærme er det et flytbart vindue, der kan ændres i størrelse. Et mærke på chatknappen tæller ulæste beskeder.', 'Tryk på et kaldenavn i chatten for at åbne spillerkortet; højreklik eller langt tryk åbner en menu: privat besked, citér (skriver “Navn: ” i feltet), ignorer, note… Kan slås fra i Avancerede indstillinger → Chat.'] },
         { id: 'typing', t: 'Skrivehjælp',
           list: [
             'Tab fuldfører et kaldenavn — tryk Tab igen for at bladre gennem matchene.',

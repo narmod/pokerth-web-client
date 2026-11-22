@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Hala babilejo kaj ludbabilejo",
           b: [
-            "Estas babilejo en la halo kaj alia ĉe la tablo. Sur telefonoj la ludbabilejo flosas super la tablo; sur pli grandaj ekranoj ĝi estas trenebla kaj grandecŝanĝebla fenestro. Insigno sur la babila butono nombras nelegitajn mesaĝojn."] },
+            "Estas babilejo en la halo kaj alia ĉe la tablo. Sur telefonoj la ludbabilejo flosas super la tablo; sur pli grandaj ekranoj ĝi estas trenebla kaj grandecŝanĝebla fenestro. Insigno sur la babila butono nombras nelegitajn mesaĝojn.", "Tuŝu kromnomon en la babilejo por malfermi la ludantan karton; dekstra klako aŭ longa premo malfermas menuon: privata mesaĝo, citi (skribas “Nomo: ” en la kampo), ignori, noto… Malŝaltebla en Altnivelaj agordoj → Babilejo."] },
         { id: "typing",
           t: "Tajpaj helpiloj",
           list: [

@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'כרטיס שחקן',
+    chatNickQuote: 'ציטוט',
+    advChatNickMenu: 'צ׳אט: נגיעה בכינוי פותחת את כרטיס השחקן, לחיצה ימנית או לחיצה ארוכה פותחת תפריט',
     srvDownBanner: 'שרת PokerTH אינו מגיב (הפעלה מחדש או תחזוקה). החיבור שלך תקין — ניסיון נוסף בעוד {s} שנ׳',
     srvDownGaveUp: 'שרת PokerTH אינו זמין כבר 30 דקות. נסו שוב מאוחר יותר.',
     netOfflineBanner: 'אין חיבור לאינטרנט — החיבור יתחדש ברגע שיחזור',

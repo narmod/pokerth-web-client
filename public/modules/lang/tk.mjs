@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Oýunçy kartjasy',
+    chatNickQuote: 'Sitata',
+    advChatNickMenu: 'Çat: lakama basmak oýunçy kartjasyny açýar, sag basyş ýa-da uzak basmak menýu açýar',
     srvDownBanner: 'PokerTH serweri jogap bermeýär (täzeden başlatmak ýa-da tehniki hyzmat). Birikmäňiz işleýär — indiki synanyşyk {s} sekuntdan',
     srvDownGaveUp: 'PokerTH serweri 30 minutdan bäri elýeterli däl. Soňrak gaýtadan synanyşyň.',
     netOfflineBanner: 'Internet birikmesi ýok — dikelen badyna gaýtadan birigýär',

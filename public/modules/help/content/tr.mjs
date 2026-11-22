@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Sohbet ve sosyal',
       sections: [
         { id: 'panels', t: 'Lobi sohbeti ve masa sohbeti',
-          b: ['Lobide bir, masada bir sohbet vardır. Telefonda masa sohbeti oyunun üzerinde süzülür; büyük ekranlarda taşınabilir ve boyutlandırılabilir bir penceredir. Sohbet düğmesindeki rozet okunmamış mesajları sayar.'] },
+          b: ['Lobide bir, masada bir sohbet vardır. Telefonda masa sohbeti oyunun üzerinde süzülür; büyük ekranlarda taşınabilir ve boyutlandırılabilir bir penceredir. Sohbet düğmesindeki rozet okunmamış mesajları sayar.', 'Oyuncu kartını açmak için sohbette bir takma ada dokunun; sağ tık veya uzun basma bir menü açar: özel mesaj, alıntı (giriş alanına “Ad: ” yazar), yok say, not… Gelişmiş seçenekler → Sohbet bölümünden kapatılabilir.'] },
         { id: 'typing', t: 'Yazma yardımcıları',
           list: [
             'Tab bir takma adı tamamlar — eşleşmeler arasında dolaşmak için tekrar Tab\u2019a bas.',

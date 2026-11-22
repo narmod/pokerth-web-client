@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat & Soziales',
       sections: [
         { id: 'panels', t: 'Lobby-Chat und Spiel-Chat',
-          b: ['Es gibt einen Chat in der Lobby und einen am Tisch. Auf Telefonen schwebt der Spiel-Chat über dem Tisch; auf größeren Bildschirmen ist er ein verschieb- und größenveränderbares Fenster. Ein Abzeichen auf der Chat-Schaltfläche zählt ungelesene Nachrichten.'] },
+          b: ['Es gibt einen Chat in der Lobby und einen am Tisch. Auf Telefonen schwebt der Spiel-Chat über dem Tisch; auf größeren Bildschirmen ist er ein verschieb- und größenveränderbares Fenster. Ein Abzeichen auf der Chat-Schaltfläche zählt ungelesene Nachrichten.', 'Tippe im Chat auf einen Nicknamen, um die Spielerkarte zu öffnen; Rechtsklick oder langes Drücken öffnet ein Menü: Privatnachricht, Zitieren (schreibt „Name: “ ins Eingabefeld), Ignorieren, Notiz… Abschaltbar unter Erweiterte Optionen → Chat.'] },
         { id: 'typing', t: 'Tipp-Hilfen',
           list: [
             'Tab vervollständigt einen Spitznamen — drücke erneut Tab, um durch die Treffer zu wechseln.',

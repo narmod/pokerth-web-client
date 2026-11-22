@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Oyuncu kartı',
+    chatNickQuote: 'Alıntıla',
+    advChatNickMenu: 'Sohbet: bir takma ada dokunmak oyuncu kartını, sağ tık veya uzun basma bir menü açar',
     srvDownBanner: 'PokerTH sunucusu yanıt vermiyor (yeniden başlatma veya bakım). Bağlantınız çalışıyor — sonraki deneme {s} sn sonra',
     srvDownGaveUp: 'PokerTH sunucusuna 30 dakikadır ulaşılamıyor. Lütfen daha sonra tekrar deneyin.',
     netOfflineBanner: 'İnternet bağlantısı yok — geri gelir gelmez yeniden bağlanılacak',

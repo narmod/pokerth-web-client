@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Pelaajakortti',
+    chatNickQuote: 'Lainaa',
+    advChatNickMenu: 'Chat: lempinimen napautus avaa pelaajakortin, oikea napsautus tai pitkä painallus avaa valikon',
     srvDownBanner: 'PokerTH-palvelin ei vastaa (uudelleenkäynnistys tai huolto). Yhteytesi toimii — seuraava yritys {s} s kuluttua',
     srvDownGaveUp: 'PokerTH-palvelin on ollut tavoittamattomissa 30 minuuttia. Yritä myöhemmin uudelleen.',
     netOfflineBanner: 'Ei internetyhteyttä — yhdistetään uudelleen heti, kun yhteys palaa',

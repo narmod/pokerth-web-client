@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Cabadaich agus sòisealta',
       sections: [
         { id: 'panels', t: 'Cabadaich an lobaidh agus cabadaich a\u2019 bhùird',
-          b: ['Tha aon chabadaich san lobaidh agus tè eile aig a\u2019 bhòrd. Air an fhòn snàmhaidh cabadaich a\u2019 bhùird os cionn a\u2019 gheama; air sgrìnichean nas motha \u2019s e uinneag ghluasadach le meud atharrachail a th\u2019 innte. Cunntaidh bràiste air putan na cabadaich na teachdaireachdan gun leughadh.'] },
+          b: ['Tha aon chabadaich san lobaidh agus tè eile aig a\u2019 bhòrd. Air an fhòn snàmhaidh cabadaich a\u2019 bhùird os cionn a\u2019 gheama; air sgrìnichean nas motha \u2019s e uinneag ghluasadach le meud atharrachail a th\u2019 innte. Cunntaidh bràiste air putan na cabadaich na teachdaireachdan gun leughadh.', 'Thoir gnogag air far-ainm sa chabadaich gus cairt a\' chluicheadair fhosgladh; fosglaidh briog deas no brùth fada clàr-taice: teachdaireachd phrìobhaideach, thoir luaidh (sgrìobhaidh e “Ainm: ” san raon), leig seachad, nòta… Gabhaidh a chur dheth ann an Roghainnean adhartach → Cabadaich.'] },
         { id: 'typing', t: 'Cuideachadh le sgrìobhadh',
           list: [
             'Coilionaidh Tab far-ainm — brùth Tab a-rithist gus gluasad tro na maidsean.',

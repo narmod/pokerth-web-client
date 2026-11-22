@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat și social',
       sections: [
         { id: 'panels', t: 'Chatul din lobby și chatul de la masă',
-          b: ['Există un chat în lobby și altul la masă. Pe telefon, chatul mesei plutește deasupra jocului; pe ecrane mai mari e o fereastră mobilă și redimensionabilă. O insignă pe butonul de chat numără mesajele necitite.'] },
+          b: ['Există un chat în lobby și altul la masă. Pe telefon, chatul mesei plutește deasupra jocului; pe ecrane mai mari e o fereastră mobilă și redimensionabilă. O insignă pe butonul de chat numără mesajele necitite.', 'Atinge un pseudonim în chat pentru a deschide fișa jucătorului; clic dreapta sau apăsare lungă deschide un meniu: mesaj privat, citează (scrie „Nume: ” în câmp), ignoră, notă… Se poate dezactiva din Opțiuni avansate → Chat.'] },
         { id: 'typing', t: 'Ajutoare la tastare',
           list: [
             'Tab completează un pseudonim — apasă Tab din nou pentru a parcurge potrivirile.',

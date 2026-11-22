@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: '플레이어 카드',
+    chatNickQuote: '인용',
+    advChatNickMenu: '채팅: 닉네임을 탭하면 플레이어 카드, 오른쪽 클릭이나 길게 누르면 메뉴',
     srvDownBanner: 'PokerTH 서버가 응답하지 않습니다(재시작 또는 점검 중). 사용자의 연결은 정상입니다 — {s}초 후 다시 시도',
     srvDownGaveUp: 'PokerTH 서버를 30분째 사용할 수 없습니다. 나중에 다시 시도하세요.',
     netOfflineBanner: '인터넷에 연결되어 있지 않습니다 — 연결이 복구되면 바로 다시 연결합니다',

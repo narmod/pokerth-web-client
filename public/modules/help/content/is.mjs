@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Spjall anddyris og spjall leiks",
           b: [
-            "Það er eitt spjall í anddyrinu og eitt við borðið. Í símum flýtur leikspjallið yfir borðinu; á stærri skjám er það gluggi sem hægt er að draga og breyta stærð á. Merki á spjallhnappinum telur ólesin skilaboð."] },
+            "Það er eitt spjall í anddyrinu og eitt við borðið. Í símum flýtur leikspjallið yfir borðinu; á stærri skjám er það gluggi sem hægt er að draga og breyta stærð á. Merki á spjallhnappinum telur ólesin skilaboð.", "Pikkaðu á gælunafn í spjallinu til að opna leikmannaspjaldið; hægrismellur eða langt þrýst opnar valmynd: einkaskilaboð, vitna í (skrifar „Nafn: “ í reitinn), hunsa, minnispunktur… Hægt að slökkva í Ítarlegum stillingum → Spjall."] },
         { id: "typing",
           t: "Innsláttarhjálp",
           list: [

@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Kartu pemain',
+    chatNickQuote: 'Kutip',
+    advChatNickMenu: 'Obrolan: ketuk nama panggilan untuk kartu pemain, klik kanan atau tekan lama untuk menu',
     srvDownBanner: 'Server PokerTH tidak merespons (restart atau pemeliharaan). Koneksi Anda berfungsi — percobaan berikutnya dalam {s} dtk',
     srvDownGaveUp: 'Server PokerTH tidak tersedia selama 30 menit. Silakan coba lagi nanti.',
     netOfflineBanner: 'Tidak ada koneksi Internet — akan tersambung kembali begitu tersedia',

@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'プレイヤーカード',
+    chatNickQuote: '引用',
+    advChatNickMenu: 'チャット：ニックネームをタップでプレイヤーカード、右クリックまたは長押しでメニュー',
     srvDownBanner: 'PokerTH サーバーが応答しません（再起動またはメンテナンス中）。あなたの接続は正常です — {s} 秒後に再試行',
     srvDownGaveUp: 'PokerTH サーバーが30分間利用できません。後でもう一度お試しください。',
     netOfflineBanner: 'インターネットに接続されていません — 復帰しだい再接続します',

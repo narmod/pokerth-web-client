@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Cerdyn chwaraewr',
+    chatNickQuote: 'Dyfynnu',
+    advChatNickMenu: 'Sgwrs: tapio llysenw\'n agor cerdyn y chwaraewr, clic de neu wasg hir yn agor dewislen',
     srvDownBanner: 'Nid yw gweinydd PokerTH yn ymateb (ailgychwyn neu waith cynnal a chadw). Mae eich cysylltiad yn gweithio — cais nesaf mewn {s} e',
     srvDownGaveUp: 'Nid yw gweinydd PokerTH wedi bod ar gael ers 30 munud. Rhowch gynnig arall arni yn nes ymlaen.',
     netOfflineBanner: 'Dim cysylltiad â\'r rhyngrwyd — bydd yn ailgysylltu cyn gynted ag y daw\'n ôl',

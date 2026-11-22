@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Spelerskaart',
+    chatNickQuote: 'Citeren',
+    advChatNickMenu: 'Chat: tik op een bijnaam voor de spelerskaart, rechtsklik of lang drukken voor een menu',
     srvDownBanner: 'De PokerTH-server reageert niet (herstart of onderhoud). Je verbinding werkt — volgende poging over {s} s',
     srvDownGaveUp: 'De PokerTH-server is al 30 minuten onbereikbaar. Probeer het later opnieuw.',
     netOfflineBanner: 'Geen internetverbinding — opnieuw verbinden zodra die terug is',

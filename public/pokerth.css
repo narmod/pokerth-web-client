@@ -2267,6 +2267,18 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .msg.reaction { font-size: var(--fs-lg); opacity: 0.85; font-style: italic; }
 .msg.bc     { color: var(--gold-dim); border-left: 2px solid var(--gold-dim); padding-left: 6px; }
 .msg.mine .who { color: var(--green); }
+/* Clickable chat nicknames (ui/chat-nick.mjs, web.153): tap = player card,
+   right-click / long-press = menu. No text selection or iOS callout on the
+   name itself, so a long-press opens the menu instead of selecting. */
+body:not(.adv-no-chatnick) #chat .msg .who,
+body:not(.adv-no-chatnick) #g-chat-msgs .msg .who { cursor: pointer; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+@media (hover: hover) {
+  body:not(.adv-no-chatnick) #chat .msg .who:hover,
+  body:not(.adv-no-chatnick) #g-chat-msgs .msg .who:hover { text-decoration: underline; text-underline-offset: 2px; }
+}
+/* « /me » lines: the sender is a .who for the gesture, but keeps the look of
+   the line it sits in (italic, mention / bot colours). */
+#chat .msg .who.who-act, #g-chat-msgs .msg .who.who-act { color: inherit; font-weight: inherit; }
 /* Mention : mon pseudo cité dans un message d'autrui → corps en or gras
    (parité QML LobbyHandler, colorAccent = --gold). */
 .msg.mention .txt { color: var(--gold); font-weight: 700; }

@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Conversa e social',
       sections: [
         { id: 'panels', t: 'Conversa do lobby e conversa da mesa',
-          b: ['Há uma conversa no lobby e outra na mesa. No telemóvel, a conversa da mesa flutua sobre o jogo; em ecrãs maiores é uma janela móvel e redimensionável. Um distintivo no botão da conversa conta as mensagens por ler.'] },
+          b: ['Há uma conversa no lobby e outra na mesa. No telemóvel, a conversa da mesa flutua sobre o jogo; em ecrãs maiores é uma janela móvel e redimensionável. Um distintivo no botão da conversa conta as mensagens por ler.', 'Toque numa alcunha no chat para abrir a ficha do jogador; clique direito ou toque longo abre um menu: mensagem privada, citar (escreve «Nome: » no campo), ignorar, nota… Pode ser desativado em Opções avançadas → Chat.'] },
         { id: 'typing', t: 'Ajudas de escrita',
           list: [
             'Tab completa uma alcunha — prime Tab de novo para percorreres as correspondências.',

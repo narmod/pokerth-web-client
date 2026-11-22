@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Kad pemain',
+    chatNickQuote: 'Petik',
+    advChatNickMenu: 'Sembang: ketik nama samaran untuk kad pemain, klik kanan atau tekan lama untuk menu',
     srvDownBanner: 'Pelayan PokerTH tidak bertindak balas (mula semula atau penyelenggaraan). Sambungan anda berfungsi — cubaan seterusnya dalam {s} s',
     srvDownGaveUp: 'Pelayan PokerTH tidak tersedia selama 30 minit. Sila cuba lagi kemudian.',
     netOfflineBanner: 'Tiada sambungan Internet — akan bersambung semula sebaik sahaja ia kembali',

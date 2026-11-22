@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Pokalbiai ir bendravimas',
       sections: [
         { id: 'panels', t: 'Fojė pokalbis ir stalo pokalbis',
-          b: ['Vienas pokalbis yra fojė, kitas prie stalo. Telefone stalo pokalbis sklando virš žaidimo; didesniuose ekranuose tai perkeliamas ir keičiamo dydžio langas. Ženkliukas ant pokalbio mygtuko skaičiuoja neskaitytas žinutes.'] },
+          b: ['Vienas pokalbis yra fojė, kitas prie stalo. Telefone stalo pokalbis sklando virš žaidimo; didesniuose ekranuose tai perkeliamas ir keičiamo dydžio langas. Ženkliukas ant pokalbio mygtuko skaičiuoja neskaitytas žinutes.', 'Palieskite slapyvardį pokalbyje, kad atidarytumėte žaidėjo kortelę; dešinysis spustelėjimas ar ilgas paspaudimas atidaro meniu: privati žinutė, cituoti (įrašo „Vardas: “ į lauką), ignoruoti, pastaba… Galima išjungti Išplėstinėse parinktyse → Pokalbiai.'] },
         { id: 'typing', t: 'Rašymo pagalbininkai',
           list: [
             'Tab užbaigia slapyvardį — spausk Tab dar kartą, kad pereitum per atitikmenis.',

@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Karta e lojtarit',
+    chatNickQuote: 'Citoje',
+    advChatNickMenu: 'Biseda: prekja e nofkës hap kartën e lojtarit, klikimi i djathtë ose shtypja e gjatë hap një meny',
     srvDownBanner: 'Serveri i PokerTH nuk përgjigjet (rinisje ose mirëmbajtje). Lidhja juaj funksionon — përpjekja tjetër pas {s} s',
     srvDownGaveUp: 'Serveri i PokerTH nuk është i disponueshëm prej 30 minutash. Provoni përsëri më vonë.',
     netOfflineBanner: 'Nuk ka lidhje interneti — rilidhje sapo të kthehet',

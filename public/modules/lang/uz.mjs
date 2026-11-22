@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'O‘yinchi kartasi',
+    chatNickQuote: 'Iqtibos',
+    advChatNickMenu: 'Chat: taxallusga bosish o‘yinchi kartasini, o‘ng tugma yoki uzoq bosish menyuni ochadi',
     srvDownBanner: 'PokerTH serveri javob bermayapti (qayta ishga tushirish yoki texnik xizmat). Ulanishingiz ishlayapti — keyingi urinish {s} soniyadan keyin',
     srvDownGaveUp: 'PokerTH serveri 30 daqiqadan beri mavjud emas. Keyinroq qayta urinib ko‘ring.',
     netOfflineBanner: 'Internet aloqasi yo‘q — qaytishi bilan qayta ulanadi',

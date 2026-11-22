@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Spēlētāja kartīte',
+    chatNickQuote: 'Citēt',
+    advChatNickMenu: 'Tērzēšana: pieskāriens segvārdam atver spēlētāja kartīti, labais klikšķis vai ilgs spiediens – izvēlni',
     srvDownBanner: 'PokerTH serveris neatbild (restartēšana vai apkope). Jūsu savienojums darbojas — nākamais mēģinājums pēc {s} s',
     srvDownGaveUp: 'PokerTH serveris nav pieejams jau 30 minūtes. Mēģiniet vēlāk vēlreiz.',
     netOfflineBanner: 'Nav interneta savienojuma — atkārtoti savienosies, tiklīdz tas atgriezīsies',

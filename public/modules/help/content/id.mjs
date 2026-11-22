@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Obrolan & sosial',
       sections: [
         { id: 'panels', t: 'Obrolan lobi dan obrolan permainan',
-          b: ['Ada obrolan di lobi dan satu lagi di meja. Di ponsel, obrolan permainan mengambang di atas meja; di layar lebih besar, ia berupa jendela yang dapat diseret dan diubah ukurannya. Lencana pada tombol obrolan menghitung pesan yang belum dibaca.'] },
+          b: ['Ada obrolan di lobi dan satu lagi di meja. Di ponsel, obrolan permainan mengambang di atas meja; di layar lebih besar, ia berupa jendela yang dapat diseret dan diubah ukurannya. Lencana pada tombol obrolan menghitung pesan yang belum dibaca.', 'Ketuk nama panggilan di obrolan untuk membuka kartu pemain; klik kanan atau tekan lama membuka menu: pesan pribadi, kutip (menulis “Nama: ” di kolom), abaikan, catatan… Dapat dimatikan di Opsi lanjutan → Obrolan.'] },
         { id: 'typing', t: 'Bantuan pengetikan',
           list: [
             'Tab melengkapi nama panggilan \u2014 tekan Tab lagi untuk menelusuri kecocokan.',

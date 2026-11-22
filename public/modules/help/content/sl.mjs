@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Klepet in druženje',
       sections: [
         { id: 'panels', t: 'Klepet predverja in klepet igre',
-          b: ['Obstaja klepet v predverju in klepet pri mizi. Na telefonih klepet igre lebdi nad mizo; na večjih zaslonih je premakljivo, velikost spremenljivo okno. Značka na gumbu klepeta šteje neprebrana sporočila.'] },
+          b: ['Obstaja klepet v predverju in klepet pri mizi. Na telefonih klepet igre lebdi nad mizo; na večjih zaslonih je premakljivo, velikost spremenljivo okno. Značka na gumbu klepeta šteje neprebrana sporočila.', 'Dotaknite se vzdevka v klepetu, da odprete kartico igralca; desni klik ali dolg pritisk odpre meni: zasebno sporočilo, citiraj (v polje vpiše »Ime: «), prezri, opomba… Izklopite lahko v Naprednih možnostih → Klepet.'] },
         { id: 'typing', t: 'Pripomočki pri tipkanju',
           list: [
             'Tab dopolni vzdevek — znova pritisni Tab za kroženje med zadetki.',

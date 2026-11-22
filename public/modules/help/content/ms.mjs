@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Sembang & sosial',
       sections: [
         { id: 'panels', t: 'Sembang lobi dan sembang permainan',
-          b: ['Terdapat sembang di lobi dan satu lagi di meja. Pada telefon, sembang permainan terapung di atas meja; pada skrin yang lebih besar, ia ialah tetingkap yang boleh diseret dan diubah saiz. Lencana pada butang sembang mengira mesej yang belum dibaca.'] },
+          b: ['Terdapat sembang di lobi dan satu lagi di meja. Pada telefon, sembang permainan terapung di atas meja; pada skrin yang lebih besar, ia ialah tetingkap yang boleh diseret dan diubah saiz. Lencana pada butang sembang mengira mesej yang belum dibaca.', 'Ketik nama samaran dalam sembang untuk membuka kad pemain; klik kanan atau tekan lama membuka menu: mesej peribadi, petik (menulis “Nama: ” dalam ruangan), abaikan, nota… Boleh dimatikan dalam Pilihan lanjutan → Sembang.'] },
         { id: 'typing', t: 'Bantuan menaip',
           list: [
             'Tab melengkapkan nama samaran — tekan Tab sekali lagi untuk berkitar antara padanan.',

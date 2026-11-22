@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Trò chuyện và cộng đồng',
       sections: [
         { id: 'panels', t: 'Trò chuyện sảnh và trò chuyện bàn',
-          b: ['Có một khung trò chuyện ở sảnh và một khung khác ở bàn. Trên điện thoại, khung trò chuyện của bàn nổi trên ván đấu; trên màn hình lớn hơn, đó là cửa sổ di chuyển và đổi kích thước được. Một huy hiệu trên nút trò chuyện đếm số tin chưa đọc.'] },
+          b: ['Có một khung trò chuyện ở sảnh và một khung khác ở bàn. Trên điện thoại, khung trò chuyện của bàn nổi trên ván đấu; trên màn hình lớn hơn, đó là cửa sổ di chuyển và đổi kích thước được. Một huy hiệu trên nút trò chuyện đếm số tin chưa đọc.', 'Chạm vào biệt danh trong trò chuyện để mở thẻ người chơi; nhấp phải hoặc nhấn giữ sẽ mở menu: tin nhắn riêng, trích dẫn (ghi “Tên: ” vào ô nhập), bỏ qua, ghi chú… Có thể tắt trong Tùy chọn nâng cao → Trò chuyện.'] },
         { id: 'typing', t: 'Hỗ trợ gõ',
           list: [
             'Tab hoàn tất một biệt danh — nhấn Tab lần nữa để duyệt qua các kết quả khớp.',

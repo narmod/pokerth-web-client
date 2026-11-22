@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'بطاقة اللاعب',
+    chatNickQuote: 'اقتباس',
+    advChatNickMenu: 'الدردشة: لمس الاسم المستعار يفتح بطاقة اللاعب، والنقر بالزر الأيمن أو الضغط المطوّل يفتح قائمة',
     srvDownBanner: 'خادم PokerTH لا يستجيب (إعادة تشغيل أو صيانة). اتصالك يعمل — المحاولة التالية خلال {s} ث',
     srvDownGaveUp: 'خادم PokerTH غير متاح منذ 30 دقيقة. يُرجى المحاولة لاحقًا.',
     netOfflineBanner: 'لا يوجد اتصال بالإنترنت — ستتم إعادة الاتصال فور عودته',

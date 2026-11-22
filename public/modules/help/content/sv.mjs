@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chatt och socialt',
       sections: [
         { id: 'panels', t: 'Lobbychatt och bordschatt',
-          b: ['Det finns en chatt i lobbyn och en vid bordet. På telefonen svävar bordschatten över spelet; på större skärmar är det ett flyttbart fönster som kan storleksändras. Ett märke på chattknappen räknar olästa meddelanden.'] },
+          b: ['Det finns en chatt i lobbyn och en vid bordet. På telefonen svävar bordschatten över spelet; på större skärmar är det ett flyttbart fönster som kan storleksändras. Ett märke på chattknappen räknar olästa meddelanden.', 'Tryck på ett smeknamn i chatten för att öppna spelarkortet; högerklick eller långt tryck öppnar en meny: privat meddelande, citera (skriver ”Namn: ” i fältet), ignorera, anteckning… Kan stängas av i Avancerade inställningar → Chatt.'] },
         { id: 'typing', t: 'Skrivhjälp',
           list: [
             'Tab kompletterar ett smeknamn — tryck Tab igen för att bläddra bland träffarna.',

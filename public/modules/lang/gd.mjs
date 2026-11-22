@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Cairt cluicheadair',
+    chatNickQuote: 'Thoir luaidh',
+    advChatNickMenu: 'Cabadaich: thoir gnogag air far-ainm airson cairt a\' chluicheadair, briog deas no brùth fada airson clàr-taice',
     srvDownBanner: 'Chan eil frithealaiche PokerTH a\' freagairt (ath-thòiseachadh no obair-glèidhidh). Tha do cheangal ag obair — an ath oidhirp an ceann {s} d',
     srvDownGaveUp: 'Cha robh frithealaiche PokerTH ri fhaighinn fad 30 mionaid. Feuch ris a-rithist an ceann tamaill.',
     netOfflineBanner: 'Chan eil ceangal ris an eadar-lìon ann — thèid ath-cheangal cho luath \'s a thilleas e',

@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Káàdì olùṣeré',
+    chatNickQuote: 'Fà yọ',
+    advChatNickMenu: 'Ìjíròrò: fọwọ́ kan orúkọ ìnagijẹ fún káàdì olùṣeré, tẹ ọ̀tún tàbí tẹ̀ ẹ́ pẹ́ fún àkójọ',
     srvDownBanner: 'Olupin PokerTH kò dáhùn (àtúnbẹ̀rẹ̀ tàbí àtúnṣe). Ìsopọ̀ rẹ ń ṣiṣẹ́ — ìgbìyànjú tó kàn ní ìṣẹ́jú-àáyá {s}',
     srvDownGaveUp: 'Olupin PokerTH kò sí fún ìṣẹ́jú 30. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i nígbà míì.',
     netOfflineBanner: 'Kò sí ìsopọ̀ Íntánẹ́ẹ̀tì — yóò tún sopọ̀ ní kété tí ó bá padà',

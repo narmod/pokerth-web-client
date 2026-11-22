@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Ikhadi lomdlali',
+    chatNickQuote: 'Caphuna',
+    advChatNickMenu: 'Ingxoxo: thepha igama lokudlala ukuze uthole ikhadi lomdlali, chofoza kwesokudla noma cindezela isikhathi eside ukuze uthole imenyu',
     srvDownBanner: 'Iseva ye-PokerTH ayiphenduli (ukuqala kabusha noma ukulungisa). Ukuxhumana kwakho kuyasebenza — umzamo olandelayo emizuzwaneni engu-{s}',
     srvDownGaveUp: 'Iseva ye-PokerTH ayitholakali amaminithi angu-30. Sicela uzame futhi emuva kwesikhathi.',
     netOfflineBanner: 'Akukho ukuxhumana ne-inthanethi — kuzoxhuma kabusha uma sekubuyile',

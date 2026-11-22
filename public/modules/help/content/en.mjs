@@ -148,7 +148,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat & social',
       sections: [
         { id: 'panels', t: 'Lobby chat and game chat',
-          b: ['There is a chat in the lobby and one at the table. On phones the game chat floats over the table; on larger screens it is a draggable, resizable window. A badge on the chat button counts unread messages.'] },
+          b: ['There is a chat in the lobby and one at the table. On phones the game chat floats over the table; on larger screens it is a draggable, resizable window. A badge on the chat button counts unread messages.', 'Tap a nickname in the chat to open the player card; right-click or long-press it for a menu: private message, quote (writes “Name: ” in the input), ignore, note… This can be turned off in Advanced options → Chat.'] },
         { id: 'typing', t: 'Typing helpers',
           list: [
             'Tab completes a nickname \u2014 press Tab again to cycle through matches.',

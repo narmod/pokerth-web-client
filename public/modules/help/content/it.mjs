@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat e social',
       sections: [
         { id: 'panels', t: 'Chat della lobby e chat del tavolo',
-          b: ['C\u2019è una chat nella lobby e una al tavolo. Sul telefono, la chat del tavolo fluttua sopra il gioco; su schermi più grandi è una finestra spostabile e ridimensionabile. Un badge sul pulsante della chat conta i messaggi non letti.'] },
+          b: ['C\u2019è una chat nella lobby e una al tavolo. Sul telefono, la chat del tavolo fluttua sopra il gioco; su schermi più grandi è una finestra spostabile e ridimensionabile. Un badge sul pulsante della chat conta i messaggi non letti.', 'Tocca un nickname nella chat per aprire la scheda del giocatore; clic destro o pressione lunga apre un menu: messaggio privato, cita (scrive «Nome: » nel campo), ignora, nota… Disattivabile in Opzioni avanzate → Chat.'] },
         { id: 'typing', t: 'Aiuti alla scrittura',
           list: [
             'Tab completa un nickname — premi ancora Tab per scorrere le corrispondenze.',

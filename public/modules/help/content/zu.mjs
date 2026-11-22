@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Ingxoxo yelobhi nengxoxo yomdlalo",
           b: [
-            "Kunengxoxo elobhini neyodwa etafuleni. Kumafoni ingxoxo yomdlalo intanta phezu kwetafula; ezikrinini ezinkulu iyiwindi elingahudulwa futhi lishintshwe usayizi. Uphawu enkinobhweni yengxoxo lubala imilayezo engafundiwe."] },
+            "Kunengxoxo elobhini neyodwa etafuleni. Kumafoni ingxoxo yomdlalo intanta phezu kwetafula; ezikrinini ezinkulu iyiwindi elingahudulwa futhi lishintshwe usayizi. Uphawu enkinobhweni yengxoxo lubala imilayezo engafundiwe.", "Thepha igama lokudlala engxoxweni ukuze uvule ikhadi lomdlali; ukuchofoza kwesokudla noma ukucindezela isikhathi eside kuvula imenyu: umlayezo oyimfihlo, caphuna (kubhala “Igama: ” ebhokisini), ziba, inothi… Kungacishwa ku-Izinketho ezithuthukisiwe → Ingxoxo."] },
         { id: "typing",
           t: "Abasizi bokubhala",
           list: [

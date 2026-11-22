@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Vestlus ja suhtlus',
       sections: [
         { id: 'panels', t: 'Fuajee vestlus ja mänguvestlus',
-          b: ['Vestlus on nii fuajees kui ka lauas. Telefonides hõljub mänguvestlus laua kohal; suurematel ekraanidel on see lohistatav ja muudetava suurusega aken. Vestlusnupul olev märgis loendab lugemata sõnumeid.'] },
+          b: ['Vestlus on nii fuajees kui ka lauas. Telefonides hõljub mänguvestlus laua kohal; suurematel ekraanidel on see lohistatav ja muudetava suurusega aken. Vestlusnupul olev märgis loendab lugemata sõnumeid.', 'Puuduta vestluses hüüdnime, et avada mängija kaart; paremklõps või pikk vajutus avab menüü: privaatsõnum, tsiteeri (kirjutab väljale „Nimi: “), ignoreeri, märkus… Saab välja lülitada: Täpsemad valikud → Vestlus.'] },
         { id: 'typing', t: 'Kirjutamise abid',
           list: [
             'Tab täiendab hüüdnime \u2014 vajuta uuesti Tab, et vastete vahel liikuda.',

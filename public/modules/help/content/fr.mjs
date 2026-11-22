@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat & social',
       sections: [
         { id: 'panels', t: 'Chat du lobby et chat de table',
-          b: ['Il y a un chat dans le lobby et un à la table. Sur téléphone, le chat de table flotte au-dessus du jeu ; sur écran plus grand, c\u2019est une fenêtre déplaçable et redimensionnable. Un badge sur le bouton du chat compte les messages non lus.'] },
+          b: ['Il y a un chat dans le lobby et un à la table. Sur téléphone, le chat de table flotte au-dessus du jeu ; sur écran plus grand, c\u2019est une fenêtre déplaçable et redimensionnable. Un badge sur le bouton du chat compte les messages non lus.', 'Touchez un pseudo dans le chat pour ouvrir la carte du joueur ; clic droit ou appui long ouvre un menu : message privé, citer (écrit « Pseudo: » dans la saisie), ignorer, note… Désactivable dans Options avancées → Chat.'] },
         { id: 'typing', t: 'Aides à la saisie',
           list: [
             'Tab complète un pseudo — appuie encore sur Tab pour parcourir les correspondances.',

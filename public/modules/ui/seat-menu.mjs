@@ -15,6 +15,11 @@
 // Aucune chaîne nouvelle : le menu réutilise les clés déjà traduites dans les
 // 47 langues par la carte (nvTitle, ppOpen, piIgnore/piUnignore,
 // piReportAvatar, piKickban).
+//
+// Même menu sur un pseudo du chat (ui/chat-nick.mjs, web.153) : opts.chat
+// ajoute en tête « Carte joueur », « Message privé » et « Citer », et ignore
+// par NOM (sans rouvrir la carte). Un joueur parti du serveur (pid 0) n'a plus
+// que « Citer » et « Ignorer ».
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
 import { esc } from './misc.mjs';
@@ -65,11 +70,35 @@ function openNoteFor(pid) {
 // tête : c'est elle qu'on vient chercher par ce geste. Chaque entrée reprend
 // EXACTEMENT la garde de son bouton dans la carte — un menu qui proposerait
 // une action que la carte refuse serait un mensonge.
-function itemsFor(pid) {
+function itemsFor(pid, opts) {
   const out = [];
-  const isBot = (() => { try { return !!window.isBot(pid); } catch (e) { return false; } })();
-  const isMe = pid === S.myId;
-  const name = (() => { try { return window.getPlayerName(pid) || ''; } catch (e) { return ''; } })();
+  const chat = !!(opts && opts.chat);
+  const isBot = (() => { try { return !!(pid && window.isBot(pid)); } catch (e) { return false; } })();
+  const name = (opts && opts.name) || (() => { try { return window.getPlayerName(pid) || ''; } catch (e) { return ''; } })();
+  const isMe = pid ? pid === S.myId : (!!name && name === S.myName);
+
+  if (chat) {
+    if (pid) out.push({ k: 'card', ico: '🪪', label: tt('chatNickCard', 'Player card'),
+                        run: () => { try { openPlayerInfoPopup(pid); } catch (e) {} } });
+    const guest = (() => { try { return !!(window._amGuestMode && window._amGuestMode()); } catch (e) { return false; } })();
+    if (pid && !isMe && !isBot && !guest && name && typeof window.openPmModal === 'function') {
+      out.push({ k: 'pm', ico: '✉️', label: tt('pmBtn', 'Private message'),
+                 run: () => { try { window.openPmModal(name); } catch (e) {} } });
+    }
+    if (!isMe && name && typeof opts.quote === 'function') {
+      out.push({ k: 'quote', ico: '💬', label: tt('chatNickQuote', 'Quote'), run: () => opts.quote(name) });
+    }
+    if (!isMe && !isBot && name && typeof opts.ignore === 'function') {
+      const ign = (() => { try { return !!window._isIgnored(name); } catch (e) { return false; } })();
+      const it = { k: 'ignore', ico: ign ? '🔔' : '🔕',
+                   label: ign ? tt('piUnignore', 'Unignore') : tt('piIgnore', 'Ignore'),
+                   run: () => opts.ignore(name) };
+      if (!pid) { out.push(it); return out; }      // gone from the server: nothing else applies
+      opts._ignoreItem = it;
+    }
+    if (!pid) return out;
+    if (out.length) out.push({ sep: true });
+  }
 
   // Note : sur un adversaire seulement (se noter soi-même n'a pas de sens).
   // Les bots y ont droit, comme dans la carte — en entraînement c'est
@@ -86,7 +115,9 @@ function itemsFor(pid) {
     out.push({ k: 'profile', ico: '📊', label: tt('ppOpen', 'Player profile'),
                run: () => { try { window._pimOpenStats(pid); } catch (e) {} } });
   }
-  if (!isMe && !isBot && name) {
+  if (chat && opts._ignoreItem) {
+    out.push(opts._ignoreItem);
+  } else if (!isMe && !isBot && name) {
     const ign = (() => { try { return !!window._isIgnored(name); } catch (e) { return false; } })();
     out.push({ k: 'ignore', ico: ign ? '🔔' : '🔕',
                label: ign ? tt('piUnignore', 'Unignore') : tt('piIgnore', 'Ignore'),
@@ -101,22 +132,24 @@ function itemsFor(pid) {
                run: () => { try { window._reportAvatar(pid); } catch (e) {} } });
   }
   // Kickban : administrateurs pokerth.net uniquement.
-  if (!isMe && !isBot && (S._playerRights[S.myId] || 0) === 3) {
+  if (pid && !isMe && !isBot && (S._playerRights[S.myId] || 0) === 3) {
     out.push({ sep: true });
     out.push({ k: 'kickban', ico: '🔨', label: tt('piKickban', 'Total kickban'), danger: true,
                run: () => { try { window._adminBanPlayer(pid); } catch (e) {} } });
   }
+  // No dangling separator when nothing follows the chat entries.
+  if (out.length && out[out.length - 1].sep) out.pop();
   return out;
 }
 
-export function openSeatMenu(pid, x, y) {
-  const items = itemsFor(pid);
+export function openSeatMenu(pid, x, y, opts) {
+  const items = itemsFor(pid, opts);
   // Aucune action possible : pas de menu vide qui s'ouvre pour rien (le QML
   // teste pareil avec hasContextActions).
   if (!items.length) return false;
   const el = host();
-  let name = '';
-  try { name = window.getPlayerName(pid) || ''; } catch (e) {}
+  let name = (opts && opts.name) || '';
+  if (!name) { try { name = window.getPlayerName(pid) || ''; } catch (e) {} }
   let html = name ? '<div class="ctx-hd">' + esc(name) + '</div>' : '';
   items.forEach((it, i) => {
     if (it.sep) { html += '<div class="menu-sep"></div>'; return; }
@@ -153,7 +186,10 @@ export function isSeatMenuOpen() { return _open; }
 // Fermetures : tout ce qui indique que l'attention est passée ailleurs. Le
 // pointerdown est écouté en capture pour fermer avant qu'un clic n'atteigne un
 // siège (sinon le menu se refermerait ET la carte s'ouvrirait).
+let _inited = false;
 export function initSeatMenu() {
+  if (_inited) return;     // seats AND chat nicknames call it
+  _inited = true;
   document.addEventListener('pointerdown', (ev) => {
     if (!_open) return;
     if (_el && _el.contains(ev.target)) return;

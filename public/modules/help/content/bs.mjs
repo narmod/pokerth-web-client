@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat i društvene funkcije',
       sections: [
         { id: 'panels', t: 'Chat predvorja i chat stola',
-          b: ['Jedan chat je u predvorju, drugi za stolom. Na telefonu chat stola lebdi iznad igre; na većim zaslonima to je pomični prozor promjenjive veličine. Značka na gumbu chata broji nepročitane poruke.'] },
+          b: ['Jedan chat je u predvorju, drugi za stolom. Na telefonu chat stola lebdi iznad igre; na većim zaslonima to je pomični prozor promjenjive veličine. Značka na gumbu chata broji nepročitane poruke.', 'Dodirnite nadimak u chatu da otvorite karticu igrača; desni klik ili dugi pritisak otvara meni: privatna poruka, citiranje (upisuje „Ime: ” u polje), ignorisanje, bilješka… Može se isključiti u Naprednim opcijama → Chat.'] },
         { id: 'typing', t: 'Pomoć pri tipkanju',
           list: [
             'Tab dovršava nadimak — pritisni Tab ponovno za kretanje kroz podudaranja.',

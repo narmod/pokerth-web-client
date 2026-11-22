@@ -274,6 +274,7 @@ function applyAdvOpts() {
     try { if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt(); } catch (e) {}   // zoom navigateur (option browser_zoom)
     try { if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } catch (e) {}
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
+    b.classList.toggle('adv-no-chatnick', !_advGet('chat_nick_menu', true)); // pseudo cliquable du chat (ui/chat-nick.mjs)
     b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
     b.classList.remove('adv-no-winopen'); // bouton dore tant que sa fenetre est ouverte : toujours actif — option retiree (narmod 2026-07-30), le CSS reste keye sur la classe
     try { if (typeof window._syncWinBtns === 'function') window._syncWinBtns(); } catch (e) {}
@@ -488,6 +489,7 @@ function openAdvancedOptions() {
   sync('adv-acescenes', 'ace_scenes', true);       // facéties de l'As (scènes, danses, réactions, bravo) — modules/mascot/index.mjs
   sync('adv-acedance', 'ace_dance', true);    // l'As danse sur le lecteur de musique (modules/mascot/acts-dance.mjs)
   sync('adv-lobbychat', 'lobby_chat', true);
+  sync('adv-chatnick', 'chat_nick_menu', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
   sync('adv-pausehands', 'pause_hands', false);
@@ -1547,7 +1549,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_lobby_type_chat', 'pth_chat_tr_always', 'pth_guard_raise', 'pth_community_suggest',
+  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_lobby_type_chat', 'pth_chat_tr_always', 'pth_chat_nick_menu', 'pth_guard_raise', 'pth_community_suggest',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice', 'pth_announce', 'pth_avatar_create',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
@@ -9590,7 +9592,9 @@ function addGameChat(sender, text, cls, spec) {
     // à l'affichage par chaque client.
     if (String(text).slice(0, 4) === '/me ') {
       d.className += ' action';
-      d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="txt">*'+e(sender)+' '+emT(text.slice(4))+'*</span>' + _tr;
+      // Sender in a .who (who-act: same look) — clickable (ui/chat-nick.mjs),
+      // and removed with the rest when the player is ignored.
+      d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="txt">*<span class="who who-act">'+e(sender)+'</span> '+emT(text.slice(4))+'*</span>' + _tr;
     } else {
       d.innerHTML = '<span class="msg-time">'+_chatTs()+'</span> <span class="who">'+e(sender)+'</span>: <span class="txt">'+emT(text)+'</span>' + _tr;
     }
@@ -12752,7 +12756,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.152'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.153'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

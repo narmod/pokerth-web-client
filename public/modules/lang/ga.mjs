@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Cárta imreora',
+    chatNickQuote: 'Luaigh',
+    advChatNickMenu: 'Comhrá: tapáil leasainm le cárta an imreora a oscailt, deaschliceáil nó brú fada le roghchlár a oscailt',
     srvDownBanner: 'Níl freastalaí PokerTH ag freagairt (atosú nó cothabháil). Tá do nasc ag obair — an chéad iarracht eile i gceann {s} s',
     srvDownGaveUp: 'Níl freastalaí PokerTH ar fáil le 30 nóiméad. Bain triail eile as ar ball.',
     netOfflineBanner: 'Níl aon nasc Idirlín ann — athcheanglófar a luaithe a fhillfidh sé',

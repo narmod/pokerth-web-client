@@ -3341,6 +3341,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/pm.mjs"></script>
 <script type="module" src="modules/net/watchdog.mjs"></script>
 <script type="module" src="modules/net/reconn-hold.mjs"></script>
+<script type="module" src="modules/ui/chat-nick.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
 <script type="module" src="modules/net/session.mjs"></script>
 <script type="module" src="modules/ui/game-info.mjs"></script>
@@ -4080,6 +4081,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-chattralways" onchange="setAdvOpt('chat_tr_always',this.checked);try{document.body.classList.toggle('chat-tr-always',this.checked)}catch(e){}"><span data-i18n="advChatTrAlways">Translation button always visible (otherwise only on the hovered or tapped line)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-avcreate" onchange="setAdvOpt('avatar_create',this.checked)"><span data-i18n="advAvatarCreate">Show the “Create” portraits tab in the avatar window</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-chatnick" onchange="setAdvOpt('chat_nick_menu',this.checked)"><span data-i18n="advChatNickMenu">Chat: tap a nickname for the player card, right-click or long-press it for a menu</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatclearlogin" onchange="setAdvOpt('chat_clear_login',this.checked)"><span data-i18n="advChatClearLogin">Clear the lobby chat when connecting</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-lobbytypechat" onchange="setAdvOpt('lobby_type_chat',this.checked)"><span data-i18n="advLobbyTypeChat">Lobby: typing outside a text field writes straight into the chat</span><em class="adv-webtag">web</em></label>
       </details>

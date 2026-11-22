@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat at social',
       sections: [
         { id: 'panels', t: 'Lobby chat at game chat',
-          b: ['May chat sa lobby at isa sa mesa. Sa mga phone, lumulutang ang game chat sa ibabaw ng mesa; sa mas malalaking screen ito ay dina-drag at nire-resize na window. Binibilang ng badge sa chat button ang mga hindi pa nabasang mensahe.'] },
+          b: ['May chat sa lobby at isa sa mesa. Sa mga phone, lumulutang ang game chat sa ibabaw ng mesa; sa mas malalaking screen ito ay dina-drag at nire-resize na window. Binibilang ng badge sa chat button ang mga hindi pa nabasang mensahe.', 'I-tap ang palayaw sa chat para buksan ang card ng manlalaro; ang right-click o matagal na pagpindot ay nagbubukas ng menu: pribadong mensahe, i-quote (isinusulat ang “Pangalan: ” sa input), i-ignore, tala… Maaaring i-off sa Advanced options → Chat.'] },
         { id: 'typing', t: 'Mga tulong sa pag-type',
           list: [
             'Kinukumpleto ng Tab ang palayaw \u2014 pindutin muli ang Tab para mag-cycle sa mga tugma.',

@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Lobbi çaty we oýun çaty",
           b: [
-            "Lobbide bir çat we stolda bir çat bar. Telefonlarda oýun çaty stoluň üstünde ýüzýär; uly ekranlarda süýrenip we ölçegi üýtgedip bolýan penjire. Çat düwmesindäki belgi okalmadyk habarlary sanaýar."] },
+            "Lobbide bir çat we stolda bir çat bar. Telefonlarda oýun çaty stoluň üstünde ýüzýär; uly ekranlarda süýrenip we ölçegi üýtgedip bolýan penjire. Çat düwmesindäki belgi okalmadyk habarlary sanaýar.", "Oýunçy kartjasyny açmak üçin çatdaky lakama basyň; sag basyş ýa-da uzak basmak menýu açýar: şahsy hat, sitata (meýdana “At: ” ýazýar), äsgermezlik, bellik… Giňişleýin sazlamalar → Çat bölüminde öçürip bolýar."] },
         { id: "typing",
           t: "Ýazmak kömekçileri",
           list: [

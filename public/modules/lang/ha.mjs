@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Katin ɗan wasa',
+    chatNickQuote: 'Ambato',
+    advChatNickMenu: 'Hira: taɓa laƙabi yana buɗe katin ɗan wasa, danna dama ko dogon latsawa yana buɗe menu',
     srvDownBanner: 'Sabar PokerTH ba ta amsa (sake farawa ko gyara). Haɗin ku yana aiki — ƙoƙari na gaba cikin daƙiƙa {s}',
     srvDownGaveUp: 'Sabar PokerTH ba ta samuwa tsawon mintuna 30. Da fatan a sake gwadawa daga baya.',
     netOfflineBanner: 'Babu haɗin Intanet — za a sake haɗawa da zarar ya dawo',

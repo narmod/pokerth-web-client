@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Egongelako txata eta partidako txata",
           b: [
-            "Txat bat dago egongelan eta beste bat mahaian. Telefonoetan, partidako txatak mahaiaren gainean flotatzen du; pantaila handiagoetan arrastatu eta tamainaz alda daitekeen leiho bat da. Txat-botoiko bereizgarriak irakurri gabeko mezuak zenbatzen ditu."] },
+            "Txat bat dago egongelan eta beste bat mahaian. Telefonoetan, partidako txatak mahaiaren gainean flotatzen du; pantaila handiagoetan arrastatu eta tamainaz alda daitekeen leiho bat da. Txat-botoiko bereizgarriak irakurri gabeko mezuak zenbatzen ditu.", "Ukitu ezizen bat txatean jokalariaren txartela irekitzeko; eskuineko klikak edo sakatze luzeak menu bat irekitzen du: mezu pribatua, aipatu («Izena: » idazten du eremuan), ezikusi, oharra… Aukera aurreratuak → Txata atalean desaktibatu daiteke."] },
         { id: "typing",
           t: "Idazteko laguntzak",
           list: [

@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Card ng manlalaro',
+    chatNickQuote: 'I-quote',
+    advChatNickMenu: 'Chat: i-tap ang palayaw para sa card ng manlalaro, right-click o pindutin nang matagal para sa menu',
     srvDownBanner: 'Hindi tumutugon ang PokerTH server (restart o maintenance). Gumagana ang iyong koneksyon — susubok muli sa loob ng {s} s',
     srvDownGaveUp: 'Hindi available ang PokerTH server sa loob ng 30 minuto. Subukang muli mamaya.',
     netOfflineBanner: 'Walang koneksyon sa Internet — kokonekta muli sa sandaling bumalik ito',

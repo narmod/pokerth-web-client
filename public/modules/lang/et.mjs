@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Mängija kaart',
+    chatNickQuote: 'Tsiteeri',
+    advChatNickMenu: 'Vestlus: hüüdnime puudutamine avab mängija kaardi, paremklõps või pikk vajutus avab menüü',
     srvDownBanner: 'PokerTH-i server ei vasta (taaskäivitus või hooldus). Sinu ühendus töötab — järgmine katse {s} s pärast',
     srvDownGaveUp: 'PokerTH-i server on olnud 30 minutit kättesaamatu. Proovi hiljem uuesti.',
     netOfflineBanner: 'Internetiühendus puudub — ühendus luuakse uuesti kohe, kui see taastub',

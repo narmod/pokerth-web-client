@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Karta hráče',
+    chatNickQuote: 'Citovat',
+    advChatNickMenu: 'Chat: klepnutí na přezdívku otevře kartu hráče, pravé tlačítko nebo dlouhé podržení otevře nabídku',
     srvDownBanner: 'Server PokerTH neodpovídá (restart nebo údržba). Vaše připojení funguje — další pokus za {s} s',
     srvDownGaveUp: 'Server PokerTH je nedostupný už 30 minut. Zkuste to později.',
     netOfflineBanner: 'Žádné připojení k internetu — znovu se připojí, jakmile se obnoví',

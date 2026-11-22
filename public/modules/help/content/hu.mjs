@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Csevegés és közösség',
       sections: [
         { id: 'panels', t: 'Lobbicsevegés és asztali csevegés',
-          b: ['Egy csevegés van a lobbiban, egy másik az asztalnál. Telefonon az asztali csevegés a játék fölött lebeg; nagyobb képernyőkön mozgatható és átméretezhető ablak. A csevegés gombján lévő jelvény számolja az olvasatlan üzeneteket.'] },
+          b: ['Egy csevegés van a lobbiban, egy másik az asztalnál. Telefonon az asztali csevegés a játék fölött lebeg; nagyobb képernyőkön mozgatható és átméretezhető ablak. A csevegés gombján lévő jelvény számolja az olvasatlan üzeneteket.', 'Koppints egy becenévre a chatben a játékoskártya megnyitásához; jobb klik vagy hosszú nyomás menüt nyit: privát üzenet, idézés („Név: ” kerül a beviteli mezőbe), figyelmen kívül hagyás, jegyzet… Kikapcsolható: Speciális beállítások → Chat.'] },
         { id: 'typing', t: 'Gépelési segítségek',
           list: [
             'A Tab kiegészít egy becenevet — nyomd meg újra a Tabot a találatok közötti lépkedéshez.',

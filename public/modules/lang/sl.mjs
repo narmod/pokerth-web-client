@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Kartica igralca',
+    chatNickQuote: 'Citiraj',
+    advChatNickMenu: 'Klepet: dotik vzdevka odpre kartico igralca, desni klik ali dolg pritisk odpre meni',
     srvDownBanner: 'Strežnik PokerTH se ne odziva (ponovni zagon ali vzdrževanje). Vaša povezava deluje — naslednji poskus čez {s} s',
     srvDownGaveUp: 'Strežnik PokerTH je nedosegljiv že 30 minut. Poskusite znova pozneje.',
     netOfflineBanner: 'Ni internetne povezave — ponovna povezava takoj, ko se vrne',

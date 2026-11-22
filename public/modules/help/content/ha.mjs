@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Hirar zaure da hirar wasa",
           b: [
-            "Akwai hira a zaure da wata a tebur. A wayoyi hirar wasa tana shawagi a saman tebur; a manyan allo taga ce da ake iya ja da canja girma. Alama a maɓallin hira tana ƙirga saƙonnin da ba a karanta ba."] },
+            "Akwai hira a zaure da wata a tebur. A wayoyi hirar wasa tana shawagi a saman tebur; a manyan allo taga ce da ake iya ja da canja girma. Alama a maɓallin hira tana ƙirga saƙonnin da ba a karanta ba.", "Taɓa laƙabi a cikin hira don buɗe katin ɗan wasa; danna dama ko dogon latsawa yana buɗe menu: saƙon sirri, ambato (yana rubuta “Suna: ” a cikin akwati), yi watsi, bayani… Ana iya kashe shi a Zaɓuɓɓuka na ci gaba → Hira."] },
         { id: "typing",
           t: "Taimakon rubutu",
           list: [

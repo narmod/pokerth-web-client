@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'የተጫዋች ካርድ',
+    chatNickQuote: 'ጥቀስ',
+    advChatNickMenu: 'ውይይት፦ ቅጽል ስም መንካት የተጫዋች ካርዱን ይከፍታል፤ የቀኝ ጠቅታ ወይም ረጅም መጫን ምናሌ ይከፍታል',
     srvDownBanner: 'የPokerTH አገልጋይ ምላሽ አይሰጥም (ዳግም ማስጀመር ወይም ጥገና)። ግንኙነትዎ ይሰራል — ቀጣይ ሙከራ በ{s} ሰከንድ',
     srvDownGaveUp: 'የPokerTH አገልጋይ ለ30 ደቂቃዎች አልተገኘም። እባክዎ ቆይተው እንደገና ይሞክሩ።',
     netOfflineBanner: 'የበይነመረብ ግንኙነት የለም — ሲመለስ ወዲያውኑ እንደገና ይገናኛል',

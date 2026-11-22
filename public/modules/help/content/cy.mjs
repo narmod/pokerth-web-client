@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Sgwrs y lobi a sgwrs y gêm",
           b: [
-            "Mae sgwrs yn y lobi ac un arall wrth y bwrdd. Ar ffonau mae sgwrs y gêm yn arnofio dros y bwrdd; ar sgriniau mwy mae'n ffenestr y gellir ei llusgo a newid ei maint. Mae bathodyn ar y botwm sgwrsio yn cyfrif negeseuon heb eu darllen."] },
+            "Mae sgwrs yn y lobi ac un arall wrth y bwrdd. Ar ffonau mae sgwrs y gêm yn arnofio dros y bwrdd; ar sgriniau mwy mae'n ffenestr y gellir ei llusgo a newid ei maint. Mae bathodyn ar y botwm sgwrsio yn cyfrif negeseuon heb eu darllen.", "Tapiwch lysenw yn y sgwrs i agor cerdyn y chwaraewr; mae clic de neu wasg hir yn agor dewislen: neges breifat, dyfynnu (yn ysgrifennu “Enw: ” yn y maes), anwybyddu, nodyn… Gellir ei ddiffodd yn Opsiynau uwch → Sgwrs."] },
         { id: "typing",
           t: "Help teipio",
           list: [

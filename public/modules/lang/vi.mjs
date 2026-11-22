@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Thẻ người chơi',
+    chatNickQuote: 'Trích dẫn',
+    advChatNickMenu: 'Trò chuyện: chạm vào biệt danh để mở thẻ người chơi, nhấp phải hoặc nhấn giữ để mở menu',
     srvDownBanner: 'Máy chủ PokerTH không phản hồi (khởi động lại hoặc bảo trì). Kết nối của bạn vẫn hoạt động — thử lại sau {s} giây',
     srvDownGaveUp: 'Máy chủ PokerTH đã không khả dụng trong 30 phút. Vui lòng thử lại sau.',
     netOfflineBanner: 'Không có kết nối Internet — sẽ kết nối lại ngay khi có mạng',

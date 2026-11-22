@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Lobbi çatı və oyun çatı",
           b: [
-            "Lobbidə bir çat, masada isə başqa bir çat var. Telefonlarda oyun çatı masanın üstündə üzür; daha böyük ekranlarda dartıla və ölçüsü dəyişdirilə bilən pəncərədir. Çat düyməsindəki nişan oxunmamış mesajları sayır."] },
+            "Lobbidə bir çat, masada isə başqa bir çat var. Telefonlarda oyun çatı masanın üstündə üzür; daha böyük ekranlarda dartıla və ölçüsü dəyişdirilə bilən pəncərədir. Çat düyməsindəki nişan oxunmamış mesajları sayır.", "Oyunçu kartını açmaq üçün çatda ləqəbə toxunun; sağ klik və ya uzun basmaq menyu açır: şəxsi mesaj, sitat (daxiletmə sahəsinə “Ad: ” yazır), nəzərə alma, qeyd… Ətraflı seçimlər → Çat bölməsində söndürmək olar."] },
         { id: "typing",
           t: "Yazma köməkçiləri",
           list: [

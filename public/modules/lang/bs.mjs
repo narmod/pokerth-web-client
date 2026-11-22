@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Kartica igrača',
+    chatNickQuote: 'Citiraj',
+    advChatNickMenu: 'Chat: dodir nadimka otvara karticu igrača, desni klik ili dugi pritisak otvara meni',
     srvDownBanner: 'PokerTH server ne odgovara (ponovno pokretanje ili održavanje). Vaša veza radi — novi pokušaj za {s} s',
     srvDownGaveUp: 'PokerTH server je nedostupan već 30 minuta. Pokušajte ponovo kasnije.',
     netOfflineBanner: 'Nema internet veze — ponovno povezivanje čim se vrati',

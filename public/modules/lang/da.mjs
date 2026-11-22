@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Spillerkort',
+    chatNickQuote: 'Citér',
+    advChatNickMenu: 'Chat: tryk på et kaldenavn for spillerkortet, højreklik eller langt tryk for en menu',
     srvDownBanner: 'PokerTH-serveren svarer ikke (genstart eller vedligeholdelse). Din forbindelse virker — nyt forsøg om {s} s',
     srvDownGaveUp: 'PokerTH-serveren har været utilgængelig i 30 minutter. Prøv igen senere.',
     netOfflineBanner: 'Ingen internetforbindelse — genopretter forbindelsen, så snart den er tilbage',

@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat e social',
       sections: [
         { id: 'panels', t: 'Chat do vestíbulo e chat da mesa',
-          b: ['Hai un chat no vestíbulo e outro na mesa. No móbil, o chat da mesa flota sobre o xogo; en pantallas máis grandes é unha xanela que se pode mover e redimensionar. Unha insignia no botón de chat conta as mensaxes sen ler.'] },
+          b: ['Hai un chat no vestíbulo e outro na mesa. No móbil, o chat da mesa flota sobre o xogo; en pantallas máis grandes é unha xanela que se pode mover e redimensionar. Unha insignia no botón de chat conta as mensaxes sen ler.', 'Toca un alcume no chat para abrir a ficha do xogador; o clic dereito ou a pulsación longa abren un menú: mensaxe privada, citar (escribe «Nome: » no campo), ignorar, nota… Pódese desactivar en Opcións avanzadas → Chat.'] },
         { id: 'typing', t: 'Axudas de escritura',
           list: [
             'O tabulador completa un alcume — preme o tabulador de novo para percorrer as coincidencias.',

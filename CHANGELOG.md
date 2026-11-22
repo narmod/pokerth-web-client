@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Clickable chat nicknames** (`web.153`) — lobby chat 21/11: a troll in the lobby, and « how do I ignore him? »
+  answered with « find him in the player list ». New `public/modules/ui/chat-nick.mjs`: in the lobby and game chats
+  a nickname does what a seat does — tap = player card, right-click / long-press (500 ms, cancelled past 10 px, the
+  following click swallowed) = the seat menu (`ui/seat-menu.mjs`, new optional `opts.chat`) with « Player card »,
+  « Private message » (not for guests, bots or myself), « Quote » (writes `Name: ` into that panel's input) in front
+  of note / profile / ignore / report / kickban. Ignoring from the chat goes by name and does not reopen the card. A
+  player gone from the server (no online pid, not seated at my table) gets « Quote » and « Ignore » only. The sender
+  of a « /me » line is now a `.who` too (`who-act`, same look as the line), so it is clickable and ignoring a player
+  removes his `/me` lines already shown (they used to stay); the abbreviation marker skips `.who`.
+  `initSeatMenu()` is idempotent. Option Advanced options → Chat (`chat_nick_menu`, on; `body.adv-no-chatnick`; synced
+  with the account). 3 strings and one help paragraph (Chat › Lobby chat and game chat) in the 83 languages; Ace's
+  Help hotspot for the menu's « Private message ». Tests: `test-chat-nick-browser`.
 - **Waiting out a game-server restart** (`web.152`) — lobby chat 17–22/11: two « Important Security Update » restarts,
   players reinstalling the app because they could not tell a dead server from their own network, and a reconnect that
   gave up after ~1 min 50 (6 attempts) while a restart takes 5 min or more. The proxy now closes the browser socket

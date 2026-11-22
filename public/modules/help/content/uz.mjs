@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Lobbi chati va oʻyin chati",
           b: [
-            "Lobbida bitta chat, stolda yana bittasi bor. Telefonlarda oʻyin chati stol ustida suzib turadi; kattaroq ekranlarda esa suriladigan, oʻlchami oʻzgartiriladigan oyna. Chat tugmasidagi belgi oʻqilmagan xabarlarni sanaydi."] },
+            "Lobbida bitta chat, stolda yana bittasi bor. Telefonlarda oʻyin chati stol ustida suzib turadi; kattaroq ekranlarda esa suriladigan, oʻlchami oʻzgartiriladigan oyna. Chat tugmasidagi belgi oʻqilmagan xabarlarni sanaydi.", "O‘yinchi kartasini ochish uchun chatdagi taxallusga bosing; o‘ng tugma yoki uzoq bosish menyuni ochadi: shaxsiy xabar, iqtibos (maydonga “Ism: ” yozadi), e’tiborsiz qoldirish, eslatma… Kengaytirilgan sozlamalar → Chat bo‘limida o‘chirish mumkin."] },
         { id: "typing",
           t: "Yozishga yordamchilar",
           list: [

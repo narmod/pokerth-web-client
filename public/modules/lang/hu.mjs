@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Játékoskártya',
+    chatNickQuote: 'Idézés',
+    advChatNickMenu: 'Chat: egy becenév koppintása megnyitja a játékoskártyát, jobb klik vagy hosszú nyomás menüt nyit',
     srvDownBanner: 'A PokerTH szerver nem válaszol (újraindítás vagy karbantartás). A kapcsolatod működik — újabb próbálkozás {s} mp múlva',
     srvDownGaveUp: 'A PokerTH szerver 30 perce nem érhető el. Próbáld újra később.',
     netOfflineBanner: 'Nincs internetkapcsolat — újracsatlakozás, amint visszatér',

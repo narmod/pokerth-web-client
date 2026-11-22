@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Ìjíròrò gbọ̀ngàn àti ìjíròrò eré",
           b: [
-            "Ìjíròrò kan wà ní gbọ̀ngàn àti ọ̀kan ní tábìlì. Lórí fóònù, ìjíròrò eré ń léfòó lórí tábìlì; lórí ojú ńlá ó jẹ́ fèrèsé tí a lè fà àti yí ìwọ̀n rẹ̀ padà. Àmì kan lórí bọ́tìnì ìjíròrò ń ka àwọn ìfiránṣẹ́ tí a kò tíì kà."] },
+            "Ìjíròrò kan wà ní gbọ̀ngàn àti ọ̀kan ní tábìlì. Lórí fóònù, ìjíròrò eré ń léfòó lórí tábìlì; lórí ojú ńlá ó jẹ́ fèrèsé tí a lè fà àti yí ìwọ̀n rẹ̀ padà. Àmì kan lórí bọ́tìnì ìjíròrò ń ka àwọn ìfiránṣẹ́ tí a kò tíì kà.", "Fọwọ́ kan orúkọ ìnagijẹ nínú ìjíròrò láti ṣí káàdì olùṣeré; títẹ ọ̀tún tàbí títẹ̀ pẹ́ ń ṣí àkójọ: ìfiránṣẹ́ àdáni, fà yọ (ń kọ “Orúkọ: ” sínú àpótí), fojú fò, àkọsílẹ̀… A lè pa á ní Àwọn àṣàyàn ìlọsíwájú → Ìjíròrò."] },
         { id: "typing",
           t: "Olùrànlọ́wọ́ títẹ̀",
           list: [

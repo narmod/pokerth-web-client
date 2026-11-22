@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Leikmannaspjald',
+    chatNickQuote: 'Vitna í',
+    advChatNickMenu: 'Spjall: pikkaðu á gælunafn fyrir leikmannaspjaldið, hægrismelltu eða haltu inni fyrir valmynd',
     srvDownBanner: 'PokerTH-þjónninn svarar ekki (endurræsing eða viðhald). Tengingin þín virkar — næsta tilraun eftir {s} sek',
     srvDownGaveUp: 'PokerTH-þjónninn hefur verið óaðgengilegur í 30 mínútur. Reyndu aftur síðar.',
     netOfflineBanner: 'Engin nettenging — tengist aftur um leið og hún kemur',

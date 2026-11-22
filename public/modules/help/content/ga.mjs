@@ -210,7 +210,7 @@ export const help = {
         { id: "panels",
           t: "Comhrá an fhorhalla agus comhrá an chluiche",
           b: [
-            "Tá comhrá san fhorhalla agus ceann eile ag an mbord. Ar fhóin bíonn comhrá an chluiche ar snámh os cionn an bhoird; ar scáileáin níos mó is fuinneog í is féidir a tharraingt agus a méid a athrú. Comhaireann suaitheantas ar an gcnaipe comhrá na teachtaireachtaí nár léadh."] },
+            "Tá comhrá san fhorhalla agus ceann eile ag an mbord. Ar fhóin bíonn comhrá an chluiche ar snámh os cionn an bhoird; ar scáileáin níos mó is fuinneog í is féidir a tharraingt agus a méid a athrú. Comhaireann suaitheantas ar an gcnaipe comhrá na teachtaireachtaí nár léadh.", "Tapáil leasainm sa chomhrá chun cárta an imreora a oscailt; osclaíonn deaschliceáil nó brú fada roghchlár: teachtaireacht phríobháideach, luaigh (scríobhann “Ainm: ” sa réimse), déan neamhaird, nóta… Is féidir é a mhúchadh in Ardroghanna → Comhrá."] },
         { id: "typing",
           t: "Cabhair clóscríofa",
           list: [

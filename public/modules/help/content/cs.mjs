@@ -143,7 +143,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat a sociální funkce',
       sections: [
         { id: 'panels', t: 'Chat lobby a chat u stolu',
-          b: ['Jeden chat je v lobby, druhý u stolu. Na telefonu se chat u stolu vznáší nad hrou; na větších obrazovkách je to přesouvatelné okno s měnitelnou velikostí. Odznak na tlačítku chatu počítá nepřečtené zprávy.'] },
+          b: ['Jeden chat je v lobby, druhý u stolu. Na telefonu se chat u stolu vznáší nad hrou; na větších obrazovkách je to přesouvatelné okno s měnitelnou velikostí. Odznak na tlačítku chatu počítá nepřečtené zprávy.', 'Klepnutím na přezdívku v chatu otevřete kartu hráče; pravé tlačítko nebo dlouhé podržení otevře nabídku: soukromá zpráva, citovat (napíše „Jméno: “ do pole), ignorovat, poznámka… Lze vypnout v Pokročilých možnostech → Chat.'] },
         { id: 'typing', t: 'Pomůcky při psaní',
           list: [
             'Tab doplní přezdívku — dalším stiskem Tab procházíš shody.',

@@ -92,7 +92,7 @@ export const HOTSPOTS = [
   ['.pl-colh-chip', 'hsPlCols', true],
   ['.pl-act-ban, #seat-ctx-menu [data-ctx-k="ignore"]', 'hsPlIgnore', true, 'chat:social'],
   ['.pl-act-stats', 'hsPlStats', true, 'pthnet:rankings'],
-  ['.pl-act-pm', 'hsPlPm', true, 'chat:privatemsg'],
+  ['.pl-act-pm, #seat-ctx-menu [data-ctx-k="pm"]', 'hsPlPm', true, 'chat:privatemsg'],
   ['.pl-name-link', 'hsPlName', true, 'chat:social'],
   ['#lobby-foot-name', 'hsMyProfile', false, 'start:avatar'],
   ['#chat-in', 'hsChatIn', false, 'chat:typing'],

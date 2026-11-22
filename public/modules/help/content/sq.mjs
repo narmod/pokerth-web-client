@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Biseda dhe funksionet sociale',
       sections: [
         { id: 'panels', t: 'Biseda e lobit dhe biseda e lojës',
-          b: ['Ka një bisedë në lobi dhe një tjetër te tavolina. Në telefonë, biseda e lojës noton mbi tavolinë; në ekranet më të mëdha, është një dritare e tërheqshme dhe që ndryshon madhësi. Një shenjë te butoni i bisedës numëron mesazhet e palexuara.'] },
+          b: ['Ka një bisedë në lobi dhe një tjetër te tavolina. Në telefonë, biseda e lojës noton mbi tavolinë; në ekranet më të mëdha, është një dritare e tërheqshme dhe që ndryshon madhësi. Një shenjë te butoni i bisedës numëron mesazhet e palexuara.', 'Prekni një nofkë në bisedë për të hapur kartën e lojtarit; klikimi i djathtë ose shtypja e gjatë hap një meny: mesazh privat, citim (shkruan “Emri: ” në fushë), shpërfill, shënim… Mund të çaktivizohet te Opsionet e avancuara → Biseda.'] },
         { id: 'typing', t: 'Ndihmesa gjatë shkrimit',
           list: [
             'Tab plotëson një pseudonim — shtyp Tab sërish për të kaluar nëpër përputhjet.',

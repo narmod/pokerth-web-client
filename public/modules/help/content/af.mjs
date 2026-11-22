@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Klets en sosiaal',
       sections: [
         { id: 'panels', t: 'Voorportaalklets en tafelklets',
-          b: ['Daar is een klets in die voorportaal en een by die tafel. Op die foon sweef die tafelklets oor die spel; op groter skerms is dit \u2019n skuifbare venster met verstelbare grootte. \u2019n Kentekentjie op die kletsknoppie tel ongeleesde boodskappe.'] },
+          b: ['Daar is een klets in die voorportaal en een by die tafel. Op die foon sweef die tafelklets oor die spel; op groter skerms is dit \u2019n skuifbare venster met verstelbare grootte. \u2019n Kentekentjie op die kletsknoppie tel ongeleesde boodskappe.', 'Tik op \'n bynaam in die klets om die spelerkaart oop te maak; regsklik of druk lank vir \'n kieslys: privaat boodskap, aanhaal (skryf “Naam: ” in die invoerveld), ignoreer, nota… Kan afgeskakel word in Gevorderde opsies → Klets.'] },
         { id: 'typing', t: 'Tikhulpmiddels',
           list: [
             'Tab voltooi \u2019n bynaam — druk weer Tab om deur die passings te blaai.',

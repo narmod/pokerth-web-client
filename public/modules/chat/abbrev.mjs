@@ -105,7 +105,7 @@ function markAbbrev(root) {
   var targets = [], n;
   while ((n = walker.nextNode())) {
     var p = n.parentNode;
-    if (p && p.closest && p.closest('a, .chat-abbr')) continue;
+    if (p && p.closest && p.closest('a, .chat-abbr, .who')) continue;   // never inside a nickname
     rx.lastIndex = 0;
     if (rx.test(n.nodeValue)) targets.push(n);
   }

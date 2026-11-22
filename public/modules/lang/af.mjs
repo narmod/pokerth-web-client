@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Spelerkaart',
+    chatNickQuote: 'Haal aan',
+    advChatNickMenu: 'Klets: tik op \'n bynaam vir die spelerkaart, regsklik of druk lank vir \'n kieslys',
     srvDownBanner: 'PokerTH-bediener reageer nie (herbegin of instandhouding). Jou verbinding werk — volgende poging oor {s} s',
     srvDownGaveUp: 'Die PokerTH-bediener is al 30 minute onbeskikbaar. Probeer later weer.',
     netOfflineBanner: 'Geen internetverbinding nie — herkoppel sodra dit terug is',

@@ -370,7 +370,9 @@ function addChat(sender, text, cls='', spec) {
     // reformaté à l'affichage par chaque client.
     if (String(text).slice(0, 4) === '/me ') {
       d.className += ' action';
-      d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="txt">*${esc(sender)} ${emT(text.slice(4))}*</span>` + _tr;
+      // Sender in a .who (who-act: same look as the rest of the line) so the
+      // nickname is clickable (ui/chat-nick.mjs) and ignoring removes the line.
+      d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="txt">*<span class="who who-act">${esc(sender)}</span> ${emT(text.slice(4))}*</span>` + _tr;
     } else {
       d.innerHTML = `<span class="msg-time">${window._chatTs()}</span> <span class="who">${esc(sender)}</span>: <span class="txt">${emT(text)}</span>` + _tr;
     }

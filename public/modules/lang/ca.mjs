@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Fitxa del jugador',
+    chatNickQuote: 'Cita',
+    advChatNickMenu: 'Xat: tocar un sobrenom obre la fitxa del jugador; clic dret o pulsació llarga obre un menú',
     srvDownBanner: 'El servidor de PokerTH no respon (reinici o manteniment). La connexió funciona — nou intent d\'aquí a {s} s',
     srvDownGaveUp: 'El servidor de PokerTH no està disponible des de fa 30 minuts. Torneu-ho a provar més tard.',
     netOfflineBanner: 'Sense connexió a Internet — es reconnectarà quan torni',

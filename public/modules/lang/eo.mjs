@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Ludanta karto',
+    chatNickQuote: 'Citi',
+    advChatNickMenu: 'Babilejo: tuŝi kromnomon malfermas la ludantan karton, dekstra klako aŭ longa premo malfermas menuon',
     srvDownBanner: 'La servilo de PokerTH ne respondas (rekomenco aŭ prizorgado). Via konekto funkcias — nova provo post {s} s',
     srvDownGaveUp: 'La servilo de PokerTH estas neatingebla jam de 30 minutoj. Reprovu poste.',
     netOfflineBanner: 'Neniu interreta konekto — rekonektiĝos tuj kiam ĝi revenos',

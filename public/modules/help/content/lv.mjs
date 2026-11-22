@@ -150,7 +150,7 @@ export const help = {
       id: 'chat', icon: '💬', title: 'Tērzēšana un saziņa',
       sections: [
         { id: 'panels', t: 'Vestibila un spēles tērzēšana',
-          b: ['Tērzēšana ir gan vestibilā, gan pie galda. Telefonos spēles tērzēšana peld virs galda; lielākos ekrānos tas ir pārvietojams logs ar maināmu izmēru. Nozīmīte uz tērzēšanas pogas skaita neizlasītās ziņas.'] },
+          b: ['Tērzēšana ir gan vestibilā, gan pie galda. Telefonos spēles tērzēšana peld virs galda; lielākos ekrānos tas ir pārvietojams logs ar maināmu izmēru. Nozīmīte uz tērzēšanas pogas skaita neizlasītās ziņas.', 'Pieskarieties segvārdam tērzēšanā, lai atvērtu spēlētāja kartīti; labais klikšķis vai ilgs spiediens atver izvēlni: privāta ziņa, citēt (ieraksta laukā “Vārds: ”), ignorēt, piezīme… Var izslēgt sadaļā Papildu iestatījumi → Tērzēšana.'] },
         { id: 'typing', t: 'Rakstīšanas palīgi',
           list: [
             'Tab pabeidz segvārdu — nospied Tab vēlreiz, lai pārslēgtos starp sakritībām.',

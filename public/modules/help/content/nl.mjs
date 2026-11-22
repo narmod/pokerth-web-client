@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat & sociaal',
       sections: [
         { id: 'panels', t: 'Lobbychat en tafelchat',
-          b: ['Er is een chat in de lobby en een aan tafel. Op de telefoon zweeft de tafelchat boven het spel; op grotere schermen is het een verplaatsbaar en schaalbaar venster. Een embleem op de chatknop telt de ongelezen berichten.'] },
+          b: ['Er is een chat in de lobby en een aan tafel. Op de telefoon zweeft de tafelchat boven het spel; op grotere schermen is het een verplaatsbaar en schaalbaar venster. Een embleem op de chatknop telt de ongelezen berichten.', 'Tik in de chat op een bijnaam om de spelerskaart te openen; rechtsklik of lang drukken opent een menu: privébericht, citeren (zet „Naam: ” in het invoerveld), negeren, notitie… Uit te zetten in Geavanceerde opties → Chat.'] },
         { id: 'typing', t: 'Typhulpjes',
           list: [
             'Tab vult een bijnaam aan — druk nogmaals op Tab om door de treffers te bladeren.',

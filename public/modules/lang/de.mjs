@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Spielerkarte',
+    chatNickQuote: 'Zitieren',
+    advChatNickMenu: 'Chat: Antippen eines Nicknamens öffnet die Spielerkarte, Rechtsklick oder langes Drücken ein Menü',
     srvDownBanner: 'Der PokerTH-Server antwortet nicht (Neustart oder Wartung). Deine Verbindung funktioniert — nächster Versuch in {s} s',
     srvDownGaveUp: 'Der PokerTH-Server ist seit 30 Minuten nicht erreichbar. Versuch es später noch einmal.',
     netOfflineBanner: 'Keine Internetverbindung — Verbindung wird wiederhergestellt, sobald sie zurück ist',

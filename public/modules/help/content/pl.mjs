@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Czat i społeczność',
       sections: [
         { id: 'panels', t: 'Czat lobby i czat stołu',
-          b: ['Jest czat w lobby i czat przy stole. Na telefonie czat stołu unosi się nad grą; na większych ekranach to przesuwalne i skalowalne okno. Plakietka na przycisku czatu liczy nieprzeczytane wiadomości.'] },
+          b: ['Jest czat w lobby i czat przy stole. Na telefonie czat stołu unosi się nad grą; na większych ekranach to przesuwalne i skalowalne okno. Plakietka na przycisku czatu liczy nieprzeczytane wiadomości.', 'Dotknij pseudonimu w czacie, aby otworzyć kartę gracza; prawy klik lub długie przytrzymanie otwiera menu: prywatna wiadomość, cytuj (wpisuje „Nazwa: ” w pole), ignoruj, notatka… Można wyłączyć w Opcjach zaawansowanych → Czat.'] },
         { id: 'typing', t: 'Pomoce przy pisaniu',
           list: [
             'Tab uzupełnia pseudonim — naciśnij Tab ponownie, by przełączać dopasowania.',

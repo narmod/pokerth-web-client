@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: '玩家卡片',
+    chatNickQuote: '引用',
+    advChatNickMenu: '聊天：点按昵称打开玩家卡片，右键或长按打开菜单',
     srvDownBanner: 'PokerTH 服务器无响应（正在重启或维护）。你的网络连接正常 — {s} 秒后重试',
     srvDownGaveUp: 'PokerTH 服务器已有 30 分钟无法访问。请稍后再试。',
     netOfflineBanner: '没有网络连接 — 恢复后将立即重新连接',

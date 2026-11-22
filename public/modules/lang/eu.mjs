@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Jokalariaren txartela',
+    chatNickQuote: 'Aipatu',
+    advChatNickMenu: 'Txata: ezizen bat ukitzean jokalariaren txartela irekitzen da; eskuineko klikak edo sakatze luzeak menu bat irekitzen du',
     srvDownBanner: 'PokerTH zerbitzariak ez du erantzuten (berrabiaraztea edo mantentze-lanak). Zure konexioak funtzionatzen du — hurrengo saiakera {s} s barru',
     srvDownGaveUp: 'PokerTH zerbitzaria ez dago erabilgarri duela 30 minutu. Saiatu berriro geroago.',
     netOfflineBanner: 'Ez dago Interneteko konexiorik — berriro konektatuko da itzultzen denean',

@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Žaidėjo kortelė',
+    chatNickQuote: 'Cituoti',
+    advChatNickMenu: 'Pokalbiai: palietus slapyvardį atsidaro žaidėjo kortelė, dešinysis spustelėjimas ar ilgas paspaudimas – meniu',
     srvDownBanner: 'PokerTH serveris neatsako (paleidimas iš naujo arba priežiūra). Jūsų ryšys veikia — kitas bandymas po {s} s',
     srvDownGaveUp: 'PokerTH serveris nepasiekiamas jau 30 minučių. Bandykite vėliau.',
     netOfflineBanner: 'Nėra interneto ryšio — prisijungsime iš naujo, kai tik jis atsiras',

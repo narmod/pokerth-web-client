@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Ficha do jogador',
+    chatNickQuote: 'Citar',
+    advChatNickMenu: 'Chat: tocar em um apelido abre a ficha do jogador; clique direito ou toque longo abre um menu',
     srvDownBanner: 'O servidor do PokerTH não está respondendo (reinício ou manutenção). Sua conexão está funcionando — nova tentativa em {s} s',
     srvDownGaveUp: 'O servidor do PokerTH está indisponível há 30 minutos. Tente novamente mais tarde.',
     netOfflineBanner: 'Sem conexão com a Internet — reconectando assim que ela voltar',

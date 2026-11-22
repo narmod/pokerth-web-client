@@ -146,7 +146,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Chati na kijamii',
       sections: [
         { id: 'panels', t: 'Chati ya ukumbi na chati ya mchezo',
-          b: ['Kuna chati kwenye ukumbi na moja mezani. Kwenye simu, chati ya mchezo huelea juu ya meza; kwenye skrini kubwa ni dirisha linaloburutwa na kubadilishwa ukubwa. Beji kwenye kitufe cha chati huhesabu jumbe ambazo hazijasomwa.'] },
+          b: ['Kuna chati kwenye ukumbi na moja mezani. Kwenye simu, chati ya mchezo huelea juu ya meza; kwenye skrini kubwa ni dirisha linaloburutwa na kubadilishwa ukubwa. Beji kwenye kitufe cha chati huhesabu jumbe ambazo hazijasomwa.', 'Gusa jina la utani kwenye gumzo ili kufungua kadi ya mchezaji; kubofya kulia au kubonyeza kwa muda hufungua menyu: ujumbe wa faragha, nukuu (huandika “Jina: ” kwenye kisanduku), puuza, dokezo… Inaweza kuzimwa katika Chaguo za kina → Gumzo.'] },
         { id: 'typing', t: 'Misaada ya kuandika',
           list: [
             'Tab hukamilisha jina la utani \u2014 bonyeza Tab tena kuzunguka mafanano.',

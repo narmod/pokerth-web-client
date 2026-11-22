@@ -144,7 +144,7 @@ export const help = {
       id: 'chat', icon: '\uD83D\uDCAC', title: 'Xat i social',
       sections: [
         { id: 'panels', t: 'Xat del vestíbul i xat de la taula',
-          b: ['Hi ha un xat al vestíbul i un altre a la taula. Al mòbil, el xat de la taula sura sobre el joc; en pantalles més grans és una finestra que es pot moure i redimensionar. Una insígnia al botó de xat compta els missatges no llegits.'] },
+          b: ['Hi ha un xat al vestíbul i un altre a la taula. Al mòbil, el xat de la taula sura sobre el joc; en pantalles més grans és una finestra que es pot moure i redimensionar. Una insígnia al botó de xat compta els missatges no llegits.', 'Toqueu un sobrenom al xat per obrir la fitxa del jugador; amb clic dret o pulsació llarga s\'obre un menú: missatge privat, citar (escriu «Nom: » al camp), ignorar, nota… Es pot desactivar a Opcions avançades → Xat.'] },
         { id: 'typing', t: 'Ajudes d\u2019escriptura',
           list: [
             'El tabulador completa un sobrenom — torna a prémer el tabulador per recórrer les coincidències.',

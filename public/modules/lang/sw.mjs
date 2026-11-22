@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+    chatNickCard: 'Kadi ya mchezaji',
+    chatNickQuote: 'Nukuu',
+    advChatNickMenu: 'Gumzo: gusa jina la utani kwa kadi ya mchezaji, bofya kulia au bonyeza kwa muda kwa menyu',
     srvDownBanner: 'Seva ya PokerTH haijibu (kuwashwa upya au matengenezo). Muunganisho wako unafanya kazi — jaribio linalofuata baada ya sekunde {s}',
     srvDownGaveUp: 'Seva ya PokerTH haipatikani kwa dakika 30. Tafadhali jaribu tena baadaye.',
     netOfflineBanner: 'Hakuna muunganisho wa Intaneti — itaunganisha upya mara tu utakaporudi',
