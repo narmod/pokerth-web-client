@@ -31,9 +31,9 @@ try {
   ok(live.status === 200 && /^frame-ancestors 'self' https:\/\/pokerth\.net https:\/\/www\.pokerth\.net$/.test(live.headers.get('content-security-policy') || ''),
     '/live: the enforced policy is still frame-ancestors only');
   ok(/connect-src 'self' wss:\/\/www\.pokerth\.net(;|$)/.test(ro) && /object-src 'none'/.test(ro) && /base-uri 'self'/.test(ro)
-    && /form-action 'self'/.test(ro) && /img-src 'self' data: blob:/.test(ro) && /default-src 'self'/.test(ro),
+    && /form-action 'self'/.test(ro) && /img-src 'self' data: blob: https:\/\/www\.pokerth\.net(;|$)/.test(ro) && /default-src 'self'/.test(ro),
     '/live: report-only policy — own origin + the pokerth.net WebSocket, no plugin, no <base>');
-  ok(/script-src 'self' 'unsafe-inline'(;|$)/.test(ro) && !/unsafe-eval/.test(ro), '/live: no external script, no eval');
+  ok(/script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'(;|$)/.test(ro) && !/'unsafe-eval'/.test(ro), '/live: no external script, no eval (WebAssembly only, for sql.js)');
   ok(/report-uri \/__csp-report/.test(ro) && /report-to live-csp/.test(ro) && live.headers.get('reporting-endpoints') === 'live-csp="/__csp-report"',
     '/live: both report channels point at /__csp-report');
   const home = await fetch(base + '/');
@@ -46,6 +46,8 @@ try {
   const s2 = await post('application/reports+json', [
     { type: 'csp-violation', body: { documentURL: 'https://webclient.pokerth.net/live', effectiveDirective: 'img-src', blockedURL: 'https://cdn.example/a.png?x=1', disposition: 'report' } },
     { type: 'csp-violation', body: { effectiveDirective: 'script-src-elem', blockedURL: 'chrome-extension://abcdef/inject.js', disposition: 'report' } },
+    { type: 'csp-violation', body: { effectiveDirective: 'script-src-elem', blockedURL: 'https://static.cloudflareinsights.com/beacon.min.js/vce7018', disposition: 'report' } },
+    { type: 'csp-violation', body: { effectiveDirective: 'connect-src', blockedURL: 'https://cloudflareinsights.com/cdn-cgi/rum', disposition: 'report' } },
     { type: 'deprecation', body: { id: 'x' } },
   ]);
   const s3 = await post('application/csp-report', { 'csp-report': { 'effective-directive': 'script-src', 'blocked-uri': 'inline', 'source-file': 'moz-extension://x/c.js' } });
@@ -60,6 +62,7 @@ try {
     'both formats reach Admin › Errors as « live-csp » (' + JSON.stringify(msgs) + ')');
   ok(!JSON.stringify(er).includes('SECRETKEY') && !JSON.stringify(er).includes('x=1'), "the blocked URL's query string is never kept");
   ok(!JSON.stringify(er).includes('extension'), 'reports caused by a browser extension are dropped');
+  ok(!JSON.stringify(er).includes('cloudflareinsights'), 'the Cloudflare Web Analytics beacon, refused on purpose, is not recorded (web.155)');
   ok(g.some((x) => x.src === 'https://webclient.pokerth.net/pokerth.js' && x.line === 12), 'the source file and line are kept');
   // Same rate limit as /clienterr: a flood is refused, not stored.
   let last = 0;

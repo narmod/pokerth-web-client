@@ -402,6 +402,13 @@ highlights below.
   Admin › Errors as mode `live-csp` (blocked URL without its query string, browser-extension reports dropped,
   `/clienterr`'s rate limit). The enforced header is unchanged (`frame-ancestors`). Plan: switch to enforcing
   once a week of reports shows nothing legitimate. `scripts/test-live-csp.mjs` (12 checks).
+- **`/live` report-only policy, first week of reports** (`web.155`) — Admin › Errors showed three sources the policy
+  would block: `wasm-eval` from `/vendor/sql-wasm.js` (sql.js compiling its `.wasm`, the `.pdb` export) →
+  `'wasm-unsafe-eval'` added to `script-src` (WebAssembly only, JS `eval` still refused); the favicon of the
+  « PokerTH.net » menu link → `https://www.pokerth.net` added to `img-src`; the Cloudflare Web Analytics beacon the
+  pokerth.net zone injects (`static.cloudflareinsights.com`) → kept refused, and its reports (script and
+  `cloudflareinsights.com` posts) are no longer recorded (`_CSP_IGNORE`). Still report-only.
+  `test-live-csp` (13 checks).
 - **Admin key kept per tab** (`web.134`) — the admin page stored its key in `localStorage`, shared by every page
   of the origin: a script injected into `/live` (embedded on pokerth.net, showing every player's names and chat)
   could have read it. It now lives in the tab's `sessionStorage`, which other tabs and frames cannot read; a

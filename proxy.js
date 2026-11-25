@@ -11003,11 +11003,17 @@ const LIVE_FRAME_ANCESTORS = "frame-ancestors 'self' https://pokerth.net https:/
 // 'unsafe-inline' stays: the page carries ~1 000 inline handlers. What this
 // adds against an injected script: no request, beacon or image to another
 // site (exfiltration), no external script, no eval, no <base>, no plugin.
+// web.155, from the first week of reports: 'wasm-unsafe-eval' for sql.js
+// (/vendor/sql-wasm.js compiles its .wasm — the .pdb export; WebAssembly
+// only, JS eval stays refused) and https://www.pokerth.net in img-src for the
+// favicon of the « PokerTH.net » menu link. The Cloudflare Web Analytics
+// beacon the pokerth.net zone injects stays refused, and its reports are not
+// recorded (_CSP_IGNORE).
 const LIVE_CSP_REPORT_ONLY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://www.pokerth.net",
   "font-src 'self' data:",
   "media-src 'self' data: blob:",
   "connect-src 'self' wss://www.pokerth.net",
@@ -16500,6 +16506,10 @@ function _errSig(it) {
 }
 // CSP reports (both formats) → client-error items; see /__csp-report.
 const _CSP_EXT = /^(chrome|moz|safari|safari-web|ms-browser)-extension:/i;
+// Refused on purpose, so not worth a line in Admin › Errors (web.155): the
+// Cloudflare Web Analytics beacon (static.cloudflareinsights.com script and
+// its cloudflareinsights.com/cdn-cgi/rum posts) injected by the zone.
+const _CSP_IGNORE = /^https?:\/\/(?:[a-z0-9-]+\.)*cloudflareinsights\.com(?:[:/]|$)/i;
 function _cspUrl(u) {
   u = String(u == null ? '' : u).slice(0, 400);
   if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(u)) return u.slice(0, 40);   // 'inline', 'eval', 'data', 'blob'…
@@ -16524,6 +16534,7 @@ function _cspReports(d) {
   raw.forEach(function (v) {
     const blocked = String(v.blocked == null ? '' : v.blocked), src = String(v.src == null ? '' : v.src);
     if (_CSP_EXT.test(blocked) || _CSP_EXT.test(src)) return;
+    if (_CSP_IGNORE.test(blocked)) return;
     const dir = String(v.dir || '?').replace(/[^a-z-]/gi, '').slice(0, 40) || '?';
     out.push({
       msg: 'CSP ' + (String(v.disp || '') === 'enforce' ? 'blocked' : 'would block') + ': ' + dir + ' ' + (_cspUrl(blocked) || '?'),
