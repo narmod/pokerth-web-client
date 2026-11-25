@@ -1,4 +1,7 @@
-2026-11-22 version 2.1.11-web.153 (current series):
+2026-11-25 version 2.1.11-web.154 (current series):
+- improvement: Tab in the chat now completes the nickname you typed in full first (« noob » no longer becomes « noobass »), then the players who spoke last
+
+2026-11-22 version 2.1.11-web.153:
 - new: tap a nickname in the chat to open the player's card; right-click or long-press it for a menu — private message, quote, ignore, note… (can be turned off in Advanced options → Chat)
 - bugfix: ignoring a player now also hides his « /me » messages already in the chat
 

@@ -11278,12 +11278,22 @@ function _attachChatKeys(id, gameScope) {
         if (!m) return;                       // rien à compléter → Tab normal
         var prefix = m[1].toLowerCase();
         var nicks = (window._chatNicks ? window._chatNicks(gameScope) : []) || [];
-        var seen = {};
-        var matches = nicks.filter(function (n) {
-          var k = n.toLowerCase();
-          if (seen[k] || k.indexOf(prefix) !== 0) return false;
-          seen[k] = 1; return true;
-        });
+        var matches;
+        if (typeof window._rankNickMatches === 'function') {
+          // Exact nickname first, then the latest speakers of this chat, my own
+          // nickname last (modules/chat/nick-complete.mjs).
+          var recent = window._recentChatSpeakers
+            ? window._recentChatSpeakers(document.getElementById(gameScope ? 'g-chat-msgs' : 'chat'))
+            : [];
+          matches = window._rankNickMatches(prefix, nicks, recent, S.myName);
+        } else {
+          var seen = {};
+          matches = nicks.filter(function (n) {
+            var k = n.toLowerCase();
+            if (seen[k] || k.indexOf(prefix) !== 0) return false;
+            seen[k] = 1; return true;
+          });
+        }
         if (!matches.length) return;          // aucun pseudo → Tab normal
         tabMatches = matches; tabIdx = 0;
         tabStart = pos - m[1].length;
@@ -12756,7 +12766,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.153'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.154'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

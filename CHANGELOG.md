@@ -410,6 +410,12 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Tab nickname completion: the exact nickname first** (`web.154`) — lobby chat 21/11 and 24/11: « noob » + Tab
+  gave « noobass ». The candidates came in the order players arrived (QML `StaticData.nickComplete` does the same).
+  New `public/modules/chat/nick-complete.mjs`: exact nickname (case ignored) first, then the latest speakers of that
+  chat (read from its `.who` spans, most recent first), then the rest in list order, my own nickname last; Tab still
+  cycles through every match. `pokerth.js` keeps the old order if the module is not loaded. Tests:
+  `test-nick-complete`. Same fix worth proposing upstream (QML).
 - **Reopened page: no more « nickname in use » for 2 minutes** (`web.151`, audit `claude/AUDIT_FANTOMES_2026-11-21.md`)
   — server log (48 h): 146 logins refused because the same nickname still had a session open, all from the web
   client, 144 of them guests; they also set off 12 of the 13 per-IP login limits. A page closed or killed and
