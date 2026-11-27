@@ -417,6 +417,15 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Invite list: no more players seated at another table, no guests** (`web.156`) — reported by sp0ck on 27/11
+  (forum t=1298): at an invite-only table, Jimbob2 invited gst while gst was playing a running game; the server
+  does not check, relays InviteNotify to the whole table, then answers RejectInvNotify (busy), so the table read
+  « Jimbob2 invited gst » for nothing. Since the invite modal arrived (June 2026) the list only left out me and my own
+  table. Now parity QML `PlayerListItem.canInvite` (`!isSelf && !guestPlayer && !Lobby.isPlayerInAnyGame`): new
+  `InviteLink.canInvitePlayer` / `inviteEligiblePids` (`net/invite-link.mjs`) also leave out anyone seated at a
+  waiting or running table and guests (rights 1). Used by the ≡ menu modal and the waiting-room « Invite » column;
+  `sendInvite` re-checks at send time and the open modal refreshes on game-list seat changes. `test-invite-link`
+  (+9 checks).
 - **Tab nickname completion: the exact nickname first** (`web.154`) — lobby chat 21/11 and 24/11: « noob » + Tab
   gave « noobass ». The candidates came in the order players arrived (QML `StaticData.nickComplete` does the same).
   New `public/modules/chat/nick-complete.mjs`: exact nickname (case ignored) first, then the latest speakers of that

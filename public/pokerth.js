@@ -7427,11 +7427,12 @@ const App = (() => {
       App._renderInviteList(App._inviteEligiblePids());
       modal.style.display = 'flex';
     },
+    // Parity QML canInvite: not me, not at my table, not a guest, and not
+    // seated at ANY other table, waiting or running (InviteLink.canInvitePlayer).
+    // Before 2.1.11-web.156 only me + my own table were filtered out.
     _inviteEligiblePids() {
-      var seated = {};
-      Object.keys(S.seatData).forEach(function(s){ seated[parseInt(s,10)] = true; });
-      var pids = [];
-      S._lobbyPids.forEach(function(p){ if (p !== S.myId && !seated[p]) pids.push(p); });
+      var pids = (window.InviteLink && window.InviteLink.inviteEligiblePids)
+        ? window.InviteLink.inviteEligiblePids() : [];
       pids.sort(function(a,b){
         var na=(S.players[a]||('#'+a)).toLowerCase(), nb=(S.players[b]||('#'+b)).toLowerCase();
         return na<nb?-1:na>nb?1:0;
@@ -7466,6 +7467,12 @@ const App = (() => {
     inviteSentTo(pid) { return !!S._invSent[pid]; },
     sendInvite(pid) {
       if (window._offlineMode || !S.gId || pid === S.myId || !App._canInviteHere()) return;
+      // The list may be stale (player sat down at another table meanwhile):
+      // re-check at send time, and refresh the modal instead of sending.
+      if (!(window.InviteLink && window.InviteLink.canInvitePlayer && window.InviteLink.canInvitePlayer(pid))) {
+        App._renderInviteList(App._inviteEligiblePids());
+        return;
+      }
       try {
         if (_advGet('confirm_social', true)) {
           var _inm = S.players[pid] || ('#' + pid);
@@ -12221,7 +12228,8 @@ function renderPlayersList() {
   var _inGame = rows.filter(function(r) { return r.act; });
   var _atLobby = rows.filter(function(r) { return !r.act; });
   // Éligibilité d'invitation (page d'attente uniquement) : même source que le
-  // modal (App._inviteEligiblePids) -> exclut moi et les joueurs déjà à ma table.
+  // modal (App._inviteEligiblePids) -> exclut moi, ma table, les invités et
+  // tout joueur assis à une autre table, en attente ou en cours (parité QML).
   var _invMode = _plWaitingMode() && _plCanInviteHere() && (typeof App !== 'undefined') && App._inviteEligiblePids;
   var _invElig = {};
   if (_invMode) { try { App._inviteEligiblePids().forEach(function(p){ _invElig[p] = 1; }); } catch(e) { _invMode = false; } }
@@ -12766,7 +12774,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.155'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.156'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

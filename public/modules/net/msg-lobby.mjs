@@ -770,6 +770,12 @@ function onGameListAdminChanged(sub) {
 function _refreshPlayersPanelIfOpen() {
   const _pp = document.getElementById('players-panel');
   if (_pp && _pp.style.display !== 'none' && typeof window.renderPlayersList === 'function') window.renderPlayersList();
+  // Invite modal (≡ menu) open: a player who just sat down elsewhere must
+  // leave its list too (same eligibility as the waiting-room column).
+  const _im = document.getElementById('invite-modal');
+  if (_im && _im.style.display === 'flex' && window.App && typeof window.App._renderInviteList === 'function') {
+    try { window.App._renderInviteList(window.App._inviteEligiblePids()); } catch (e) {}
+  }
 }
 
 function onGameListNew(sub) {

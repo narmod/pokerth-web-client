@@ -155,6 +155,37 @@ export function canInviteFromCurrentGame() {
   return canInviteToGame(type);
 }
 
+// Who may receive an invitation to MY table (parity QML PlayerListItem
+// canInvite: canInviteFromCurrentGame && !isSelf && !guestPlayer
+// && !Lobby.isPlayerInAnyGame(id)). The server does not check any of this:
+// it relays InviteNotify to everyone at the inviting table, THEN answers
+// RejectInvNotify (busy) — so a player seated elsewhere showed up as
+// « X invited Y » for nothing (forum t=1298, 27/11/2026).
+// isPlayerInAnyGame: seated at a listed table, waiting or running (closed
+// tables are dropped from S.games; spectators are not players, as in QML).
+export function isPlayerInAnyGame(games, pid) {
+  for (var id in (games || {})) {
+    var g = games[id];
+    if (g && g.mode !== 3 && g.seats && g.seats.indexOf(pid) !== -1) return true;
+  }
+  return false;
+}
+// Rights (PlayerInfo field 3): 1 = guest, 2 = registered, 3 = admin.
+export function isGuestPlayer(rights, pid) {
+  return ((rights && rights[pid]) || 0) === 1;
+}
+export function canInvitePlayer(pid) {
+  if (!pid || pid === S.myId) return false;
+  if (S.seatData && S.seatData[pid]) return false;          // already at my table
+  if (isGuestPlayer(S._playerRights, pid)) return false;
+  return !isPlayerInAnyGame(S.games, pid);
+}
+export function inviteEligiblePids() {
+  var out = [];
+  try { (S._lobbyPids || []).forEach(function (p) { if (canInvitePlayer(p)) out.push(p); }); } catch (e) {}
+  return out;
+}
+
 // Join (or watch) the table the pending link points at, if it is listed.
 export function resolvePendingInvite() {
   var name = window._pendingAutoJoinName;
@@ -239,7 +270,8 @@ export const InviteLink = {
   PTHNET, inviteTarget, buildInviteUrl, parseInviteHash, normServer, sameServer,
   isLoopbackHost, namesMatch, pickInviteTable, inviteWarnings, createNotFoundWatch,
   resolvePendingInvite, scheduleInviteResolve, armNotFoundWatch, onInviteHashChange,
-  canInviteToGame, canInviteFromCurrentGame
+  canInviteToGame, canInviteFromCurrentGame,
+  isPlayerInAnyGame, isGuestPlayer, canInvitePlayer, inviteEligiblePids
 };
 
 if (typeof window !== 'undefined') {

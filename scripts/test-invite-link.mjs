@@ -164,6 +164,25 @@ ok(IL.canInviteToGame(3) && !IL.canInviteToGame(1) && !IL.canInviteToGame(2) && 
    'invite: server invitation offered only for type 3 (invite-only)');
 ok(/_plColOrder\(\) \{ return \(_plWaitingMode\(\) && _plCanInviteHere\(\)\)/.test(pj), 'player list: « Invite » column gated on invite-only tables');
 ok(/sendInvite\(pid\) \{\n\s+if \([^)]*!App\._canInviteHere\(\)\) return;/.test(pj), 'sendInvite: refused outside invite-only tables');
+// ── Who may be invited (parity QML canInvite, forum t=1298) ─────────────
+{
+  const keep = { myId: S.myId, games: S.games, seatData: S.seatData, rights: S._playerRights, lobby: S._lobbyPids };
+  S.myId = 1;
+  S.games = { 10: { mode: 1, seats: [1, 2] }, 20: { mode: 2, seats: [3] }, 30: { mode: 1, seats: [4], watchers: [5] }, 40: { mode: 3, seats: [6] } };
+  S.seatData = { 1: {}, 2: {} };
+  S._playerRights = { 7: 1, 8: 2 };
+  S._lobbyPids = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  ok(IL.isPlayerInAnyGame(S.games, 3) && IL.isPlayerInAnyGame(S.games, 4), 'invite: seated at a running or waiting table = in a game');
+  ok(!IL.isPlayerInAnyGame(S.games, 5) && !IL.isPlayerInAnyGame(S.games, 6), 'invite: spectator / closed table = not in a game');
+  ok(!IL.canInvitePlayer(1) && !IL.canInvitePlayer(2), 'invite: never me nor a player at my table');
+  ok(!IL.canInvitePlayer(3), 'invite: never a player in a running game elsewhere (gst case)');
+  ok(!IL.canInvitePlayer(4), 'invite: never a player waiting at another table');
+  ok(!IL.canInvitePlayer(7) && IL.canInvitePlayer(8), 'invite: never a guest (rights 1), registered OK');
+  ok(JSON.stringify(IL.inviteEligiblePids().sort()) === '[5,6,8,9]', 'invite: eligible = idle lobby players + spectators, no guest');
+  S.myId = keep.myId; S.games = keep.games; S.seatData = keep.seatData; S._playerRights = keep.rights; S._lobbyPids = keep.lobby;
+}
+ok(/_inviteEligiblePids\(\) \{[\s\S]{0,200}InviteLink\.inviteEligiblePids\(\)/.test(pj), 'pokerth.js: modal + waiting-room column use InviteLink.inviteEligiblePids');
+ok(/sendInvite\(pid\) \{[\s\S]{0,400}canInvitePlayer\(pid\)/.test(pj), 'sendInvite: eligibility re-checked at send time');
 const ml = fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8');
 ok(ml.indexOf('scheduleInviteResolve(') !== -1 && ml.indexOf("from './invite-link.mjs'") !== -1, 'msg-lobby: name match goes through pickInviteTable');
 ok(fs.readFileSync('public/sw.js', 'utf8').indexOf("'/modules/net/invite-link.mjs'") !== -1, 'sw.js: module precached');
