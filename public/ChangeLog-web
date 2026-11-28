@@ -1,4 +1,7 @@
-2026-11-28 version 2.1.11-web.160 (current series):
+2026-11-28 version 2.1.11-web.161 (current series):
+- improvement: a table no longer waits 20 seconds to start because a player's phone went to sleep or his tab was closed
+
+2026-11-28 version 2.1.11-web.160:
 - improvement: reconnecting after your table finished, or after you were knocked out, no longer shows « rejoining… » then « rejoin failed » — you land in the lobby, and if your table is still playing you watch the end of it
 
 2026-11-28 version 2.1.11-web.159:

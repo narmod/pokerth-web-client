@@ -429,6 +429,15 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **No more 20-second start delay for a sleeping browser** (`web.161`) — server log 26–28/11: 14 of the 17 « start
+  timeout after 20 s, no start ACK » were web players (9 on iOS), most gone seconds later: the bridge held the
+  session in its grace while the table waited for an answer that could not come. New `server/start-ack.js`: on a
+  StartEvent, the bridge sends StartEventAck itself at once when no browser is attached (grace, overflow close),
+  or after 3 s when an attached browser stays silent; cancelled by GameStartInitial / GameStartRejoin /
+  RemovedFromGame. The browser's own late ack for that game is then dropped — the server counted one, and in the
+  lobby the same packet ends the session (`ServerLobbyThread::HandlePacket` → `ERR_SOCK_INVALID_STATE`); in the
+  running states it is ignored. Proxy change: needs a full deploy (restart), not a static one. Tests:
+  `test-proxy-start-ack` (15), `test-proxy-start-ack-e2e` (real proxy, fake server).
 - **Rejoin only when the server offers it** (`web.160`) — server log 26–28/11: ≈ 98 web `RejoinExistingGame` sent
   without an offer; 70 for a game already over (« not running » / « does not exist »), 18 refused (seat released,
   session id mismatch), each shown as « rejoining » then « rejoin failed », and 10 sent a player already out of

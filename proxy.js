@@ -16800,8 +16800,12 @@ const SESSION_GRACE_MS = 120000;          // garder l'amont 2 min après coupure
                                           // retour au premier plan — il faut une fenêtre large)
 const SESSION_MAX_BUF  = 4 * 1024 * 1024; // plafond du tampon (octets) en attente de rebranchement
 
+// Start acknowledgement for a browser that cannot answer (server/start-ack.js).
+const START_ACK = require('./server/start-ack.js');
+
 function _destroySession(S) {
   if (S.grace) { clearTimeout(S.grace); S.grace = null; }
+  START_ACK.dispose(S.startAck);
   _liveSessions.delete(S);
   if (S.sid && _sessions.get(S.sid) === S) _sessions.delete(S.sid);
   try { S.sock && S.sock.destroy(); } catch (_) {}
@@ -16916,6 +16920,13 @@ function _openUpstream(S) {
             console.log('[S→C] #' + S.n + ' ' + d.name + ' (' + msgLen + 'b)' + d.extra);
           if (_ll >= 2 && (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand')))
             console.log('      hex: ' + payload.toString('hex'));
+          // A table starting while the browser cannot answer (asleep, closed,
+          // in grace): acknowledge for it instead of keeping the table waiting
+          // 20 s (server log 26–28/11, server/start-ack.js).
+          START_ACK.onServerPayload(S.startAck || (S.startAck = {}), payload,
+            !!(S.ws && S.ws.readyState === WebSocket.OPEN && S.ws.bufferedAmount <= MAX_WS_SEND_QUEUE),
+            function (f) { if (!S.sock || !S.sock.writable) return false; S.sock.write(f); return true; },
+            function (m) { console.log(m); });
           // Navigateur attaché → envoyer ; sinon (session en attente) → tamponner.
           // Garde de file d'envoi (miroir du PR upstream pokerth#518) : un
           // navigateur qui ne lit plus laisse ws accumuler bufferedAmount sans
@@ -17128,6 +17139,11 @@ function _attachWs(S, ws) {
         if (_ll >= 2 && _n <= 32 && d.name !== 'Init' && d.name !== 'AuthClientResponse') console.log('      hex: ' + buf.slice(4).toString('hex'));
       }
     }
+    // The browser's own start acknowledgement for a game the bridge already
+    // acknowledged: the server has counted one, and in the lobby the same
+    // packet would end the session (server/start-ack.js).
+    if (S.startAck && buf.length === 4 + buf.readUInt32BE(0) &&
+        START_ACK.onBrowserPayload(S.startAck, buf.slice(4))) return;
     // An upstream that stops reading (slow or hostile LAN server) used to let
     // this buffer grow without bound; the server→browser side already has a
     // 1 MiB ceiling.
