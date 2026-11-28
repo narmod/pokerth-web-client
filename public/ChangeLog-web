@@ -1,4 +1,7 @@
-2026-11-28 version 2.1.11-web.162 (current series):
+2026-11-28 version 2.1.11-web.164 (current series):
+- bugfix: pressing Tab in the chat to complete a nickname did nothing and raised an error; it completes the name again
+
+2026-11-28 version 2.1.11-web.162:
 - bugfix: a long chat message in Cyrillic, Greek, Arabic, Chinese or full of emoji was lost without a word; it is now shortened to what the server accepts, like in the desktop client
 
 2026-11-28 version 2.1.11-web.161:

@@ -438,6 +438,10 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Tab nickname completion in chat works again** (`web.164`) — client error log 26–28/11: « ReferenceError: S is
+  not defined » in `_attachChatKeys` (`pokerth.js`). The Tab handler passed `S.myName` to `_rankNickMatches`, but `S`
+  is not in scope there (it is local to other IIFEs); it now reads `window.PthState.myName`. Scope analysis
+  (eslint-scope) confirms no other unresolved `S` in `pokerth.js`.
 - **Long non-Latin chat messages no longer vanish** (`web.162`) — server log 26–28/11: « Invalid packet: 63 » from a web
   client. The server accepts 1–128 BYTES of UTF-8 (`ValidateChatRequestMessage`), the inputs cap 128 characters: in
   Cyrillic, Greek, Arabic, CJK or with emoji the packet was rejected and the message lost silently. New

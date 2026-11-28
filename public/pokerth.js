@@ -11303,7 +11303,8 @@ function _attachChatKeys(id, gameScope) {
           var recent = window._recentChatSpeakers
             ? window._recentChatSpeakers(document.getElementById(gameScope ? 'g-chat-msgs' : 'chat'))
             : [];
-          matches = window._rankNickMatches(prefix, nicks, recent, S.myName);
+          matches = window._rankNickMatches(prefix, nicks, recent,
+            (window.PthState && window.PthState.myName) || '');
         } else {
           var seen = {};
           matches = nicks.filter(function (n) {
@@ -12785,7 +12786,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.164'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
