@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Pārbauda kontu…',
     connErrVersion:'Nesaderīga versija', connErrFull:'Serveris ir pilns', connErrAuth:'Autentifikācija neizdevās',
-    connErrNickTaken:'Segvārds jau ir aizņemts', connErrNickInvalid:'Nederīgs segvārds', connErrMaintenance:'Apkope', connErrBlocked:'Bloķēts',
+    connErrNickTaken:'Segvārds jau ir aizņemts', connErrElsewhere: "Jūsu kontā pieteicās citā cilnē vai ierīcē", connErrNickInvalid:'Nederīgs segvārds', connErrMaintenance:'Apkope', connErrBlocked:'Bloķēts',
     connErrAvatarSize:'Avatara fails ir par lielu', connErrPacket:'Nederīga tīkla pakete (versiju neatbilstība?)', connErrState:'Nederīgs savienojuma stāvoklis (versiju neatbilstība?)', connErrKicked:'Tu tiki izmests no servera', connErrBanned:'Tev uz laiku ir liegta piekļuve serverim', connErrAccBlocked:'Tavs konts ir bloķēts', connErrIdle:'Atvienots neaktivitātes dēļ — vari atkal pieslēgties',
     ipBlockedPrefix:'⏳ IP bloķēts — ', ipBlockedWaitPrefix:'⏳ IP bloķēts — gaidi ', ipBlockedRetry:'⏳ IP bloķēts — pagaidi 5 minūtes un mēģini vēlreiz.',
     sharedTableJoining:'🔗 Koplietotais galds atrasts — pievienojas…',

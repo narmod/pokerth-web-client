@@ -349,7 +349,7 @@ export const strings = {
     connErrVersion: 'Incompatibele versie',
     connErrFull: 'Server vol',
     connErrAuth: 'Authenticatie mislukt',
-    connErrNickTaken: 'Bijnaam al in gebruik',
+    connErrNickTaken: 'Bijnaam al in gebruik', connErrElsewhere: "Je account is aangemeld vanaf een ander tabblad of apparaat",
     connErrNickInvalid: 'Ongeldige bijnaam',
     connErrMaintenance: 'Onderhoud',
     connErrBlocked: 'Geblokkeerd',

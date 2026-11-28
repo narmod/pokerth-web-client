@@ -204,6 +204,20 @@ sub = subOf([[1, 0, 3]]);
 M.onError(sub);
 ok(true, 'onError : traité sans exception');
 
+// ── onError 4 while logged in = account logged in elsewhere: no retry (server log 26–28/11)
+S._wasAuthenticated = true; S._intentionalDisconnect = false; S._connLostReason = '';
+window._nickBusyTimer = null;
+M.onError(subOf([[1, 0, 4]]));
+ok(S._intentionalDisconnect === true && !window._nickBusyTimer && S._wasAuthenticated === false,
+   'onError 4 after login: no automatic retry');
+ok(S._connLostReason === 'Your account logged in from another tab or device', 'onError 4 after login: « logged in elsewhere » reason');
+// ── onError 4 at login (refused, ghost of our own session): bounded retry kept
+S._wasAuthenticated = false; S._connLostReason = ''; S._nickBusyTries = 0; S.myName = 'Moi';
+M.onError(subOf([[1, 0, 4]]));
+ok(!!window._nickBusyTimer && S._connLostReason === '', 'onError 4 at login: bounded nickname retry still armed');
+try { clearTimeout(window._nickBusyTimer); clearInterval(window._nickBusyTick); } catch (e) {}
+window._nickBusyTimer = null;
+
 // ── onReportGameAck : toast selon le code
 toasts.length = 0;
 sub = subOf([[1, 0, 12], [2, 0, 0]]);

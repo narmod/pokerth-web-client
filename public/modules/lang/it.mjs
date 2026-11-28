@@ -351,7 +351,7 @@ export const strings = {
     connErrVersion: 'Versione incompatibile',
     connErrFull: 'Server pieno',
     connErrAuth: 'Autenticazione fallita',
-    connErrNickTaken: 'Nickname già in uso',
+    connErrNickTaken: 'Nickname già in uso', connErrElsewhere: "Il tuo account si è connesso da un'altra scheda o da un altro dispositivo",
     connErrNickInvalid: 'Nickname non valido',
     connErrMaintenance: 'Manutenzione',
     connErrBlocked: 'Bloccato',

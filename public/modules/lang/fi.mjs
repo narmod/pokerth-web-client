@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'Yhteensopimaton versio',
     connErrFull: 'Palvelin täynnä',
     connErrAuth: 'Todennus epäonnistui',
-    connErrNickTaken: 'Nimimerkki on jo varattu',
+    connErrNickTaken: 'Nimimerkki on jo varattu', connErrElsewhere: "Tilillesi kirjauduttiin toisesta välilehdestä tai laitteesta",
     connErrNickInvalid: 'Virheellinen nimimerkki',
     connErrMaintenance: 'Huolto',
     connErrBlocked: 'Estetty',

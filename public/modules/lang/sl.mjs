@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Preverjanje računa…',
     connErrVersion:'Nezdružljiva različica', connErrFull:'Strežnik poln', connErrAuth:'Preverjanje pristnosti ni uspelo',
-    connErrNickTaken:'Vzdevek že zaseden', connErrNickInvalid:'Neveljaven vzdevek', connErrMaintenance:'Vzdrževanje', connErrBlocked:'Blokirano',
+    connErrNickTaken:'Vzdevek že zaseden', connErrElsewhere: "Vaš račun se je prijavil v drugem zavihku ali napravi", connErrNickInvalid:'Neveljaven vzdevek', connErrMaintenance:'Vzdrževanje', connErrBlocked:'Blokirano',
     connErrAvatarSize:'Datoteka avatarja prevelika', connErrPacket:'Neveljaven omrežni paket (neujemanje različic?)', connErrState:'Neveljavno stanje povezave (neujemanje različic?)', connErrKicked:'Izločen si bil s strežnika', connErrBanned:'Začasno si bil blokiran na strežniku', connErrAccBlocked:'Tvoj račun je blokiran', connErrIdle:'Povezava prekinjena zaradi nedejavnosti — vabljeni k ponovni povezavi',
     ipBlockedPrefix:'⏳ IP blokiran — ', ipBlockedWaitPrefix:'⏳ IP blokiran — počakaj ', ipBlockedRetry:'⏳ IP blokiran — počakaj 5 minut in poskusi znova.',
     sharedTableJoining:'🔗 Deljena miza najdena — pridruževanje…',

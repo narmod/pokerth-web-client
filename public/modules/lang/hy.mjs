@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Հաշիվը ստուգվում է…',
     connErrVersion:'Անհամատեղելի տարբերակ', connErrFull:'Սերվերը լիքն է', connErrAuth:'Նույնականացումը ձախողվեց',
-    connErrNickTaken:'Մականունն արդեն զբաղված է', connErrNickInvalid:'Անվավեր մականուն', connErrMaintenance:'Տեխնիկական սպասարկում', connErrBlocked:'Արգելափակված է',
+    connErrNickTaken:'Մականունն արդեն զբաղված է', connErrElsewhere: "Ձեր հաշիվ մուտք են գործել մեկ այլ ներդիրից կամ սարքից", connErrNickInvalid:'Անվավեր մականուն', connErrMaintenance:'Տեխնիկական սպասարկում', connErrBlocked:'Արգելափակված է',
     connErrAvatarSize:'Ավատարի ֆայլը չափազանց մեծ է', connErrPacket:'Անվավեր ցանցային փաթեթ (տարբերակների անհամապատասխանություն՞)', connErrState:'Կապի անվավեր վիճակ (տարբերակների անհամապատասխանություն՞)', connErrKicked:'Դուք հեռացվեցիք սերվերից', connErrBanned:'Դուք ժամանակավորապես արգելափակվեցիք սերվերում', connErrAccBlocked:'Ձեր հաշիվը արգելափակված է', connErrIdle:'Կապն ընդհատվեց անգործությունից հետո — կարող եք նորից միանալ',
     ipBlockedPrefix:'⏳ IP-ն արգելափակված է — ', ipBlockedWaitPrefix:'⏳ IP-ն արգելափակված է — սպասեք ', ipBlockedRetry:'⏳ IP-ն արգելափակված է — սպասեք 5 րոպե, ապա նորից փորձեք։',
     sharedTableJoining:'🔗 Կիսված սեղանը գտնվեց — միանում է…',

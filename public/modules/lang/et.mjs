@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Konto kontrollimine…',
     connErrVersion:'Ühildumatu versioon', connErrFull:'Server on täis', connErrAuth:'Autentimine ebaõnnestus',
-    connErrNickTaken:'Hüüdnimi on juba võetud', connErrNickInvalid:'Vigane hüüdnimi', connErrMaintenance:'Hooldus', connErrBlocked:'Blokeeritud',
+    connErrNickTaken:'Hüüdnimi on juba võetud', connErrElsewhere: "Teie kontole logiti sisse teiselt vahekaardilt või seadmest", connErrNickInvalid:'Vigane hüüdnimi', connErrMaintenance:'Hooldus', connErrBlocked:'Blokeeritud',
     connErrAvatarSize:'Avatari fail on liiga suur', connErrPacket:'Vigane võrgupakett (versioonide erinevus?)', connErrState:'Vigane ühenduse olek (versioonide erinevus?)', connErrKicked:'Sind visati serverist välja', connErrBanned:'Sind on serverist ajutiselt bännitud', connErrAccBlocked:'Sinu konto on blokeeritud', connErrIdle:'Ühendus katkestati tegevusetuse tõttu — võid rahulikult uuesti ühenduda',
     ipBlockedPrefix:'⏳ IP blokeeritud — ', ipBlockedWaitPrefix:'⏳ IP blokeeritud — oota ', ipBlockedRetry:'⏳ IP blokeeritud — oota 5 minutit ja proovi siis uuesti.',
     sharedTableJoining:'🔗 Jagatud laud leitud — liitumine…',

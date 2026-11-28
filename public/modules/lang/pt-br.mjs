@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: 'Versão incompatível',
     connErrFull: 'Servidor cheio',
     connErrAuth: 'Falha na autenticação',
-    connErrNickTaken: 'Apelido já em uso',
+    connErrNickTaken: 'Apelido já em uso', connErrElsewhere: "Sua conta foi conectada em outra aba ou outro dispositivo",
     connErrNickInvalid: 'Apelido inválido',
     connErrMaintenance: 'Manutenção',
     connErrBlocked: 'Bloqueado',

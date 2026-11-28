@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: 'பொருந்தாத பதிப்பு',
     connErrFull: 'சேவையகம் நிரம்பியுள்ளது',
     connErrAuth: 'அங்கீகாரம் தோல்வியடைந்தது',
-    connErrNickTaken: 'புனைப்பெயர் ஏற்கனவே பயன்பாட்டில் உள்ளது',
+    connErrNickTaken: 'புனைப்பெயர் ஏற்கனவே பயன்பாட்டில் உள்ளது', connErrElsewhere: "வேறு தாவல் அல்லது சாதனத்திலிருந்து உங்கள் கணக்கில் உள்நுழையப்பட்டது",
     connErrNickInvalid: 'தவறான புனைப்பெயர்',
     connErrMaintenance: 'பராமரிப்பு',
     connErrBlocked: 'தடுக்கப்பட்டது',

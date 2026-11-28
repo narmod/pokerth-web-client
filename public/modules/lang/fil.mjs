@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Bine-verify ang account…',
     connErrVersion:'Hindi tugmang bersyon', connErrFull:'Puno ang server', connErrAuth:'Nabigo ang authentication',
-    connErrNickTaken:'Nakuha na ang palayaw', connErrNickInvalid:'Hindi valid na palayaw', connErrMaintenance:'Maintenance', connErrBlocked:'Naka-block',
+    connErrNickTaken:'Nakuha na ang palayaw', connErrElsewhere: "Nag-log in ang account mo mula sa ibang tab o device", connErrNickInvalid:'Hindi valid na palayaw', connErrMaintenance:'Maintenance', connErrBlocked:'Naka-block',
     connErrAvatarSize:'Masyadong malaki ang avatar file', connErrPacket:'Hindi valid na network packet (hindi tugma ang bersyon?)', connErrState:'Hindi valid na connection state (hindi tugma ang bersyon?)', connErrKicked:'Na-kick ka mula sa server', connErrBanned:'Pansamantala kang na-ban sa server', connErrAccBlocked:'Naka-block ang iyong account', connErrIdle:'Na-disconnect dahil sa inaktibidad — malugod kang muling kumonekta',
     ipBlockedPrefix:'⏳ Naka-block ang IP — ', ipBlockedWaitPrefix:'⏳ Naka-block ang IP — maghintay ng ', ipBlockedRetry:'⏳ Naka-block ang IP — maghintay ng 5 minuto saka subukan muli.',
     sharedTableJoining:'🔗 Nakita ang ibinahaging mesa — sumasali…',

@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'À ń ṣàyẹ̀wò àkáǹtì…',
     connErrVersion:'Ẹ̀yà tí kò bá a mu', connErrFull:'Olùpín ti kún', connErrAuth:'Ìjẹ́rìísí kùnà',
-    connErrNickTaken:'Ẹlòmíràn ti gba orúkọ ìnagijẹ náà', connErrNickInvalid:'Orúkọ ìnagijẹ tí kò bófin mu', connErrMaintenance:'Àtúnṣe', connErrBlocked:'A ti dí i',
+    connErrNickTaken:'Ẹlòmíràn ti gba orúkọ ìnagijẹ náà', connErrElsewhere: "A wọlé sí àkáǹtì rẹ láti táàbù tàbí ẹ̀rọ mìíràn", connErrNickInvalid:'Orúkọ ìnagijẹ tí kò bófin mu', connErrMaintenance:'Àtúnṣe', connErrBlocked:'A ti dí i',
     connErrAvatarSize:'Fáìlì afàtá tóbi jù', connErrPacket:'Àpò nẹ́tíwọ̀ọ̀kì tí kò bófin mu (àwọn ẹ̀yà kò bá ara wọn mu?)', connErrState:'Ipò ìsopọ̀ tí kò bófin mu (àwọn ẹ̀yà kò bá ara wọn mu?)', connErrKicked:'A ti lé ọ kúrò lórí olùpín', connErrBanned:'A ti dí ọ lọ́wọ́ olùpín fún ìgbà díẹ̀', connErrAccBlocked:'A ti dí àkáǹtì rẹ', connErrIdle:'A gé ìsopọ̀ nítorí àìṣiṣẹ́ — o lè tún sopọ̀',
     ipBlockedPrefix:'⏳ A ti dí IP — ', ipBlockedWaitPrefix:'⏳ A ti dí IP — dúró ', ipBlockedRetry:'⏳ A ti dí IP — dúró fún ìṣẹ́jú 5 kí o sì tún gbìyànjú.',
     sharedTableJoining:'🔗 A rí tábìlì tí a pín — ó ń darapọ̀…',

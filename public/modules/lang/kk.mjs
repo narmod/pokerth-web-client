@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Тіркелгі тексерілуде…',
     connErrVersion:'Үйлесімсіз нұсқа', connErrFull:'Сервер толы', connErrAuth:'Аутентификация сәтсіз аяқталды',
-    connErrNickTaken:'Лақап ат бос емес', connErrNickInvalid:'Жарамсыз лақап ат', connErrMaintenance:'Техникалық қызмет көрсету', connErrBlocked:'Бұғатталған',
+    connErrNickTaken:'Лақап ат бос емес', connErrElsewhere: "Аккаунтыңызға басқа қойындыдан не құрылғыдан кірілді", connErrNickInvalid:'Жарамсыз лақап ат', connErrMaintenance:'Техникалық қызмет көрсету', connErrBlocked:'Бұғатталған',
     connErrAvatarSize:'Аватар файлы тым үлкен', connErrPacket:'Жарамсыз желілік пакет (нұсқалар сәйкес емес пе?)', connErrState:'Жарамсыз қосылым күйі (нұсқалар сәйкес емес пе?)', connErrKicked:'Сіз серверден шығарылдыңыз', connErrBanned:'Сізге серверге кіруге уақытша тыйым салынды', connErrAccBlocked:'Тіркелгіңіз бұғатталған', connErrIdle:'Әрекетсіздіктен кейін ажыратылдыңыз — қайта қосыла аласыз',
     ipBlockedPrefix:'⏳ IP бұғатталған — ', ipBlockedWaitPrefix:'⏳ IP бұғатталған — күтіңіз: ', ipBlockedRetry:'⏳ IP бұғатталған — 5 минут күтіп, қайталап көріңіз.',
     sharedTableJoining:'🔗 Бөлісілген үстел табылды — қосылуда…',

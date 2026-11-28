@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Mengesahkan akaun…',
     connErrVersion:'Versi tidak serasi', connErrFull:'Pelayan penuh', connErrAuth:'Pengesahan gagal',
-    connErrNickTaken:'Nama samaran telah digunakan', connErrNickInvalid:'Nama samaran tidak sah', connErrMaintenance:'Penyelenggaraan', connErrBlocked:'Disekat',
+    connErrNickTaken:'Nama samaran telah digunakan', connErrElsewhere: "Akaun anda telah dilog masuk dari tab atau peranti lain", connErrNickInvalid:'Nama samaran tidak sah', connErrMaintenance:'Penyelenggaraan', connErrBlocked:'Disekat',
     connErrAvatarSize:'Fail avatar terlalu besar', connErrPacket:'Paket rangkaian tidak sah (versi tidak sepadan?)', connErrState:'Keadaan sambungan tidak sah (versi tidak sepadan?)', connErrKicked:'Anda telah dikeluarkan dari pelayan', connErrBanned:'Anda telah disekat buat sementara dari pelayan', connErrAccBlocked:'Akaun anda disekat', connErrIdle:'Terputus sambungan kerana tidak aktif — anda dialu-alukan untuk menyambung semula',
     ipBlockedPrefix:'⏳ IP disekat — ', ipBlockedWaitPrefix:'⏳ IP disekat — tunggu ', ipBlockedRetry:'⏳ IP disekat — tunggu 5 minit kemudian cuba lagi.',
     sharedTableJoining:'🔗 Meja yang dikongsi dijumpai — menyertai…',

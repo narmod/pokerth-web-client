@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'جارٍ التحقق من الحساب…',
     connErrVersion:'إصدار غير متوافق', connErrFull:'الخادم ممتلئ', connErrAuth:'فشلت المصادقة',
-    connErrNickTaken:'الاسم المستعار محجوز', connErrNickInvalid:'اسم مستعار غير صالح', connErrMaintenance:'صيانة', connErrBlocked:'محظور',
+    connErrNickTaken:'الاسم المستعار محجوز', connErrElsewhere: "تم تسجيل الدخول إلى حسابك من علامة تبويب أو جهاز آخر", connErrNickInvalid:'اسم مستعار غير صالح', connErrMaintenance:'صيانة', connErrBlocked:'محظور',
     connErrAvatarSize:'ملف الأفاتار كبير جدًا', connErrPacket:'حزمة شبكة غير صالحة (عدم توافق الإصدار؟)', connErrState:'حالة اتصال غير صالحة (عدم توافق الإصدار؟)', connErrKicked:'طُردت من الخادم', connErrBanned:'حُظرت مؤقتًا من الخادم', connErrAccBlocked:'حسابك محظور', connErrIdle:'قُطع الاتصال بعد خمول — يمكنك إعادة الاتصال متى شئت',
     ipBlockedPrefix:'⏳ عنوان IP محظور — ', ipBlockedWaitPrefix:'⏳ عنوان IP محظور — انتظر ', ipBlockedRetry:'⏳ عنوان IP محظور — انتظر 5 دقائق ثم أعد المحاولة.',
     sharedTableJoining:'🔗 عُثر على طاولة مشتركة — جارٍ الانضمام…',

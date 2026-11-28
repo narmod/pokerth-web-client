@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: '版本不相容',
     connErrFull: '伺服器已滿',
     connErrAuth: '身份驗證失敗',
-    connErrNickTaken: '暱稱已被佔用',
+    connErrNickTaken: '暱稱已被佔用', connErrElsewhere: "你的帳號已在另一個分頁或裝置上登入",
     connErrNickInvalid: '暱稱無效',
     connErrMaintenance: '維護中',
     connErrBlocked: '已被封禁',

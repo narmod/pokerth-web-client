@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ఖాతాను ధృవీకరిస్తోంది…',
     connErrVersion:'అనుకూలం కాని వెర్షన్', connErrFull:'సర్వర్ నిండిపోయింది', connErrAuth:'ప్రామాణీకరణ విఫలమైంది',
-    connErrNickTaken:'మారుపేరు ఇప్పటికే తీసుకోబడింది', connErrNickInvalid:'చెల్లని మారుపేరు', connErrMaintenance:'నిర్వహణ', connErrBlocked:'బ్లాక్ చేయబడింది',
+    connErrNickTaken:'మారుపేరు ఇప్పటికే తీసుకోబడింది', connErrElsewhere: "మరో ట్యాబ్ లేదా పరికరం నుండి మీ ఖాతాలోకి లాగిన్ అయ్యారు", connErrNickInvalid:'చెల్లని మారుపేరు', connErrMaintenance:'నిర్వహణ', connErrBlocked:'బ్లాక్ చేయబడింది',
     connErrAvatarSize:'అవతార్ ఫైల్ చాలా పెద్దది', connErrPacket:'చెల్లని నెట్‌వర్క్ ప్యాకెట్ (వెర్షన్ సరిపోలలేదా?)', connErrState:'చెల్లని కనెక్షన్ స్థితి (వెర్షన్ సరిపోలలేదా?)', connErrKicked:'మిమ్మల్ని సర్వర్ నుండి తొలగించారు', connErrBanned:'మిమ్మల్ని సర్వర్ నుండి తాత్కాలికంగా నిషేధించారు', connErrAccBlocked:'మీ ఖాతా బ్లాక్ చేయబడింది', connErrIdle:'నిష్క్రియత తర్వాత డిస్‌కనెక్ట్ అయ్యారు — మళ్లీ కనెక్ట్ కావచ్చు',
     ipBlockedPrefix:'⏳ IP బ్లాక్ అయింది — ', ipBlockedWaitPrefix:'⏳ IP బ్లాక్ అయింది — వేచి ఉండండి ', ipBlockedRetry:'⏳ IP బ్లాక్ అయింది — 5 నిమిషాలు ఆగి మళ్లీ ప్రయత్నించండి.',
     sharedTableJoining:'🔗 షేర్ చేసిన టేబుల్ దొరికింది — చేరుతోంది…',

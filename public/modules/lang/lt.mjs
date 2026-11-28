@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Nesuderinama versija',
     connErrFull: 'Serveris pilnas',
     connErrAuth: 'Autentifikavimas nepavyko',
-    connErrNickTaken: 'Slapyvardis jau naudojamas',
+    connErrNickTaken: 'Slapyvardis jau naudojamas', connErrElsewhere: "Į jūsų paskyrą prisijungta kitame skirtuke arba įrenginyje",
     connErrNickInvalid: 'Netinkamas slapyvardis',
     connErrMaintenance: 'Techninė priežiūra',
     connErrBlocked: 'Užblokuota',

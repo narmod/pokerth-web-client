@@ -349,7 +349,7 @@ export const strings = {
     connErrVersion: 'Несовместимая версия',
     connErrFull: 'Сервер переполнен',
     connErrAuth: 'Ошибка аутентификации',
-    connErrNickTaken: 'Никнейм уже занят',
+    connErrNickTaken: 'Никнейм уже занят', connErrElsewhere: "В ваш аккаунт вошли с другой вкладки или другого устройства",
     connErrNickInvalid: 'Недопустимый никнейм',
     connErrMaintenance: 'Техобслуживание',
     connErrBlocked: 'Заблокировано',

@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Hesab yoxlanılır…',
     connErrVersion:'Uyğunsuz versiya', connErrFull:'Server doludur', connErrAuth:'Kimlik doğrulaması alınmadı',
-    connErrNickTaken:'Ləqəb artıq tutulub', connErrNickInvalid:'Yanlış ləqəb', connErrMaintenance:'Texniki xidmət', connErrBlocked:'Bloklanıb',
+    connErrNickTaken:'Ləqəb artıq tutulub', connErrElsewhere: "Hesabınıza başqa bir tab və ya cihazdan daxil olundu", connErrNickInvalid:'Yanlış ləqəb', connErrMaintenance:'Texniki xidmət', connErrBlocked:'Bloklanıb',
     connErrAvatarSize:'Avatar faylı çox böyükdür', connErrPacket:'Yanlış şəbəkə paketi (versiya uyğunsuzluğu?)', connErrState:'Yanlış bağlantı vəziyyəti (versiya uyğunsuzluğu?)', connErrKicked:'Siz serverdən çıxarıldınız', connErrBanned:'Siz serverdən müvəqqəti qadağan olundunuz', connErrAccBlocked:'Hesabınız bloklanıb', connErrIdle:'Fəaliyyətsizlikdən sonra bağlantı kəsildi — yenidən qoşula bilərsiniz',
     ipBlockedPrefix:'⏳ IP bloklanıb — ', ipBlockedWaitPrefix:'⏳ IP bloklanıb — gözləyin ', ipBlockedRetry:'⏳ IP bloklanıb — 5 dəqiqə gözləyin, sonra yenidən cəhd edin.',
     sharedTableJoining:'🔗 Paylaşılan masa tapıldı — qoşulur…',

@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ანგარიში მოწმდება…',
     connErrVersion:'შეუთავსებელი ვერსია', connErrFull:'სერვერი სავსეა', connErrAuth:'ავტორიზაცია ვერ მოხერხდა',
-    connErrNickTaken:'მეტსახელი უკვე დაკავებულია', connErrNickInvalid:'არასწორი მეტსახელი', connErrMaintenance:'ტექნიკური მომსახურება', connErrBlocked:'დაბლოკილია',
+    connErrNickTaken:'მეტსახელი უკვე დაკავებულია', connErrElsewhere: "თქვენს ანგარიშზე შესვლა მოხდა სხვა ჩანართიდან ან მოწყობილობიდან", connErrNickInvalid:'არასწორი მეტსახელი', connErrMaintenance:'ტექნიკური მომსახურება', connErrBlocked:'დაბლოკილია',
     connErrAvatarSize:'ავატარის ფაილი ზედმეტად დიდია', connErrPacket:'არასწორი ქსელური პაკეტი (ვერსიები არ ემთხვევა?)', connErrState:'კავშირის არასწორი მდგომარეობა (ვერსიები არ ემთხვევა?)', connErrKicked:'სერვერიდან გამოგაგდეს', connErrBanned:'სერვერზე დროებით დაგბლოკეს', connErrAccBlocked:'თქვენი ანგარიში დაბლოკილია', connErrIdle:'უმოქმედობის შემდეგ კავშირი გაითიშა — შეგიძლიათ კვლავ დაუკავშირდეთ',
     ipBlockedPrefix:'⏳ IP დაბლოკილია — ', ipBlockedWaitPrefix:'⏳ IP დაბლოკილია — დაელოდეთ ', ipBlockedRetry:'⏳ IP დაბლოკილია — დაელოდეთ 5 წუთს და კვლავ სცადეთ.',
     sharedTableJoining:'🔗 გაზიარებული მაგიდა მოიძებნა — შეერთება…',

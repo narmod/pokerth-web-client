@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ගිණුම සත්‍යාපනය වෙමින්…',
     connErrVersion:'නොගැළපෙන අනුවාදය', connErrFull:'සේවාදායකය පිරී ඇත', connErrAuth:'සත්‍යාපනය අසාර්ථක විය',
-    connErrNickTaken:'අන්වර්ථ නාමය දැනටමත් ගෙන ඇත', connErrNickInvalid:'වලංගු නොවන අන්වර්ථ නාමය', connErrMaintenance:'නඩත්තුව', connErrBlocked:'අවහිර කර ඇත',
+    connErrNickTaken:'අන්වර්ථ නාමය දැනටමත් ගෙන ඇත', connErrElsewhere: "වෙනත් ටැබයකින් හෝ උපාංගයකින් ඔබගේ ගිණුමට පුරනය විය", connErrNickInvalid:'වලංගු නොවන අන්වර්ථ නාමය', connErrMaintenance:'නඩත්තුව', connErrBlocked:'අවහිර කර ඇත',
     connErrAvatarSize:'අවතාර ගොනුව විශාල වැඩියි', connErrPacket:'වලංගු නොවන ජාල පැකට්ටුව (අනුවාද නොගැළපීමක්ද?)', connErrState:'වලංගු නොවන සම්බන්ධතා තත්ත්වය (අනුවාද නොගැළපීමක්ද?)', connErrKicked:'ඔබව සේවාදායකයෙන් ඉවත් කරන ලදී', connErrBanned:'ඔබව සේවාදායකයෙන් තාවකාලිකව තහනම් කරන ලදී', connErrAccBlocked:'ඔබේ ගිණුම අවහිර කර ඇත', connErrIdle:'අක්‍රියව සිටීම නිසා විසන්ධි විය — නැවත සම්බන්ධ වීමට ඔබව සාදරයෙන් පිළිගනිමු',
     ipBlockedPrefix:'⏳ IP අවහිරයි — ', ipBlockedWaitPrefix:'⏳ IP අවහිරයි — රැඳී සිටින්න ', ipBlockedRetry:'⏳ IP අවහිරයි — මිනිත්තු 5 ක් රැඳී සිට නැවත උත්සාහ කරන්න.',
     sharedTableJoining:'🔗 බෙදාගත් මේසය හමු විය — එක්වෙමින්…',

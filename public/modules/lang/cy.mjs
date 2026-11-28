@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Yn gwirio\'r cyfrif…',
     connErrVersion:'Fersiwn anghydnaws', connErrFull:'Mae\'r gweinydd yn llawn', connErrAuth:'Methodd y dilysu',
-    connErrNickTaken:'Mae\'r llysenw wedi\'i gymryd eisoes', connErrNickInvalid:'Llysenw annilys', connErrMaintenance:'Cynnal a chadw', connErrBlocked:'Wedi\'i rwystro',
+    connErrNickTaken:'Mae\'r llysenw wedi\'i gymryd eisoes', connErrElsewhere: "Mewngofnodwyd i'ch cyfrif o dab neu ddyfais arall", connErrNickInvalid:'Llysenw annilys', connErrMaintenance:'Cynnal a chadw', connErrBlocked:'Wedi\'i rwystro',
     connErrAvatarSize:'Mae ffeil yr afatar yn rhy fawr', connErrPacket:'Pecyn rhwydwaith annilys (fersiynau ddim yn cyfateb?)', connErrState:'Cyflwr cysylltu annilys (fersiynau ddim yn cyfateb?)', connErrKicked:'Rydych chi wedi cael eich cicio o\'r gweinydd', connErrBanned:'Rydych chi wedi\'ch gwahardd dros dro o\'r gweinydd', connErrAccBlocked:'Mae eich cyfrif wedi\'i rwystro', connErrIdle:'Wedi datgysylltu ar ôl anweithgarwch — gallwch ailgysylltu',
     ipBlockedPrefix:'⏳ IP wedi\'i rwystro — ', ipBlockedWaitPrefix:'⏳ IP wedi\'i rwystro — arhoswch ', ipBlockedRetry:'⏳ IP wedi\'i rwystro — arhoswch 5 munud a rhowch gynnig arall.',
     sharedTableJoining:'🔗 Wedi canfod y bwrdd a rannwyd — yn ymuno…',

@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'バージョンが非互換',
     connErrFull: 'サーバー満員',
     connErrAuth: '認証に失敗',
-    connErrNickTaken: 'ニックネームは使用中',
+    connErrNickTaken: 'ニックネームは使用中', connErrElsewhere: "別のタブまたは端末からこのアカウントにログインしました",
     connErrNickInvalid: '無効なニックネーム',
     connErrMaintenance: 'メンテナンス',
     connErrBlocked: 'ブロックされました',

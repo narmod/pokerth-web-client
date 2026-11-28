@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Nekompatibilní verze',
     connErrFull: 'Server je plný',
     connErrAuth: 'Ověření selhalo',
-    connErrNickTaken: 'Přezdívka je obsazená',
+    connErrNickTaken: 'Přezdívka je obsazená', connErrElsewhere: "Váš účet se přihlásil v jiné kartě nebo na jiném zařízení",
     connErrNickInvalid: 'Neplatná přezdívka',
     connErrMaintenance: 'Údržba',
     connErrBlocked: 'Zablokováno',

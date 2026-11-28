@@ -514,6 +514,26 @@ function onError(sub) {
         return;
       }
     }
+    if (r === 4 && S._wasAuthenticated) {
+      // Replaced by another login of the same account (server log 26–28/11:
+      // one account, 349 sessions in 3 h, one every 32 s). This session was
+      // already logged in (InitAck received; onAnnounce clears the flag for a
+      // new upstream, a proxy rebind keeps it), so the error is not a refused
+      // login: the official server ends an account's session when the account
+      // logs in elsewhere (ServerLobbyThread::EstablishSession →
+      // InternalRemovePlayer(…, ERR_NET_PLAYER_NAME_IN_USE)). Retrying here
+      // would log in again and end the OTHER tab or device, which retries in
+      // turn — with the counter reset by every accepted login, forever. So:
+      // no retry, back to the login screen with the reason; logging in again
+      // by hand still takes the account back here.
+      S._wasAuthenticated = false;
+      S._intentionalDisconnect = true;
+      _nickBusyReset();
+      window._hideBanner();
+      S._connLostReason = t('connErrElsewhere');
+      setStatus(t('connErrElsewhere'), 'err');
+      return;
+    }
     if (r === 4) {
       // Pseudo déjà utilisé sur le serveur : c'est presque toujours NOTRE
       // propre session précédente qui n'est pas encore retombée. On ne renomme

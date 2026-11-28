@@ -351,7 +351,7 @@ export const strings = {
     connErrVersion: 'Inkompatible Version',
     connErrFull: 'Server voll',
     connErrAuth: 'Authentifizierung fehlgeschlagen',
-    connErrNickTaken: 'Spitzname bereits vergeben',
+    connErrNickTaken: 'Spitzname bereits vergeben', connErrElsewhere: "Ihr Konto wurde in einem anderen Tab oder auf einem anderen Gerät angemeldet",
     connErrNickInvalid: 'Ungültiger Spitzname',
     connErrMaintenance: 'Wartung',
     connErrBlocked: 'Gesperrt',

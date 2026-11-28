@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Μη συμβατή έκδοση',
     connErrFull: 'Ο διακομιστής είναι πλήρης',
     connErrAuth: 'Η ταυτοποίηση απέτυχε',
-    connErrNickTaken: 'Το ψευδώνυμο χρησιμοποιείται ήδη',
+    connErrNickTaken: 'Το ψευδώνυμο χρησιμοποιείται ήδη', connErrElsewhere: "Ο λογαριασμός σας συνδέθηκε από άλλη καρτέλα ή συσκευή",
     connErrNickInvalid: 'Μη έγκυρο ψευδώνυμο',
     connErrMaintenance: 'Συντήρηση',
     connErrBlocked: 'Αποκλεισμένο',

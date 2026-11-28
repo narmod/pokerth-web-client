@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'An cuntas á fhíorú…',
     connErrVersion:'Leagan neamh-chomhoiriúnach', connErrFull:'Tá an freastalaí lán', connErrAuth:'Theip ar fhíordheimhniú',
-    connErrNickTaken:'Tá an leasainm tógtha cheana', connErrNickInvalid:'Leasainm neamhbhailí', connErrMaintenance:'Cothabháil', connErrBlocked:'Blocáilte',
+    connErrNickTaken:'Tá an leasainm tógtha cheana', connErrElsewhere: "Logáladh isteach i do chuntas ó chluaisín nó ó ghléas eile", connErrNickInvalid:'Leasainm neamhbhailí', connErrMaintenance:'Cothabháil', connErrBlocked:'Blocáilte',
     connErrAvatarSize:'Tá comhad an abhatáir rómhór', connErrPacket:'Paicéad líonra neamhbhailí (leaganacha nach dtagann le chéile?)', connErrState:'Staid cheangail neamhbhailí (leaganacha nach dtagann le chéile?)', connErrKicked:'Caitheadh amach as an bhfreastalaí thú', connErrBanned:'Cuireadh cosc sealadach ort ón bhfreastalaí', connErrAccBlocked:'Tá do chuntas blocáilte', connErrIdle:'Dícheanglaíodh thú tar éis neamhghníomhaíochta — is féidir leat athcheangal',
     ipBlockedPrefix:'⏳ IP blocáilte — ', ipBlockedWaitPrefix:'⏳ IP blocáilte — fan ', ipBlockedRetry:'⏳ IP blocáilte — fan 5 nóiméad agus bain triail eile as.',
     sharedTableJoining:'🔗 Aimsíodh an bord comhroinnte — ag glacadh páirte…',

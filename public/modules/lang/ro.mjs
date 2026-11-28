@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Versiune incompatibilă',
     connErrFull: 'Serverul este plin',
     connErrAuth: 'Autentificare eșuată',
-    connErrNickTaken: 'Pseudonimul este ocupat',
+    connErrNickTaken: 'Pseudonimul este ocupat', connErrElsewhere: "Contul tău s-a conectat dintr-o altă filă sau de pe alt dispozitiv",
     connErrNickInvalid: 'Pseudonim invalid',
     connErrMaintenance: 'Mentenanță',
     connErrBlocked: 'Blocat',

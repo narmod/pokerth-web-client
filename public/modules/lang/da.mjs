@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'Inkompatibel version',
     connErrFull: 'Serveren er fuld',
     connErrAuth: 'Godkendelse mislykkedes',
-    connErrNickTaken: 'Kaldenavnet er optaget',
+    connErrNickTaken: 'Kaldenavnet er optaget', connErrElsewhere: "Din konto er logget ind fra en anden fane eller enhed",
     connErrNickInvalid: 'Ugyldigt kaldenavn',
     connErrMaintenance: 'Vedligeholdelse',
     connErrBlocked: 'Blokeret',

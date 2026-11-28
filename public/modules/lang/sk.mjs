@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Nekompatibilná verzia',
     connErrFull: 'Server je plný',
     connErrAuth: 'Overenie zlyhalo',
-    connErrNickTaken: 'Prezývka je obsadená',
+    connErrNickTaken: 'Prezývka je obsadená', connErrElsewhere: "Váš účet sa prihlásil na inej karte alebo inom zariadení",
     connErrNickInvalid: 'Neplatná prezývka',
     connErrMaintenance: 'Údržba',
     connErrBlocked: 'Zablokované',

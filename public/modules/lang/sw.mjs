@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Inathibitisha akaunti…',
     connErrVersion:'Toleo lisilooana', connErrFull:'Seva imejaa', connErrAuth:'Uthibitishaji umeshindikana',
-    connErrNickTaken:'Jina la utani limechukuliwa', connErrNickInvalid:'Jina la utani batili', connErrMaintenance:'Matengenezo', connErrBlocked:'Imezuiwa',
+    connErrNickTaken:'Jina la utani limechukuliwa', connErrElsewhere: "Akaunti yako imeingiwa kutoka kichupo au kifaa kingine", connErrNickInvalid:'Jina la utani batili', connErrMaintenance:'Matengenezo', connErrBlocked:'Imezuiwa',
     connErrAvatarSize:'Faili la avatari ni kubwa mno', connErrPacket:'Pakiti batili ya mtandao (tofauti ya toleo?)', connErrState:'Hali batili ya muunganisho (tofauti ya toleo?)', connErrKicked:'Umeondolewa kwenye seva', connErrBanned:'Umepigwa marufuku kwa muda kwenye seva', connErrAccBlocked:'Akaunti yako imezuiwa', connErrIdle:'Umetenganishwa kwa kutokuwa na shughuli — karibu kuunganisha tena',
     ipBlockedPrefix:'⏳ IP imezuiwa — ', ipBlockedWaitPrefix:'⏳ IP imezuiwa — subiri ', ipBlockedRetry:'⏳ IP imezuiwa — subiri dakika 5 kisha jaribu tena.',
     sharedTableJoining:'🔗 Meza iliyoshirikiwa imepatikana — inajiunga…',

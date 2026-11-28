@@ -429,6 +429,15 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Same account in two places: no more 30-second ping-pong** (`web.159`) — server log 26–28/11
+  (`claude/ANALYSE_LOGS_SERVEUR_2026-11-28.md`): one account, two clients on one machine, 349 logins in 3 h, one every
+  32 s. The official server ends an account's session when it logs in elsewhere and sends the old one
+  `initPlayerNameInUse` (`ServerLobbyThread::EstablishSession` → `InternalRemovePlayer(…, ERR_NET_PLAYER_NAME_IN_USE)`);
+  the web client treated it like a refused login and retried after 30 s, ending the other client, and the 3-try cap
+  never tripped because every accepted login reset it. `onError` now tells the two apart with `S._wasAuthenticated`
+  (InitAck seen on this upstream; cleared by `onAnnounce`, kept by a proxy rebind): already logged in → no retry,
+  login screen + « Connection lost » with the new `connErrElsewhere` (83 languages); a login refused with that code
+  keeps the bounded retry. Tests: `test-msg-lobby` (+3).
 - **Invite list: no more players seated at another table, no guests** (`web.156`) — reported by sp0ck on 27/11
   (forum t=1298): at an invite-only table, Jimbob2 invited gst while gst was playing a running game; the server
   does not check, relays InviteNotify to the whole table, then answers RejectInvNotify (busy), so the table read

@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'מאמת חשבון…',
     connErrVersion:'גרסה לא תואמת', connErrFull:'השרת מלא', connErrAuth:'האימות נכשל',
-    connErrNickTaken:'הכינוי כבר תפוס', connErrNickInvalid:'כינוי לא חוקי', connErrMaintenance:'תחזוקה', connErrBlocked:'חסום',
+    connErrNickTaken:'הכינוי כבר תפוס', connErrElsewhere: "נכנסו לחשבון שלך מכרטיסייה או ממכשיר אחר", connErrNickInvalid:'כינוי לא חוקי', connErrMaintenance:'תחזוקה', connErrBlocked:'חסום',
     connErrAvatarSize:'קובץ האווטאר גדול מדי', connErrPacket:'חבילת רשת לא חוקית (אי-התאמת גרסה?)', connErrState:'מצב חיבור לא חוקי (אי-התאמת גרסה?)', connErrKicked:'הועפתם מהשרת', connErrBanned:'נחסמתם זמנית מהשרת', connErrAccBlocked:'החשבון שלכם חסום', connErrIdle:'נותקתם עקב חוסר פעילות — מוזמנים להתחבר שוב',
     ipBlockedPrefix:'⏳ ה-IP חסום — ', ipBlockedWaitPrefix:'⏳ ה-IP חסום — המתינו ', ipBlockedRetry:'⏳ ה-IP חסום — המתינו 5 דקות ונסו שוב.',
     sharedTableJoining:'🔗 נמצא שולחן משותף — מצטרף…',

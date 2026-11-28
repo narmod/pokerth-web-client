@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ಖಾತೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ…',
     connErrVersion:'ಹೊಂದಿಕೆಯಾಗದ ಆವೃತ್ತಿ', connErrFull:'ಸರ್ವರ್ ತುಂಬಿದೆ', connErrAuth:'ದೃಢೀಕರಣ ವಿಫಲವಾಯಿತು',
-    connErrNickTaken:'ಅಡ್ಡಹೆಸರನ್ನು ಈಗಾಗಲೇ ತೆಗೆದುಕೊಳ್ಳಲಾಗಿದೆ', connErrNickInvalid:'ಅಮಾನ್ಯ ಅಡ್ಡಹೆಸರು', connErrMaintenance:'ನಿರ್ವಹಣೆ', connErrBlocked:'ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ',
+    connErrNickTaken:'ಅಡ್ಡಹೆಸರನ್ನು ಈಗಾಗಲೇ ತೆಗೆದುಕೊಳ್ಳಲಾಗಿದೆ', connErrElsewhere: "ಬೇರೆ ಟ್ಯಾಬ್ ಅಥವಾ ಸಾಧನದಿಂದ ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಆಗಿದೆ", connErrNickInvalid:'ಅಮಾನ್ಯ ಅಡ್ಡಹೆಸರು', connErrMaintenance:'ನಿರ್ವಹಣೆ', connErrBlocked:'ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ',
     connErrAvatarSize:'ಅವತಾರ್ ಫೈಲ್ ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ', connErrPacket:'ಅಮಾನ್ಯ ನೆಟ್‌ವರ್ಕ್ ಪ್ಯಾಕೆಟ್ (ಆವೃತ್ತಿ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲವೇ?)', connErrState:'ಅಮಾನ್ಯ ಸಂಪರ್ಕ ಸ್ಥಿತಿ (ಆವೃತ್ತಿ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲವೇ?)', connErrKicked:'ನಿಮ್ಮನ್ನು ಸರ್ವರ್‌ನಿಂದ ಹೊರಹಾಕಲಾಗಿದೆ', connErrBanned:'ನಿಮ್ಮನ್ನು ಸರ್ವರ್‌ನಿಂದ ತಾತ್ಕಾಲಿಕವಾಗಿ ನಿಷೇಧಿಸಲಾಗಿದೆ', connErrAccBlocked:'ನಿಮ್ಮ ಖಾತೆಯನ್ನು ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ', connErrIdle:'ನಿಷ್ಕ್ರಿಯತೆಯ ನಂತರ ಸಂಪರ್ಕ ಕಡಿತವಾಯಿತು — ನೀವು ಮತ್ತೆ ಸಂಪರ್ಕಿಸಬಹುದು',
     ipBlockedPrefix:'⏳ IP ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ — ', ipBlockedWaitPrefix:'⏳ IP ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ — ಕಾಯಿರಿ ', ipBlockedRetry:'⏳ IP ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ — 5 ನಿಮಿಷ ಕಾದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
     sharedTableJoining:'🔗 ಹಂಚಿಕೊಂಡ ಟೇಬಲ್ ಸಿಕ್ಕಿತು — ಸೇರಲಾಗುತ್ತಿದೆ…',

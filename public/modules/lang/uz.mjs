@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Hisob tekshirilmoqda…',
     connErrVersion:'Mos kelmaydigan versiya', connErrFull:'Server toʻla', connErrAuth:'Autentifikatsiya amalga oshmadi',
-    connErrNickTaken:'Taxallus allaqachon band', connErrNickInvalid:'Taxallus yaroqsiz', connErrMaintenance:'Texnik xizmat', connErrBlocked:'Bloklangan',
+    connErrNickTaken:'Taxallus allaqachon band', connErrElsewhere: "Hisobingizga boshqa varaq yoki qurilmadan kirildi", connErrNickInvalid:'Taxallus yaroqsiz', connErrMaintenance:'Texnik xizmat', connErrBlocked:'Bloklangan',
     connErrAvatarSize:'Avatar fayli juda katta', connErrPacket:'Yaroqsiz tarmoq paketi (versiyalar mos emasmi?)', connErrState:'Yaroqsiz ulanish holati (versiyalar mos emasmi?)', connErrKicked:'Siz serverdan chiqarib yuborildingiz', connErrBanned:'Siz serverda vaqtincha bloklandingiz', connErrAccBlocked:'Hisobingiz bloklangan', connErrIdle:'Faolsizlikdan keyin uzildi — qayta ulanishingiz mumkin',
     ipBlockedPrefix:'⏳ IP bloklangan — ', ipBlockedWaitPrefix:'⏳ IP bloklangan — kuting: ', ipBlockedRetry:'⏳ IP bloklangan — 5 daqiqa kutib, qayta urinib koʻring.',
     sharedTableJoining:'🔗 Ulashilgan stol topildi — qoʻshilmoqda…',

@@ -346,7 +346,7 @@ export const strings = {
     connErrVersion: 'Uyumsuz sürüm',
     connErrFull: 'Sunucu dolu',
     connErrAuth: 'Kimlik doğrulama başarısız',
-    connErrNickTaken: 'Takma ad zaten alınmış',
+    connErrNickTaken: 'Takma ad zaten alınmış', connErrElsewhere: "Hesabınıza başka bir sekmeden veya cihazdan giriş yapıldı",
     connErrNickInvalid: 'Geçersiz takma ad',
     connErrMaintenance: 'Bakım',
     connErrBlocked: 'Engellendi',

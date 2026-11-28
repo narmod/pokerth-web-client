@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'መለያ በማረጋገጥ ላይ…',
     connErrVersion:'የማይጣጣም ስሪት', connErrFull:'አገልጋዩ ሞልቷል', connErrAuth:'ማረጋገጥ አልተሳካም',
-    connErrNickTaken:'ቅጽል ስሙ አስቀድሞ ተወስዷል', connErrNickInvalid:'ልክ ያልሆነ ቅጽል ስም', connErrMaintenance:'ጥገና', connErrBlocked:'ታግዷል',
+    connErrNickTaken:'ቅጽል ስሙ አስቀድሞ ተወስዷል', connErrElsewhere: "ወደ መለያዎ ከሌላ ትር ወይም መሣሪያ ተገብቷል", connErrNickInvalid:'ልክ ያልሆነ ቅጽል ስም', connErrMaintenance:'ጥገና', connErrBlocked:'ታግዷል',
     connErrAvatarSize:'የአምሳያ ፋይል በጣም ትልቅ ነው', connErrPacket:'ልክ ያልሆነ የአውታረ መረብ ፓኬት (የስሪት አለመጣጣም?)', connErrState:'ልክ ያልሆነ የግንኙነት ሁኔታ (የስሪት አለመጣጣም?)', connErrKicked:'ከአገልጋዩ ተባርረዋል', connErrBanned:'ከአገልጋዩ ለጊዜው ታግደዋል', connErrAccBlocked:'መለያዎ ታግዷል', connErrIdle:'ባለመንቀሳቀስ ምክንያት ግንኙነት ተቋርጧል — እንደገና መገናኘት ይችላሉ',
     ipBlockedPrefix:'⏳ IP ታግዷል — ', ipBlockedWaitPrefix:'⏳ IP ታግዷል — ይጠብቁ ', ipBlockedRetry:'⏳ IP ታግዷል — 5 ደቂቃ ጠብቀው እንደገና ይሞክሩ።',
     sharedTableJoining:'🔗 የተጋራ ጠረጴዛ ተገኝቷል — በመቀላቀል ላይ…',

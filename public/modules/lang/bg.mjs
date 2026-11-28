@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Несъвместима версия',
     connErrFull: 'Сървърът е пълен',
     connErrAuth: 'Неуспешна автентикация',
-    connErrNickTaken: 'Прякорът е зает',
+    connErrNickTaken: 'Прякорът е зает', connErrElsewhere: "Профилът ви е влязъл от друг раздел или друго устройство",
     connErrNickInvalid: 'Невалиден прякор',
     connErrMaintenance: 'Поддръжка',
     connErrBlocked: 'Блокирано',

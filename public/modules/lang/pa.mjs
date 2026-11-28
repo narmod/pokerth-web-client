@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ਖਾਤਾ ਤਸਦੀਕ ਹੋ ਰਿਹਾ ਹੈ…',
     connErrVersion:'ਅਸੰਗਤ ਵਰਜ਼ਨ', connErrFull:'ਸਰਵਰ ਭਰਿਆ ਹੋਇਆ', connErrAuth:'ਪ੍ਰਮਾਣੀਕਰਨ ਅਸਫਲ',
-    connErrNickTaken:'ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਲਿਆ ਹੋਇਆ', connErrNickInvalid:'ਗ਼ਲਤ ਨਾਮ', connErrMaintenance:'ਰੱਖ-ਰਖਾਅ', connErrBlocked:'ਬਲੌਕ ਕੀਤਾ',
+    connErrNickTaken:'ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਲਿਆ ਹੋਇਆ', connErrElsewhere: "ਕਿਸੇ ਹੋਰ ਟੈਬ ਜਾਂ ਡਿਵਾਈਸ ਤੋਂ ਤੁਹਾਡੇ ਖਾਤੇ ਵਿੱਚ ਲੌਗ ਇਨ ਕੀਤਾ ਗਿਆ", connErrNickInvalid:'ਗ਼ਲਤ ਨਾਮ', connErrMaintenance:'ਰੱਖ-ਰਖਾਅ', connErrBlocked:'ਬਲੌਕ ਕੀਤਾ',
     connErrAvatarSize:'ਅਵਤਾਰ ਫਾਈਲ ਬਹੁਤ ਵੱਡੀ', connErrPacket:'ਗ਼ਲਤ ਨੈੱਟਵਰਕ ਪੈਕੇਟ (ਵਰਜ਼ਨ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ?)', connErrState:'ਗ਼ਲਤ ਕਨੈਕਸ਼ਨ ਸਥਿਤੀ (ਵਰਜ਼ਨ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ?)', connErrKicked:'ਤੁਹਾਨੂੰ ਸਰਵਰ ਤੋਂ ਕੱਢ ਦਿੱਤਾ ਗਿਆ', connErrBanned:'ਤੁਹਾਨੂੰ ਸਰਵਰ ਤੋਂ ਅਸਥਾਈ ਤੌਰ \u2019ਤੇ ਪਾਬੰਦੀਸ਼ੁਦਾ ਕੀਤਾ ਗਿਆ', connErrAccBlocked:'ਤੁਹਾਡਾ ਖਾਤਾ ਬਲੌਕ ਕੀਤਾ ਗਿਆ ਹੈ', connErrIdle:'ਨਾ-ਸਰਗਰਮੀ ਬਾਅਦ ਡਿਸਕਨੈਕਟ ਹੋਇਆ — ਤੁਸੀਂ ਦੁਬਾਰਾ ਜੁੜ ਸਕਦੇ ਹੋ',
     ipBlockedPrefix:'⏳ IP ਬਲੌਕ ਕੀਤਾ — ', ipBlockedWaitPrefix:'⏳ IP ਬਲੌਕ ਕੀਤਾ — ਉਡੀਕ ਕਰੋ ', ipBlockedRetry:'⏳ IP ਬਲੌਕ ਕੀਤਾ — 5 ਮਿੰਟ ਉਡੀਕ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
     sharedTableJoining:'🔗 ਸਾਂਝਾ ਕੀਤਾ ਟੇਬਲ ਮਿਲਿਆ — ਸ਼ਾਮਲ ਹੋ ਰਿਹਾ ਹੈ…',

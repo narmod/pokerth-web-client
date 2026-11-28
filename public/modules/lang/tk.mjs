@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Hasap barlanýar…',
     connErrVersion:'Laýyk gelmeýän wersiýa', connErrFull:'Serwer doly', connErrAuth:'Tanamak başartmady',
-    connErrNickTaken:'Lakam eýýäm eýelenen', connErrNickInvalid:'Nädogry lakam', connErrMaintenance:'Tehniki hyzmat', connErrBlocked:'Petiklendi',
+    connErrNickTaken:'Lakam eýýäm eýelenen', connErrElsewhere: "Hasabyňyza başga goýmadan ýa-da enjamdan girildi", connErrNickInvalid:'Nädogry lakam', connErrMaintenance:'Tehniki hyzmat', connErrBlocked:'Petiklendi',
     connErrAvatarSize:'Awatar faýly gaty uly', connErrPacket:'Nädogry tor paketi (wersiýalar laýyk gelmeýärmi?)', connErrState:'Nädogry birikme ýagdaýy (wersiýalar laýyk gelmeýärmi?)', connErrKicked:'Sizi serwerden çykardylar', connErrBanned:'Serwer sizi wagtlaýyn petikledi', connErrAccBlocked:'Hasabyňyz petiklendi', connErrIdle:'Işjeň däldigiňiz sebäpli birikme kesildi — täzeden birigip bilersiňiz',
     ipBlockedPrefix:'⏳ IP petiklendi — ', ipBlockedWaitPrefix:'⏳ IP petiklendi — garaşyň ', ipBlockedRetry:'⏳ IP petiklendi — 5 minut garaşyp, gaýtadan synanyşyň.',
     sharedTableJoining:'🔗 Paýlaşylan stol tapyldy — goşulýar…',

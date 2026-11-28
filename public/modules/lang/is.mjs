@@ -200,7 +200,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Staðfesti aðgang…',
     connErrVersion:'Ósamhæf útgáfa', connErrFull:'Þjónninn er fullur', connErrAuth:'Auðkenning mistókst',
-    connErrNickTaken:'Gælunafnið er þegar í notkun', connErrNickInvalid:'Ógilt gælunafn', connErrMaintenance:'Viðhald', connErrBlocked:'Lokað á þig',
+    connErrNickTaken:'Gælunafnið er þegar í notkun', connErrElsewhere: "Skráð var inn á aðganginn þinn úr öðrum flipa eða tæki", connErrNickInvalid:'Ógilt gælunafn', connErrMaintenance:'Viðhald', connErrBlocked:'Lokað á þig',
     connErrAvatarSize:'Avatarskráin er of stór', connErrPacket:'Ógildur netpakki (ósamræmi í útgáfu?)', connErrState:'Ógild tengingarstaða (ósamræmi í útgáfu?)', connErrKicked:'Þér var vísað af þjóninum', connErrBanned:'Þú ert tímabundið í banni á þjóninum', connErrAccBlocked:'Lokað hefur verið á aðganginn þinn', connErrIdle:'Aftengt vegna óvirkni — þú getur tengst aftur',
     ipBlockedPrefix:'⏳ IP lokað — ', ipBlockedWaitPrefix:'⏳ IP lokað — bíddu ', ipBlockedRetry:'⏳ IP lokað — bíddu í 5 mín. og reyndu aftur.',
     sharedTableJoining:'🔗 Deilt borð fannst — sest við það…',

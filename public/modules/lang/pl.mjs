@@ -350,7 +350,7 @@ export const strings = {
     connErrVersion: 'Niezgodna wersja',
     connErrFull: 'Serwer pełny',
     connErrAuth: 'Błąd uwierzytelniania',
-    connErrNickTaken: 'Pseudonim już zajęty',
+    connErrNickTaken: 'Pseudonim już zajęty', connErrElsewhere: "Twoje konto zalogowało się na innej karcie lub innym urządzeniu",
     connErrNickInvalid: 'Nieprawidłowy pseudonim',
     connErrMaintenance: 'Konserwacja',
     connErrBlocked: 'Zablokowano',

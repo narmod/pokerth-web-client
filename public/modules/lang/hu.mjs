@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Inkompatibilis verzió',
     connErrFull: 'A szerver megtelt',
     connErrAuth: 'A hitelesítés sikertelen',
-    connErrNickTaken: 'A becenév foglalt',
+    connErrNickTaken: 'A becenév foglalt', connErrElsewhere: "A fiókodba egy másik lapon vagy eszközön jelentkeztek be",
     connErrNickInvalid: 'Érvénytelen becenév',
     connErrMaintenance: 'Karbantartás',
     connErrBlocked: 'Letiltva',

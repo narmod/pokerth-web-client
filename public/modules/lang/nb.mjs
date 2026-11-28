@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'Inkompatibel versjon',
     connErrFull: 'Serveren er full',
     connErrAuth: 'Autentisering mislyktes',
-    connErrNickTaken: 'Kallenavnet er opptatt',
+    connErrNickTaken: 'Kallenavnet er opptatt', connErrElsewhere: "Kontoen din ble logget inn fra en annen fane eller enhet",
     connErrNickInvalid: 'Ugyldig kallenavn',
     connErrMaintenance: 'Vedlikehold',
     connErrBlocked: 'Blokkert',

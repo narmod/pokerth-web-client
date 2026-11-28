@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'Inkompatibel version',
     connErrFull: 'Servern är full',
     connErrAuth: 'Autentisering misslyckades',
-    connErrNickTaken: 'Smeknamnet är upptaget',
+    connErrNickTaken: 'Smeknamnet är upptaget', connErrElsewhere: "Ditt konto loggades in från en annan flik eller enhet",
     connErrNickInvalid: 'Ogiltigt smeknamn',
     connErrMaintenance: 'Underhåll',
     connErrBlocked: 'Blockerad',

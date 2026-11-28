@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'ખાતું ચકાસાઈ રહ્યું છે…',
     connErrVersion:'અસંગત વર્ઝન', connErrFull:'સર્વર ભરાઈ ગયું છે', connErrAuth:'પ્રમાણીકરણ નિષ્ફળ',
-    connErrNickTaken:'ઉપનામ પહેલેથી લેવાઈ ગયું છે', connErrNickInvalid:'અમાન્ય ઉપનામ', connErrMaintenance:'જાળવણી', connErrBlocked:'બ્લોક કરેલ છે',
+    connErrNickTaken:'ઉપનામ પહેલેથી લેવાઈ ગયું છે', connErrElsewhere: "બીજા ટૅબ અથવા ઉપકરણ પરથી તમારા એકાઉન્ટમાં લૉગ ઇન થયું", connErrNickInvalid:'અમાન્ય ઉપનામ', connErrMaintenance:'જાળવણી', connErrBlocked:'બ્લોક કરેલ છે',
     connErrAvatarSize:'અવતાર ફાઇલ ખૂબ મોટી છે', connErrPacket:'અમાન્ય નેટવર્ક પેકેટ (વર્ઝન મેળ નથી ખાતું?)', connErrState:'અમાન્ય કનેક્શન સ્થિતિ (વર્ઝન મેળ નથી ખાતું?)', connErrKicked:'તમને સર્વર પરથી કાઢવામાં આવ્યા', connErrBanned:'તમને સર્વર પરથી કામચલાઉ પ્રતિબંધિત કરવામાં આવ્યા છે', connErrAccBlocked:'તમારું ખાતું બ્લોક કરવામાં આવ્યું છે', connErrIdle:'નિષ્ક્રિયતા પછી ડિસ્કનેક્ટ થયું — તમે ફરી કનેક્ટ કરી શકો છો',
     ipBlockedPrefix:'⏳ IP બ્લોક — ', ipBlockedWaitPrefix:'⏳ IP બ્લોક — રાહ જુઓ ', ipBlockedRetry:'⏳ IP બ્લોક — 5 મિનિટ રાહ જોઈ ફરી પ્રયત્ન કરો.',
     sharedTableJoining:'🔗 શેર કરેલું ટેબલ મળ્યું — જોડાઈ રહ્યા છો…',

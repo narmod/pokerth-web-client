@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: '版本不兼容',
     connErrFull: '服务器已满',
     connErrAuth: '身份验证失败',
-    connErrNickTaken: '昵称已被占用',
+    connErrNickTaken: '昵称已被占用', connErrElsewhere: "你的账号已在另一个标签页或设备上登录",
     connErrNickInvalid: '昵称无效',
     connErrMaintenance: '维护中',
     connErrBlocked: '已被封禁',

@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'اکاؤنٹ کی تصدیق ہو رہی ہے…',
     connErrVersion:'غیر ہم آہنگ ورژن', connErrFull:'سرور بھرا ہوا ہے', connErrAuth:'توثیق ناکام',
-    connErrNickTaken:'نام پہلے سے لیا جا چکا ہے', connErrNickInvalid:'غلط نام', connErrMaintenance:'دیکھ بھال', connErrBlocked:'بلاک',
+    connErrNickTaken:'نام پہلے سے لیا جا چکا ہے', connErrElsewhere: "آپ کے اکاؤنٹ میں کسی اور ٹیب یا ڈیوائس سے لاگ ان کیا گیا", connErrNickInvalid:'غلط نام', connErrMaintenance:'دیکھ بھال', connErrBlocked:'بلاک',
     connErrAvatarSize:'اوتار کی فائل بہت بڑی ہے', connErrPacket:'غلط نیٹ ورک پیکٹ (ورژن کا فرق؟)', connErrState:'غلط کنکشن حالت (ورژن کا فرق؟)', connErrKicked:'آپ کو سرور سے نکال دیا گیا', connErrBanned:'آپ پر سرور سے عارضی پابندی لگی', connErrAccBlocked:'آپ کا اکاؤنٹ بلاک ہے', connErrIdle:'غیر فعالیت پر منقطع — آپ دوبارہ جڑ سکتے ہیں',
     ipBlockedPrefix:'⏳ IP بلاک ہے — ', ipBlockedWaitPrefix:'⏳ IP بلاک ہے — انتظار کریں ', ipBlockedRetry:'⏳ IP بلاک ہے — ۵ منٹ انتظار کر کے دوبارہ کوشش کریں۔',
     sharedTableJoining:'🔗 مشترکہ میز ملی — شامل ہو رہے ہیں…',

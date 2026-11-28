@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'অ্যাকাউন্ট যাচাই হচ্ছে…',
     connErrVersion:'অসামঞ্জস্যপূর্ণ সংস্করণ', connErrFull:'সার্ভার পূর্ণ', connErrAuth:'প্রমাণীকরণ ব্যর্থ',
-    connErrNickTaken:'ডাকনাম নেওয়া হয়ে গেছে', connErrNickInvalid:'অবৈধ ডাকনাম', connErrMaintenance:'রক্ষণাবেক্ষণ', connErrBlocked:'ব্লক করা',
+    connErrNickTaken:'ডাকনাম নেওয়া হয়ে গেছে', connErrElsewhere: "অন্য একটি ট্যাব বা ডিভাইস থেকে আপনার অ্যাকাউন্টে লগ ইন করা হয়েছে", connErrNickInvalid:'অবৈধ ডাকনাম', connErrMaintenance:'রক্ষণাবেক্ষণ', connErrBlocked:'ব্লক করা',
     connErrAvatarSize:'অবতার ফাইল খুব বড়', connErrPacket:'অবৈধ নেটওয়ার্ক প্যাকেট (সংস্করণ অমিল?)', connErrState:'অবৈধ সংযোগ অবস্থা (সংস্করণ অমিল?)', connErrKicked:'আপনাকে সার্ভার থেকে বের করে দেওয়া হয়েছে', connErrBanned:'আপনাকে সাময়িকভাবে সার্ভার থেকে নিষিদ্ধ করা হয়েছে', connErrAccBlocked:'আপনার অ্যাকাউন্ট ব্লক করা হয়েছে', connErrIdle:'নিষ্ক্রিয়তার কারণে সংযোগ বিচ্ছিন্ন — আবার সংযোগ করতে পারেন',
     ipBlockedPrefix:'⏳ IP ব্লক করা — ', ipBlockedWaitPrefix:'⏳ IP ব্লক করা — অপেক্ষা করুন ', ipBlockedRetry:'⏳ IP ব্লক করা — ৫ মিনিট অপেক্ষা করে আবার চেষ্টা করুন।',
     sharedTableJoining:'🔗 শেয়ার করা টেবিল পাওয়া গেছে — যোগ দেওয়া হচ্ছে…',

@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Проверка на сметката…',
     connErrVersion:'Некомпатибилна верзија', connErrFull:'Серверот е полн', connErrAuth:'Автентикацијата не успеа',
-    connErrNickTaken:'Прекарот веќе е зафатен', connErrNickInvalid:'Невалиден прекар', connErrMaintenance:'Одржување', connErrBlocked:'Блокирано',
+    connErrNickTaken:'Прекарот веќе е зафатен', connErrElsewhere: "Вашата сметка се најави од друга картичка или друг уред", connErrNickInvalid:'Невалиден прекар', connErrMaintenance:'Одржување', connErrBlocked:'Блокирано',
     connErrAvatarSize:'Датотеката на аватарот е преголема', connErrPacket:'Невалиден мрежен пакет (неусогласеност на верзии?)', connErrState:'Невалидна состојба на врската (неусогласеност на верзии?)', connErrKicked:'Беше отстранет од серверот', connErrBanned:'Привремено беше блокиран на серверот', connErrAccBlocked:'Твојата сметка е блокирана', connErrIdle:'Врската е прекината поради неактивност — добредојден си да се поврзеш повторно',
     ipBlockedPrefix:'⏳ IP-адресата е блокирана — ', ipBlockedWaitPrefix:'⏳ IP-адресата е блокирана — почекај ', ipBlockedRetry:'⏳ IP-адресата е блокирана — почекај 5 минути и обиди се повторно.',
     sharedTableJoining:'🔗 Споделената маса е најдена — приклучување…',

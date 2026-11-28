@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'အကောင့်ကို စစ်ဆေးနေသည်…',
     connErrVersion:'ဗားရှင်း မကိုက်ညီပါ', connErrFull:'ဆာဗာ ပြည့်နေသည်', connErrAuth:'အထောက်အထားစိစစ်မှု မအောင်မြင်ပါ',
-    connErrNickTaken:'အမည်ပြောင်ကို အခြားသူ ယူထားပြီး', connErrNickInvalid:'အမည်ပြောင် မမှန်ကန်ပါ', connErrMaintenance:'ပြုပြင်ထိန်းသိမ်းမှု', connErrBlocked:'ပိတ်ဆို့ထားသည်',
+    connErrNickTaken:'အမည်ပြောင်ကို အခြားသူ ယူထားပြီး', connErrElsewhere: "အခြားတဘ် သို့မဟုတ် စက်တစ်ခုမှ သင့်အကောင့်သို့ ဝင်ရောက်ခဲ့သည်", connErrNickInvalid:'အမည်ပြောင် မမှန်ကန်ပါ', connErrMaintenance:'ပြုပြင်ထိန်းသိမ်းမှု', connErrBlocked:'ပိတ်ဆို့ထားသည်',
     connErrAvatarSize:'အဗတာဖိုင် ကြီးလွန်းသည်', connErrPacket:'ကွန်ရက်ပက်ကက် မမှန်ကန်ပါ (ဗားရှင်း မကိုက်ညီ?)', connErrState:'ချိတ်ဆက်မှုအခြေအနေ မမှန်ကန်ပါ (ဗားရှင်း မကိုက်ညီ?)', connErrKicked:'သင့်ကို ဆာဗာမှ ထုတ်ပယ်လိုက်သည်', connErrBanned:'သင့်ကို ဆာဗာမှ ယာယီ ပိတ်ပင်ထားသည်', connErrAccBlocked:'သင့်အကောင့်ကို ပိတ်ဆို့ထားသည်', connErrIdle:'လှုပ်ရှားမှုမရှိသဖြင့် ချိတ်ဆက်မှု ပြတ်သွားသည် — ပြန်လည်ချိတ်ဆက်နိုင်ပါသည်',
     ipBlockedPrefix:'⏳ IP ပိတ်ဆို့ထားသည် — ', ipBlockedWaitPrefix:'⏳ IP ပိတ်ဆို့ထားသည် — စောင့်ပါ ', ipBlockedRetry:'⏳ IP ပိတ်ဆို့ထားသည် — ၅ မိနစ်စောင့်ပြီး ထပ်ကြိုးစားပါ။',
     sharedTableJoining:'🔗 မျှဝေထားသော စားပွဲကို တွေ့ပြီ — ဝင်နေသည်…',

@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Kontua egiaztatzen…',
     connErrVersion:'Bertsio bateraezina', connErrFull:'Zerbitzaria beteta dago', connErrAuth:'Autentifikazioak huts egin du',
-    connErrNickTaken:'Ezizena hartuta dago', connErrNickInvalid:'Ezizen baliogabea', connErrMaintenance:'Mantentze-lanak', connErrBlocked:'Blokeatuta',
+    connErrNickTaken:'Ezizena hartuta dago', connErrElsewhere: "Zure kontuan beste fitxa edo gailu batetik hasi da saioa", connErrNickInvalid:'Ezizen baliogabea', connErrMaintenance:'Mantentze-lanak', connErrBlocked:'Blokeatuta',
     connErrAvatarSize:'Abatar-fitxategia handiegia da', connErrPacket:'Sareko pakete baliogabea (bertsio-desadostasuna?)', connErrState:'Konexio-egoera baliogabea (bertsio-desadostasuna?)', connErrKicked:'Zerbitzaritik kanporatu zaituzte', connErrBanned:'Zerbitzarian aldi baterako debekatu zaituzte', connErrAccBlocked:'Zure kontua blokeatuta dago', connErrIdle:'Jarduerarik ezagatik deskonektatua — berriro konekta zaitezke',
     ipBlockedPrefix:'⏳ IPa blokeatuta — ', ipBlockedWaitPrefix:'⏳ IPa blokeatuta — itxaron ', ipBlockedRetry:'⏳ IPa blokeatuta — itxaron 5 minutu eta saiatu berriro.',
     sharedTableJoining:'🔗 Partekatutako mahaia aurkitu da — sartzen…',

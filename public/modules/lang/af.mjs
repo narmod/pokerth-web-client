@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Onversoenbare weergawe',
     connErrFull: 'Bediener is vol',
     connErrAuth: 'Stawing het misluk',
-    connErrNickTaken: 'Bynaam is reeds in gebruik',
+    connErrNickTaken: 'Bynaam is reeds in gebruik', connErrElsewhere: "Jou rekening het van 'n ander oortjie of toestel aangemeld",
     connErrNickInvalid: 'Ongeldige bynaam',
     connErrMaintenance: 'Onderhoud',
     connErrBlocked: 'Geblokkeer',

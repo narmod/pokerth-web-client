@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Санҷиши ҳисоб…',
     connErrVersion:'Версияи номувофиқ', connErrFull:'Сервер пур аст', connErrAuth:'Аутентификатсия ноком шуд',
-    connErrNickTaken:'Тахаллус банд аст', connErrNickInvalid:'Тахаллуси нодуруст', connErrMaintenance:'Хизматрасонии техникӣ', connErrBlocked:'Баста шуд',
+    connErrNickTaken:'Тахаллус банд аст', connErrElsewhere: "Ба ҳисоби шумо аз варақа ё дастгоҳи дигар ворид шуданд", connErrNickInvalid:'Тахаллуси нодуруст', connErrMaintenance:'Хизматрасонии техникӣ', connErrBlocked:'Баста шуд',
     connErrAvatarSize:'Файли аватар хеле калон аст', connErrPacket:'Бастаи шабакавии нодуруст (версияҳо мувофиқ нестанд?)', connErrState:'Ҳолати нодурусти пайваст (версияҳо мувофиқ нестанд?)', connErrKicked:'Шуморо аз сервер бароварданд', connErrBanned:'Сервер шуморо муваққатан баст', connErrAccBlocked:'Ҳисоби шумо баста шудааст', connErrIdle:'Бо сабаби ғайрифаъолӣ пайваст қатъ шуд — метавонед аз нав пайваст шавед',
     ipBlockedPrefix:'⏳ IP баста шуд — ', ipBlockedWaitPrefix:'⏳ IP баста шуд — интизор шавед ', ipBlockedRetry:'⏳ IP баста шуд — 5 дақиқа интизор шуда, боз кӯшиш кунед.',
     sharedTableJoining:'🔗 Мизи мубодилашуда ёфт шуд — ҳамроҳ шуда истодааст…',

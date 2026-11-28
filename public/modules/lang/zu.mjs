@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Kuhlolwa i-akhawunti…',
     connErrVersion:'Inguqulo engahambisani', connErrFull:'Iseva igcwele', connErrAuth:'Ukuqinisekisa kuhlulekile',
-    connErrNickTaken:'Isiteketiso sesithathiwe', connErrNickInvalid:'Isiteketiso esingavumelekile', connErrMaintenance:'Ukulungiswa', connErrBlocked:'Kuvinjiwe',
+    connErrNickTaken:'Isiteketiso sesithathiwe', connErrElsewhere: "Kungenwe ku-akhawunti yakho kusuka kwenye ithebhu noma idivayisi ehlukile", connErrNickInvalid:'Isiteketiso esingavumelekile', connErrMaintenance:'Ukulungiswa', connErrBlocked:'Kuvinjiwe',
     connErrAvatarSize:'Ifayela le-avatar likhulu kakhulu', connErrPacket:'Iphakethe lenethiwekhi elingavumelekile (izinguqulo azihambisani?)', connErrState:'Isimo soxhumano esingavumelekile (izinguqulo azihambisani?)', connErrKicked:'Ukhishiwe kuseva', connErrBanned:'Uvinjwe okwesikhashana yiseva', connErrAccBlocked:'I-akhawunti yakho ivinjiwe', connErrIdle:'Unqanyuliwe ngenxa yokungenzi lutho — ungaxhuma futhi',
     ipBlockedPrefix:'⏳ I-IP ivinjiwe — ', ipBlockedWaitPrefix:'⏳ I-IP ivinjiwe — linda ', ipBlockedRetry:'⏳ I-IP ivinjiwe — linda imizuzu emi-5 bese uzama futhi.',
     sharedTableJoining:'🔗 Itafula elabiwe litholakele — iyajoyina…',

@@ -295,7 +295,7 @@ export const strings = {
     handsClose:'बंद करें ✕', watchBtn:'देखें', watchTitle:'बिना खेले देखें',
     verifyingAccount:'खाता सत्यापित हो रहा है…',
     connErrVersion:'असंगत संस्करण', connErrFull:'सर्वर भरा है', connErrAuth:'प्रमाणीकरण विफल',
-    connErrNickTaken:'उपनाम पहले से लिया गया', connErrNickInvalid:'अमान्य उपनाम', connErrMaintenance:'रखरखाव', connErrBlocked:'अवरुद्ध',
+    connErrNickTaken:'उपनाम पहले से लिया गया', connErrElsewhere: "आपके खाते में किसी दूसरे टैब या डिवाइस से लॉग इन किया गया", connErrNickInvalid:'अमान्य उपनाम', connErrMaintenance:'रखरखाव', connErrBlocked:'अवरुद्ध',
     connErrAvatarSize:'अवतार फ़ाइल बहुत बड़ी है', connErrPacket:'अमान्य नेटवर्क पैकेट (अलग-अलग संस्करण?)', connErrState:'अमान्य कनेक्शन स्थिति (अलग-अलग संस्करण?)', connErrKicked:'आपको सर्वर से निकाल दिया गया', connErrBanned:'आपको सर्वर से अस्थायी रूप से प्रतिबंधित किया गया', connErrAccBlocked:'आपका खाता अवरुद्ध है', connErrIdle:'निष्क्रियता के कारण डिस्कनेक्ट — आप फिर से जुड़ सकते हैं',
     ipBlockedPrefix:'⏳ IP अवरुद्ध — ', ipBlockedWaitPrefix:'⏳ IP अवरुद्ध — प्रतीक्षा ', ipBlockedRetry:'⏳ IP अवरुद्ध — 5 मिनट प्रतीक्षा करें फिर पुनः प्रयास करें।',
     sharedTableJoining:'🔗 साझा टेबल मिली — शामिल हो रहे हैं…',

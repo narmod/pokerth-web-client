@@ -352,7 +352,7 @@ export const strings = {
     connErrVersion: 'Versión incompatible',
     connErrFull: 'Servidor lleno',
     connErrAuth:'Error de autenticación',
-    connErrNickTaken: 'Apodo ya en uso',
+    connErrNickTaken: 'Apodo ya en uso', connErrElsewhere: "Tu cuenta se ha conectado desde otra pestaña u otro dispositivo",
     connErrNickInvalid: 'Apodo no válido',
     connErrMaintenance: 'Mantenimiento',
     connErrBlocked: 'Bloqueado',

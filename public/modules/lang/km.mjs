@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'កំពុងផ្ទៀងផ្ទាត់គណនី…',
     connErrVersion:'កំណែមិនឆបគ្នា', connErrFull:'ម៉ាស៊ីនមេពេញ', connErrAuth:'ការផ្ទៀងផ្ទាត់បរាជ័យ',
-    connErrNickTaken:'ឈ្មោះមានគេប្រើរួចហើយ', connErrNickInvalid:'ឈ្មោះមិនត្រឹមត្រូវ', connErrMaintenance:'កំពុងថែទាំ', connErrBlocked:'ត្រូវបានរាំងខ្ទប់',
+    connErrNickTaken:'ឈ្មោះមានគេប្រើរួចហើយ', connErrElsewhere: "គណនីរបស់អ្នកត្រូវបានចូលពីផ្ទាំង ឬឧបករណ៍ផ្សេង", connErrNickInvalid:'ឈ្មោះមិនត្រឹមត្រូវ', connErrMaintenance:'កំពុងថែទាំ', connErrBlocked:'ត្រូវបានរាំងខ្ទប់',
     connErrAvatarSize:'ឯកសាររូបតំណាងធំពេក', connErrPacket:'កញ្ចប់បណ្ដាញមិនត្រឹមត្រូវ (កំណែមិនត្រូវគ្នា?)', connErrState:'ស្ថានភាពការភ្ជាប់មិនត្រឹមត្រូវ (កំណែមិនត្រូវគ្នា?)', connErrKicked:'អ្នកត្រូវបានបណ្ដេញចេញពីម៉ាស៊ីនមេ', connErrBanned:'អ្នកត្រូវបានហាមឃាត់ជាបណ្ដោះអាសន្នពីម៉ាស៊ីនមេ', connErrAccBlocked:'គណនីរបស់អ្នកត្រូវបានរាំងខ្ទប់', connErrIdle:'ផ្ដាច់ដោយសារអសកម្ម — អ្នកអាចភ្ជាប់ឡើងវិញបាន',
     ipBlockedPrefix:'⏳ IP ត្រូវបានរាំងខ្ទប់ — ', ipBlockedWaitPrefix:'⏳ IP ត្រូវបានរាំងខ្ទប់ — រង់ចាំ ', ipBlockedRetry:'⏳ IP ត្រូវបានរាំងខ្ទប់ — រង់ចាំ ៥ នាទី រួចព្យាយាមម្ដងទៀត។',
     sharedTableJoining:'🔗 រកឃើញតុដែលបានចែករំលែក — កំពុងចូលរួម…',

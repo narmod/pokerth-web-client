@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Бүртгэл шалгаж байна…',
     connErrVersion:'Нийцэхгүй хувилбар', connErrFull:'Сервер дүүрсэн', connErrAuth:'Баталгаажуулалт амжилтгүй',
-    connErrNickTaken:'Хоч аль хэдийн эзлэгдсэн', connErrNickInvalid:'Буруу хоч', connErrMaintenance:'Засвар үйлчилгээ', connErrBlocked:'Хаагдсан',
+    connErrNickTaken:'Хоч аль хэдийн эзлэгдсэн', connErrElsewhere: "Таны бүртгэлд өөр таб эсвэл төхөөрөмжөөс нэвтэрсэн", connErrNickInvalid:'Буруу хоч', connErrMaintenance:'Засвар үйлчилгээ', connErrBlocked:'Хаагдсан',
     connErrAvatarSize:'Аватарын файл хэт том', connErrPacket:'Буруу сүлжээний пакет (хувилбарууд таарахгүй байна уу?)', connErrState:'Холболтын буруу төлөв (хувилбарууд таарахгүй байна уу?)', connErrKicked:'Таныг серверээс гаргасан', connErrBanned:'Сервер таныг түр хаасан', connErrAccBlocked:'Таны бүртгэл хаагдсан', connErrIdle:'Идэвхгүй байсан тул салгагдлаа — дахин холбогдож болно',
     ipBlockedPrefix:'⏳ IP хаагдсан — ', ipBlockedWaitPrefix:'⏳ IP хаагдсан — хүлээнэ үү ', ipBlockedRetry:'⏳ IP хаагдсан — 5 минут хүлээгээд дахин оролдоно уу.',
     sharedTableJoining:'🔗 Хуваалцсан ширээ олдлоо — нэгдэж байна…',

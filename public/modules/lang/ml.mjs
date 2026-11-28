@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'അക്കൗണ്ട് പരിശോധിക്കുന്നു…',
     connErrVersion:'പൊരുത്തമില്ലാത്ത പതിപ്പ്', connErrFull:'സെർവർ നിറഞ്ഞു', connErrAuth:'പ്രാമാണീകരണം പരാജയപ്പെട്ടു',
-    connErrNickTaken:'വിളിപ്പേര് നേരത്തേ എടുത്തിട്ടുണ്ട്', connErrNickInvalid:'അസാധുവായ വിളിപ്പേര്', connErrMaintenance:'പരിപാലനം', connErrBlocked:'തടഞ്ഞിരിക്കുന്നു',
+    connErrNickTaken:'വിളിപ്പേര് നേരത്തേ എടുത്തിട്ടുണ്ട്', connErrElsewhere: "മറ്റൊരു ടാബിൽ നിന്നോ ഉപകരണത്തിൽ നിന്നോ നിങ്ങളുടെ അക്കൗണ്ടിൽ ലോഗിൻ ചെയ്തു", connErrNickInvalid:'അസാധുവായ വിളിപ്പേര്', connErrMaintenance:'പരിപാലനം', connErrBlocked:'തടഞ്ഞിരിക്കുന്നു',
     connErrAvatarSize:'അവതാർ ഫയൽ വളരെ വലുതാണ്', connErrPacket:'അസാധുവായ നെറ്റ്‌വർക്ക് പാക്കറ്റ് (പതിപ്പ് പൊരുത്തക്കേട്?)', connErrState:'അസാധുവായ കണക്ഷൻ നില (പതിപ്പ് പൊരുത്തക്കേട്?)', connErrKicked:'നിങ്ങളെ സെർവറിൽ നിന്ന് പുറത്താക്കി', connErrBanned:'നിങ്ങളെ സെർവറിൽ നിന്ന് താൽക്കാലികമായി വിലക്കി', connErrAccBlocked:'നിങ്ങളുടെ അക്കൗണ്ട് തടഞ്ഞിരിക്കുന്നു', connErrIdle:'നിഷ്ക്രിയത്വത്തിന് ശേഷം വിച്ഛേദിച്ചു — വീണ്ടും ബന്ധിപ്പിക്കാം',
     ipBlockedPrefix:'⏳ IP തടഞ്ഞു — ', ipBlockedWaitPrefix:'⏳ IP തടഞ്ഞു — കാത്തിരിക്കുക ', ipBlockedRetry:'⏳ IP തടഞ്ഞു — 5 മിനിറ്റ് കാത്തിരുന്ന് വീണ്ടും ശ്രമിക്കുക.',
     sharedTableJoining:'🔗 പങ്കിട്ട ടേബിൾ കണ്ടെത്തി — ചേരുന്നു…',

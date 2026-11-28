@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Memverifikasi akun…',
     connErrVersion:'Versi tidak kompatibel', connErrFull:'Server penuh', connErrAuth:'Autentikasi gagal',
-    connErrNickTaken:'Nama panggilan sudah dipakai', connErrNickInvalid:'Nama panggilan tidak valid', connErrMaintenance:'Pemeliharaan', connErrBlocked:'Diblokir',
+    connErrNickTaken:'Nama panggilan sudah dipakai', connErrElsewhere: "Akun Anda masuk dari tab atau perangkat lain", connErrNickInvalid:'Nama panggilan tidak valid', connErrMaintenance:'Pemeliharaan', connErrBlocked:'Diblokir',
     connErrAvatarSize:'Berkas avatar terlalu besar', connErrPacket:'Paket jaringan tidak valid (versi tidak cocok?)', connErrState:'Status koneksi tidak valid (versi tidak cocok?)', connErrKicked:'Anda dikeluarkan dari server', connErrBanned:'Anda diblokir sementara dari server', connErrAccBlocked:'Akun Anda diblokir', connErrIdle:'Terputus karena tidak aktif — silakan sambungkan kembali',
     ipBlockedPrefix:'⏳ IP diblokir — ', ipBlockedWaitPrefix:'⏳ IP diblokir — tunggu ', ipBlockedRetry:'⏳ IP diblokir — tunggu 5 menit lalu coba lagi.',
     sharedTableJoining:'🔗 Meja yang dibagikan ditemukan — bergabung…',

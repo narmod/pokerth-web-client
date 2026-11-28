@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Kontrolado de la konto…',
     connErrVersion:'Nekongrua versio', connErrFull:'La servilo estas plena', connErrAuth:'Aŭtentigo malsukcesis',
-    connErrNickTaken:'La kaŝnomo jam estas prenita', connErrNickInvalid:'Nevalida kaŝnomo', connErrMaintenance:'Prizorgado', connErrBlocked:'Blokita',
+    connErrNickTaken:'La kaŝnomo jam estas prenita', connErrElsewhere: "Via konto ensalutis el alia langeto aŭ aparato", connErrNickInvalid:'Nevalida kaŝnomo', connErrMaintenance:'Prizorgado', connErrBlocked:'Blokita',
     connErrAvatarSize:'La avatara dosiero estas tro granda', connErrPacket:'Nevalida reta pakaĵo (versioj ne kongruas?)', connErrState:'Nevalida konekta stato (versioj ne kongruas?)', connErrKicked:'Vi estis elĵetita el la servilo', connErrBanned:'Vi estis provizore forbarita de la servilo', connErrAccBlocked:'Via konto estas blokita', connErrIdle:'Malkonektita post neaktiveco — vi povas rekonekti',
     ipBlockedPrefix:'⏳ IP blokita — ', ipBlockedWaitPrefix:'⏳ IP blokita — atendu ', ipBlockedRetry:'⏳ IP blokita — atendu 5 minutojn kaj reprovu.',
     sharedTableJoining:'🔗 Kunhavigita tablo trovita — aliĝado…',

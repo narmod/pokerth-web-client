@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Праверка ўліковага запісу…',
     connErrVersion:'Несумяшчальная версія', connErrFull:'Сервер запоўнены', connErrAuth:'Памылка аўтэнтыфікацыі',
-    connErrNickTaken:'Нікнэйм ужо заняты', connErrNickInvalid:'Няправільны нікнэйм', connErrMaintenance:'Тэхнічнае абслугоўванне', connErrBlocked:'Заблакавана',
+    connErrNickTaken:'Нікнэйм ужо заняты', connErrElsewhere: "У ваш уліковы запіс увайшлі з іншай укладкі або іншай прылады", connErrNickInvalid:'Няправільны нікнэйм', connErrMaintenance:'Тэхнічнае абслугоўванне', connErrBlocked:'Заблакавана',
     connErrAvatarSize:'Файл аватара занадта вялікі', connErrPacket:'Няправільны сеткавы пакет (неадпаведнасць версій?)', connErrState:'Няправільны стан злучэння (неадпаведнасць версій?)', connErrKicked:'Вас выключылі з сервера', connErrBanned:'Вас часова заблакавалі на серверы', connErrAccBlocked:'Ваш уліковы запіс заблакаваны', connErrIdle:'Адключана з-за неактыўнасці — можаце падключыцца зноў',
     ipBlockedPrefix:'⏳ IP заблакаваны — ', ipBlockedWaitPrefix:'⏳ IP заблакаваны — пачакайце ', ipBlockedRetry:'⏳ IP заблакаваны — пачакайце 5 хвілін і паспрабуйце зноў.',
     sharedTableJoining:'🔗 Агульны стол знойдзены — далучэнне…',

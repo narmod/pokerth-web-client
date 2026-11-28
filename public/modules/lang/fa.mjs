@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'در حال بررسی حساب…',
     connErrVersion:'نسخهٔ ناسازگار', connErrFull:'سرور پر است', connErrAuth:'احراز هویت ناموفق بود',
-    connErrNickTaken:'نام مستعار قبلاً گرفته شده', connErrNickInvalid:'نام مستعار نامعتبر', connErrMaintenance:'تعمیرات', connErrBlocked:'مسدود',
+    connErrNickTaken:'نام مستعار قبلاً گرفته شده', connErrElsewhere: "با حساب شما از زبانه یا دستگاه دیگری وارد شدند", connErrNickInvalid:'نام مستعار نامعتبر', connErrMaintenance:'تعمیرات', connErrBlocked:'مسدود',
     connErrAvatarSize:'فایل آواتار خیلی بزرگ است', connErrPacket:'بستهٔ شبکهٔ نامعتبر (ناسازگاری نسخه؟)', connErrState:'وضعیت اتصال نامعتبر (ناسازگاری نسخه؟)', connErrKicked:'از سرور اخراج شدید', connErrBanned:'به‌طور موقت از سرور محروم شدید', connErrAccBlocked:'حسابتان مسدود است', connErrIdle:'به دلیل بی‌فعالیتی قطع شدید — هر وقت خواستید دوباره وصل شوید',
     ipBlockedPrefix:'⏳ آی‌پی مسدود — ', ipBlockedWaitPrefix:'⏳ آی‌پی مسدود — صبر کنید ', ipBlockedRetry:'⏳ آی‌پی مسدود — ۵ دقیقه صبر کنید و دوباره تلاش کنید.',
     sharedTableJoining:'🔗 میز مشترک پیدا شد — در حال پیوستن…',

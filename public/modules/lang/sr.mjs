@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Некомпатибилна верзија',
     connErrFull: 'Сервер је пун',
     connErrAuth: 'Аутентификација није успела',
-    connErrNickTaken: 'Надимак је заузет',
+    connErrNickTaken: 'Надимак је заузет', connErrElsewhere: "Ваш налог се пријавио са друге картице или другог уређаја",
     connErrNickInvalid: 'Неважећи надимак',
     connErrMaintenance: 'Одржавање',
     connErrBlocked: 'Блокирано',

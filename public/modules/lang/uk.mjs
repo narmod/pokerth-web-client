@@ -343,7 +343,7 @@ export const strings = {
     connErrVersion: 'Несумісна версія',
     connErrFull: 'Сервер переповнений',
     connErrAuth: 'Помилка автентифікації',
-    connErrNickTaken: 'Псевдонім уже зайнятий',
+    connErrNickTaken: 'Псевдонім уже зайнятий', connErrElsewhere: "У ваш обліковий запис увійшли з іншої вкладки або іншого пристрою",
     connErrNickInvalid: 'Недійсний псевдонім',
     connErrMaintenance: 'Технічні роботи',
     connErrBlocked: 'Заблоковано',

@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Duke verifikuar llogarinë…',
     connErrVersion:'Version i papajtueshëm', connErrFull:'Serveri është plot', connErrAuth:'Vërtetimi dështoi',
-    connErrNickTaken:'Pseudonimi është tashmë i zënë', connErrNickInvalid:'Pseudonim i pavlefshëm', connErrMaintenance:'Mirëmbajtje', connErrBlocked:'I bllokuar',
+    connErrNickTaken:'Pseudonimi është tashmë i zënë', connErrElsewhere: "Llogaria juaj u hap nga një skedë ose pajisje tjetër", connErrNickInvalid:'Pseudonim i pavlefshëm', connErrMaintenance:'Mirëmbajtje', connErrBlocked:'I bllokuar',
     connErrAvatarSize:'Skedari i avatarit është shumë i madh', connErrPacket:'Paketë rrjeti e pavlefshme (mospërputhje versionesh?)', connErrState:'Gjendje e pavlefshme e lidhjes (mospërputhje versionesh?)', connErrKicked:'U përjashtove nga serveri', connErrBanned:'U bllokove përkohësisht në server', connErrAccBlocked:'Llogaria jote është e bllokuar', connErrIdle:'Lidhja u ndërpre pas mosveprimit — je i mirëpritur të rilidhesh',
     ipBlockedPrefix:'⏳ IP-ja e bllokuar — ', ipBlockedWaitPrefix:'⏳ IP-ja e bllokuar — prit ', ipBlockedRetry:'⏳ IP-ja e bllokuar — prit 5 minuta dhe provo sërish.',
     sharedTableJoining:'🔗 Tavolina e ndarë u gjet — duke u bashkuar…',

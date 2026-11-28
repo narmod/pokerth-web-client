@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: 'Tionndadh neo-fhreagarrach',
     connErrFull: 'Tha am frithealaiche làn',
     connErrAuth: 'Dh\'fhàillig an dearbhadh',
-    connErrNickTaken: 'Tha am far-ainm air a chleachdadh',
+    connErrNickTaken: 'Tha am far-ainm air a chleachdadh', connErrElsewhere: "Chaidh do chunntas a chlàradh a-steach o thaba no uidheam eile",
     connErrNickInvalid: 'Far-ainm mì-dhligheach',
     connErrMaintenance: 'Obair-càraidh',
     connErrBlocked: 'Air a bhacadh',

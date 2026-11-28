@@ -203,7 +203,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'กำลังตรวจสอบบัญชี…',
     connErrVersion:'เวอร์ชันไม่เข้ากัน', connErrFull:'เซิร์ฟเวอร์เต็ม', connErrAuth:'การยืนยันตัวตนล้มเหลว',
-    connErrNickTaken:'ชื่อเล่นถูกใช้แล้ว', connErrNickInvalid:'ชื่อเล่นไม่ถูกต้อง', connErrMaintenance:'ปิดปรับปรุง', connErrBlocked:'ถูกบล็อก',
+    connErrNickTaken:'ชื่อเล่นถูกใช้แล้ว', connErrElsewhere: "มีการเข้าสู่ระบบบัญชีของคุณจากแท็บหรืออุปกรณ์อื่น", connErrNickInvalid:'ชื่อเล่นไม่ถูกต้อง', connErrMaintenance:'ปิดปรับปรุง', connErrBlocked:'ถูกบล็อก',
     connErrAvatarSize:'ไฟล์อวาตาร์ใหญ่เกินไป', connErrPacket:'แพ็กเก็ตเครือข่ายไม่ถูกต้อง (เวอร์ชันไม่ตรงกัน?)', connErrState:'สถานะการเชื่อมต่อไม่ถูกต้อง (เวอร์ชันไม่ตรงกัน?)', connErrKicked:'คุณถูกเตะออกจากเซิร์ฟเวอร์', connErrBanned:'คุณถูกแบนชั่วคราวจากเซิร์ฟเวอร์', connErrAccBlocked:'บัญชีของคุณถูกบล็อก', connErrIdle:'ถูกตัดการเชื่อมต่อเพราะไม่มีการใช้งาน — เชื่อมต่อใหม่ได้เลย',
     ipBlockedPrefix:'⏳ IP ถูกบล็อก — ', ipBlockedWaitPrefix:'⏳ IP ถูกบล็อก — รอ ', ipBlockedRetry:'⏳ IP ถูกบล็อก — รอ 5 นาทีแล้วลองใหม่',
     sharedTableJoining:'🔗 พบโต๊ะที่แชร์ — กำลังเข้าร่วม…',

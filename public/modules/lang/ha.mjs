@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Ana tabbatar da asusu…',
     connErrVersion:'Sigar da ba ta dace ba', connErrFull:'Sabar ta cika', connErrAuth:'Tantancewa ta kasa',
-    connErrNickTaken:'An riga an ɗauki laƙabin', connErrNickInvalid:'Laƙabi mara inganci', connErrMaintenance:'Gyara', connErrBlocked:'An toshe',
+    connErrNickTaken:'An riga an ɗauki laƙabin', connErrElsewhere: "An shiga asusunka daga wani shafi ko wata na'ura", connErrNickInvalid:'Laƙabi mara inganci', connErrMaintenance:'Gyara', connErrBlocked:'An toshe',
     connErrAvatarSize:'Fayil na avatar ya yi girma sosai', connErrPacket:'Fakitin hanyar sadarwa mara inganci (sigogi ba su dace ba?)', connErrState:'Yanayin haɗi mara inganci (sigogi ba su dace ba?)', connErrKicked:'An kore ka daga sabar', connErrBanned:'An hana ka shiga sabar na ɗan lokaci', connErrAccBlocked:'An toshe asusunka', connErrIdle:'An yanke haɗi saboda rashin aiki — za ka iya sake haɗawa',
     ipBlockedPrefix:'⏳ An toshe IP — ', ipBlockedWaitPrefix:'⏳ An toshe IP — jira ', ipBlockedRetry:'⏳ An toshe IP — jira minti 5 sannan ka sake gwadawa.',
     sharedTableJoining:'🔗 An sami teburin da aka raba — ana shiga…',

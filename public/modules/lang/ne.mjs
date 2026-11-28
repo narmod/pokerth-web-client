@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'खाता जाँच हुँदैछ…',
     connErrVersion:'नमिल्ने संस्करण', connErrFull:'सर्भर भरिएको छ', connErrAuth:'प्रमाणीकरण असफल',
-    connErrNickTaken:'उपनाम पहिल्यै लिइएको छ', connErrNickInvalid:'अमान्य उपनाम', connErrMaintenance:'मर्मत', connErrBlocked:'रोकिएको',
+    connErrNickTaken:'उपनाम पहिल्यै लिइएको छ', connErrElsewhere: "अर्को ट्याब वा उपकरणबाट तपाईंको खातामा लग इन गरियो", connErrNickInvalid:'अमान्य उपनाम', connErrMaintenance:'मर्मत', connErrBlocked:'रोकिएको',
     connErrAvatarSize:'अवतार फाइल धेरै ठूलो छ', connErrPacket:'अमान्य नेटवर्क प्याकेट (संस्करण नमिलेको?)', connErrState:'अमान्य जडान अवस्था (संस्करण नमिलेको?)', connErrKicked:'तपाईंलाई सर्भरबाट निकालियो', connErrBanned:'तपाईंलाई सर्भरबाट अस्थायी रूपमा प्रतिबन्ध लगाइयो', connErrAccBlocked:'तपाईंको खाता रोकिएको छ', connErrIdle:'निष्क्रियतापछि जडान टुट्यो — तपाईं फेरि जडान गर्न सक्नुहुन्छ',
     ipBlockedPrefix:'⏳ IP रोकिएको छ — ', ipBlockedWaitPrefix:'⏳ IP रोकिएको छ — पर्खनुहोस् ', ipBlockedRetry:'⏳ IP रोकिएको छ — ५ मिनेट पर्खनुहोस् र फेरि प्रयास गर्नुहोस्।',
     sharedTableJoining:'🔗 साझा टेबल भेटियो — सामेल हुँदैछ…',

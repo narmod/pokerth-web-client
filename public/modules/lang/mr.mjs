@@ -201,7 +201,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'खातं तपासत आहे…',
     connErrVersion:'विसंगत आवृत्ती', connErrFull:'सर्व्हर भरला आहे', connErrAuth:'प्रमाणीकरण अयशस्वी',
-    connErrNickTaken:'टोपणनाव आधीच घेतलं आहे', connErrNickInvalid:'अवैध टोपणनाव', connErrMaintenance:'देखभाल', connErrBlocked:'ब्लॉक केलं आहे',
+    connErrNickTaken:'टोपणनाव आधीच घेतलं आहे', connErrElsewhere: "दुसऱ्या टॅब किंवा डिव्हाइसवरून तुमच्या खात्यात लॉग इन झाले", connErrNickInvalid:'अवैध टोपणनाव', connErrMaintenance:'देखभाल', connErrBlocked:'ब्लॉक केलं आहे',
     connErrAvatarSize:'अवतार फाइल खूप मोठी आहे', connErrPacket:'अवैध नेटवर्क पॅकेट (आवृत्ती जुळत नाही?)', connErrState:'अवैध कनेक्शन स्थिती (आवृत्ती जुळत नाही?)', connErrKicked:'तुम्हाला सर्व्हरवरून काढण्यात आलं', connErrBanned:'तुम्हाला सर्व्हरवरून तात्पुरतं बॅन केलं आहे', connErrAccBlocked:'तुमचं खातं ब्लॉक केलं आहे', connErrIdle:'निष्क्रियतेनंतर डिस्कनेक्ट झालं — तुम्ही पुन्हा कनेक्ट करू शकता',
     ipBlockedPrefix:'⏳ IP ब्लॉक — ', ipBlockedWaitPrefix:'⏳ IP ब्लॉक — थांबा ', ipBlockedRetry:'⏳ IP ब्लॉक — 5 मिनिटं थांबून पुन्हा प्रयत्न करा.',
     sharedTableJoining:'🔗 शेअर केलेलं टेबल सापडलं — सामील होत आहे…',

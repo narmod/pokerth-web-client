@@ -294,7 +294,7 @@ export const strings = {
     handsClose:'닫기 ✕', watchBtn:'관전', watchTitle:'플레이하지 않고 관전',
     verifyingAccount:'계정 확인 중…',
     connErrVersion:'호환되지 않는 버전', connErrFull:'서버 만원', connErrAuth:'인증 실패',
-    connErrNickTaken:'이미 사용 중인 닉네임', connErrNickInvalid:'잘못된 닉네임', connErrMaintenance:'점검 중', connErrBlocked:'차단됨',
+    connErrNickTaken:'이미 사용 중인 닉네임', connErrElsewhere: "다른 탭 또는 기기에서 이 계정으로 로그인했습니다", connErrNickInvalid:'잘못된 닉네임', connErrMaintenance:'점검 중', connErrBlocked:'차단됨',
     connErrAvatarSize:'아바타 파일이 너무 큽니다', connErrPacket:'잘못된 네트워크 패킷 (버전 불일치?)', connErrState:'잘못된 연결 상태 (버전 불일치?)', connErrKicked:'서버에서 추방되었습니다', connErrBanned:'서버에서 일시적으로 차단되었습니다', connErrAccBlocked:'계정이 차단되었습니다', connErrIdle:'비활성으로 연결이 끊겼습니다 — 다시 접속할 수 있습니다',
     ipBlockedPrefix:'⏳ IP 차단됨 — ', ipBlockedWaitPrefix:'⏳ IP 차단됨 — 대기 ', ipBlockedRetry:'⏳ IP 차단됨 — 5분 후 다시 시도하세요.',
     sharedTableJoining:'🔗 공유 테이블 발견 — 참가 중…',

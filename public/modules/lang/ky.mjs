@@ -204,7 +204,7 @@ export const strings = {
     // ── Messages migrated from code (i18n batch) ──
     verifyingAccount:'Аккаунт текшерилүүдө…',
     connErrVersion:'Туура келбеген версия', connErrFull:'Сервер толук', connErrAuth:'Аутентификация ишке ашкан жок',
-    connErrNickTaken:'Лакап ат ээленген', connErrNickInvalid:'Жараксыз лакап ат', connErrMaintenance:'Техникалык тейлөө', connErrBlocked:'Бөгөттөлгөн',
+    connErrNickTaken:'Лакап ат ээленген', connErrElsewhere: "Аккаунтуңузга башка өтмөктөн же түзмөктөн кирилди", connErrNickInvalid:'Жараксыз лакап ат', connErrMaintenance:'Техникалык тейлөө', connErrBlocked:'Бөгөттөлгөн',
     connErrAvatarSize:'Аватар файлы өтө чоң', connErrPacket:'Жараксыз тармак пакети (версиялар шайкеш эмеспи?)', connErrState:'Жараксыз туташуу абалы (версиялар шайкеш эмеспи?)', connErrKicked:'Сиз серверден чыгарылдыңыз', connErrBanned:'Сервер сизди убактылуу бөгөттөдү', connErrAccBlocked:'Аккаунтуңуз бөгөттөлгөн', connErrIdle:'Аракетсиздиктен улам ажыратылдыңыз — кайра туташа аласыз',
     ipBlockedPrefix:'⏳ IP бөгөттөлгөн — ', ipBlockedWaitPrefix:'⏳ IP бөгөттөлгөн — күтүңүз ', ipBlockedRetry:'⏳ IP бөгөттөлгөн — 5 мүнөт күтүп, кайра аракет кылыңыз.',
     sharedTableJoining:'🔗 Бөлүшүлгөн үстөл табылды — кошулууда…',

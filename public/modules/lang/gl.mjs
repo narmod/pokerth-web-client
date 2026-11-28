@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Versión incompatible',
     connErrFull: 'O servidor está cheo',
     connErrAuth: 'Fallou a autenticación',
-    connErrNickTaken: 'O alcume xa está en uso',
+    connErrNickTaken: 'O alcume xa está en uso', connErrElsewhere: "A túa conta conectouse desde outra lapela ou outro dispositivo",
     connErrNickInvalid: 'Alcume non válido',
     connErrMaintenance: 'Mantemento',
     connErrBlocked: 'Bloqueado',

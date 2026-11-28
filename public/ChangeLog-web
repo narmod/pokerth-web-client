@@ -1,4 +1,7 @@
-2026-11-28 version 2.1.11-web.157 (current series):
+2026-11-28 version 2.1.11-web.159 (current series):
+- bugfix: with the same account open in two tabs or on two devices, they no longer push each other off the server every 30 seconds — the one left behind now says « Your account logged in from another tab or device » and waits
+
+2026-11-28 version 2.1.11-web.157:
 - improvement: the poker guides (rules, hand rankings, odds, FAQ…) now show the date they were last updated
 
 2026-11-25 version 2.1.11-web.154:

@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Phiên bản không tương thích',
     connErrFull: 'Máy chủ đã đầy',
     connErrAuth: 'Xác thực thất bại',
-    connErrNickTaken: 'Biệt danh đã được dùng',
+    connErrNickTaken: 'Biệt danh đã được dùng', connErrElsewhere: "Tài khoản của bạn đã được đăng nhập từ một thẻ hoặc thiết bị khác",
     connErrNickInvalid: 'Biệt danh không hợp lệ',
     connErrMaintenance: 'Bảo trì',
     connErrBlocked: 'Bị chặn',

@@ -344,7 +344,7 @@ export const strings = {
     connErrVersion: 'Versió incompatible',
     connErrFull: 'El servidor és ple',
     connErrAuth: 'Ha fallat l\'autenticació',
-    connErrNickTaken: 'El sobrenom ja s\'usa',
+    connErrNickTaken: 'El sobrenom ja s\'usa', connErrElsewhere: "El teu compte s'ha connectat des d'una altra pestanya o dispositiu",
     connErrNickInvalid: 'Sobrenom no vàlid',
     connErrMaintenance: 'Manteniment',
     connErrBlocked: 'Bloquejat',

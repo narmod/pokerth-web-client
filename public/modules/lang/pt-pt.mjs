@@ -345,7 +345,7 @@ export const strings = {
     connErrVersion: 'Versão incompatível',
     connErrFull: 'Servidor cheio',
     connErrAuth: 'Falha na autenticação',
-    connErrNickTaken: 'A alcunha já está em uso',
+    connErrNickTaken: 'A alcunha já está em uso', connErrElsewhere: "A sua conta foi ligada noutro separador ou noutro dispositivo",
     connErrNickInvalid: 'Alcunha inválida',
     connErrMaintenance: 'Manutenção',
     connErrBlocked: 'Bloqueado',
