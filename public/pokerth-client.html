@@ -3190,11 +3190,11 @@ function _processAvatarFile(file) {
   <div class="pv-scroll" tabindex="-1" data-kn-focus data-kn-read>
     <div class="pv-body">
       <p class="pv-updated" data-i18n="pvUpdated">Last updated: October 19, 2026</p>
-      <h2 data-i18n="pvWhoH">Who runs this</h2>
+      <h3 data-i18n="pvWhoH">Who runs this</h3>
       <p data-i18n="pvWho">The PokerTH Web Client is a free and open-source hobby project, maintained by an individual, Arnaud Obscur ("narmod"), in collaboration with the PokerTH project. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
-      <h2 data-i18n="pvLocalH">What stays in your browser</h2>
+      <h3 data-i18n="pvLocalH">What stays in your browser</h3>
       <p data-i18n="pvLocal">Your settings, statistics, achievements and logs are stored in your browser. They leave your device only in the cases listed below. You can clear them from your browser settings or with Restore defaults.</p>
-      <h2 data-i18n="pvServerH">What the server sees</h2>
+      <h3 data-i18n="pvServerH">What the server sees</h3>
       <ul>
         <li data-i18n="pvSrv1">Visit statistics: a random identifier created by your browser counts distinct devices and visits. The server stores only a hashed form of it, never with a name or an IP address. Daily figures are deleted after about 13 months, and so is the hashed identifier of any device not seen since. Browser, operating system and language are only counted as totals. The website a visit comes from is counted the same way, by its domain name only. The browser’s time zone (for example Europe/Paris) is sent too, so that visits can be counted by country: only totals per country are kept, and no IP address is used for this. It is also sent when you connect to a game, so that the server operator can see how many players are connected right now in each country: it is held as a country code for as long as the connection lasts, and never stored. When you log in on pokerth.net, whether it is as a guest or with an account is counted, as a total per day; for a LAN game, the server is counted under its entry in the public LAN list (or as “other”), never by its address. These totals may be combined (for example: LAN games opened from a phone in Germany, from the installed app or a browser tab), still as numbers only, kept as long as the other daily figures.</li>
         <li data-i18n="pvSrvSync">Settings sync (registered accounts): when you log in with a registered pokerth.net account, your settings (the config.xml shared with the desktop client, plus web options such as theme, seats, shortcuts, language, avatar choice and ignore list) are stored on this server under your account name, so they follow you to other devices. On by default; it can be turned off in Advanced options.</li>
@@ -3206,15 +3206,15 @@ function _processAvatarFile(file) {
         <li data-i18n="pvSrvLan">Server proposals (LAN): when you propose a server from the login page, its details (name, address, description, link, last day of an event) go to the admins and, once approved, are shown to every player. What you write under “For the admins only” (nickname, note, contact) is seen by the admins only: the contact is erased as soon as they approve or reject the request, and the note is kept as an internal note on that server. No IP address is stored with a request, only a salted hash of it, kept 30 days, to count how many requests came from one address.</li>
         <li data-i18n="pvSrv2">Technical connection data: your IP address is needed to deliver and protect the service and may appear in the server logs for security (rate limiting, blocking abusive connections). It is used for nothing else.</li>
       </ul>
-      <h2 data-i18n="pvThirdH">Third-party services</h2>
+      <h3 data-i18n="pvThirdH">Third-party services</h3>
       <p data-i18n="pvThird">When you connect to pokerth.net (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.</p>
       <p data-i18n="pvThirdTr">Translation: when you tap the translate button (🌐) on a chat message or a forum post, the text is sent from your browser to Google Translate, or to MyMemory if that fails, or finally through this server to Google. Nothing is sent unless you tap, and the feature can be turned off in Advanced options.</p>
       <p data-i18n="pvThirdRadio">Radios: when you play a radio station in the music player, your browser connects directly to that station.</p>
       <p data-i18n="pvThirdPdb">Log analysis: if you use Analyse log file, the .pdb file is sent through this server to the pokerth.net log analysis service.</p>
-      <h2 data-i18n="pvAcctH">Your pokerth.net account</h2>
+      <h3 data-i18n="pvAcctH">Your pokerth.net account</h3>
       <p data-i18n="pvAcct">Your pokerth.net account (nickname, password stored only as a hash, e-mail address, optional country, gender and avatar, game results and ranking) is created and kept by pokerth.net, not by this web client, and is covered by the pokerth.net privacy policy below. The pokerth.net game server also processes connection data for every player, guests included (nickname, client type and version, operating system, country, connection times), as that policy describes. When you log in with your account, your nickname and password go from your browser through this server to the pokerth.net game server over encrypted connections: this server passes them on without keeping them, and the web client never saves your password; only your browser’s own password manager may keep it, if you allow it. To have your account deleted, write to webmaster@pokerth.net.</p>
       <p><a href="https://www.pokerth.net/ucp.php?mode=privacy" target="_blank" rel="noopener noreferrer">pokerth.net/ucp.php?mode=privacy</a></p>
-      <h2 data-i18n="pvLicH">Free software - AGPL-3.0</h2>
+      <h3 data-i18n="pvLicH">Free software - AGPL-3.0</h3>
       <p data-i18n="pvLic1">The entire client is free software, released under the GNU AGPL v3 license. You can read the source code, verify what it does, host your own copy, and modify it:</p>
       <ul>
         <li><span data-i18n="pvLicSrc">Source code</span> &mdash; <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
@@ -3222,7 +3222,7 @@ function _processAvatarFile(file) {
         <li><span data-i18n="pvLicGnu">GNU licenses</span> &mdash; <a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener noreferrer">gnu.org/licenses</a></li>
       </ul>
       <p data-i18n="pvLic2">PokerTH itself is released under the GNU GPL license.</p>
-      <h2 data-i18n="pvRightsH">Your rights and contact</h2>
+      <h3 data-i18n="pvRightsH">Your rights and contact</h3>
       <p data-i18n="pvRights">Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example synced settings or a leaderboard entry). Please contact the pokerth.net administrators, whose details are on the pokerth.net Imprint page:</p>
       <p><a href="https://www.pokerth.net/app.php/imprint" target="_blank" rel="noopener noreferrer">pokerth.net/app.php/imprint</a></p>
       <p data-i18n="pvRightsGh">For questions about the web client itself, you can also open an issue on GitHub:</p>

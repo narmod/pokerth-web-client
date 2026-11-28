@@ -10688,8 +10688,8 @@ html.reduce-fx .seat-action-badge {
 .pv-scroll { flex:1; overflow-y:auto; }
 .pv-body { max-width:720px; margin:0 auto; padding:10px 18px 48px; color:var(--text); font-size:var(--fs-md); line-height:1.65; }
 .pv-updated { color:var(--text-dim); font-size:var(--fs-base); margin:4px 0 14px; }
-.pv-body h2 { color:var(--text-hi); font-size:var(--fs-lg); margin:22px 0 8px; padding-top:16px; border-top:1px solid var(--border-hi); }
-.pv-body h2:first-of-type { border-top:0; padding-top:0; }
+.pv-body h3 { color:var(--text-hi); font-size:var(--fs-lg); margin:22px 0 8px; padding-top:16px; border-top:1px solid var(--border-hi); }
+.pv-body h3:first-of-type { border-top:0; padding-top:0; }
 .pv-body a { color:var(--gold); }
 .pv-body strong { color:var(--text-hi); font-weight:600; }
 .pv-body ul { padding-left:20px; }

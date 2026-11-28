@@ -1902,7 +1902,10 @@ function seoHeadBlock(base, lang) {
     inLanguage: lang || 'en',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     isAccessibleForFree: true,
-    sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://github.com/pokerth/pokerth', 'https://www.pokerth.net/']
+    // The game's entries in Wikidata (Q182261) and Wikipedia tie this entity
+    // to the knowledge graph assistants answer from.
+    sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://github.com/pokerth/pokerth', 'https://www.pokerth.net/',
+      'https://www.wikidata.org/wiki/Q182261', 'https://en.wikipedia.org/wiki/PokerTH']
   };
   // featureList is English prose: only on the English page, so a localized
   // variant never carries a block of text in another language.
@@ -1942,14 +1945,16 @@ function seoHeadBlock(base, lang) {
 }
 
 function seoBodyBlock(lang) {
-  // Crawler-readable summary of what the page is. The app itself renders no
-  // static text, so search engines and AI crawlers would otherwise see an
-  // empty page. Kept off-viewport (not display:none) and aria-hidden so it
-  // never doubles up for screen-reader users. Localized: the heading and lead
-  // come from SEO_I18N, the rest from SEO_BODY_I18N.
+  // Summary of what the page is, for visitors and crawlers that run no
+  // JavaScript (GPTBot, ClaudeBot, PerplexityBot and most AI fetchers read the
+  // raw HTML). A <noscript> fallback rather than off-viewport text: the app
+  // needs JavaScript, so this is what a script-less visitor really gets, and
+  // it is never text hidden from people while shown to search engines.
+  // Localized: the heading and lead come from SEO_I18N, the rest from
+  // SEO_BODY_I18N.
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var b = (lang && SEO_BODY_I18N[lang]) || SEO_BODY_I18N.en;
-  return '<div id="seo-intro" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">' +
+  return '<noscript><div id="seo-intro">' +
     // <h2>, not <h1>: the page's single <h1> is the visible brand block of
     // the connect screen, so no heading lives only in off-viewport text.
     '<h2>' + _seoAttr(seoTitleOverride() || loc.t) + '</h2>' +
@@ -1974,7 +1979,7 @@ function seoBodyBlock(lang) {
     (_seoHostIn(lang) ? '<a href="' + _seoLangHref('/host-a-server', SEO_HOST_I18N, lang) + '">' + _seoNavLabel(lang, 'host') + '</a> \u2014 ' : '') +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">' + _seoNavLabel(lang, 'faq') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/privacy', _seoPrivacyTable(), lang) + '">' + b.pv + '</a></p>' +
-    '</div>';
+    '</div></noscript>';
 }
 
 // Anchor text for a link to a localized content page: that page's own <h1>,
@@ -2090,6 +2095,14 @@ function seoLlmsTxt(base) {
     '- ' + nLang + ' interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Up to 10 players per table; spectators can watch running games\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
+    // History with a public source, the figures assistants quote.
+    '- PokerTH was started in 2006 by Felix Hammer and Florian Thauer and is still\n' +
+    '  developed by its community; the desktop client was downloaded more than\n' +
+    '  2.8 million times from SourceForge alone between 2007 and May 2017\n' +
+    '  (https://en.wikipedia.org/wiki/PokerTH)\n' +
+    '- Guide pages on rules, hand rankings, all 169 starting hands, exact odds, the glossary,\n' +
+    '  the FAQ and more, each in up to ' + nLang + ' languages\n' +
+    (u ? '\n## Full text\n\n- Every guide page in one Markdown file: ' + u + '/llms-full.txt\n' : '') +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- FAQ: ' + u + '/faq\n- How to play, step by step: ' + u + '/how-to-play\n' +
          '- Texas Hold’em rules: ' + u + '/rules\n- Poker hand rankings: ' + u + '/hand-rankings\n' +
          '- Poker glossary: ' + u + '/glossary\n- Competitions and coming dates: ' + u + '/competitions\n' +
@@ -2104,6 +2117,75 @@ function seoLlmsTxt(base) {
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
     '- PokerTH desktop client and server: https://github.com/pokerth/pokerth\n' +
     '- PokerTH project and forum: https://www.pokerth.net/\n';
+}
+
+// /llms-full.txt — the English text of every guide page in one Markdown file,
+// the companion of /llms.txt that assistants read when they want the content
+// rather than the map. Built from the pages themselves (each renderer is run
+// against a capturing response), so it can never drift from what is served.
+// /competitions is left out: it is a live calendar, linked from /llms.txt.
+var _SEO_GUIDE_PATHS = ['/rules', '/faq', '/hand-rankings', '/how-to-play', '/glossary', '/competitions',
+  '/host-a-server', '/accessibility', '/starting-hands', '/play-against-computer', '/poker-odds',
+  '/play-with-friends', '/privacy'];
+var _SEO_FULL_PAGES = [['/how-to-play', seoHowToPage], ['/rules', seoRulesPage], ['/hand-rankings', seoHandsPage],
+  ['/starting-hands', seoStartPage], ['/poker-odds', seoOddsPage], ['/glossary', seoGlossaryPage],
+  ['/play-with-friends', seoFriendsPage], ['/play-against-computer', seoBotsPage], ['/accessibility', seoA11yPage],
+  ['/host-a-server', seoHostPage], ['/faq', seoFaqPage]];
+var _seoFullMemo = null; // { key, txt }
+function _seoHtmlToMd(html, base) {
+  var dec = function (t) {
+    return t.replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+      .replace(/&#39;|&apos;/g, "'").replace(/&#(\d+);/g, function (m, n) { return String.fromCodePoint(+n); }).replace(/&amp;/g, '&');
+  };
+  var abs = function (h) { return /^\//.test(h) ? (base || '') + h : h; };
+  var t = String(html)
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<a [^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, function (m, h, x) {
+      var label = x.replace(/<[^>]+>/g, '').trim();
+      return label ? '[' + label + '](' + abs(h) + ')' : '';
+    })
+    .replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n\n# $1\n\n')
+    .replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n\n## $1\n\n')
+    .replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n\n### $1\n\n')
+    .replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '\n\n#### $1\n\n')
+    .replace(/<li[^>]*>/gi, '\n- ').replace(/<\/li>/gi, '')
+    .replace(/<tr[^>]*>/gi, '\n|').replace(/<\/t[dh]>/gi, ' |').replace(/<t[dh][^>]*>/gi, ' ')
+    .replace(/<\/tr>|<\/table>|<table[^>]*>/gi, '\n')
+    .replace(/<(strong|b)>([\s\S]*?)<\/\1>/gi, '**$2**')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|ul|ol|section|figure|figcaption|dl|dd|dt|details|summary)>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '');
+  t = dec(t).split('\n').map(function (l) { return l.replace(/[ \t]+/g, ' ').trim(); }).join('\n')
+    .replace(/\n{3,}/g, '\n\n').trim()
+    // Table rows stay together, with the separator line Markdown needs under the first one.
+    .replace(/(\|[^\n]*)\n\n+(?=\|)/g, '$1\n')
+    .replace(/(\*\*[^*\n]+\*\*)(?=[0-9A-Za-z])/g, '$1 ');
+  t = t.replace(/(^|\n\n)(\|[^\n]*\|)(?=\n\||\n?$)/g, function (m, pre, row) {
+    var n = (row.match(/\|/g) || []).length - 1;
+    return pre + row + '\n|' + new Array(n + 1).join(' --- |');
+  });
+  return t;
+}
+function seoLlmsFullTxt(base) {
+  var key = (base || '') + '|' + (BOOT_VERSION || '') + '|' + seoLastModSelf();
+  if (_seoFullMemo && _seoFullMemo.key === key) return _seoFullMemo.txt;
+  var parts = ['# PokerTH Web Client — full guide text', '',
+    '> ' + SEO_DESC, '',
+    'The English text of every guide page of ' + (base || 'the PokerTH Web Client') + ', in one file.',
+    'Summary and links: ' + (base ? base + '/llms.txt' : '/llms.txt') + '. Each page also exists in up to ' + (supportedLangCount() || 83) + ' languages (?lang=<code>).', ''];
+  _SEO_FULL_PAGES.forEach(function (pg) {
+    var out = null;
+    var fake = { req: { headers: {}, method: 'GET' }, writeHead: function () {}, setHeader: function () {},
+      end: function (b) { out = b == null ? '' : String(b); } };
+    try { pg[1](fake, 'GET', ''); } catch (e) { out = null; }
+    var m = out && /<main>([\s\S]*)<\/main>/.exec(out);
+    if (!m) return;
+    var body = m[1].replace(/<div class="endcta">[\s\S]*$/, '').replace(/<a class="play"[\s\S]*?<\/a>/g, '');
+    parts.push('---', '', 'Source: ' + (base || '') + pg[0], '', _seoHtmlToMd(body, base), '');
+  });
+  var txt = parts.join('\n').replace(/\n{3,}/g, '\n\n') + '\n';
+  _seoFullMemo = { key: key, txt: txt };
+  return txt;
 }
 
 // ── SEO content pages — /rules and /faq, rendered server-side ──────────────
@@ -2275,7 +2357,7 @@ function _seoLangHref(relPath, table, lang) {
 // translations live in seo-i18n/nav.js; English is the fallback per label.
 var SEO_NAV_EN = { play: '\u25b6 Play now', rules: 'Rules', hands: 'Hand rankings', howto: 'How to play',
   gloss: 'Glossary', comp: 'Competitions', friends: 'Play with friends', odds: 'Poker odds', bots: 'Vs computer', start: 'Starting hands', a11y: 'Accessibility', host: 'Host a server', faq: 'FAQ', privacy: 'Privacy', src: 'Source',
-  cta: 'Play PokerTH in your browser \u2014 free, no download' };
+  cta: 'Play PokerTH in your browser \u2014 free, no download', upd: 'Last updated: {d}' };
 var SEO_NAV_I18N = {};
 function _seoNavLabel(lang, k) {
   var e = (lang && SEO_I18N[lang] && SEO_NAV_I18N[lang]) || null;
@@ -6905,6 +6987,26 @@ var SEO_FAQ_I18N = {
   }
 };
 
+// Visible « last updated » line of a dated page (seo-i18n/article-dates.json),
+// the same day as dateModified: assistants and readers trust a date they can
+// see. The date is formatted by Intl in the page language (Gregorian
+// calendar, like the structured data); a language Intl does not know gets the
+// ISO day rather than another language's month name.
+function _seoUpdatedLine(relPath, lang) {
+  var ad = SEO_ARTICLE_DATES[relPath], day = ad && (ad.modified || ad.published);
+  if (!day || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return '';
+  var loc = lang || 'en', txt = day;
+  try {
+    var f = new Intl.DateTimeFormat(loc, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', calendar: 'gregory' });
+    if (f.resolvedOptions().locale.split('-')[0] === loc.split('-')[0]) txt = f.format(new Date(day + 'T00:00:00Z'));
+  } catch (e) { /* unknown locale: ISO day */ }
+  var e = (lang && SEO_I18N[lang] && SEO_NAV_I18N[lang]) || null;
+  var tpl = (e && e.upd) || SEO_NAV_EN.upd;
+  var parts = String(tpl).split('{d}');
+  if (parts.length !== 2) parts = [SEO_NAV_EN.upd.split('{d}')[0], ''];
+  return '<p class="updated">' + _seoAttr(parts[0]) + '<time datetime="' + day + '">' + _seoAttr(txt) + '</time>' + _seoAttr(parts[1]) + '</p>';
+}
+
 // Languages a given content page is actually available in, English first.
 function seoPageLangs(table) {
   var out = ['en'];
@@ -7023,7 +7125,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
     '<header class="top"><div class="in"><a class="brand" href="' + _seoLangHref('/', SEO_I18N, lang) + '">' +
     '<img src="/logo-chip-68.png" alt="" width="34" height="34"><span class="bn"><b>PokerTH</b> <span>Web Client</span></span></a>' + nav + '</div></header>' +
     '<main>' + (hero ? '<div class="hero"><div class="in"><div class="suits" aria-hidden="true"><i class="s"></i><i class="h"></i><i class="d"></i><i class="c"></i></div>' + hero + cta + '</div></div>' : '') +
-    '<div class="body in">' + rest + '<div class="endcta"><img src="/logo-chip-68.png" alt="" width="48" height="48">' + cta + '</div></div></main></body></html>';
+    '<div class="body in">' + _seoUpdatedLine(relPath, lang) + rest + '<div class="endcta"><img src="/logo-chip-68.png" alt="" width="48" height="48">' + cta + '</div></div></main></body></html>';
   // Compressed (≈ ÷4) and validated: a revisit with the same ETag is a 304.
   // res.req is the request this response answers (Node ≥ 15.7).
   _seoSendText(res.req || { headers: {}, method: method }, res, 'text/html; charset=utf-8', _seoEtag(html),
@@ -14163,7 +14265,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var _n = Math.max(0, c[1] - 1);
       _add(_n ? 'ok' : 'warn', c[0] + ' translated into ' + _n + ' of ' + (_tot - 1) + ' non-English languages.');
     });
-    _add(seoAiCrawlers() ? 'ok' : 'warn', seoAiCrawlers() ? 'AI crawlers are allowed and llms.txt is served.' : 'AI crawlers are refused in robots.txt and llms.txt returns 404.');
+    _add(seoAiCrawlers() ? 'ok' : 'warn', seoAiCrawlers() ? 'AI crawlers are allowed; llms.txt and llms-full.txt are served.' : 'AI crawlers are refused in robots.txt and llms.txt returns 404.');
     var _urlCount = _base ? seoIndexNowUrls(_base).length : 0;
     if (_urlCount) _add('ok', 'sitemap.xml indexes ' + seoSitemapChildren(_base).length + ' sitemaps listing ' + _urlCount + ' URLs.');
     return adminJson(res, 200, { ok: true, checks: _ck, indexNow: _seoAdmin().indexNow });
@@ -15614,6 +15716,12 @@ const httpServer = http.createServer((req, res) => {
     res.end(seoLlmsTxt(seoPublicUrl()));
     return;
   }
+  if (reqPathOnly === '/llms-full.txt') {
+    // Same gate as /llms.txt.
+    if (!seoEnabled() || !seoAiCrawlers()) { res.writeHead(404); res.end('Not found'); return; }
+    var _lf = seoLlmsFullTxt(seoPublicUrl());
+    return _seoSendText(req, res, 'text/plain; charset=utf-8', _seoEtag(_lf), seoLastModSelf(), { raw: Buffer.from(_lf, 'utf8') });
+  }
   // IndexNow key file — /<key>.txt proves ownership of the submitted host.
   if (seoEnabled()) {
     var _inKey = seoIndexNowKey();
@@ -15628,6 +15736,17 @@ const httpServer = http.createServer((req, res) => {
   // player of a self-hosted or test server who opened a guide from About ›
   // Poker guides got English whatever their interface language. Only the
   // robots tags follow the SEO toggle (noindex, no canonical or hreflang).
+  // A guide path typed with a trailing slash or capitals (/rules/, /Rules)
+  // answered 404: one permanent redirect to the canonical path, query kept.
+  if (reqPathOnly !== '/' && _SEO_GUIDE_PATHS.indexOf(reqPathOnly) === -1) {
+    var _gp = reqPathOnly.toLowerCase().replace(/\/+$/, '');
+    if (_SEO_GUIDE_PATHS.indexOf(_gp) !== -1) {
+      var _gq = String(req.url || '').indexOf('?');
+      res.writeHead(301, Object.assign({ 'Location': _gp + (_gq !== -1 ? String(req.url).slice(_gq) : ''), 'Cache-Control': 'public, max-age=86400' }, SECURITY_HEADERS));
+      res.end();
+      return;
+    }
+  }
   if (reqPathOnly === '/rules' || reqPathOnly === '/rules.html') {
     return seoRulesPage(res, req.method, seoLangFromQuery(req.url));
   }
@@ -16299,7 +16418,12 @@ const httpServer = http.createServer((req, res) => {
     // CSS/JS/MJS must always revalidate so a deploy is picked up without a
     // hard refresh; static media (images/fonts) can still be cached a day.
     const isCode = ext === '.css' || ext === '.js' || ext === '.mjs';
-    const cacheCtl = isCode ? 'no-cache, must-revalidate' : 'public, max-age=86400';
+    // Fonts change only with a font update, which renames nothing but is
+    // rare: a month, revalidated in the background past that.
+    const isFont = ext === '.woff' || ext === '.woff2';
+    const cacheCtl = isCode ? 'no-cache, must-revalidate'
+      : isFont ? 'public, max-age=2592000, stale-while-revalidate=86400'
+      : 'public, max-age=86400';
     return sendFile(req, res, candidate, type, cacheCtl, candSt, isCode);
   }
   res.writeHead(404); res.end('Not found');

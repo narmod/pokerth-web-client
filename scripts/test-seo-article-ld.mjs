@@ -41,7 +41,10 @@ const blocks = (h) => [...h.matchAll(/<script type="application\/ld\+json">([\s\
 const meta = (h, p) => (h.match(new RegExp('<meta property="' + p + '" content="([^"]*)"')) || [])[1];
 // The page's words, not its markup: a restyle (web.240 moved the title onto a
 // header band) is not a new version of the text.
+// The visible « last updated » line is the date itself, not the text it dates:
+// left out, or moving the date would change the fingerprint it is moved for.
 const main = (h) => ((h.match(/<main>([\s\S]*)<\/main>/) || [])[1] || '')
+  .replace(/<p class="updated">[\s\S]*?<\/p>/, '')
   .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const LANGS = Object.keys(require(join(root, 'seo-i18n', 'competitions.js')));
 // One fingerprint over the page in English and in every language it exists in
@@ -72,6 +75,9 @@ try {
     if (!d) continue;
     ok(d.fp === f, `${p}: text unchanged in every language since ${d.modified}` + (d.fp === f ? '' : ' — move the date: node scripts/test-seo-article-ld.mjs --update'));
     ok(ISO.test(d.published) && ISO.test(d.modified) && d.published <= d.modified && d.modified <= today, `${p}: dates in order (${d.published} ≤ ${d.modified} ≤ today)`);
+    ok(h.indexOf('<p class="updated">Last updated: <time datetime="' + d.modified + '">') !== -1, `${p}: visible « Last updated » line on the same day`);
+    const frh = await get(p + '?lang=fr');
+    ok(frh.indexOf('<p class="updated">Mis à jour le <time datetime="' + d.modified + '">') !== -1, `${p}?lang=fr: visible line localized`);
     if (!art) continue;
     ok(art.datePublished === d.published && art.dateModified === d.modified, `${p}: datePublished / dateModified in the JSON-LD`);
     ok(meta(h, 'article:published_time') === d.published && meta(h, 'article:modified_time') === d.modified, `${p}: article:published_time / modified_time`);

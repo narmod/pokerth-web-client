@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **GEO — what assistants read** (`web.157`) — audit `claude/AUDIT_GEO_2026-11-28.md`. Most AI fetchers run no
+  JavaScript: the home page summary (`#seo-intro`) is now a `<noscript>` fallback instead of off-viewport text, and
+  the in-app privacy overlay's seven headings are `<h3>` (CSS follows), so the raw home page no longer reads as a
+  privacy policy. New `/llms-full.txt`: the English text of the 11 guide pages in Markdown, built by running each
+  page renderer against a capturing response (same gate as `/llms.txt`, which links it and gains a sourced history
+  figure). Dated guide pages show a visible « Last updated » line (`<time>`, Intl date in the page language, label
+  `upd` in `seo-i18n/nav.js` for the 82 languages), the same day as `dateModified`; the article-date fingerprint
+  ignores it. App entity `sameAs` + Wikidata Q182261 and Wikipedia. `/rules/`, `/Rules`… → 301 to the canonical
+  guide path (query kept). Fonts cached 30 days. Test: `test-seo-geo`.
 - **Clickable chat nicknames** (`web.153`) — lobby chat 21/11: a troll in the lobby, and « how do I ignore him? »
   answered with « find him in the player list ». New `public/modules/ui/chat-nick.mjs`: in the lobby and game chats
   a nickname does what a seat does — tap = player card, right-click / long-press (500 ms, cancelled past 10 px, the

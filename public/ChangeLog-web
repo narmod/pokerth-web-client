@@ -1,4 +1,7 @@
-2026-11-25 version 2.1.11-web.154 (current series):
+2026-11-28 version 2.1.11-web.157 (current series):
+- improvement: the poker guides (rules, hand rankings, odds, FAQ…) now show the date they were last updated
+
+2026-11-25 version 2.1.11-web.154:
 - improvement: Tab in the chat now completes the nickname you typed in full first (« noob » no longer becomes « noobass »), then the players who spoke last
 
 2026-11-22 version 2.1.11-web.153:
