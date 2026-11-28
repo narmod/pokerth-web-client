@@ -8702,6 +8702,21 @@ function _seoCompUpcoming(list, now) {
   return out.slice(0, _SEO_COMP_MAX);
 }
 
+// Estimated length of each date, for the Event endDate Google recommends. No
+// competition site publishes one: these are the upper ends of estimates worked
+// out from each table's official settings (blind rise, stack, time to act;
+// a game ends after about 7 doublings at ~35 s a hand). BBC: blinds every
+// 5 min, ~1 h 15 – 1 h 40. WeCup daily: ×2 every 22 hands, ~1 h 15 – 1 h 45.
+// WeCup final: ×2 every 25 hands, ~1 h 30 – 2 h. Monthly Cup: first round
+// ~1 h then the Gold / Silver / Bronze finals ~1 h 30, the evening with its
+// break ~2 h 30 – 3 h.
+var _SEO_COMP_DUR_MIN = { bbc: 100, wecDaily: 105, wecFinal: 120, mc: 180 };
+function _seoCompEndIso(e) {
+  var m = e.src === 'bbc' ? _SEO_COMP_DUR_MIN.bbc : e.src === 'mc' ? _SEO_COMP_DUR_MIN.mc
+    : e.kind === 'daily' ? _SEO_COMP_DUR_MIN.wecDaily : _SEO_COMP_DUR_MIN.wecFinal;
+  return new Date(e.at + m * 60000).toISOString();
+}
+
 function _seoCompLabel(e, up) {
   if (e.src === 'bbc') return up.bbc;
   if (e.src === 'mc') return up.mc;
@@ -8757,7 +8772,7 @@ function seoCompetitionsPage(res, method, lang) {
     (up || []).forEach(function (e) {
       var u = _SEO_COMP_HOSTS.test(String(e.url || '')) ? e.url : _SEO_COMP_SERIES[e.src].url;
       var ev = { '@context': 'https://schema.org', '@type': 'Event', name: _seoCompLabel(e, tr.up),
-        startDate: new Date(e.at).toISOString(), eventStatus: 'https://schema.org/EventScheduled',
+        startDate: new Date(e.at).toISOString(), endDate: _seoCompEndIso(e), eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode', isAccessibleForFree: true,
         description: series[e.src].description, inLanguage: lang || 'en',
         location: { '@type': 'VirtualLocation', url: u },

@@ -7,7 +7,8 @@
 //      gate as /llms.txt (SEO on and AI crawlers allowed), and /llms.txt links it;
 //   3. the app entity's sameAs names the PokerTH Wikidata item and Wikipedia;
 //   4. a guide path with a trailing slash or capitals redirects to the canonical one;
-//   5. fonts are cached a month.
+//   5. fonts are cached a month;
+//   6. competition Events carry an estimated endDate.
 // Run: node scripts/test-seo-geo.mjs   (~10 s)
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
@@ -70,6 +71,15 @@ try {
     ok(r.status === 301 && r.headers.location === to, `${from} → 301 ${to}`);
   }
   ok((await on.get('/rules')).status === 200 && (await on.get('/not-a-page/')).status === 404, 'canonical path 200, unknown path still 404');
+  // 6. Competition dates carry an estimated endDate (the WeCup daily game is
+  // always listed; the community sites' dates only when the relay answers).
+  const comp = (await on.get('/competitions')).body;
+  const evs = [...comp.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .flatMap((m) => [].concat(JSON.parse(m[1]))).filter((b) => b['@type'] === 'Event');
+  ok(evs.every((e) => e.endDate && Date.parse(e.endDate) - Date.parse(e.startDate) >= 60 * 60000
+    && Date.parse(e.endDate) - Date.parse(e.startDate) <= 180 * 60000), `/competitions: every Event has an endDate 1–3 h after its start (${evs.length} events)`);
+  const daily = evs.find((e) => Date.parse(e.endDate) - Date.parse(e.startDate) === 105 * 60000);
+  if (evs.length) ok(!!daily, '/competitions: the WeCup daily game lasts 1 h 45');
   // 5. Fonts
   const f = await on.get('/fonts/inter-latin-wght-normal.woff2');
   ok(/max-age=2592000/.test(f.headers['cache-control'] || ''), 'fonts cached a month');

@@ -25,6 +25,9 @@ highlights below.
   `upd` in `seo-i18n/nav.js` for the 82 languages), the same day as `dateModified`; the article-date fingerprint
   ignores it. App entity `sameAs` + Wikidata Q182261 and Wikipedia. `/rules/`, `/Rules`… → 301 to the canonical
   guide path (query kept). Fonts cached 30 days. Test: `test-seo-geo`.
+  `web.158`: competition `Event`s carry an `endDate` — no site publishes durations, so the upper end of estimates
+  from each table's settings (`_SEO_COMP_DUR_MIN`: BBC 1 h 40, WeCup daily 1 h 45, WeCup final 2 h, Monthly Cup
+  evening 3 h).
 - **Clickable chat nicknames** (`web.153`) — lobby chat 21/11: a troll in the lobby, and « how do I ignore him? »
   answered with « find him in the player list ». New `public/modules/ui/chat-nick.mjs`: in the lobby and game chats
   a nickname does what a seat does — tap = player card, right-click / long-press (500 ms, cancelled past 10 px, the
