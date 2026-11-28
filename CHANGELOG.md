@@ -429,6 +429,14 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Rejoin only when the server offers it** (`web.160`) — server log 26–28/11: ≈ 98 web `RejoinExistingGame` sent
+  without an offer; 70 for a game already over (« not running » / « does not exist »), 18 refused (seat released,
+  session id mismatch), each shown as « rejoining » then « rejoin failed », and 10 sent a player already out of
+  chips back to his empty seat. All 43 offered rejoins succeeded. `onInitAck` now follows the QML client
+  (`clientstate.cpp`): a seat is reclaimed only on `InitAck.rejoinGameId`; a local marker without an offer is
+  cleared and the lobby shown quietly, and `onGameListNew` spectates that table if it is still running and open to
+  spectators (`S._watchAfterResume`, 15 s window; `NetGameInfo.allowSpectators`, field 15). A spectator marker keeps
+  its re-spectate join. Tests: `test-msg-lobby` (+3, one rewritten).
 - **Same account in two places: no more 30-second ping-pong** (`web.159`) — server log 26–28/11
   (`claude/ANALYSE_LOGS_SERVEUR_2026-11-28.md`): one account, two clients on one machine, 349 logins in 3 h, one every
   32 s. The official server ends an account's session when it logs in elsewhere and sends the old one

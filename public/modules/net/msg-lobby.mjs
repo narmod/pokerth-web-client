@@ -286,6 +286,23 @@ function onInitAck(sub) {
         }
       } catch (e) {}
     }
+    // QML parity (clientstate.cpp, InitAck): a SEAT is reclaimed only when
+    // the server offers it. Our own markers asked anyway, and the server log
+    // of 26–28/11 shows what came back: of ≈ 98 web rejoins sent without an
+    // offer, 70 hit a game already over (« not running » / « does not
+    // exist »), 18 were refused (seat released, session id mismatch) — each
+    // time a « rejoining » banner, then « rejoin failed » — and 10 put a
+    // player already out of chips back in front of his empty seat. Without an
+    // offer there is no seat waiting: straight to the lobby, quietly, and if
+    // that table is still running and open to spectators the game list will
+    // show it, so we watch the end of it (_watchAfterResume, onGameListNew).
+    // A spectator marker is not concerned: re-spectating is an ordinary join.
+    if (_rt && !_srvRt && !S._pendingRejoinSpec) {
+      S._watchAfterResume = { g: _rt, until: Date.now() + 15000 };
+      S._pendingRejoin = 0; S._rejoinNickRetries = 0;
+      try { localStorage.removeItem('pth_resume'); } catch (e) {}
+      _rt = 0;
+    }
     if (_rt) {
       S._pendingRejoin = _rt;
       window._showBanner(t('rejoinInProgress'));
@@ -878,6 +895,19 @@ function onGameListNew(sub) {
     if (!S.loaded) { S.loaded = true; }
     renderGames();
     _refreshPlayersPanelIfOpen();
+    // After a reconnect the server offered no seat back (onInitAck): if the
+    // table we came from is still running and takes spectators, watch it.
+    var _war = S._watchAfterResume;
+    if (_war && _war.g === id) {
+      S._watchAfterResume = null;
+      // NetGameInfo.allowSpectators (field 15) defaults to true server-side.
+      var _gSpec = Proto.u32orNull(gi, 15);
+      if (Date.now() < _war.until && mode === 2 && _gSpec !== 0 && !S.amInGame && !window.LIVE_MODE && !window._offlineMode) {
+        setTimeout(function () {
+          try { if (!S.amInGame && App && App.spectateGame) App.spectateGame(id); } catch (e) {}
+        }, 150);
+      }
+    }
     // ── Auto-join from a share link ──
     // If we arrived via a "copy table link" URL and this is the
     // table it pointed to, join it now (the lobby has just told

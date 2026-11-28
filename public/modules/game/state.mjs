@@ -137,6 +137,9 @@ export const S = {
   _connLostReason: '',
   _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
   _pendingRejoinSpec: false, // true = on était SPECTATEUR → re-spectater (pas de siège à réclamer)
+  // { g: gameId, until: ms } — no seat offered back after a reconnect: watch
+  // that table if the game list shows it still running (msg-lobby.mjs).
+  _watchAfterResume: null,
   _rejoinNickRetries: 0,
   // Session GUID handed out by the server (InitAck field 1, 16 bytes). Played
   // back in InitMessage.myLastSessionId on reconnect: it is the ONLY proof the

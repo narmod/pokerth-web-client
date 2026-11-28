@@ -87,14 +87,23 @@ ok(sent2.some((b) => MSG.parse(b).type === T.PlayerInfoRequest),
    'onInitAck : PlayerInfoRequest pour notre propre avatar');
 ok(S._pendingNameRequests.has(42), 'onInitAck : notre pid en attente de nom');
 
-// Rejoin en attente : RejoinGame envoyé au lieu du lobby
+// Rejoin offered by the server (InitAck.rejoinGameId, field 4): RejoinGame instead of the lobby
 sent2.length = 0;
 S._pendingRejoin = 17;
-M.onInitAck(subOf([[1, 0, 1], [2, 0, 42]]));
+M.onInitAck(subOf([[1, 0, 1], [2, 0, 42], [4, 0, 17]]));
 const rj = MSG.parse(MSG.buildRejoinGame(17)).type;
 ok(sent2.some((b) => MSG.parse(b).type === rj),
-   'onInitAck : _pendingRejoin → RejoinExistingGame (sortie anticipée break→return)');
+   'onInitAck : server offer → RejoinExistingGame (sortie anticipée break→return)');
 S._pendingRejoin = 0;
+
+// QML parity (server log 26–28/11): our own marker but NO offer → no rejoin request,
+// marker cleared, and the table is watched if the game list shows it running.
+sent2.length = 0;
+S._pendingRejoin = 17; S._pendingRejoinSpec = false; store['pth_resume'] = JSON.stringify({ n: 'Moi', g: 17, t: Date.now() });
+M.onInitAck(subOf([[1, 0, 1], [2, 0, 42]]));
+ok(!sent2.some((b) => MSG.parse(b).type === rj), 'onInitAck : marker without server offer → no RejoinExistingGame');
+ok(S._pendingRejoin === 0 && !store['pth_resume'] && S._watchAfterResume && S._watchAfterResume.g === 17,
+   'onInitAck : no offer → marker cleared, table 17 to watch if still running');
 
 // ── Battement serveur : c'est lui qui arme (ou non) le watchdog du lobby.
 // Un serveur < 2.1.0 n'en envoie aucun — il ne faut alors JAMAIS armer, sinon
@@ -197,6 +206,26 @@ ok((S.games[12].watchers || []).filter(function (p) { return p === 9; }).length 
    'onGameListSpectatorJoined : pas de doublon');
 M.onGameListSpectatorLeft(sub);
 ok(!(S.games[12].watchers || []).includes(9), 'onGameListSpectatorLeft : pid 9 retiré');
+
+// ── Watch after resume: running table 17 open to spectators → spectate; others → nothing
+{
+  const watched = [];
+  App.spectateGame = (id) => watched.push(id);
+  S.amInGame = false;
+  S._watchAfterResume = { g: 17, until: Date.now() + 15000 };
+  M.onGameListNew(subOf([[1, 0, 16], [2, 0, 2], [3, 0, 0], [6, 2, Proto.encode([[1, 2, str('Autre')], [2, 0, 1], [3, 0, 6]])]]));
+  M.onGameListNew(subOf([[1, 0, 17], [2, 0, 2], [3, 0, 0], [6, 2, Proto.encode([[1, 2, str('La mienne')], [2, 0, 1], [3, 0, 6]])]]));
+  await new Promise((r) => setTimeout(r, 200));
+  ok(watched.length === 1 && watched[0] === 17 && S._watchAfterResume === null, 'onGameListNew : my running table → spectate it, once');
+  watched.length = 0;
+  S._watchAfterResume = { g: 18, until: Date.now() + 15000 };
+  M.onGameListNew(subOf([[1, 0, 18], [2, 0, 2], [3, 0, 0], [6, 2, Proto.encode([[1, 2, str('Fermée')], [2, 0, 1], [3, 0, 6], [15, 0, 0]])]]));
+  S._watchAfterResume = { g: 19, until: Date.now() + 15000 };
+  M.onGameListNew(subOf([[1, 0, 19], [2, 0, 1], [3, 0, 0], [6, 2, Proto.encode([[1, 2, str('Pas lancée')], [2, 0, 1], [3, 0, 6]])]]));
+  await new Promise((r) => setTimeout(r, 200));
+  ok(watched.length === 0, 'onGameListNew : no spectating where spectators are refused or the game is not running');
+  delete App.spectateGame;
+}
 
 // ── onError : code affiché + bannière masquée
 S._intentionalDisconnect = false;
