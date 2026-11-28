@@ -7948,6 +7948,8 @@ const App = (() => {
       }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addGameChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
+      // Shown as sent: cut to the server's 128 bytes (MSG.fitChat).
+      text = MSG.fitChat(text);
       send(S.gId ? MSG.buildGameChat(S.gId, text) : MSG.buildChat(text));
       addGameChat(S.myName, text, 'mine');
     },
@@ -7972,7 +7974,7 @@ const App = (() => {
     },
     sendChat() {
       const input = $('chat-in');
-      const text  = input.value.trim();
+      let text    = input.value.trim();
       if (!text || !S.ws) return;
       input.value = '';
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
@@ -8034,6 +8036,8 @@ const App = (() => {
       }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
+      // Shown as sent: cut to the server's 128 bytes (MSG.fitChat).
+      text = MSG.fitChat(text);
       send(MSG.buildChat(text, 0));
       // Affichage optimiste
       addChat(S.myName, text, 'mine');
@@ -12774,7 +12778,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.161'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.162'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

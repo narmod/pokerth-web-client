@@ -342,9 +342,26 @@ const MSG = (() => {
     return Proto.encode([[1,0,T.Init],[3,2,init]]);
   }
 
+  // Chat text as the server accepts it: 1 to 128 BYTES of UTF-8
+  // (NetPacketValidator::ValidateChatRequestMessage, MAX_CHAT_TEXT_SIZE).
+  // The inputs cap 128 characters, which in Cyrillic, Greek, Arabic, CJK or
+  // with emoji is up to 4× more bytes: the whole packet was then rejected
+  // (« Invalid packet: 63 ») and the message lost without a word. Parity with
+  // the Qt client (chattools.cpp: while (text.toUtf8().size() > 128) chop(1)),
+  // cut on whole code points so an emoji is never split in half.
+  const CHAT_MAX_BYTES = 128;
+  const _chatEnc = new TextEncoder();
+  function fitChat(text) {
+    const s = String(text == null ? '' : text);
+    if (_chatEnc.encode(s).length <= CHAT_MAX_BYTES) return s;
+    const cps = Array.from(s);
+    while (cps.length && _chatEnc.encode(cps.join('')).length > CHAT_MAX_BYTES) cps.pop();
+    return cps.join('');
+  }
+
   // Chat lobby
   function buildChat(text) {
-    const req = Proto.encode([[3,2,text]]);
+    const req = Proto.encode([[3,2,fitChat(text)]]);
     return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
   }
 
@@ -370,7 +387,7 @@ const MSG = (() => {
   // server admin bot uses this scoping to know whether to interpret
   // a leading "/" as a game-admin command (notably /kick <name>).
   function buildGameChat(gameId, text) {
-    const req = Proto.encode([[1,0,gameId],[3,2,text]]);
+    const req = Proto.encode([[1,0,gameId],[3,2,fitChat(text)]]);
     return Proto.encode([[1,0,T.ChatRequest],[64,2,req]]);
   }
 
@@ -581,9 +598,7 @@ const MSG = (() => {
   // de 128 OCTETS que le chat : au-delà, le validateur de paquets rejette tout
   // le message. On tronque donc en octets UTF-8 (pas en caractères).
   function buildAdminGlobalNotice(text) {
-    let s = String(text == null ? '' : text).trim();
-    const enc = new TextEncoder();
-    while (s && enc.encode(s).length > 128) s = s.slice(0, -1);
+    const s = fitChat(String(text == null ? '' : text).trim());
     const msg = Proto.encode([[1,2,s]]);
     return Proto.encode([[1,0,82],[83,2,msg]]);
   }
@@ -600,7 +615,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildPrivateChat, buildPrivateChatToName, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer, buildReportAvatar, hexToMd5Bytes };
+  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, fitChat, buildChat, buildGameChat, buildPrivateChat, buildPrivateChatToName, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer, buildReportAvatar, hexToMd5Bytes };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

@@ -429,6 +429,12 @@ highlights below.
   clears both stores. `scripts/test-admin-key-storage.mjs` (9 checks).
 
 ### Fixed
+- **Long non-Latin chat messages no longer vanish** (`web.162`) — server log 26–28/11: « Invalid packet: 63 » from a web
+  client. The server accepts 1–128 BYTES of UTF-8 (`ValidateChatRequestMessage`), the inputs cap 128 characters: in
+  Cyrillic, Greek, Arabic, CJK or with emoji the packet was rejected and the message lost silently. New
+  `MSG.fitChat` (cut on whole code points, never inside an emoji) used by `buildChat`, `buildGameChat` and
+  `buildAdminGlobalNotice`; `sendChat` / `sendGameChat` also show the text as sent. Parity with the Qt client
+  (`chattools.cpp`). Tests: `test-messages` (+5).
 - **No more 20-second start delay for a sleeping browser** (`web.161`) — server log 26–28/11: 14 of the 17 « start
   timeout after 20 s, no start ACK » were web players (9 on iOS), most gone seconds later: the bridge held the
   session in its grace while the table waited for an answer that could not come. New `server/start-ack.js`: on a

@@ -1,4 +1,7 @@
-2026-11-28 version 2.1.11-web.161 (current series):
+2026-11-28 version 2.1.11-web.162 (current series):
+- bugfix: a long chat message in Cyrillic, Greek, Arabic, Chinese or full of emoji was lost without a word; it is now shortened to what the server accepts, like in the desktop client
+
+2026-11-28 version 2.1.11-web.161:
 - improvement: a table no longer waits 20 seconds to start because a player's phone went to sleep or his tab was closed
 
 2026-11-28 version 2.1.11-web.160:

@@ -103,5 +103,20 @@ ok(new Set(ids).size === ids.length && ids.every((n) => Number.isInteger(n) && n
   delete window.LIVE_MODE;
 }
 
+// Chat text: at most 128 UTF-8 bytes, cut on whole code points (server log
+// 26–28/11: « Invalid packet: 63 », a ChatRequest over the server limit).
+{
+  const enc = new TextEncoder();
+  const chatText = (b) => Proto.str(MSG.parse(b).sub, 3);
+  ok(MSG.fitChat('Hello') === 'Hello', 'fitChat: short text untouched');
+  const ru = chatText(MSG.buildChat('Привет, как дела? '.repeat(6)));
+  ok(enc.encode(ru).length <= 128 && enc.encode(ru).length >= 127, 'buildChat: Cyrillic cut to 128 bytes (' + enc.encode(ru).length + ')');
+  const emo = MSG.fitChat('a'.repeat(126) + '😀😀');
+  ok(emo === 'a'.repeat(126), 'fitChat: an emoji is never split (' + emo.length + ' chars)');
+  const g = MSG.parse(MSG.buildGameChat(7, 'é'.repeat(100)));
+  ok(Proto.u32(g.sub, 1) === 7 && enc.encode(Proto.str(g.sub, 3)).length === 128, 'buildGameChat: game id kept, text cut to 128 bytes');
+  ok(chatText(MSG.buildChat('a'.repeat(128))).length === 128, 'buildChat: exactly 128 ASCII bytes kept');
+}
+
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All messages tests passed.');
