@@ -1543,6 +1543,12 @@
         <div id="seMsg" class="msg"></div>
         <div id="seList" class="ltab"><div class="empty">Loading…</div></div>
       </div>
+      <div class="card">
+        <div class="boardhead"><h2>Listening now</h2><span id="mlSum" class="headnote"></span></div>
+        <p class="muted">What the players’ music panels are playing right now, tracks and radio stations alike, refreshed with the connections above. A total per title only: no name, nothing kept.</p>
+        <details class="more"><summary>Who is seen</summary><p class="muted">A player counts while connected to this proxy — a game, training, the Mini-games page or the notice channel of a direct pokerth.net session — and stops counting on pause, stop or when the page closes. The login screen alone is not seen. One browser tab counts once, whatever its connections.</p></details>
+        <div id="mlList"><div class="empty">Loading…</div></div>
+      </div>
     </div>
     <div id="panel-livemap" style="display:none">
       <section class="ovmodes" id="lmTiles" aria-label="Connected right now, by entry mode"><div class="empty">Loading…</div></section>
@@ -8143,8 +8149,27 @@
     var nc=ccs.filter(function(cc){ return cc!=='ZZ'; }).length;
     if(nt) nt.textContent=n+' connection'+(n===1?'':'s')+' · '+nc+' countr'+(nc===1?'y':'ies')+' · read '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   }
+  // Listening now: totals per title from /admin/sessions (proxy.js,
+  // musicLiveSnapshot). Same rows as Traffic › Music, one colour per kind.
+  function _mlRender(d){
+    var box=$('mlList'), sum=$('mlSum'); if(!box) return;
+    if(!d.music){ if(sum) sum.textContent=''; box.innerHTML='<div class="empty">This proxy does not report it yet — the running process predates the feature. Restart it (Operations › Deployment › Restart).</div>'; return; }
+    var rows=d.music, total=0, nT=0, nR=0;
+    rows.forEach(function(r){ total+=r.n||0; if(r.stream) nR+=r.n||0; else nT+=r.n||0; });
+    if(sum) sum.textContent=total?(total+' listener'+(total===1?'':'s')+' · '+nT+' on tracks · '+nR+' on radios'):'';
+    if(!total){ box.innerHTML='<div class="empty">Nobody is listening to music right now.</div>'; return; }
+    box.innerHTML=rows.map(function(r){
+      var pc=r.n*100/total, c=r.stream?'var(--m-live)':'var(--m-net)';
+      return '<div class="envrow"><span class="dot" style="background:'+c+'"></span>'
+        +'<span class="nmx">'+_annEsc(r.title)+(r.artist?' <small class="muted">· '+_annEsc(r.artist)+'</small>':'')
+        +' <small class="muted">'+(r.stream?'radio':'track')+'</small></span>'
+        +'<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+c+'"></i></span>'
+        +'<span class="pct">'+r.n+' · '+Math.round(pc)+'%</span></div>';
+    }).join('');
+  }
   function _seRender(){
     var d=_seData, list=$('seList'), sum=$('seSum'), ch=$('seModes'); if(!d||!list) return;
+    _mlRender(d);
     var rows=_seRows(d), q=(($('seFilter')||{}).value||'').trim().toLowerCase();
     _seTiles(rows,d);
     if(ch) ch.innerHTML='<button type="button" class="chip'+(_seSel==='all'?' on':'')+'" data-sm="all" aria-pressed="'+(_seSel==='all')+'">All</button>'

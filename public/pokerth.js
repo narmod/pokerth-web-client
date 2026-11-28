@@ -5180,7 +5180,11 @@ const App = (() => {
       try { sck = new WebSocket(S._notifyUrl); } catch (e) {}
       if (!sck) { S._notifyTimer = setTimeout(dial, 30000); return; }
       S._notifyWS = sck;
-      sck.onmessage = function (e) { if (typeof e.data === 'string') _handleCtrlFrame(e.data); };
+      sck.onmessage = function (e) {
+        if (typeof e.data !== 'string') return;
+        if (window._pthMusicLive && window._pthMusicLive.ctl(sck, e.data)) return;
+        _handleCtrlFrame(e.data);
+      };
       sck.onerror = function () { try { sck.close(); } catch (e) {} };
       sck.onclose = function () {
         if (sck !== S._notifyWS) return;
@@ -5249,6 +5253,9 @@ const App = (() => {
   // SYNCTOK: re-sent on reattach were lost after the first reconnection.
   function _onProxyText(data) {
     if (_handleCtrlFrame(data)) return;
+    // Listening now (modules/net/music-live.mjs): the proxy reads « M: »
+    // frames on this socket — answer with what the music panel plays.
+    if (window._pthMusicLive && window._pthMusicLive.ctl(S.ws, data)) return;
     // Jeton de sync des préférences (émis à l'InitAck d'un login authentifié)
     if (data.startsWith('SYNCTOK:')) {
       try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(data.slice(8)); } catch (_e) {}
@@ -12778,7 +12785,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.11-web.162'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.11-web.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Admin: listening now** (`web.163`) — Live › Sessions gains a « Listening now » card: how many players listen to
+  each track or radio station at this instant, refreshed with the connections (5 s). The proxy announces `MLIVE:1`
+  on every connection it serves (game bridge and notice channels); only then does the client
+  (`modules/net/music-live.mjs`, fed by the existing `pth-music-state` event) answer `M:<tab>:<id>` on each change
+  (`M:<tab>:` = paused/stopped) — never on a direct pokerth.net socket, the offline server or an older proxy, which
+  would take the frame for a malformed game packet. `<tab>` is random per page load and never stored, so a tab with
+  two sockets counts once. Totals per title only (no nickname), in memory, gone with the socket; ids checked against
+  the catalogue (cached 10 s), 30 frames / 10 s and 4 tabs per socket. Privacy text updated (English). Test:
+  `test-music-live`.
 - **GEO — what assistants read** (`web.157`) — audit `claude/AUDIT_GEO_2026-11-28.md`. Most AI fetchers run no
   JavaScript: the home page summary (`#seo-intro`) is now a `<noscript>` fallback instead of off-viewport text, and
   the in-app privacy overlay's seven headings are `<h3>` (CSS follows), so the raw home page no longer reads as a

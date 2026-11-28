@@ -9718,6 +9718,84 @@ function recordMusicPlay(id, bot) {
   cell.mu[id] = (cell.mu[id] || 0) + 1;
   saveVisitsSoon();
 }
+// ── Listening now (admin Live › Sessions) ─────────────────────────────────
+// What the players' music panels are playing at this instant, tracks and radio
+// stations alike. The proxy announces « MLIVE:1 » on every connection it
+// serves (game bridge or notice channel); only then does the client answer
+// with « M:<tab>:<id> » each time its playback changes (« M:<tab>: » = paused
+// or stopped). <tab> is a random token drawn per page load and never stored:
+// it only lets one tab holding two sockets to this proxy count once. Kept in
+// memory with the sockets, dropped with them, never written to disk, never
+// tied to a nickname: the admin only sees a total per title.
+const MLIVE_FRAME = 'MLIVE:1';
+const MLIVE_MAX_TABS = 20000;       // global bound, far above any real audience
+const MLIVE_MAX_PER_SOCK = 4;       // tabs one socket may speak for
+const MLIVE_RATE_MS = 10000, MLIVE_RATE_MAX = 30;   // frames per socket per window
+const _mlive = new Map();           // tab token → { id, socks: Set<ws> }
+// The catalogue is read from disk: its ids are cached a few seconds, so a
+// socket repeating frames costs no file read each time.
+let _mliveIds = null, _mliveIdsAt = 0;
+function musicLiveKnown(id) {
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) return false;
+  const now = Date.now();
+  if (!_mliveIds || now - _mliveIdsAt > 10000) {
+    const ids = new Set();
+    try { musicListForClient().forEach(function (t) { if (t && t.id) ids.add(t.id); }); } catch (e) {}
+    _mliveIds = ids; _mliveIdsAt = now;
+  }
+  return _mliveIds.has(id);
+}
+function _mliveForget(tok, ws) {
+  const e = _mlive.get(tok);
+  if (e) { e.socks.delete(ws); if (!e.socks.size) _mlive.delete(tok); }
+}
+// Returns true when the text frame was a listening frame (handled or refused).
+function _mliveFrame(ws, text) {
+  if (typeof text !== 'string' || text.indexOf('M:') !== 0) return false;
+  if (text.length > 100) return true;
+  const now = Date.now();
+  if (!ws._mlWin || now - ws._mlWin > MLIVE_RATE_MS) { ws._mlWin = now; ws._mlN = 0; }
+  if (++ws._mlN > MLIVE_RATE_MAX) return true;  // a player skipping tracks never gets here
+  const c = text.indexOf(':', 2);
+  if (c < 0) return true;
+  const tok = text.slice(2, c), id = text.slice(c + 1);
+  if (!/^[A-Za-z0-9]{8,32}$/.test(tok)) return true;
+  if (!ws._mtoks) ws._mtoks = new Set();
+  if (!id) {                                   // paused or stopped: this tab plays nothing
+    const e = _mlive.get(tok);
+    if (e) { e.socks.forEach(function (w) { if (w._mtoks) w._mtoks.delete(tok); }); _mlive.delete(tok); }
+    return true;
+  }
+  if (!musicLiveKnown(id)) return true;        // an id outside the catalogue creates no key
+  let e = _mlive.get(tok);
+  if (!e) {
+    if (_mlive.size >= MLIVE_MAX_TABS) return true;
+    if (!ws._mtoks.has(tok) && ws._mtoks.size >= MLIVE_MAX_PER_SOCK) return true;
+    e = { id: id, socks: new Set() };
+    _mlive.set(tok, e);
+  }
+  if (!e.socks.has(ws) && !ws._mtoks.has(tok) && ws._mtoks.size >= MLIVE_MAX_PER_SOCK) return true;
+  e.id = id;
+  e.socks.add(ws); ws._mtoks.add(tok);
+  return true;
+}
+function _mliveDrop(ws) {
+  if (!ws || !ws._mtoks) return;
+  ws._mtoks.forEach(function (tok) { _mliveForget(tok, ws); });
+  ws._mtoks = null;
+}
+// Totals per title for the admin, most listened first. A title removed from
+// the catalogue meanwhile is still listed, under its id.
+function musicLiveSnapshot() {
+  const n = {};
+  _mlive.forEach(function (e) { n[e.id] = (n[e.id] || 0) + 1; });
+  const meta = {};
+  try { musicListForClient().forEach(function (t) { if (t && t.id) meta[t.id] = t; }); } catch (e) {}
+  return Object.keys(n).map(function (id) {
+    const t = meta[id] || {};
+    return { id: id, title: String(t.title || id), artist: String(t.artist || t.genre || ''), stream: !!t.stream, n: n[id] };
+  }).sort(function (a, b) { return (b.n - a.n) || a.title.localeCompare(b.title); });
+}
 // ── Aide de l'As (modules/guide) : compteurs anonymes ─────────────────────
 // POST /__guide { ctx, ev } — aucun identifiant de visiteur, aucun pseudo,
 // aucune table. Seules les paires (contexte, événement) de
@@ -16768,7 +16846,9 @@ function _sessionsSnapshot() {
   } catch (e) {}
   bridges.sort(function (a, b) { return a.startedAt - b.startedAt; });
   notify.sort(function (a, b) { return a.startedAt - b.startedAt; });
-  return { ok: true, now: now, maxClients: _maxClients(), bridges: bridges, notify: notify };
+  let music = [];
+  try { music = musicLiveSnapshot(); } catch (e) {}
+  return { ok: true, now: now, maxClients: _maxClients(), bridges: bridges, notify: notify, music: music };
 }
 // Déconnexion manuelle depuis le tableau de bord. Un pont est fermé pour de
 // bon (code 4009, PAS de délai de grâce : on détruit la session AVANT de
@@ -17057,6 +17137,9 @@ function _attachWs(S, ws) {
   if (S.syncToken) { try { ws.send('SYNCTOK:' + S.syncToken); } catch (e) {} S.pendingTok = null; }
   else if (S.pendingTok) { try { ws.send(S.pendingTok); } catch (e) {} S.pendingTok = null; }
   if (S.hofFrame) { try { ws.send(S.hofFrame); } catch (e) {} }
+  // Listening now: tell the client this proxy reads « M: » frames (an older
+  // proxy would take them for malformed game frames).
+  try { ws.send(MLIVE_FRAME); } catch (e) {}
 
   ws.on('message', (data, isBinary) => {
     // ── Soft per-connection rate limit (frames + bytes, sliding 1 s window).
@@ -17072,6 +17155,8 @@ function _attachWs(S, ws) {
     }
     if (!isBinary) {
       const text = data.toString();
+      // Listening now: « M:<tab>:<id> » stays here, never reaches the TCP path.
+      if (_mliveFrame(ws, text)) return;
       // Former web-to-web avatar relay (AVATAR:/AVATARIMG:): retired, the avatar
       // now travels only through the PokerTH protocol, as with the QML client.
       // A tab still running an older build may keep sending them: absorb them
@@ -17230,6 +17315,8 @@ wss.on('connection', (ws, req) => {
   ws._ip = clientIp(req);
   ws._port = (req.socket && req.socket.remotePort) || 0;
   ws._startedAt = Date.now();
+  // Listening now: what this socket's tabs were playing leaves with it.
+  ws.once('close', function () { _mliveDrop(ws); });
 
   // ── Comptage des sockets par IP (plafond appliqué à l'upgrade, cf. verifyClient) ──
   if (ws._ip && ws._ip !== 'unknown') {
@@ -17255,11 +17342,15 @@ wss.on('connection', (ws, req) => {
     ws._game = '';
     console.log('[i] Notify-only client attached (' + ws._bcMode + ', ' + wss.clients.size + ' ws total)');
     if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
-    // Aucun trafic entrant attendu, sauf sur la page Mini-jeux : « G:<id> »
-    // dit le jeu à l'écran ('' = l'accueil de la page). Seul un id connu de
+    try { ws.send(MLIVE_FRAME); } catch (e) {}
+    // Entrant : « M:<tab>:<id> », ce que joue le lecteur de musique (tous
+    // modes, cf. _mliveFrame) ; sur la page Mini-jeux, « G:<id> » dit le jeu à
+    // l'écran ('' = l'accueil de la page). Seul un id connu de
     // server/arcade-stats.js est gardé, avec la socket, jamais stocké.
     ws.on('message', function (data, isBinary) {
-      if (ws._bcMode !== 'arcade' || isBinary) return;
+      if (isBinary) return;
+      if (_mliveFrame(ws, String(data || ''))) return;
+      if (ws._bcMode !== 'arcade') return;
       const s = String(data || '');
       if (s.length > 40 || s.indexOf('G:') !== 0) return;
       const g = s.slice(2);

@@ -9,12 +9,15 @@
 // Admin › Overview, Live › Sessions and Live › Map count it under
 // « Mini-games », and the player gets the admin broadcasts like everyone.
 //
-// One text frame « G:<id> » says the game on screen ('' = the page's home).
+// One text frame « G:<id> » says the game on screen ('' = the page's home);
+// « M:… » frames say what the music panel plays (net/music-live.mjs).
 // No nickname, no id: the proxy keeps the game with the socket and drops it
 // with it (proxy.js, notify branch). Offline (installed app without network,
 // a static host without the proxy) the dial fails quietly and is tried again
 // while the page stays open.
 // ═══════════════════════════════════════════════════════════════════
+
+import { ctl as musicLiveCtl } from '../net/music-live.mjs';
 
 const RETRY_MS = 15000, OFFLINE_RETRY_MS = 30000;
 let sock = /** @type {WebSocket|null} */ (null);
@@ -44,6 +47,8 @@ function dial() {
   sock = me;
   me.onopen = () => { if (game) { try { me.send(frame()); } catch (e) {} } };
   me.onmessage = (e) => {
+    // « MLIVE:1 »: this channel also carries what the music panel plays.
+    if (musicLiveCtl(me, e.data)) return;
     const h = /** @type {any} */ (window)._handleCtrlFrame;
     if (typeof e.data === 'string' && typeof h === 'function') { try { h(e.data); } catch (x) {} }
   };
